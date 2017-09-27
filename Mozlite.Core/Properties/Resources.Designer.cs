@@ -61,6 +61,24 @@ namespace Mozlite.Properties {
         }
         
         /// <summary>
+        ///   查找类似 类型“{1}”的属性“{0}”必须包含get访问器。 的本地化字符串。
+        /// </summary>
+        internal static string NoGetter {
+            get {
+                return ResourceManager.GetString("NoGetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 类型“{1}”的属性“{0}”必须包含set访问器。 的本地化字符串。
+        /// </summary>
+        internal static string NoSetter {
+            get {
+                return ResourceManager.GetString("NoSetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 字节大小必须能被 8 整除。 的本地化字符串。
         /// </summary>
         internal static string RandomNumberGenerator_SizeInvalid {
