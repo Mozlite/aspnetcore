@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mozlite.Data.Migrations.Models;
 using Mozlite.Data.Migrations.Operations;
+using Mozlite.Data.Properties;
 using Mozlite.Properties;
 
 namespace Mozlite.Data.Migrations

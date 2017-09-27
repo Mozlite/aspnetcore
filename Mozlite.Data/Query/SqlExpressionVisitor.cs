@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Mozlite.Data.Migrations;
 using Mozlite.Properties;
+using Mozlite.Data.Properties;
 
 namespace Mozlite.Data.Query
 {

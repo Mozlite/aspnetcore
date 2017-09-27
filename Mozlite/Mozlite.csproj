@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
   </ItemGroup>
 
 </Project>
