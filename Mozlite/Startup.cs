@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Data.SqlServer;
 
 namespace Mozlite
 {
@@ -17,8 +22,8 @@ namespace Mozlite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMozlite();
-                //.AddSqlServer(Configuration);
+            services.AddMozlite()
+                .AddSqlServer(Configuration);
             services.AddMvc();
         }
 
@@ -28,7 +33,6 @@ namespace Mozlite
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {

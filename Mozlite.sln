@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Core", "Mozlite.Core\Mozlite.Core.csproj", "{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite", "Mozlite\Mozlite.csproj", "{15721884-469B-4C7D-996A-2FF7F9CCEE3A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Data", "Mozlite.Data\Mozlite.Data.csproj", "{4D86A978-E398-4D6E-BF6B-F5ED00DE69D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Data.SqlServer", "Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj", "{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite", "Mozlite\Mozlite.csproj", "{27303AD8-9469-42FD-8CA9-2555830C90BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15721884-469B-4C7D-996A-2FF7F9CCEE3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15721884-469B-4C7D-996A-2FF7F9CCEE3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15721884-469B-4C7D-996A-2FF7F9CCEE3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15721884-469B-4C7D-996A-2FF7F9CCEE3A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D86A978-E398-4D6E-BF6B-F5ED00DE69D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D86A978-E398-4D6E-BF6B-F5ED00DE69D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D86A978-E398-4D6E-BF6B-F5ED00DE69D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

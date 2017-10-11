@@ -3,20 +3,21 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
-    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
-    <UserSecretsId>aspnet-Mozlite-941D7C66-6B86-4C33-BE99-CC74B2130AF7</UserSecretsId>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
+    <UserSecretsId>aspnet-Mozlite-54CD57F1-F07F-4C2B-A6CF-F30A1E4D91FB</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0-preview2-final" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0-preview1-final" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj" />
     <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
   </ItemGroup>
 
