@@ -3,21 +3,11 @@
     /// <summary>
     /// 索引名称更改操作。
     /// </summary>
-    public class RenameIndexOperation : MigrationOperation
+    public class RenameIndexOperation : NameTableMigrationOperation
     {
-        /// <summary>
-        /// 原有名称。
-        /// </summary>
-        public virtual string Name { get;  set; }
-
         /// <summary>
         /// 新名称。
         /// </summary>
         public virtual string NewName { get;  set; }
-        
-        /// <summary>
-        /// 表格名称。
-        /// </summary>
-        public virtual string Table { get;  set; }
     }
 }

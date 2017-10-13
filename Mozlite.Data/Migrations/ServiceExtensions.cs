@@ -21,7 +21,7 @@ namespace Mozlite.Data.Migrations
             {
                 Task.Run(
                     async () => await serviceScope.ServiceProvider
-                    .GetService<IMigrator>()
+                    .GetService<IDataMigrator>()
                     .MigrateAsync());
             }
             return app;

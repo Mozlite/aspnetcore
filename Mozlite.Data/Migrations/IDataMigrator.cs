@@ -5,7 +5,7 @@ namespace Mozlite.Data.Migrations
     /// <summary>
     /// 数据迁移接口。
     /// </summary>
-    public interface IMigrator
+    public interface IDataMigrator
     {
         /// <summary>
         /// 迁移数据。

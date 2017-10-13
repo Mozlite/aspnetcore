@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Mozlite.Data.Migrations.Builders;
 using Mozlite.Data.Migrations.Operations;
 using Mozlite.Extensions;
 
@@ -46,6 +47,11 @@ namespace Mozlite.Data.Migrations.Models
         /// 判断是否存在的脚本。
         /// </summary>
         protected abstract string ExistsSql { get; }
+
+        /// <summary>
+        /// 主键名称。
+        /// </summary>
+        protected string PrimaryKeyName => OperationHelper.GetName(NameType.PrimaryKey, Table);
 
         /// <summary>
         /// 判断是否已经存在迁移表。
@@ -144,7 +150,7 @@ namespace Mozlite.Data.Migrations.Models
                 if (migration.Version == 1 && !await db.AnyAsync(m => m.Id == migration.Id, cancellationToken))
                     return await db.CreateAsync(migration, cancellationToken);
                 return await db.UpdateAsync(migration, cancellationToken);
-            }, 60, cancellationToken);
+            }, 600, cancellationToken);
         }
     }
 }

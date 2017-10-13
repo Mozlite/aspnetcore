@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Mozlite.Data.Properties;
-using Mozlite.Properties;
 
 namespace Mozlite
 {

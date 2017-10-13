@@ -24,5 +24,17 @@ namespace Mozlite.Data.Migrations.Builders
         /// 当前操作实例。
         /// </summary>
         protected virtual TOperation Operation { get; }
+
+        /// <summary>
+        /// 设置配置得扩展属性。
+        /// </summary>
+        /// <param name="name">当前属性名称。</param>
+        /// <param name="value">当前属性值。</param>
+        /// <returns>返回当前扩展构建实例。</returns>
+        public OperationBuilder<TOperation> Set(string name, object value)
+        {
+            Operation[name] = value.ToString();
+            return this;
+        }
     }
 }

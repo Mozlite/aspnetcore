@@ -5,7 +5,7 @@ namespace Mozlite.Data.Migrations.Operations
     /// <summary>
     /// 列操作相关实例。
     /// </summary>
-    public class ColumnOperation : MigrationOperation
+    public class ColumnOperation : NameTableMigrationOperation
     {
         /// <summary>
         /// 是否为Unicode字符集。
@@ -40,7 +40,7 @@ namespace Mozlite.Data.Migrations.Operations
         /// <summary>
         /// 是否可空。
         /// </summary>
-        public virtual bool IsNullable { get; set; }
+        public virtual bool? IsNullable { get; set; }
 
         /// <summary>
         /// 默认值。

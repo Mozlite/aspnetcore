@@ -3,18 +3,8 @@
     /// <summary>
     /// 添加外键操作。
     /// </summary>
-    public class AddForeignKeyOperation : MigrationOperation
+    public class AddForeignKeyOperation : NameTableMigrationOperation
     {
-        /// <summary>
-        /// 名称。
-        /// </summary>
-        public virtual string Name { get;  set; }
-        
-        /// <summary>
-        /// 表格。
-        /// </summary>
-        public virtual string Table { get;  set; }
-
         /// <summary>
         /// 相关列。
         /// </summary>

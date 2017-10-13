@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Mozlite.Data.Migrations.Operations;
 using System.Reflection;
-using Mozlite.Properties;
 using Mozlite.Extensions;
 using Mozlite.Data.Properties;
 
@@ -25,25 +24,18 @@ namespace Mozlite.Data.Migrations
                 { typeof(AddUniqueConstraintOperation), (g, o, b) => g.Generate((AddUniqueConstraintOperation)o, b) },
                 { typeof(AlterColumnOperation), (g, o, b) => g.Generate((AlterColumnOperation)o, b) },
                 { typeof(AlterDatabaseOperation), (g, o, b) => g.Generate((AlterDatabaseOperation)o, b) },
-                { typeof(AlterSequenceOperation), (g, o, b) => g.Generate((AlterSequenceOperation)o, b) },
                 { typeof(AlterTableOperation), (g, o, b) => g.Generate((AlterTableOperation)o, b) },
                 { typeof(CreateIndexOperation), (g, o, b) => g.Generate((CreateIndexOperation)o, b, true) },
-                { typeof(CreateSequenceOperation), (g, o, b) => g.Generate((CreateSequenceOperation)o, b) },
                 { typeof(CreateTableOperation), (g, o, b) => g.Generate((CreateTableOperation)o, b, true) },
                 { typeof(DropColumnOperation), (g, o, b) => g.Generate((DropColumnOperation)o, b, true) },
                 { typeof(DropForeignKeyOperation), (g, o, b) => g.Generate((DropForeignKeyOperation)o, b, true) },
                 { typeof(DropIndexOperation), (g, o, b) => g.Generate((DropIndexOperation)o, b) },
                 { typeof(DropPrimaryKeyOperation), (g, o, b) => g.Generate((DropPrimaryKeyOperation)o, b, true) },
-                { typeof(DropSchemaOperation), (g, o, b) => g.Generate((DropSchemaOperation)o, b) },
-                { typeof(DropSequenceOperation), (g, o, b) => g.Generate((DropSequenceOperation)o, b) },
                 { typeof(DropTableOperation), (g, o, b) => g.Generate((DropTableOperation)o, b, true) },
                 { typeof(DropUniqueConstraintOperation), (g, o, b) => g.Generate((DropUniqueConstraintOperation)o, b) },
-                { typeof(EnsureSchemaOperation), (g, o, b) => g.Generate((EnsureSchemaOperation)o, b) },
                 { typeof(RenameColumnOperation), (g, o, b) => g.Generate((RenameColumnOperation)o, b) },
                 { typeof(RenameIndexOperation), (g, o, b) => g.Generate((RenameIndexOperation)o, b) },
-                { typeof(RenameSequenceOperation), (g, o, b) => g.Generate((RenameSequenceOperation)o, b) },
                 { typeof(RenameTableOperation), (g, o, b) => g.Generate((RenameTableOperation)o, b) },
-                { typeof(RestartSequenceOperation), (g, o, b) => g.Generate((RestartSequenceOperation)o, b) },
                 { typeof(SqlOperation), (g, o, b) => g.Generate((SqlOperation)o, b) }
             };
 
@@ -253,29 +245,6 @@ namespace Mozlite.Data.Migrations
         }
 
         /// <summary>
-        /// 修改序列号。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             AlterSequenceOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            Check.NotNull(operation, nameof(operation));
-            Check.NotNull(builder, nameof(builder));
-
-            builder
-                .Append("ALTER SEQUENCE ")
-                .Append(SqlHelper.DelimitIdentifier(operation.Name, operation.Schema));
-
-            SequenceOptions(operation, builder);
-
-            builder.AppendLine(SqlHelper.StatementTerminator);
-
-            EndStatement(builder);
-        }
-
-        /// <summary>
         /// 修改表格。
         /// </summary>
         /// <param name="operation">操作实例。</param>
@@ -335,52 +304,6 @@ namespace Mozlite.Data.Migrations
                 builder.AppendLine(SqlHelper.StatementTerminator);
                 EndStatement(builder);
             }
-        }
-
-        /// <summary>
-        /// 确认架构。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             EnsureSchemaOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 新建序列号。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             CreateSequenceOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            Check.NotNull(operation, nameof(operation));
-            Check.NotNull(builder, nameof(builder));
-
-            builder
-                .Append("CREATE SEQUENCE ")
-                .Append(SqlHelper.DelimitIdentifier(operation.Name, operation.Schema));
-
-            if (operation.ClrType != typeof(long))
-            {
-                builder
-                    .Append(" AS ")
-                    .Append(TypeMapper.GetMapping(operation.ClrType));
-            }
-
-            builder
-                .Append(" START WITH ")
-                .Append(SqlHelper.EscapeLiteral(operation.StartValue));
-
-            SequenceOptions(operation, builder);
-
-            builder.AppendLine(SqlHelper.StatementTerminator);
-
-            EndStatement(builder);
         }
 
         /// <summary>
@@ -539,46 +462,6 @@ namespace Mozlite.Data.Migrations
         }
 
         /// <summary>
-        /// 删除架构。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             DropSchemaOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            Check.NotNull(operation, nameof(operation));
-            Check.NotNull(builder, nameof(builder));
-
-            builder
-                .Append("DROP SCHEMA ")
-                .Append(SqlHelper.DelimitIdentifier(operation.Name))
-                .AppendLine(SqlHelper.StatementTerminator);
-
-            EndStatement(builder);
-        }
-
-        /// <summary>
-        /// 删除序列号。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             DropSequenceOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            Check.NotNull(operation, nameof(operation));
-            Check.NotNull(builder, nameof(builder));
-
-            builder
-                .Append("DROP SEQUENCE ")
-                .Append(SqlHelper.DelimitIdentifier(operation.Name, operation.Schema))
-                .AppendLine(SqlHelper.StatementTerminator);
-
-            EndStatement(builder);
-        }
-
-        /// <summary>
         /// 删除表格。
         /// </summary>
         /// <param name="operation">操作实例。</param>
@@ -587,7 +470,7 @@ namespace Mozlite.Data.Migrations
         protected virtual void Generate(
              DropTableOperation operation,
              MigrationCommandListBuilder builder,
-            bool terminate)
+             bool terminate)
         {
             Check.NotNull(operation, nameof(operation));
             Check.NotNull(builder, nameof(builder));
@@ -638,40 +521,6 @@ namespace Mozlite.Data.Migrations
         }
 
         /// <summary>
-        /// 重命名序列号。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             RenameSequenceOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 重新计算序列号。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        protected virtual void Generate(
-             RestartSequenceOperation operation,
-             MigrationCommandListBuilder builder)
-        {
-            Check.NotNull(operation, nameof(operation));
-            Check.NotNull(builder, nameof(builder));
-
-            builder
-                .Append("ALTER SEQUENCE ")
-                .Append(SqlHelper.DelimitIdentifier(operation.Name, operation.Schema))
-                .Append(" RESTART WITH ")
-                .Append(SqlHelper.EscapeLiteral(operation.StartValue))
-                .AppendLine(SqlHelper.StatementTerminator);
-
-            EndStatement(builder);
-        }
-
-        /// <summary>
         /// SQL语句。
         /// </summary>
         /// <param name="operation">操作实例。</param>
@@ -708,14 +557,16 @@ namespace Mozlite.Data.Migrations
         /// </summary>
         /// <param name="statement">匿名对象。</param>
         /// <param name="action">执行每一项。</param>
-        protected virtual void ForEachProperty(object statement, Action<string, object> action)
+        protected virtual void ForEachProperty(object statement, Action<PropertyInfo, object> action)
         {
-            foreach (var property in statement.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            var type = statement.GetType();
+            var isAnonymous = type.IsAnonymous();
+            foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
-                if (property.IsCreating())
+                if (isAnonymous || property.IsCreatable())
                 {
                     var value = property.GetValue(statement);
-                    action(property.Name, value);
+                    action(property, value);
                 }
             }
         }
@@ -744,94 +595,7 @@ namespace Mozlite.Data.Migrations
         /// <param name="where">条件表达式。</param>
         /// <returns>返回生成的SQL语句。</returns>
         protected abstract string GenerateSqlDelete(IEntityType entityType, Expression where);
-
-        /// <summary>
-        /// 修改序列号转换。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例。</param>
-        protected virtual void SequenceOptions(
-                 AlterSequenceOperation operation,
-                 MigrationCommandListBuilder builder)
-            => SequenceOptions(
-                operation.Schema,
-                operation.Name,
-                operation.IncrementBy,
-                operation.MinValue,
-                operation.MaxValue,
-                operation.IsCyclic,
-                builder);
-
-        /// <summary>
-        /// 新建序列号转换。
-        /// </summary>
-        /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例。</param>
-        protected virtual void SequenceOptions(
-                 CreateSequenceOperation operation,
-                 MigrationCommandListBuilder builder)
-            => SequenceOptions(
-                operation.Schema,
-                operation.Name,
-                operation.IncrementBy,
-                operation.MinValue,
-                operation.MaxValue,
-                operation.IsCyclic,
-                builder);
-
-        /// <summary>
-        /// 序列号相关操作。
-        /// </summary>
-        /// <param name="schema">架构。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="increment">增量。</param>
-        /// <param name="minimumValue">最小值。</param>
-        /// <param name="maximumValue">最大值。</param>
-        /// <param name="cycle">是否循环。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例。</param>
-        protected virtual void SequenceOptions(
-             string schema,
-             string name,
-            int increment,
-            long? minimumValue,
-            long? maximumValue,
-            bool cycle,
-             MigrationCommandListBuilder builder)
-        {
-            Check.NotEmpty(name, nameof(name));
-            Check.NotNull(increment, nameof(increment));
-            Check.NotNull(cycle, nameof(cycle));
-            Check.NotNull(builder, nameof(builder));
-
-            builder
-                .Append(" INCREMENT BY ")
-                .Append(SqlHelper.EscapeLiteral(increment));
-
-            if (minimumValue != null)
-            {
-                builder
-                    .Append(" MINVALUE ")
-                    .Append(SqlHelper.EscapeLiteral(minimumValue));
-            }
-            else
-            {
-                builder.Append(" NO MINVALUE");
-            }
-
-            if (maximumValue != null)
-            {
-                builder
-                    .Append(" MAXVALUE ")
-                    .Append(SqlHelper.EscapeLiteral(maximumValue));
-            }
-            else
-            {
-                builder.Append(" NO MAXVALUE");
-            }
-
-            builder.Append(cycle ? " CYCLE" : " NO CYCLE");
-        }
-
+        
         /// <summary>
         /// 添加列的相关定义。
         /// </summary>
@@ -880,7 +644,7 @@ namespace Mozlite.Data.Migrations
             int? maxLength,
             bool rowVersion,
             bool identity,
-            bool nullable,
+            bool? nullable,
             object defaultValue,
             string defaultValueSql,
             string computedColumnSql,
@@ -895,7 +659,7 @@ namespace Mozlite.Data.Migrations
                 .Append(" ")
                 .Append(type ?? TypeMapper.GetMapping(clrType, maxLength, rowVersion, unicode));
 
-            if (!nullable)
+            if (nullable == true)
             {
                 builder.Append(" NOT NULL");
             }
@@ -1038,7 +802,7 @@ namespace Mozlite.Data.Migrations
                 .Append(ColumnList(operation.Columns))
                 .Append(")");
         }
-        
+
         /// <summary>
         /// 添加索引的相关定义。
         /// </summary>
@@ -1055,7 +819,7 @@ namespace Mozlite.Data.Migrations
         /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例。</param>
         protected virtual void ForeignKeyAction(
             ReferentialAction referentialAction,
-             MigrationCommandListBuilder builder)
+            MigrationCommandListBuilder builder)
         {
             Check.NotNull(builder, nameof(builder));
 

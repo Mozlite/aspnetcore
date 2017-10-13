@@ -9,14 +9,13 @@ using Microsoft.Extensions.Options;
 using Mozlite.Data.Migrations.Models;
 using Mozlite.Data.Migrations.Operations;
 using Mozlite.Data.Properties;
-using Mozlite.Properties;
 
 namespace Mozlite.Data.Migrations
 {
     /// <summary>
     /// 数据迁移。
     /// </summary>
-    public class Migrator : IMigrator
+    public class DataMigrator : IDataMigrator
     {
         private readonly IMigrationRepository _reposority;
 
@@ -29,14 +28,14 @@ namespace Mozlite.Data.Migrations
         private readonly string _provider;
 
         /// <summary>
-        /// 初始化类<see cref="Migrator"/>。
+        /// 初始化类<see cref="DataMigrator"/>。
         /// </summary>
         /// <param name="migrations">迁移列表。</param>
         /// <param name="options">数据选项。</param>
         /// <param name="reposority">迁移数据库操作接口。</param>
         /// <param name="logger">日志接口。</param>
-        public Migrator(IEnumerable<IDataMigration> migrations, IOptions<DatabaseOptions> options,
-            IMigrationRepository reposority, ILogger<Migrator> logger)
+        public DataMigrator(IEnumerable<IDataMigration> migrations, IOptions<DatabaseOptions> options,
+            IMigrationRepository reposority, ILogger<DataMigrator> logger)
         {
             _reposority = reposority;
             Logger = logger;

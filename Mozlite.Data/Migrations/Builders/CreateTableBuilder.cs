@@ -155,5 +155,49 @@ namespace Mozlite.Data.Migrations.Builders
             action?.Invoke(new OperationBuilder<AddColumnOperation>(operation));
             return this;
         }
+
+        /// <summary>
+        /// 添加列。
+        /// </summary>
+        /// <param name="name">列名称。</param>
+        /// <param name="type">字段类型。</param>
+        /// <param name="unicode">是否为Unicode编码。</param>
+        /// <param name="nullable">是否为空。</param>
+        /// <param name="identity">是否自增长。</param>
+        /// <param name="defaultValue">默认值。</param>
+        /// <param name="defaultValueSql">默认值SQL字符串。</param>
+        /// <param name="computedColumnSql">计算列的SQL字符串。</param>
+        /// <param name="action">添加扩展。</param>
+        /// <returns>返回操作实例。</returns>
+        public virtual CreateTableBuilder<TEntity> Column(
+            string name,
+            string type = null,
+            bool? nullable = null,
+            bool? unicode = null,
+            bool identity = false,
+            object defaultValue = null,
+            string defaultValueSql = null,
+            string computedColumnSql = null,
+            Action<OperationBuilder<AddColumnOperation>> action = null)
+        {
+            Check.NotNull(name, nameof(name));
+            
+            var operation = new AddColumnOperation
+            {
+                Table = Operation.Table,
+                Name = name,
+                ColumnType = type,
+                IsUnicode = unicode,
+                IsIdentity = identity,
+                IsNullable = nullable,
+                DefaultValue = defaultValue,
+                DefaultValueSql = defaultValueSql,
+                ComputedColumnSql = computedColumnSql
+            };
+            Operation.Columns.Add(operation);
+
+            action?.Invoke(new OperationBuilder<AddColumnOperation>(operation));
+            return this;
+        }
     }
 }

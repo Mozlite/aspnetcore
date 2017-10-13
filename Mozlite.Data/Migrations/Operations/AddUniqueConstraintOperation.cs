@@ -3,18 +3,8 @@
     /// <summary>
     /// 添加唯一键操作。
     /// </summary>
-    public class AddUniqueConstraintOperation : MigrationOperation
+    public class AddUniqueConstraintOperation : NameTableMigrationOperation, IClusteredOperation
     {
-        /// <summary>
-        /// 表格。
-        /// </summary>
-        public virtual string Table { get;  set; }
-
-        /// <summary>
-        /// 名称。
-        /// </summary>
-        public virtual string Name { get;  set; }
-
         /// <summary>
         /// 相关列。
         /// </summary>
