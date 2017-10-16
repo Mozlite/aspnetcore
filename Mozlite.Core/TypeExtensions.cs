@@ -138,44 +138,7 @@ namespace Mozlite
                 type = type.GetTypeInfo().BaseType;
             }
         }
-
-        private static readonly Dictionary<Type, object> _commonTypeDictionary = new Dictionary<Type, object>
-        {
-            { typeof(int), default },
-            { typeof(Guid), default },
-            { typeof(DateTime), default },
-            { typeof(DateTimeOffset), default },
-            { typeof(long), default },
-            { typeof(bool), default },
-            { typeof(double), default },
-            { typeof(short), default },
-            { typeof(float), default },
-            { typeof(byte), default },
-            { typeof(char), default },
-            { typeof(uint), default },
-            { typeof(ushort), default },
-            { typeof(ulong), default },
-            { typeof(sbyte), default }
-        };
-
-        /// <summary>
-        /// 获取当前类型的默认值。
-        /// </summary>
-        /// <param name="type">类型。</param>
-        /// <returns>返回当前值的默认类型。</returns>
-        public static object GetDefaultValue(this Type type)
-        {
-            if (!type.GetTypeInfo().IsValueType)
-            {
-                return null;
-            }
-            
-            object value;
-            return _commonTypeDictionary.TryGetValue(type, out value)
-                ? value
-                : Activator.CreateInstance(type);
-        }
-
+        
         /// <summary>
         /// 显示类型名称。
         /// </summary>

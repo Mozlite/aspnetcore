@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Reflection;
 using Mozlite.Extensions;
 
@@ -38,6 +39,18 @@ namespace Mozlite.Data
         public static bool IsAnonymous(this Type type)
         {
             return type.IsClass && type.Name.IndexOf("f__AnonymousType", StringComparison.Ordinal) != -1;
+        }
+
+        /// <summary>
+        /// 将以“,”分割的字符串，转换为数字数组。
+        /// </summary>
+        /// <param name="ids">当前ID集合。</param>
+        /// <returns>返回转换后的结果。</returns>
+        public static int[] ConvertToInt32s(this string ids)
+        {
+            return ids?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                 .Select(x => Convert.ToInt32(x.Trim()))
+                 .ToArray();
         }
     }
 }

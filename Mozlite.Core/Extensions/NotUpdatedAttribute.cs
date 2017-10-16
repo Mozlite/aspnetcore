@@ -6,7 +6,7 @@ namespace Mozlite.Extensions
     /// 忽略更新。
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NotUpdateAttribute : Attribute
+    public class NotUpdatedAttribute : Attribute
     {
 
     }

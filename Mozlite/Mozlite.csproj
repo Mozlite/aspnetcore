@@ -6,7 +6,7 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
     <UserSecretsId>aspnet-Mozlite-54CD57F1-F07F-4C2B-A6CF-F30A1E4D91FB</UserSecretsId>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   </ItemGroup>
@@ -19,6 +19,14 @@
     <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
     <ProjectReference Include="..\Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj" />
     <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
+    <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\Security\Controllers\" />
+    <Folder Include="Extensions\Security\Views\" />
   </ItemGroup>
 
 </Project>

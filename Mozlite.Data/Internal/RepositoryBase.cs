@@ -127,7 +127,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="model">模型实例对象。</param>
         /// <returns>返回是否成功新建实例。</returns>
-        public bool Create(TModel model)
+        public virtual bool Create(TModel model)
         {
             var sql = SqlGenerator.Create(EntityType);
             if (EntityType.Identity != null)
@@ -154,7 +154,7 @@ namespace Mozlite.Data.Internal
         /// <param name="model">模型实例对象。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回是否成功新建实例。</returns>
-        public async Task<bool> CreateAsync(TModel model, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> CreateAsync(TModel model, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Create(EntityType);
             if (EntityType.Identity != null)
@@ -180,7 +180,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="model">模型实例对象。</param>
         /// <returns>返回是否更新成功。</returns>
-        public bool Update(TModel model)
+        public virtual bool Update(TModel model)
         {
             var sql = SqlGenerator.Update(EntityType);
             return ExecuteNonQuery(sql, sql.CreateEntityParameters(model));
@@ -192,7 +192,7 @@ namespace Mozlite.Data.Internal
         /// <param name="model">模型实例对象。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回是否更新成功。</returns>
-        public async Task<bool> UpdateAsync(TModel model, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> UpdateAsync(TModel model, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Update(EntityType);
             return await ExecuteNonQueryAsync(sql, sql.CreateEntityParameters(model), cancellationToken: cancellationToken);
@@ -204,7 +204,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="statement">更新选项实例。</param>
         /// <returns>返回是否更新成功。</returns>
-        public bool Update(Expression<Predicate<TModel>> expression, object statement)
+        public virtual bool Update(Expression<Predicate<TModel>> expression, object statement)
         {
             var sql = SqlGenerator.Update(EntityType, expression, expression);
             return ExecuteNonQuery(sql, sql.Parameters);
@@ -215,7 +215,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="statement">更新选项实例。</param>
         /// <returns>返回是否更新成功。</returns>
-        public bool Update(object statement)
+        public virtual bool Update(object statement)
             => Update(null, statement);
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace Mozlite.Data.Internal
         /// <param name="statement">更新选项实例。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回是否更新成功。</returns>
-        public async Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, object statement, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, object statement, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Update(EntityType, expression, expression);
             return await ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
@@ -237,7 +237,7 @@ namespace Mozlite.Data.Internal
         /// <param name="statement">更新选项实例。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回是否更新成功。</returns>
-        public Task<bool> UpdateAsync(object statement, CancellationToken cancellationToken = default)
+        public virtual Task<bool> UpdateAsync(object statement, CancellationToken cancellationToken = default)
             => UpdateAsync(null, statement, cancellationToken);
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>判断是否删除成功。</returns>
-        public bool Delete(Expression<Predicate<TModel>> expression = null)
+        public virtual bool Delete(Expression<Predicate<TModel>> expression = null)
             => ExecuteNonQuery(SqlGenerator.Delete(EntityType, expression));
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>判断是否删除成功。</returns>
-        public Task<bool> DeleteAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
+        public virtual Task<bool> DeleteAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
             => ExecuteNonQueryAsync(SqlGenerator.Delete(EntityType, expression), cancellationToken: cancellationToken);
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回模型实例对象。</returns>
-        public TModel Find(Expression<Predicate<TModel>> expression)
+        public virtual TModel Find(Expression<Predicate<TModel>> expression)
         {
             Check.NotNull(expression, nameof(expression));
             return ReadSql(SqlGenerator.Fetch(EntityType, expression));
@@ -274,7 +274,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回模型实例对象。</returns>
-        public async Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        public virtual async Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
         {
             Check.NotNull(expression, nameof(expression));
             return await ReadSqlAsync(SqlGenerator.Fetch(EntityType, expression), cancellationToken);
@@ -336,9 +336,9 @@ namespace Mozlite.Data.Internal
             var primaryKey = EntityType.PrimaryKey.Properties.Single();
 
             using (var reader = await ExecuteReaderAsync($"SELECT * FROM {EntityType.Table} WHERE {SqlHelper.DelimitIdentifier(primaryKey.Name)} = @Key;",
-                new { Key = key }))
+                new { Key = key }, cancellationToken: cancellationToken))
             {
-                if (await reader.ReadAsync())
+                if (await reader.ReadAsync(cancellationToken))
                     return EntityType.Read<TModel>(reader);
             }
             return default;
@@ -349,18 +349,18 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回模型实例对象。</returns>
-        public IEnumerable<TModel> Load(Expression<Predicate<TModel>> expression = null)
+        public virtual IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null)
         {
             return LoadSql(SqlGenerator.Fetch(EntityType, expression));
         }
-        
+
         /// <summary>
         /// 通过条件表达式获取模型实例对象。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回模型实例对象。</returns>
-        public async Task<IEnumerable<TModel>> LoadAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             return await LoadSqlAsync(SqlGenerator.Fetch(EntityType, expression), cancellationToken);
         }
@@ -370,7 +370,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回判断结果。</returns>
-        public bool Any(Expression<Predicate<TModel>> expression = null)
+        public virtual bool Any(Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Any(EntityType, expression);
             return ExecuteScalar(sql.ToString()) != null;
@@ -382,10 +382,33 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回判断结果。</returns>
-        public async Task<bool> AnyAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> AnyAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Any(EntityType, expression);
             return await ExecuteScalarAsync(sql.ToString(), cancellationToken: cancellationToken) != null;
+        }
+
+        /// <summary>
+        /// 通过条件表达式判断是否存在实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual bool Any(object key)
+        {
+            var primaryKey = EntityType.PrimaryKey.Properties.Single();
+            return ExecuteScalar($"SELECT 1 FROM {SqlHelper.DelimitIdentifier(EntityType.Table)} WHERE {primaryKey.Name} = @Id;", new { Id = key }) != null;
+        }
+
+        /// <summary>
+        /// 通过条件表达式判断是否存在实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual async Task<bool> AnyAsync(object key, CancellationToken cancellationToken)
+        {
+            var primaryKey = EntityType.PrimaryKey.Properties.Single();
+            return await ExecuteScalarAsync($"SELECT 1 FROM {SqlHelper.DelimitIdentifier(EntityType.Table)} WHERE {primaryKey.Name} = @Id;", new { Id = key }, cancellationToken: cancellationToken) != null;
         }
 
         #region helpers

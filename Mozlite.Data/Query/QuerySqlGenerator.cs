@@ -80,7 +80,7 @@ namespace Mozlite.Data.Query
         public virtual SqlIndentedStringBuilder Update(IEntityType entityType) => GetOrCreate(entityType, nameof(Update), builder =>
           {
               var names = entityType.GetProperties()
-                  .Where(property => !property.IsIdentity && !property.PropertyInfo.IsDefined(typeof(NotUpdateAttribute)))
+                  .Where(property => !property.IsIdentity && !property.PropertyInfo.IsDefined(typeof(NotUpdatedAttribute)))
                   .Select(property => property.Name)
                   .ToList();
               builder.Append("UPDATE ").Append(SqlHelper.DelimitIdentifier(entityType.Table)).Append(" SET ");
@@ -175,7 +175,7 @@ namespace Mozlite.Data.Query
         public virtual SqlIndentedStringBuilder Any(IEntityType entityType, Expression expression)
         {
             var builder = new SqlIndentedStringBuilder();
-            builder.Append("SELECT TOP 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
             builder.AppendEx(Visit(expression), " WHERE {0}").Append(SqlHelper.StatementTerminator);
             return builder;
         }

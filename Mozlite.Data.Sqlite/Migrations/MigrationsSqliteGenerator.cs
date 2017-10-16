@@ -313,7 +313,7 @@ namespace Mozlite.Data.Sqlite.Migrations
             var items = new List<string>();
             ForEachProperty(instance, (k, v) =>
             {
-                if (k.IsDefined(typeof(NotUpdateAttribute), true))
+                if (k.IsDefined(typeof(NotUpdatedAttribute), true))
                     return;
                 items.Add($"{SqlHelper.DelimitIdentifier(k.Name)}={SqlHelper.EscapeLiteral(v)}");
             });

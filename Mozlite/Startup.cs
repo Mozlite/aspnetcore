@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data.Migrations;
 using Mozlite.Data.SqlServer;
+using Mozlite.Mvc;
 
 namespace Mozlite
 {
@@ -25,7 +26,7 @@ namespace Mozlite
         {
             services.AddMozlite()
                 .AddSqlServer(Configuration);
-            services.AddMvc();
+            services.AddMozliteMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,12 +45,7 @@ namespace Mozlite
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMozliteMvc(Configuration);
         }
     }
 }

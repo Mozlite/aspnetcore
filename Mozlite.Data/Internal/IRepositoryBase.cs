@@ -150,7 +150,7 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回模型实例对象。</returns>
-        IEnumerable<TModel> Load(Expression<Predicate<TModel>> expression = null);
+        IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null);
 
         /// <summary>
         /// 通过条件表达式获取模型实例对象。
@@ -158,7 +158,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回模型实例对象。</returns>
-        Task<IEnumerable<TModel>> LoadAsync(Expression<Predicate<TModel>> expression = null,
+        Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -175,6 +175,22 @@ namespace Mozlite.Data.Internal
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回判断结果。</returns>
         Task<bool> AnyAsync(Expression<Predicate<TModel>> expression = null,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 通过条件表达式判断是否存在实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <returns>返回判断结果。</returns>
+        bool Any(object key);
+
+        /// <summary>
+        /// 通过条件表达式判断是否存在实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<bool> AnyAsync(object key,
             CancellationToken cancellationToken = default);
     }
 }
