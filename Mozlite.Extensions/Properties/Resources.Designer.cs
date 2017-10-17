@@ -167,5 +167,14 @@ namespace Mozlite.Extensions.Properties {
                 return ResourceManager.GetString("Register", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 [服务]{0}执行错误：{1}。 的本地化字符串。
+        /// </summary>
+        internal static string TaskExecuteError {
+            get {
+                return ResourceManager.GetString("TaskExecuteError", resourceCulture);
+            }
+        }
     }
 }

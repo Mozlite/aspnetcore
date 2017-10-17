@@ -46,7 +46,7 @@ namespace Mozlite.Data
         /// </summary>
         /// <param name="ids">当前ID集合。</param>
         /// <returns>返回转换后的结果。</returns>
-        public static int[] ConvertToInt32s(this string ids)
+        public static int[] SplitToInt32(this string ids)
         {
             return ids?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                  .Select(x => Convert.ToInt32(x.Trim()))

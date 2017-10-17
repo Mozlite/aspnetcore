@@ -83,7 +83,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回删除结果。</returns>
         public Task<bool> DeleteAsync(string roleIds, CancellationToken cancellationToken = new CancellationToken())
         {
-            var intIds = roleIds.ConvertToInt32s();
+            var intIds = roleIds.SplitToInt32();
             return Repository.DeleteAsync(x => x.RoleId.Included(intIds), cancellationToken);
         }
 
