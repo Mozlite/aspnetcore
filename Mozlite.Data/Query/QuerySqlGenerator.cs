@@ -10,7 +10,6 @@ namespace Mozlite.Data.Query
     /// <summary>
     /// 查询构建实现类基类。
     /// </summary>
-    /// <typeparam name="TModel">模型类型。</typeparam>
     public abstract class QuerySqlGenerator : IQuerySqlGenerator
     {
         /// <summary>
@@ -21,7 +20,7 @@ namespace Mozlite.Data.Query
         private readonly IExpressionVisitorFactory _visitorFactory;
 
         /// <summary>
-        /// 初始化类<see cref="SqlGenerator"/>。
+        /// 初始化类<see cref="QuerySqlGenerator"/>。
         /// </summary>
         /// <param name="cache">缓存接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
@@ -36,6 +35,7 @@ namespace Mozlite.Data.Query
         /// <summary>
         /// 从缓存中获取<see cref="SqlIndentedStringBuilder"/>实例。
         /// </summary>
+        /// <param name="entityType">实体对象。</param>
         /// <param name="key">缓存键。</param>
         /// <param name="action">操作SQL语句。</param>
         /// <returns>返回SQL构建实例。</returns>

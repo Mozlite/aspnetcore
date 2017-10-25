@@ -13,6 +13,11 @@ namespace Mozlite.Extensions.Tasks
         int Priority { get; }
 
         /// <summary>
+        /// 禁用。
+        /// </summary>
+        bool Disabled { get; }
+
+        /// <summary>
         /// 名称。
         /// </summary>
         string Name { get; }
@@ -31,12 +36,7 @@ namespace Mozlite.Extensions.Tasks
         /// 执行间隔时间。
         /// </summary>
         TaskInterval Interval { get; }
-
-        /// <summary>
-        /// 是否依赖参数，如果设置为true，如果数据库中没有参数则不执行。
-        /// </summary>
-        bool DependenceArgument { get; }
-
+        
         /// <summary>
         /// 执行方法。
         /// </summary>

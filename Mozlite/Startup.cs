@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data.Migrations;
 using Mozlite.Data.SqlServer;
 using Mozlite.Mvc;
+using Mozlite.Extensions.Tasks;
 
 namespace Mozlite
 {
@@ -46,6 +47,7 @@ namespace Mozlite
             app.UseStaticFiles();
 
             app.UseMozliteMvc(Configuration);
+            app.UseTasks();
         }
     }
 }

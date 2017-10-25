@@ -23,11 +23,9 @@ namespace Mozlite.Extensions.Tasks
                 await Task.Delay(TimeSpan.FromSeconds(delays));
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                    foreach (var task in serviceScope.ServiceProvider.GetRequiredService<IEnumerable<ITask>>())
+                    foreach (var task in serviceScope.ServiceProvider.GetRequiredService<IEnumerable<ITaskStarter>>())
                     {
-#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
                         Task.Run(task.RunAsync);
-#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
                     }
                 }
             });

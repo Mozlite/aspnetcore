@@ -149,14 +149,32 @@ namespace Mozlite.Extensions.Tasks
             }
         }
 
-        internal Func<Argument, Task> SetArgumentAsync;
+        /// <summary>
+        /// 任务管理接口。
+        /// </summary>
+        public ITaskManager TaskManager { get; internal set; }
+
         /// <summary>
         /// 保存当前参数实例。
         /// </summary>
-        /// <returns>返回保存任务。</returns>
-        public Task SaveAsync()
+        /// <returns>返回保存结果。</returns>
+        public Task<bool> SaveAsync()
         {
-            return SetArgumentAsync?.Invoke(this);
+            return TaskManager.SetArgumentAsync(TaskContext.Id, ToString());
         }
+
+        /// <summary>
+        /// 保存错误日志。
+        /// </summary>
+        /// <param name="exception">错误实例。</param>
+        public Task LogErrorAsync(Exception exception)
+        {
+            return TaskManager.LogErrorAsync(TaskContext.Id, TaskContext.Name, exception);
+        }
+
+        /// <summary>
+        /// 当前服务Id。
+        /// </summary>
+        public TaskContext TaskContext { get; internal set; }
     }
 }

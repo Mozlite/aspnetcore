@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -27,12 +26,7 @@ namespace Mozlite.Extensions.Tasks
         /// </summary>
         [Size(256)]
         public string Description { get; set; }
-
-        /// <summary>
-        /// 是否依赖参数配置。
-        /// </summary>
-        public bool DependenceArgument { get; set; }
-
+        
         /// <summary>
         /// 所属扩展类型，一般为类型Mozlite.Extensions.名称。
         /// </summary>
@@ -62,17 +56,19 @@ namespace Mozlite.Extensions.Tasks
         public DateTime NextExecuting { get; set; }
 
         /// <summary>
-        /// 执行间隔。
+        /// 是否启用。
         /// </summary>
-        [NotMapped]
-        public TaskInterval TaskInterval
-        {
-            get => Interval;
-            set => Interval = value?.ToString();
-        }
+        public bool Enabled { get; set; }
 
-        internal Func<Argument, Task> Service { get; set; }
+        /// <summary>
+        /// 参数。
+        /// </summary>
+        [Size(256)]
+        public string Argument { get; set; }
 
-        internal bool IsRunning { get; set; }
+        /// <summary>
+        /// 错误消息。
+        /// </summary>
+        public string Error { get; set; }
     }
 }

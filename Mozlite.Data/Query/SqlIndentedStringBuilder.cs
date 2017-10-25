@@ -62,18 +62,15 @@ namespace Mozlite.Data.Query
         /// </summary>
         public IDictionary<string, object> CreateEntityParameters(object instance)
         {
-            if (Parameters == null)
-            {
-                if (instance is IDictionary<string, object> parameters)
-                    Parameters = parameters;
-                else
-                {//匿名类型
-                    Parameters = new Dictionary<string, object>();
-                    var entityType = instance.GetType().GetEntityType();
-                    foreach (var parameterName in _parameters)
-                    {
-                        Parameters.Add(parameterName, entityType.FindProperty(parameterName).Get(instance));
-                    }
+            if (instance is IDictionary<string, object> parameters)
+                Parameters = parameters;
+            else
+            {//匿名类型
+                Parameters = new Dictionary<string, object>();
+                var entityType = instance.GetType().GetEntityType();
+                foreach (var parameterName in _parameters)
+                {
+                    Parameters.Add(parameterName, entityType.FindProperty(parameterName).Get(instance));
                 }
             }
             return Parameters;
