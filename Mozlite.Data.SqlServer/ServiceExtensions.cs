@@ -60,10 +60,10 @@ namespace Mozlite.Data.SqlServer
                         o.Schema = source.Schema;
                         o.Provider = "SqlServer";
                     })
-                    .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+                    .AddSingleton(typeof(IRepository<>), typeof(Repository<>))
                     .AddTransient<IDataMigrator, DataMigrator>()
                     .AddTransient<IMigrationRepository, SqlServerMigrationRepository>()
-                    .AddTransient<IMigrationsSqlGenerator, MigrationsSqlServerGenerator>()
+                    .AddTransient<IMigrationsSqlGenerator, SqlServerMigrationsSqlGenerator>()
                     .AddSingleton<IQuerySqlGenerator, SqlServerQuerySqlGenerator>()
                     .AddSingleton<ITypeMapper, SqlServerTypeMapper>()
                     .AddSingleton<ISqlHelper, SqlServerHelper>()

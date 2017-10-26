@@ -6,10 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Mozlite.Data.Migrations;
 using Mozlite.Data.SqlServer;
 using Mozlite.Mvc;
-using Mozlite.Extensions.Tasks;
 
 namespace Mozlite
 {
@@ -41,13 +39,10 @@ namespace Mozlite
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseMigrations();
-
+            
             app.UseStaticFiles();
 
             app.UseMozliteMvc(Configuration);
-            app.UseTasks();
         }
     }
 }

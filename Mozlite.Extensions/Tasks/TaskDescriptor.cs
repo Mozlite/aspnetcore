@@ -53,7 +53,7 @@ namespace Mozlite.Extensions.Tasks
         /// <summary>
         /// 下一次执行时间。
         /// </summary>
-        public DateTime NextExecuting { get; set; }
+        public DateTime NextExecuting { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 是否启用。

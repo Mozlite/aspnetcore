@@ -659,7 +659,7 @@ namespace Mozlite.Data.Migrations
                 .Append(" ")
                 .Append(type ?? TypeMapper.GetMapping(clrType, maxLength, rowVersion, unicode));
 
-            if (nullable == true)
+            if (nullable == false)
             {
                 builder.Append(" NOT NULL");
             }

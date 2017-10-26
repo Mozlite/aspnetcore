@@ -1,4 +1,5 @@
 ﻿(function ($) {
+    var debug = true;
     window['mozlite-ready-functions'] = [];
     window.$onready = function (func) {
         window['mozlite-ready-functions'].push(func);
@@ -55,21 +56,21 @@
     };
     $.fn.formSubmit = function (success, error) {
         ///<summary>提交表单。</summary>
-        var $form = this;
-        var submit = $form.find('button[type=submit]').attr('disabled', 'disabled');
+        var form = this;
+        var submit = form.find('[js-submit=true],[type=submit]').attr('disabled', 'disabled');
         var icon = submit.find('i.fa');
         var css = icon.attr('class');
         icon.attr('class', 'fa fa-spinner fa-spin');
         $.ajax({
             type: "POST",
-            url: $form.attr('action'),
+            url: form.attr('action'),
             contentType: false,
             processData: false,
-            data: new FormData(form),
+            data: new FormData(form.first()),
             success: function (d) {
                 submit.removeAttr('disabled').find('i.fa').attr('class', css);
                 if (success) {
-                    success(d, $form);
+                    success(d, form);
                     return;
                 }
                 if (d.message) {
@@ -88,6 +89,7 @@
                     return;
                 }
                 else if (error) error(e);
+                else if (debug) document.write(e.responseText);
                 else $alert('很抱歉，发生了错误！');
             }
         });
@@ -112,7 +114,12 @@
                     current.find('[js-submit=true]').click(function () {
                         var func = s.js('submit');
                         if (func) func = function (d, f) { $call(s.js('submit'), d, f); };
-                        form.formSubmit(func);
+                        form.formSubmit(function(d, form) {
+                            if (d.data && d.data.url)
+                                location.href = d.data.url;
+                            else if (d.type === 'success')
+                                location.href = location.href;
+                        });
                     });
                 }
                 $readyExec(current);
@@ -252,10 +259,8 @@
             });
         //modal
         exec('_modal', function (s, v) {
-            if (v === 'click')
-                s.css('cursor', 'pointer');
-            s.on(v, function () {
-                s.loadModal(s.js('url') || s.attr('href'));
+            s.on('click', function () {
+                s.loadModal(s.js('url') || s.attr('href') || v);
                 return false;
             });
         });
@@ -321,5 +326,10 @@
         var date = new Date(this.replace('T', ' '));
         return date.toFormatString(fmt || 'yyyy-MM-dd hh:mm:ss');
     };
-    $($readyExec);
 })(jQuery);
+$(document).ready(function () {
+    window.$container = $('#modal-container');
+    if (window.$container.length === 0)
+        window.$container = document.body;
+    $readyExec();
+});

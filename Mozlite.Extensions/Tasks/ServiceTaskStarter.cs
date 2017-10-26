@@ -39,14 +39,14 @@ namespace Mozlite.Extensions.Tasks
                     return contexts;
                 foreach (var task in tasks)
                 {
-                    if (!_services.TryGetValue(task.Name, out var service))
+                    if (!_services.TryGetValue(task.Type, out var service))
                         continue;
                     var context = new TaskContext
                     {
                         Id = task.Id,
                         Interval = task.Interval,
                         ExecuteAsync = service.ExecuteAsync,
-                        Argument = task.Argument,
+                        Argument = task.Argument ?? string.Empty,
                         Name = task.Name,
                         LastExecuted = task.LastExecuted,
                         NextExecuting = task.NextExecuting
@@ -77,7 +77,9 @@ namespace Mozlite.Extensions.Tasks
                         {
                             if (context.NextExecuting <= DateTime.Now && !context.IsRunning)
                             {
+#pragma warning disable 4014
                                 Task.Run(async () =>
+#pragma warning restore 4014
                                 {
                                     context.IsRunning = true;
                                     //在服务运行后可以更改当前参数值

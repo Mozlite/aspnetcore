@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Routing;
 using Mozlite.Extensions;
 using Mozlite.Mvc.Messages;
 
-namespace Mozlite.Mvc.Controllers
+namespace Mozlite.Mvc
 {
     /// <summary>
     /// 控制器基类。

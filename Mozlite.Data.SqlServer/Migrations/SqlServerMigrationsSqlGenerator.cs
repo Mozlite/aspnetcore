@@ -13,7 +13,7 @@ namespace Mozlite.Data.SqlServer.Migrations
     /// <summary>
     /// SQLServer数据库迁移SQL生成类。
     /// </summary>
-    public class MigrationsSqlServerGenerator : MigrationsSqlGenerator
+    public class SqlServerMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         private readonly IExpressionVisitorFactory _visitorFactory;
 
@@ -23,7 +23,7 @@ namespace Mozlite.Data.SqlServer.Migrations
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="typeMapper">类型匹配接口。</param>
         /// <param name="visitorFactory">条件表达式访问器工厂。</param>
-        public MigrationsSqlServerGenerator(ISqlHelper sqlHelper, ITypeMapper typeMapper, IExpressionVisitorFactory visitorFactory)
+        public SqlServerMigrationsSqlGenerator(ISqlHelper sqlHelper, ITypeMapper typeMapper, IExpressionVisitorFactory visitorFactory)
             : base(sqlHelper, typeMapper)
         {
             _visitorFactory = visitorFactory;

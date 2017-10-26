@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

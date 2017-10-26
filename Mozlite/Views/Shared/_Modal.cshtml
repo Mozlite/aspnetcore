@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal-dialog @ViewBag.DialogClass">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">@ViewBag.Title</h4>
+        </div>
+        <div class="modal-body">
+            <div class="modal-alert"><span class="fa fa-warning"></span><span class="errmsg"></span></div>
+            @RenderBody()
+        </div>
+        @if (!IsSectionDefined("footer"))
+        {
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-info" js-submit="true"><i class="fa fa-check mr5"></i> 提交更改</button>
+            </div>
+        }
+        else
+        {
+            <div class="modal-footer">
+                @RenderSection("footer", false)
+            </div>
+        }
+    </div>
+</div>

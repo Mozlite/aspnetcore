@@ -1,8 +1,11 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Data.Migrations;
+using Mozlite.Extensions.Tasks;
 using Mozlite.Mvc.Routing;
 
 namespace Mozlite.Mvc
@@ -65,9 +68,21 @@ namespace Mozlite.Mvc
         /// <returns>APP构建实例对象。</returns>
         public static IApplicationBuilder UseMozliteMvc(this IApplicationBuilder app, IConfiguration configuration)
         {
-            return app.UseMvc(builder =>
+            //配置程序集
+            var services = app.ApplicationServices.GetService<IEnumerable<IApplicationConfigurer>>();
+            foreach (var service in services)
+            {
+                service.Configure(app, configuration);
+            }
+            //数据库迁移
+            app.UseMigrations();
+            //MVC
+            app.UseMvc(builder =>
                 builder.MapLowerCaseRoute("area-default", "{area:exists}/{controller}/{action=Index}/{id?}")
                     .MapLowerCaseRoute("default", "{controller=Home}/{action=Index}/{id?}"));
+            //Tasks
+            app.UseTasks();
+            return app;
         }
     }
 }

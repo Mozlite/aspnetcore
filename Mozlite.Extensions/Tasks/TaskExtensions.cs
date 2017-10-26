@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -20,12 +21,23 @@ namespace Mozlite.Extensions.Tasks
         {
             Task.Run(async () =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(delays));
+                await Task.Delay(TimeSpan.FromSeconds(1));
+
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                    foreach (var task in serviceScope.ServiceProvider.GetRequiredService<IEnumerable<ITaskStarter>>())
+                    try
                     {
-                        Task.Run(task.RunAsync);
+                        var starters = serviceScope.ServiceProvider.GetRequiredService<IEnumerable<ITaskStarter>>();
+                        foreach (var starter in starters)
+                        {
+#pragma warning disable 4014
+                           Task.Run(starter.RunAsync);
+#pragma warning restore 4014
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        serviceScope.ServiceProvider.GetRequiredService<ILogger<ITaskStarter>>().LogError(exception, exception.Message);
                     }
                 }
             });

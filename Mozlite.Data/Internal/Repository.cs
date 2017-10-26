@@ -21,7 +21,6 @@ namespace Mozlite.Data.Internal
         /// </summary>
         /// <param name="executor">数据库执行接口。</param>
         /// <param name="logger">日志接口。</param>
-        /// <param name="model">模型接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">脚本生成器。</param>
         /// <param name="visitorFactory">条件表达式解析器工厂实例。</param>
