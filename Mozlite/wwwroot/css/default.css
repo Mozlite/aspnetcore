@@ -1,0 +1,203 @@
+﻿a, body, button, div, form, html, img, label, span, textarea {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline
+}
+
+html, body, .wrapper {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.header {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    color: #fff;
+    font-size: 22px;
+    position: relative;
+    z-index: 0;
+    font-weight: 400;
+    -webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    -o-flex: 0 0 auto;
+    flex: 0 0 auto;
+    margin-right: 0;
+}
+
+    .header .leftbar {
+        max-width: 262px;
+        padding-right: 16px;
+        display: flex;
+        flex-flow: row nowrap;
+        overflow: hidden;
+        align-items: center;
+        box-sizing: border-box;
+        flex: 1 0 auto;
+    }
+
+    .header .button {
+        background: rgba(58,104,171,.6);
+        width: 48px;
+        height: 100%;
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #FFFFFF;
+        line-height: 48px;
+    }
+
+        .header .button:hover {
+            background: rgba(26,67,130,.6);
+        }
+
+        .header .button.active,
+        .header .button.open {
+            background: #fff;
+        }
+
+    .header .leftbar a.name {
+        padding-left: 16px;
+        display: inline-block;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+
+        .header .leftbar a.name span {
+            border-spacing: 0;
+            color: #FFFFFF;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+    .header .searchbar {
+        padding-right: 16px;
+        display: flex;
+        flex-flow: row nowrap;
+        overflow: hidden;
+        align-items: center;
+        flex: 1 1 0px;
+        min-width: 260px;
+    }
+
+    .header .rightbar {
+        margin-left: auto;
+        display: inline-flex;
+        height: 100%;
+        flex: 0 0 auto;
+        align-items: stretch;
+    }
+
+    .header .avatar {
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+    }
+
+    .header .skin {
+        left: 0;
+        right: 0;
+        background: #2055A4 url(/images/bg0.jpg);
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+    }
+
+.win {
+    z-index: 1030;
+    pointer-events: none;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.rightwin {
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 480px) {
+    .rightwin {
+        border-left: 1px solid #eaeaea;
+        border-right: 1px solid #eaeaea;
+        pointer-events: auto;
+        width: 340px;
+        left: auto;
+        box-shadow: -30px 0px 30px -30px rgba(0,0,0,0.2);
+    }
+}
+
+.win .win-title {
+    padding: 0 32px;
+    padding-top: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 70px;
+    justify-content: space-between;
+}
+
+    .win .win-title .title {
+        font-size: 21px;
+        font-weight: 100;
+    }
+
+    .win .win-title .close {
+        background: none;
+        border: 0;
+        height: 44px;
+        width: 44px;
+        text-align: center;
+        line-height: 44px;
+        padding: 0;
+        color: #666666;
+        font-size: 20px;
+    }
+
+.win .win-body {
+    position: absolute;
+    top: 80px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+    .win .win-body .win-content {
+        margin-bottom: 0;
+        overflow-y: auto;
+        padding: 10px 32px 0;
+        height: 100%;
+    }
+

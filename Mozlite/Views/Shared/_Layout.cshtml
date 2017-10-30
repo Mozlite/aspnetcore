@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Mozlite</title>
-
     <environment include="Development">
         <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/mozlite.css" />
+        <link rel="stylesheet" href="~/css/default.css" />
     </environment>
     <environment exclude="Development">
         <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
@@ -16,37 +16,154 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/mozlite.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/default.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Mozlite</a>
+    <div class="wrapper">
+        <div class="header">
+            <div class="leftbar">
+                <div class="button">
+                    <i class="fa fa-dashboard"></i>
+                </div>
+                <a href="~/" class="name"><span>Mozlite</span></a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+            <div class="searchbar">
+
+            </div>
+            <div class="rightbar">
+                <div class="button"><i class="fa fa-cog"></i></div>
+                <div class="button"><i class="fa fa-question"></i></div>
+                <div class="button open"><img src="https://cid-2957ca9eb5657373.users.storage.live.com/users/0x2957ca9eb5657373/myprofile/expressionprofile/profilephoto:UserTileStatic,UserTileSmall/MeControlMediumUserTile?ck=1&ex=24&fofoff=1" class="avatar" /></div>
+            </div>
+            <div class="skin"></div>
+        </div>
+        @RenderBody()
+    </div>
+    <div class="win">
+        <div class="rightwin">
+            <div class="win-title">
+                <span class="title">快速设置</span>
+                <a href="javascript:;" class="close">
+                    &times;
+                </a>
+            </div>
+            <div class="win-body">
+                <div class="win-content">
+                    <div class="ms-Panel-content content_be8b7d2e">
+                        <div>
+                            <div class="_2cF8R1vrP0MCTM6-7G_LES">
+                                <div class="ms-SearchBox root_4163acbe">
+                                    <div class="ms-SearchBox-iconContainer iconContainer_4163acbe"><i role="presentation" aria-hidden="true" data-icon-name="Search" class="ms-Icon css-35 css-33 ms-SearchBox-icon icon_4163acbe"></i>
+                                    </div><input id="SearchBox688" class="ms-SearchBox-field field_4163acbe" placeholder="要查找什么?" value="" aria-label="要查找什么?">
+                                    <div class="ms-SearchBox-clearButton clearButton_4163acbe"><i role="presentation" aria-hidden="true" data-icon-name="Clear" class="ms-Icon css-35 css-33"></i>
+                                    </div>
+                                </div>
+                                <div class="_3JjTLzwuf9SY4RIZKf0FgL">
+                                    <div class="_33Z456srHKmYG5TVHSpggY">
+                                        <div id="options-quick-theme" class="_1y4UuYIQm43MsLZoeRMi_y" role="heading" aria-level="3">主题</div>
+                                        <div class="_2O_TQX1M1F9Ys1k1jvBjI7">
+                                            <div role="listbox" class="ms-FocusZone _3r-VZdJZHlH5FOGqkfXbAS" data-focuszone-id="FocusZone689">
+                                                <div class="aVColXWQpJLLfFj27TDTv _1qCnHHTpi-WQ7W8lpziNPy" data-is-focusable="true" role="option" aria-checked="true" aria-label="蓝图" title="蓝图" tabindex="0"><i class="_1W7VX1oOx0qCr-hSGP5pha _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="个性 80 后" title="个性 80 后" tabindex="-1"><i class="_2RA-icrIYrjMQ9qjz9J7RK _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="气球" title="气球" tabindex="-1"><i class="_2cUkebfx4zNtmoG8SC2Un5 _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="默认主题" title="默认主题" tabindex="-1"><i class="PWWHOW4cyalBBX20DDeS- _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="海滩日落" title="海滩日落" tabindex="-1"><i class="_1wYRi12tDqpW-njVjXzb- _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="黑色" title="黑色" tabindex="-1"><i class="_2JGMYidJnP44XqFMTTpCUT _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="蓝莓" title="蓝莓" tabindex="-1"><i class="MBYv0mdwONoICEvULJKT7 _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="砖" title="砖" tabindex="-1"><i class="_1VGXrjYEeCDYqAc7CSNjvs _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="猫" title="猫" tabindex="-1"><i class="_1_pqPZSNdXvcDWhIkkVEpC _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                                <div class="aVColXWQpJLLfFj27TDTv" data-is-focusable="true" role="option" aria-checked="false" aria-label="V 形" title="V 形" tabindex="-1"><i class="_3GURbSkZ2wpisaMvNdZLmI _1w8e8GdLOW2GgsAOrZ0SHR"></i>
+                                                </div>
+                                            </div><button type="button" class="_2txs6dIoHuiSdCSP75GzFj ms-Button ms-Button--action ms-Button--command css-48" data-is-focusable="true">
+                                                <div class="ms-Button-flexContainer css-49">
+                                                    <div class="ms-Button-textContainer css-50">
+                                                        <div class="ms-Button-label css-44" id="690">查看所有主题</div>
+                                                    </div>
+                                                </div></button>
+                                        </div>
+                                    </div>
+                                    <div class="_33Z456srHKmYG5TVHSpggY">
+                                        <div id="options-quick-readingPane" class="_1y4UuYIQm43MsLZoeRMi_y" role="heading" aria-level="3">收件箱版式</div>
+                                        <div role="application" class="_39VSSXbOjKyFUBFn5bMuo2">
+                                            <div class="ms-ChoiceFieldGroup root_064bba62" role="radiogroup" aria-labelledby=" options-quick-readingPane">
+                                                <div class="ms-ChoiceField choiceField_064bba62">
+                                                    <div class="ms-ChoiceField-wrapper choiceFieldWrapper_064bba62"><input type="radio" id="ChoiceGroup693-1" class="ms-ChoiceField-input input_064bba62" name="ChoiceGroup693" aria-labelledby="ChoiceGroup693-1" value="on"><label for="ChoiceGroup693-1" class="ms-ChoiceField-field field_064bba62">
+                                                            <div class="_33niNt0yCqYCn11c_Ez8qG">
+                                                                <div class="ms-Image root_9463fd69 LYQHo9nboo2fQdWMahz3K flipForRtl" style="width: 50px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMS4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA0OCAzNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDggMzU7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik00NywxdjMzSDFWMUg0NyBNNDcsMEgxQzAuNCwwLDAsMC40LDAsMXYzM2MwLDAuNiwwLjQsMSwxLDFoNDZjMC42LDAsMS0wLjQsMS0xVjFDNDgsMC40LDQ3LjYsMCw0NywwTDQ3LDB6Ii8+DQo8L2c+DQo8cmVjdCB4PSIyMCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMzQiLz4NCjxyZWN0IHg9IjEiIHk9IjciIHdpZHRoPSIxOSIgaGVpZ2h0PSI3Ii8+DQo8cmVjdCB4PSIxIiB5PSIyMCIgd2lkdGg9IjE5IiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjEiIHk9IjI3IiB3aWR0aD0iMTkiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjMiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiLz4NCjxyZWN0IHg9IjI5IiB5PSIzIiB3aWR0aD0iMTIiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjEwIiB3aWR0aD0iMjIiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjEzIiB3aWR0aD0iMTgiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjE2IiB3aWR0aD0iMjIiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjE5IiB3aWR0aD0iMTgiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjkiIHk9IjYiIHdpZHRoPSI4IiBoZWlnaHQ9IjEiLz4NCjwvc3ZnPg0K" class="ms-Image-image image_9463fd69 ms-Image-image--portrait imageIsPortrait_9463fd69 is-loaded imageIsLoaded_9463fd69 is-fadeIn css-78 ms-Image-image--scaleWidth imageIsScaleWidth_9463fd69" alt="" role="presentation">
+                                                                </div><span class="_1oCtdYtVcNMn5yLyJJysbM" id="ChoiceGroup693-1">在右侧显示阅读窗格</span>
+                                                            </div></label>
+                                                    </div>
+                                                </div>
+                                                <div class="ms-ChoiceField choiceField_064bba62">
+                                                    <div class="ms-ChoiceField-wrapper choiceFieldWrapper_064bba62"><input type="radio" id="ChoiceGroup693-2" class="ms-ChoiceField-input input_064bba62" name="ChoiceGroup693" aria-labelledby="ChoiceGroup693-2" value="on"><label for="ChoiceGroup693-2" class="ms-ChoiceField-field field_064bba62">
+                                                            <div class="_33niNt0yCqYCn11c_Ez8qG">
+                                                                <div class="ms-Image root_9463fd69 LYQHo9nboo2fQdWMahz3K flipForRtl" style="width: 50px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMS4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA0OCAzNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDggMzU7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik00NywxdjMzSDFWMUg0NyBNNDcsMEgxQzAuNCwwLDAsMC40LDAsMXYzM2MwLDAuNiwwLjQsMSwxLDFoNDZjMC42LDAsMS0wLjQsMS0xVjFDNDgsMC40LDQ3LjYsMCw0NywwTDQ3LDB6Ii8+DQo8L2c+DQo8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iNDYiIGhlaWdodD0iNCIvPg0KPHJlY3QgeD0iMSIgeT0iMTMiIHdpZHRoPSI0NiIgaGVpZ2h0PSIxIi8+DQo8cmVjdCB4PSIxIiB5PSIxOCIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjMiIHk9IjIxIiB3aWR0aD0iNCIgaGVpZ2h0PSI0Ii8+DQo8cmVjdCB4PSI5IiB5PSIyMSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjMiIHk9IjI4IiB3aWR0aD0iNDMiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMyIgeT0iMzEiIHdpZHRoPSIzNSIgaGVpZ2h0PSIxIi8+DQo8cmVjdCB4PSIzIiB5PSIzNCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjkiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSIxIi8+DQo8L3N2Zz4NCg==" class="ms-Image-image image_9463fd69 ms-Image-image--portrait imageIsPortrait_9463fd69 is-loaded imageIsLoaded_9463fd69 is-fadeIn css-78 ms-Image-image--scaleWidth imageIsScaleWidth_9463fd69" alt="" role="presentation">
+                                                                </div><span class="_1oCtdYtVcNMn5yLyJJysbM" id="ChoiceGroup693-2">在底部显示阅读窗格</span>
+                                                            </div></label>
+                                                    </div>
+                                                </div>
+                                                <div class="ms-ChoiceField choiceField_064bba62">
+                                                    <div class="ms-ChoiceField-wrapper choiceFieldWrapper_064bba62"><input type="radio" id="ChoiceGroup693-0" class="ms-ChoiceField-input input_064bba62" name="ChoiceGroup693" aria-labelledby="ChoiceGroup693-0" value="on"><label for="ChoiceGroup693-0" class="ms-ChoiceField-field field_064bba62 is-checked fieldIsChecked_064bba62">
+                                                            <div class="_33niNt0yCqYCn11c_Ez8qG">
+                                                                <div class="ms-Image root_9463fd69 LYQHo9nboo2fQdWMahz3K flipForRtl" style="width: 50px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMS4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA0OCAzNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDggMzU7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik00NywxdjMzSDFWMUg0NyBNNDcsMEgxQzAuNCwwLDAsMC40LDAsMXYzM2MwLDAuNiwwLjQsMSwxLDFoNDZjMC42LDAsMS0wLjQsMS0xVjFDNDgsMC40LDQ3LjYsMCw0NywwTDQ3LDB6Ii8+DQo8L2c+DQo8cmVjdCB4PSIxIiB5PSI3IiB3aWR0aD0iNDYiIGhlaWdodD0iNyIvPg0KPHJlY3QgeD0iMSIgeT0iMjAiIHdpZHRoPSI0NiIgaGVpZ2h0PSIxIi8+DQo8cmVjdCB4PSIxIiB5PSIyNyIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjEiLz4NCjwvc3ZnPg0K" class="ms-Image-image image_9463fd69 ms-Image-image--portrait imageIsPortrait_9463fd69 is-loaded imageIsLoaded_9463fd69 is-fadeIn css-78 ms-Image-image--scaleWidth imageIsScaleWidth_9463fd69" alt="" role="presentation">
+                                                                </div><span class="_1oCtdYtVcNMn5yLyJJysbM" id="ChoiceGroup693-0">隐藏阅读窗格</span>
+                                                            </div></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="_33Z456srHKmYG5TVHSpggY">
+                                        <div id="options-quick-conversations" class="_1y4UuYIQm43MsLZoeRMi_y" role="heading" aria-level="3">对话</div>
+                                        <div role="application" class="_39VSSXbOjKyFUBFn5bMuo2">
+                                            <div class="ms-ChoiceFieldGroup root_064bba62" role="radiogroup" aria-labelledby=" options-quick-conversations">
+                                                <div class="ms-ChoiceField choiceField_064bba62">
+                                                    <div class="ms-ChoiceField-wrapper choiceFieldWrapper_064bba62"><input type="radio" id="ChoiceGroup695-ChronologicalNewestOnBottom" class="ms-ChoiceField-input input_064bba62" name="ChoiceGroup695" aria-labelledby="ChoiceGroup695-ChronologicalNewestOnBottom" value="on"><label for="ChoiceGroup695-ChronologicalNewestOnBottom" class="ms-ChoiceField-field field_064bba62 is-checked fieldIsChecked_064bba62">
+                                                            <div class="_33niNt0yCqYCn11c_Ez8qG">
+                                                                <div class="ms-Image root_9463fd69 LYQHo9nboo2fQdWMahz3K flipForRtl" style="width: 50px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMS4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA0OCAzNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDggMzU7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik00NywxdjMzSDFWMUg0NyBNNDcsMEgxQzAuNCwwLDAsMC40LDAsMXYzM2MwLDAuNiwwLjQsMSwxLDFoNDZjMC42LDAsMS0wLjQsMS0xVjFDNDgsMC40LDQ3LjYsMCw0NywwTDQ3LDB6Ii8+DQo8L2c+DQo8cmVjdCB4PSIyMCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMzQiLz4NCjxyZWN0IHg9IjEiIHk9IjciIHdpZHRoPSIxOSIgaGVpZ2h0PSI3Ii8+DQo8cmVjdCB4PSIxIiB5PSIyMCIgd2lkdGg9IjE5IiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjEiIHk9IjI3IiB3aWR0aD0iMTkiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjMiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiLz4NCjxyZWN0IHg9IjI5IiB5PSIzIiB3aWR0aD0iMTIiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjkiIHk9IjYiIHdpZHRoPSI4IiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjIzIiB5PSIxMSIgd2lkdGg9IjQiIGhlaWdodD0iNCIvPg0KPHJlY3QgeD0iMjkiIHk9IjExIiB3aWR0aD0iMTIiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjkiIHk9IjE0IiB3aWR0aD0iOCIgaGVpZ2h0PSIxIi8+DQo8cmVjdCB4PSIyMyIgeT0iMTkiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiLz4NCjxyZWN0IHg9IjI5IiB5PSIxOSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjI5IiB5PSIyMiIgd2lkdGg9IjgiIGhlaWdodD0iMSIvPg0KPHBhdGggZD0iTTIxLDI2djhoMjZ2LThIMjF6IE0yNywzMmgtNHYtNGg0VjMyeiBNMzcsMzJoLTh2LTFoOFYzMnogTTQxLDI5SDI5di0xaDEyVjI5eiIvPg0KPC9zdmc+DQo=" class="ms-Image-image image_9463fd69 ms-Image-image--portrait imageIsPortrait_9463fd69 is-loaded imageIsLoaded_9463fd69 is-fadeIn css-78 ms-Image-image--scaleWidth imageIsScaleWidth_9463fd69" alt="" role="presentation">
+                                                                </div><span class="_1oCtdYtVcNMn5yLyJJysbM" id="ChoiceGroup695-ChronologicalNewestOnBottom">最新邮件在后</span>
+                                                            </div></label>
+                                                    </div>
+                                                </div>
+                                                <div class="ms-ChoiceField choiceField_064bba62">
+                                                    <div class="ms-ChoiceField-wrapper choiceFieldWrapper_064bba62"><input type="radio" id="ChoiceGroup695-ChronologicalNewestOnTop" class="ms-ChoiceField-input input_064bba62" name="ChoiceGroup695" aria-labelledby="ChoiceGroup695-ChronologicalNewestOnTop" value="on"><label for="ChoiceGroup695-ChronologicalNewestOnTop" class="ms-ChoiceField-field field_064bba62">
+                                                            <div class="_33niNt0yCqYCn11c_Ez8qG">
+                                                                <div class="ms-Image root_9463fd69 LYQHo9nboo2fQdWMahz3K flipForRtl" style="width: 50px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMS4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA0OCAzNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDggMzU7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik00NywxdjMzSDFWMUg0NyBNNDcsMEgxQzAuNCwwLDAsMC40LDAsMXYzM2MwLDAuNiwwLjQsMSwxLDFoNDZjMC42LDAsMS0wLjQsMS0xVjFDNDgsMC40LDQ3LjYsMCw0NywwTDQ3LDB6Ii8+DQo8L2c+DQo8cmVjdCB4PSIyMCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMzQiLz4NCjxyZWN0IHg9IjEiIHk9IjciIHdpZHRoPSIxOSIgaGVpZ2h0PSI3Ii8+DQo8cmVjdCB4PSIxIiB5PSIyMCIgd2lkdGg9IjE5IiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjEiIHk9IjI3IiB3aWR0aD0iMTkiIGhlaWdodD0iMSIvPg0KPHBhdGggZD0iTTIxLDF2OGgyNlYxSDIxeiBNMjcsN2gtNFYzaDRWN3ogTTM3LDdoLThWNmg4Vjd6IE00MSw0SDI5VjNoMTJWNHoiLz4NCjxyZWN0IHg9IjIzIiB5PSIxMSIgd2lkdGg9IjQiIGhlaWdodD0iNCIvPg0KPHJlY3QgeD0iMjkiIHk9IjExIiB3aWR0aD0iMTIiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjkiIHk9IjE0IiB3aWR0aD0iOCIgaGVpZ2h0PSIxIi8+DQo8cmVjdCB4PSIyMyIgeT0iMTkiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiLz4NCjxyZWN0IHg9IjI5IiB5PSIxOSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiLz4NCjxyZWN0IHg9IjI5IiB5PSIyMiIgd2lkdGg9IjgiIGhlaWdodD0iMSIvPg0KPHJlY3QgeD0iMjMiIHk9IjI3IiB3aWR0aD0iNCIgaGVpZ2h0PSI0Ii8+DQo8cmVjdCB4PSIyOSIgeT0iMjciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxIi8+DQo8cmVjdCB4PSIyOSIgeT0iMzAiIHdpZHRoPSI4IiBoZWlnaHQ9IjEiLz4NCjwvc3ZnPg0K" class="ms-Image-image image_9463fd69 ms-Image-image--portrait imageIsPortrait_9463fd69 is-loaded imageIsLoaded_9463fd69 is-fadeIn css-78 ms-Image-image--scaleWidth imageIsScaleWidth_9463fd69" alt="" role="presentation">
+                                                                </div><span class="_1oCtdYtVcNMn5yLyJJysbM" id="ChoiceGroup695-ChronologicalNewestOnTop">由新到旧</span>
+                                                            </div></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="_33Z456srHKmYG5TVHSpggY">
+                                        <div id="options-quick-focused" class="_1y4UuYIQm43MsLZoeRMi_y" role="heading" aria-level="3">重点收件箱</div>
+                                        <div class="ms-Toggle is-checked is-enabled css-54"><label for="Toggle697" class="root_c8117b67 ms-Label ms-Toggle-label">将邮件归类为“重点”和“其他”</label>
+                                            <div class="ms-Toggle-innerContainer css-55"><button class="ms-Toggle-background css-56" id="Toggle697" type="button" aria-pressed="true" data-is-focusable="true">
+                                                    <div class="ms-Toggle-thumb css-57"></div></button><label for="Toggle697" class="root_c8117b67 ms-Label ms-Toggle-stateText css-58">开</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><button type="button" class="H017uEecmfPm6XRjoZfyV ms-Button ms-Button--action ms-Button--command css-48" data-is-focusable="true">
+                                    <div class="ms-Button-flexContainer css-49"><span>查看完整设置</span><i role="presentation" aria-hidden="true" data-icon-name="ChevronRight" class="ms-Icon css-35 css-33 _3kBh7dLthGMsnFetj0tKS flipForRtl"></i>
+                                    </div></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - Mozlite</p>
-        </footer>
     </div>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
