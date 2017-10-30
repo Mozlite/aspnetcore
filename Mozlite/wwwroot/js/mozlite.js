@@ -2,6 +2,8 @@
     var debug = true;
     window['mozlite-ready-functions'] = [];
     window.$onready = function (func) {
+        ///<summary>当前文档或弹窗完成时候执行的方法。</summary>
+        ///<param name="func" type="Function">方法。</param>
         window['mozlite-ready-functions'].push(func);
     };
     $.fn.dset = function (key, func) {
@@ -57,6 +59,7 @@
     $.fn.formSubmit = function (success, error) {
         ///<summary>提交表单。</summary>
         var form = this;
+        var data = new FormData(this[0]);
         var submit = form.find('[js-submit=true],[type=submit]').attr('disabled', 'disabled');
         var icon = submit.find('i.fa');
         var css = icon.attr('class');
@@ -66,7 +69,7 @@
             url: form.attr('action'),
             contentType: false,
             processData: false,
-            data: new FormData(form.first()),
+            data: data,
             success: function (d) {
                 submit.removeAttr('disabled').find('i.fa').attr('class', css);
                 if (success) {
@@ -112,10 +115,28 @@
                     if (form.find('input[type=file]').length > 0)
                         form.attr('enctype', 'multipart/form-data');
                     current.find('[js-submit=true]').click(function () {
-                        var func = s.js('submit');
-                        if (func) func = function (d, f) { $call(s.js('submit'), d, f); };
-                        form.formSubmit(function(d, form) {
-                            if (d.data && d.data.url)
+                        form.formSubmit(function (d, form) {
+                            var func = s.js('submit');
+                            if (func) {
+                                $call(s.js('submit'), d, form);
+                                return;
+                            }
+                            if (d.message) {
+                                var errmsg = current.find('div.modal-alert');
+                                if (errmsg.length > 0 && d.type !== 'success') {
+                                    errmsg.attr('class', 'modal-alert text-' + d.type).show().find('.errmsg').html(d.message);
+                                    return;
+                                }
+                                $alert(d.message, d.type, function () {
+                                    if (d.data && d.data.url)
+                                        location.href = d.data.url;
+                                    else if (d.type === 'success')
+                                        location.href = location.href;
+                                });
+                                if (d.type === 'success')
+                                    current.data('bs.modal').hide();
+                            }
+                            else if (d.data && d.data.url)
                                 location.href = d.data.url;
                             else if (d.type === 'success')
                                 location.href = location.href;
@@ -332,4 +353,27 @@ $(document).ready(function () {
     if (window.$container.length === 0)
         window.$container = document.body;
     $readyExec();
+});
+$onready(function (context) {
+    $('.moz-checkbox', context).click(function () {
+        $(this).toggleClass('checked');
+        if ($(this).hasClass('checked')) {
+            $(this).find('input')[0].checked = 'checked';
+        } else {
+            $(this).find('input').removeAttr('checked');
+        }
+    });
+    $('.moz-radiobox', context).click(function () {
+        if ($(this).hasClass('checked')) {
+            return;
+        }
+        $(this).parents('.moz-radioboxlist')
+            .find('.moz-radiobox')
+            .removeClass('checked')
+            .each(function () {
+                $(this).find('input').removeAttr('checked');
+            });
+        $(this).addClass('checked');
+        $(this).find('input')[0].checked = 'checked';
+    });
 });

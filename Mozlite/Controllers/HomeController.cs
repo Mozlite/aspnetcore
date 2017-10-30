@@ -29,7 +29,7 @@ namespace Mozlite.Controllers
         [HttpPost]
         public IActionResult ModalTest(IFormCollection form)
         {
-            return Error("你已经成功提交了信息！");
+            return Error("你已经成功提交了信息：" + form["role"]);
         }
 
         public IActionResult About()
