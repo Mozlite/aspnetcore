@@ -14,6 +14,15 @@ html, body, .wrapper {
     overflow: hidden;
 }
 
+.modal-backdrop.in {
+    opacity: 0.1;
+}
+
+.modal-content {
+    border-radius: 0;
+    border: none;
+}
+
 .header {
     width: 100%;
     height: 48px;
@@ -61,6 +70,7 @@ html, body, .wrapper {
         .header .button.active,
         .header .button.open {
             background: #fff;
+            color: #1A4382;
         }
 
     .header .leftbar a.name {
@@ -115,6 +125,68 @@ html, body, .wrapper {
         z-index: -1;
     }
 
+.main {
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    height: auto;
+    flex-flow: row nowrap;
+}
+
+    .main .main-inner {
+        flex-flow: column;
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+    }
+
+        .main .main-inner .menu-wrapper {
+            width: 270px;
+            display: flex;
+            flex-flow: column;
+            flex: 0 0 auto;
+        }
+
+        .main .main-inner .splitter {
+            margin-left: -2px;
+            margin-right: -2px;
+            background: transparent;
+            margin-top: 40px;
+            width: 4px;
+            cursor: col-resize;
+            position: relative;
+            z-index: 2;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+        }
+
+        .main .main-inner .body {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            overflow: hidden;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: column;
+            flex-flow: column;
+        }
+
+        .main .main-inner .slider {
+            background-color: #f4f4f4;
+            display: flex;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: 165px;
+            position: relative;
+            overflow: hidden;
+        }
+
 .win {
     z-index: 1030;
     pointer-events: none;
@@ -125,24 +197,36 @@ html, body, .wrapper {
     bottom: 0;
 }
 
-.rightwin {
+.win-panel {
     background-color: #fff;
     position: absolute;
     width: 100%;
     bottom: 0;
     top: 0;
     right: 0;
+    left: 0;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 480px) {
-    .rightwin {
+    .win-left {
         border-left: 1px solid #eaeaea;
         border-right: 1px solid #eaeaea;
         pointer-events: auto;
-        width: 340px;
+        width: 322px;
+        left: -322px;
+        right: auto;
+        box-shadow: 30px 0px 30px -30px rgba(0,0,0,0.2);
+    }
+
+    .win-right {
+        border-left: 1px solid #eaeaea;
+        border-right: 1px solid #eaeaea;
+        pointer-events: auto;
+        width: 342px;
+        right: -342px;
         left: auto;
         box-shadow: -30px 0px 30px -30px rgba(0,0,0,0.2);
     }
@@ -201,3 +285,60 @@ html, body, .wrapper {
         height: 100%;
     }
 
+    .win .win-body.menu-wrapper {
+        top: 0;
+    }
+
+        .win .win-body.menu-wrapper .win-content {
+            padding: 0;
+        }
+
+.win .menu-wrapper .menu {
+    margin: 23px 0 0 23px;
+    width: 280px;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+    .win .menu-wrapper .menu a {
+        font-size: 12px;
+        font-weight: 400;
+        width: 88px;
+        height: 88px;
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        text-decoration: none;
+        background: #f8f8f8;
+        margin: 0 5px 5px 0;
+    }
+
+        .win .menu-wrapper .menu a:hover {
+            background-color: #2055A4;
+            color: #fff;
+        }
+
+        .win .menu-wrapper .menu a i {
+            font-size: 36px;
+            padding-bottom: 10px;
+        }
+
+        .win .menu-wrapper .menu a span {
+            display: block;
+            color: #666666;
+        }
+
+        .win .menu-wrapper .menu a:hover span {
+            color: #fff;
+        }

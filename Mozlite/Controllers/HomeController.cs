@@ -39,6 +39,16 @@ namespace Mozlite.Controllers
             return View();
         }
 
+        public IActionResult RWin()
+        {
+            return View();
+        }
+
+        public IActionResult LWin()
+        {
+            return View();
+        }
+
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";

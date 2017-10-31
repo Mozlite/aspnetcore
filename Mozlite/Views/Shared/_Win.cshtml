@@ -1,0 +1,17 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="win-panel @ViewBag.Position">
+    <div class="win-title">
+        <span class="title">@ViewBag.Title</span>
+        <a href="javascript:;" class="close">
+            &times;
+        </a>
+    </div>
+    <div class="win-body">
+        <div class="win-content">
+            @RenderBody()
+        </div>
+    </div>
+</div>
