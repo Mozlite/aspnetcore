@@ -24,7 +24,7 @@
         <div class="header">
             <div class="leftbar">
                 <div _load="@Url.Action("LWin")" class="button">
-                    <i class="fa fa-dashboard"></i>
+                    <i class="glyphicon glyphicon-camera"></i>
                 </div>
                 <a href="~/" class="name"><span>Mozlite</span></a>
             </div>
@@ -40,11 +40,44 @@
         </div>
         <div class="main">
             <div class="main-inner">
-                <div class="menu-wrapper">
-                    
+                <div class="menu-wrapper" style="width:270px">
+                    <div class="menu-inner">
+                        <div class="menu-main">
+                            <div class="menu-toggle-button">
+                                <button type="button" title="隐藏导航窗格">
+                                    <i class="icon-bar"></i>
+                                    <i class="icon-bar"></i>
+                                    <i class="icon-bar"></i>
+                                </button>
+                            </div>
+                            <div class="menu-container">
+                                <div class="menu-top"></div>
+                                <div class="menu-bottom">
+                                    <a href="#">
+                                        <i class="fa fa-envelope-o"></i>
+                                    </a><a href="#">
+                                        <i class="fa fa-lock"></i>
+                                    </a><a href="#">
+                                        <i class="fa fa-key"></i>
+                                    </a><a href="#">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-menu-wrapper" style="width: 222px;">
+                            <div class="actionbar">
+                                <button type="button" _modal="@Url.Action("ModalTest")">
+                                    <i class="fa fa-plus"></i> 添加
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="splitter"></div>
-                <div class="body">@RenderBody()</div>
+                <div class="body">
+                    @RenderBody()
+                </div>
                 <div class="slider"></div>
             </div>
         </div>

@@ -11,6 +11,7 @@ html, body, .wrapper {
     height: 100%;
     margin: 0;
     padding: 0;
+    font-size: 14px;
     overflow: hidden;
 }
 
@@ -130,22 +131,21 @@ html, body, .wrapper {
     display: flex;
     align-items: stretch;
     flex: 1;
-    height: auto;
+    height: calc(100% - 48px);
     flex-flow: row nowrap;
 }
 
     .main .main-inner {
-        flex-flow: column;
         flex: 1;
         overflow: hidden;
         display: flex;
     }
 
         .main .main-inner .menu-wrapper {
-            width: 270px;
             display: flex;
             flex-flow: column;
             flex: 0 0 auto;
+            overflow: hidden;
         }
 
         .main .main-inner .splitter {
@@ -159,32 +159,208 @@ html, body, .wrapper {
             z-index: 2;
             -webkit-box-flex: 0;
             -ms-flex: 0 0 auto;
+            display: flex;
             flex: 0 0 auto;
         }
 
         .main .main-inner .body {
-            -webkit-box-flex: 1;
-            -ms-flex: 1 1 auto;
             flex: 1 1 auto;
             overflow: hidden;
-            display: -webkit-box;
-            display: -ms-flexbox;
             display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-flow: column;
             flex-flow: column;
         }
 
         .main .main-inner .slider {
             background-color: #f4f4f4;
             display: flex;
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 auto;
             flex: 0 0 auto;
             width: 165px;
             position: relative;
             overflow: hidden;
+        }
+
+    .main .menu-wrapper .menu-inner {
+        display: flex;
+        flex: 1 1 auto;
+        height: calc(100% - 40px);
+        flex-flow: row nowrap;
+    }
+
+    .main .menu-wrapper .menu-main {
+        background-color: #f4f4f4;
+        display: flex;
+        flex-flow: column nowrap;
+        width: 48px;
+        flex: 0 0 auto;
+    }
+
+        .main .menu-wrapper .menu-main .menu-toggle-button {
+            flex: 0 0 auto;
+            height: 40px;
+            width: 48px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+            .main .menu-wrapper .menu-main .menu-toggle-button button {
+                background-color: #f4f4f4;
+                color: #1A4382;
+                height: 100%;
+                width: 100%;
+                font-size: 14px;
+                font-weight: 400;
+                box-sizing: border-box;
+                display: inline-block;
+                text-align: center;
+                cursor: pointer;
+                vertical-align: top;
+                padding: 0 14px;
+                user-select: none;
+                outline: transparent;
+                border-width: 1px;
+                border-style: solid;
+                border-color: transparent;
+                border-image: initial;
+                text-decoration: none;
+            }
+
+                .main .menu-wrapper .menu-main .menu-toggle-button button .icon-bar {
+                    background: #1A4382;
+                    display: block;
+                    height: 1px;
+                    margin-bottom: 3px;
+                }
+
+        .main .menu-wrapper .menu-main .menu-container {
+            border-right: 1px solid #eaeaea;
+            display: flex;
+            flex-flow: column nowrap;
+            flex: 1 1 auto;
+        }
+
+            .main .menu-wrapper .menu-main .menu-container .menu-top {
+                width: 100%;
+                display: flex;
+                flex: 1 1 auto;
+            }
+
+            .main .menu-wrapper .menu-main .menu-container .menu-bottom {
+                width: 48px;
+                display: flex;
+                flex-flow: column nowrap;
+            }
+
+            .main .menu-wrapper .menu-main .menu-container a {
+                position: relative;
+                font-size: 20px;
+                font-weight: 100;
+                box-sizing: border-box;
+                display: inline-block;
+                text-align: center;
+                cursor: pointer;
+                vertical-align: top;
+                padding: 0 4px;
+                width: 32px;
+                height: 32px;
+                background-color: transparent;
+                user-select: none;
+                outline: transparent;
+                border: 1px solid transparent;
+                cursor: pointer;
+                text-decoration: none;
+                color: #666666;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 auto;
+                height: 48px;
+                width: 48px;
+                margin: auto;
+            }
+
+                .main .menu-wrapper .menu-main .menu-toggle-button button:hover,
+                .main .menu-wrapper .menu-main .menu-container a:hover,
+                .main .menu-wrapper .menu-main .menu-container a.active,
+                .main .actionbar button:hover,
+                .main .actionbar a.action:hover,
+                .main .actionbar a.action.active {
+                    background: #A7BCDA;
+                    color: #1A4382;
+                }
+
+    .main .menu-wrapper .sub-menu-wrapper {
+        background-color: #f4f4f4;
+        flex-flow: column nowrap;
+        flex: 1 1 auto;
+        display: flex;
+    }
+
+    .main .sub-menu-wrapper .actionbar {
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .main .actionbar button,
+    .main .actionbar a.action {
+        background-color: #f4f4f4;
+        color: #1A4382;
+        height: 39px;
+        line-height: 39px;
+        font-size: 14px;
+        font-weight: 400;
+        box-sizing: border-box;
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        vertical-align: top;
+        padding: 0 14px;
+        user-select: none;
+        outline: transparent;
+        text-decoration: none;
+    }
+
+        .main .actionbar button i,
+        .main .actionbar a.action i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+    .main .sub-menu-wrapper .actionbar button {
+        padding-left: 18px;
+    }
+
+    .main .actionbar button[disabled],
+    .main .actionbar a.action.disabled {
+        color: #c8c8c8;
+        cursor: default;
+        pointer-events: none;
+    }
+        .main .actionbar button[disabled]:hover,
+        .main .actionbar a.action.disabled:hover {
+            background: #A7BCDA;
+        }
+
+    .main .body .toolbar {
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #eaeaea;
+        height: 40px;
+        display: flex;
+    }
+
+        .main .body .toolbar .leftbar {
+            margin: 0 8px;
+            overflow: hidden;
+            display: flex;
+            flex: 1 1 auto;
+            vertical-align: top;
+            line-height: 40px;
+            max-width: 100%;
+        }
+
+        .main .body .toolbar .rightbar {
+            padding-right: 10px;
+            text-align: right;
+            display: flex;
+            flex: 0 0 auto;
+            right: 0;
         }
 
 .win {

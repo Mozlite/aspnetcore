@@ -42,5 +42,14 @@
     });
 });
 $(document).ready(function () {
-
+    if (!window.menuWidth) window.menuWidth = $('.menu-wrapper').width();
+    $('.menu-toggle-button').click(function () {
+        if ($(this).toggleClass('closed').hasClass('closed')) {
+            $('.sub-menu-wrapper').hide();
+            $('.menu-wrapper').width(48);
+        } else {
+            $('.sub-menu-wrapper').width(menuWidth - 48).show();
+            $('.menu-wrapper').width(menuWidth);
+        }
+    });
 });

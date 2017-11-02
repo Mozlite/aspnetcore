@@ -2,9 +2,16 @@
     ViewBag.Title = "首页";
 }
 
-<div style="margin: 70px 20px;">
-    <button type="button" _modal="@Url.Action("ModalTest")">弹窗</button>
-    <button type="button" onclick="$alert('这里是警告信息，也可以是成功信息！');">警告</button> 
+<div class="actionbar">
+    <div class="toolbar">
+        <div class="leftbar">
+            <a href="#" class="action"><i class="glyphicon glyphicon-trash"></i> 编辑</a>
+            <button><i class="fa fa-trash"></i> 删除</button>
+        </div>
+        <div class="rightbar">
+            <button onclick="$alert('这里是警告信息，也可以是成功信息！');"><i class="fa fa-warning"></i></button>
+        </div>
+    </div>
 </div>
 
 <div>

@@ -1,5 +1,7 @@
 ﻿(function ($) {
     var debug = true;
+    window.IE = !!window.ActiveXObject || 'ActiveXObject' in window;
+    window.Moblie = /(iPhone|iPod|Android|ios|SymbianOS)/i.test(navigator.userAgent);
     window['mozlite-ready-functions'] = [];
     window.$onready = function (func) {
         ///<summary>当前文档或弹窗完成时候执行的方法。</summary>
@@ -346,6 +348,12 @@
         ///<param name="fmt" type="String">格式化字符串：yyyy-MM-dd HH:mm:ss</param>
         var date = new Date(this.replace('T', ' '));
         return date.toFormatString(fmt || 'yyyy-MM-dd hh:mm:ss');
+    };
+    String.prototype.randomSuffix = function () {
+        ///<summary>添加随机码。</summary>
+        if (this.indexOf('?') === -1)
+            return this + '?_=' + (+new Date);
+        return this + '&_=' + (+new Date);
     };
 })(jQuery);
 $(document).ready(function () {
