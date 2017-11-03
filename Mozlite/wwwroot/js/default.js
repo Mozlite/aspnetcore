@@ -52,4 +52,17 @@ $(document).ready(function () {
             $('.menu-wrapper').width(menuWidth);
         }
     });
+    $('.sub-menu-tree-header').click(function () {
+        if ($(this).parent().toggleClass('closed').hasClass('closed')) {
+            $(this).find('i.fa').removeClass('fa-angle-down').addClass('fa-angle-right');
+        } else {
+            $(this).find('i.fa').addClass('fa-angle-down').removeClass('fa-angle-right');
+        }
+    });
+    $('.sub-menu-item-new .text').click(function() {
+        $(this).hide().parent().find('input').show().focus();
+    });
+    $('.sub-menu-item-new input').blur(function() {
+        $(this).hide().parent().find('.text').show();
+    });
 });

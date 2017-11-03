@@ -24,6 +24,11 @@ html, body, .wrapper {
     border: none;
 }
 
+.unselection {
+    user-select: none;
+    cursor: default;
+}
+
 .header {
     width: 100%;
     height: 48px;
@@ -33,9 +38,6 @@ html, body, .wrapper {
     position: relative;
     z-index: 0;
     font-weight: 400;
-    -webkit-flex: 0 0 auto;
-    -ms-flex: 0 0 auto;
-    -o-flex: 0 0 auto;
     flex: 0 0 auto;
     margin-right: 0;
 }
@@ -298,6 +300,173 @@ html, body, .wrapper {
         border-bottom: 1px solid #eaeaea;
     }
 
+    .main .sub-menu-wrapper .sub-menu-container {
+        font-size: 14px;
+        font-weight: 400;
+        font-weight: 300;
+        color: #333333;
+        flex: 1 1 auto;
+        overflow: hidden;
+        overflow-y: auto;
+        position: relative;
+        background: #f4f4f4;
+        padding-bottom: 20px;
+        border-right: 1px solid #eaeaea;
+    }
+
+    .main .sub-menu-wrapper .sub-menu-tree {
+        padding-top: 8px;
+        width: 100%;
+    }
+
+        .main .sub-menu-wrapper .sub-menu-tree.closed .sub-menu-tree-body {
+            display: none;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree .sub-menu-tree-header {
+            padding-left: 6px;
+            padding-bottom: 3px;
+            padding-right: 28px;
+            height: 48px;
+            width: 100%;
+            display: flex;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            cursor: pointer;
+            align-items: center;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree button {
+            font-size: 16px;
+            font-weight: 400;
+            margin: 0 2px;
+            width: 32px;
+            height: 32px;
+            background-color: transparent;
+            user-select: none;
+            outline: transparent;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree .sub-menu-tree-header .text {
+            flex: 1 1 auto;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333333;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree .sub-menu-tree-header button i {
+            color: #666666;
+            font-size: 24px;
+        }
+
+    .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item {
+        padding-left: 6px;
+        padding-right: 28px;
+        height: 36px;
+        width: 100%;
+        display: flex;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        cursor: pointer;
+        align-items: center;
+    }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item:hover {
+            background-color: #eaeaea;
+            color: #000;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item > i {
+            width: 36px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            font-size: 14px;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .text {
+            flex: 1 1 auto;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 400;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .sub-menu-item-badge {
+            padding-left: 5px;
+            background-color: transparent;
+            flex: 0 0 auto;
+        }
+
+            .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .sub-menu-item-badge .sub-menu-item-badge-container {
+                padding-left: 5px;
+                color: #1A4382;
+                font-weight: 500;
+            }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item:hover .sub-menu-item-badge {
+            display: none;
+        }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .sub-menu-item-action {
+            display: none;
+            padding-left: 5px;
+            background-color: transparent;
+        }
+
+            .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .sub-menu-item-action i {
+                font-size: 16px;
+                margin-top: -4px;
+                margin-right: -6px;
+                margin-bottom: 0px;
+                margin-left: 16px;
+                height: 16px;
+                line-height: 16px;
+                text-align: center;
+                vertical-align: middle;
+                color: rgb(26, 67, 130);
+            }
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item:hover .sub-menu-item-action {
+            display: block;
+        }
+
+
+        .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item.active {
+            background-color: #A7BCDA !important;
+            color: #1A4382;
+        }
+
+            .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item.active .text {
+                font-weight: 600;
+            }
+
+    .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item-new .text {
+        margin-left: 42px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #1A4382;
+        cursor: pointer;
+    }
+
+    .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item-new input {
+        margin-left: 42px;
+        outline: none;
+        border: #1A4382 1px solid;
+        width: calc(100% - 42px);
+        padding: 5px;
+        display: none;
+    }
+
     .main .actionbar button,
     .main .actionbar a.action {
         background-color: #f4f4f4;
@@ -333,6 +502,7 @@ html, body, .wrapper {
         cursor: default;
         pointer-events: none;
     }
+
         .main .actionbar button[disabled]:hover,
         .main .actionbar a.action.disabled:hover {
             background: #A7BCDA;
@@ -362,6 +532,42 @@ html, body, .wrapper {
             flex: 0 0 auto;
             right: 0;
         }
+
+    .main .body .content-wrapper {
+        background-color: #fff;
+        flex-flow: row nowrap;
+        flex: 1 1 auto;
+        width: 100%;
+        height: calc(100% - 40px);
+        display: flex;
+        align-items: stretch;
+    }
+
+        .main .body .content-wrapper .content-container {
+            border-right: 1px solid #eaeaea;
+            width: 100%;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 auto;
+        }
+
+            .main .body .content-wrapper .content-container .filterbar {
+                padding-right: 24px;
+                border-bottom: 1px solid #eaeaea;
+                display: flex;
+                flex-flow: column nowrap;
+                overflow: hidden;
+                flex: 0 0 auto;
+            }
+
+                .main .body .content-wrapper .content-container .filterbar .actionbar {
+                    padding: 12px 0 8px;
+                    display: flex;
+                    align-items: baseline;
+                    height: 36px;
+                    flex: 0 0 auto;
+                }
 
 .win {
     z-index: 1030;
