@@ -17,15 +17,104 @@
 <div class="content-wrapper">
     <div class="content-container">
         <div class="filterbar">
+            <div class="checkbox-all"><moz:checkbox istyle="Check" class="circle"></moz:checkbox></div>
             <div class="actionbar">
-                <input type="text" class="search"/>
+                <label>选择框：</label>
+                <select class="form-control" style="width: 100px;">
+                    <option>测试一</option>
+                    <option>测试二</option>
+                    <option>测试三</option>
+                </select>
+                <label>标题：</label>
+                <div class="input-group" style="width: 200px;">
+                    <input type="text" class="form-control" />
+                    <div class="input-group-btn">
+                        <button type="button"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="filter dropdown">
+                <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span>筛选器</span>
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <ul class="filter-items">
+                        <li><a class="filter-item active" href="#"><i class="fa fa-check"></i> 过滤菜单一</a></li>
+                        <li><a class="filter-item" href="#"><i class="fa fa-check"></i> 过滤菜单一</a></li>
+                        <li><a class="filter-item" href="#"><i class="fa fa-check"></i> 过滤菜单一</a></li>
+                        <li><a class="filter-item" href="#"><i class="fa fa-check"></i> 过滤菜单一</a></li>
+                        <li class="seperator"><a class="filter-item" href="#"><i class="fa fa-check"></i> 过滤菜单一</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <moz:rolecheckboxlist class="box20"></moz:rolecheckboxlist>
+        <div class="data-container">
+            <div class="data-view customScrollBar">
+                <div class="datalist hover">
+                    <div class="data-head">
+                        10月
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-col">
+                            我说的肯定没有错，即使错了也是对的
+                            <div class="actionbar">
+                                <i class="fa fa-trash" title="删除"></i>
+                                <i class="fa fa-pencil" title="编辑"></i>
+                            </div>
+                        </div>
+                        <div class="data-date">2017-12-23</div>
+                    </div>
+                    <div class="data-row head-blue">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-head">
+                        11月
+                    </div>
+                    <div class="data-row head-blue">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts
-{
-    
+    {
+
 }

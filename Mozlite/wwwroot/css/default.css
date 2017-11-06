@@ -44,6 +44,7 @@ body {
     width: 100%;
     min-width: 1008px;
     height: 100%;
+    color: #333333;
     background-color: #fff;
     overflow-y: hidden;
     overflow-x: auto;
@@ -235,17 +236,22 @@ body {
         min-width: 50px
     }
 
-html, body, .wrapper {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    overflow: hidden;
+.customScrollBar.overlay {
+    overflow: hidden !important;
 }
+
+    .customScrollBar.overlay:hover {
+        overflow: overlay !important;
+    }
 
 .modal-backdrop.in {
     opacity: 0.1;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ccc;
 }
 
 .modal-content {
@@ -780,22 +786,280 @@ html, body, .wrapper {
         }
 
             .main .body .content-wrapper .content-container .filterbar {
-                padding-right: 24px;
+                padding: 10px 24px 10px 0;
                 border-bottom: 1px solid #eaeaea;
                 display: flex;
-                flex-flow: column nowrap;
-                overflow: hidden;
                 flex: 0 0 auto;
                 height: 56px;
             }
 
                 .main .body .content-wrapper .content-container .filterbar .actionbar {
-                    margin: 12px 0 8px;
                     display: flex;
-                    align-items: baseline;
-                    height: 36px;
-                    flex: 0 0 auto;
+                    flex-flow: row nowrap;
+                    overflow: hidden;
+                    align-items: center;
+                    flex: 1 1 auto;
                 }
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar label {
+                        margin-left: 15px;
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar select option {
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar .form-control,
+                    .main .body .content-wrapper .content-container .filterbar .actionbar button {
+                        height: 28px;
+                        line-height: 28px;
+                        box-shadow: none;
+                        padding: 0 6px;
+                        border-color: #eaeaea;
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar button {
+                        padding: 0 10px;
+                        border: 1px solid #eaeaea;
+                        border-radius: 4px;
+                    }
+
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar .input-group button:last-child {
+                        border-left: none;
+                        border-top-left-radius: 0;
+                        border-bottom-left-radius: 0;
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar button i {
+                        font-size: 14px;
+                        margin: 0;
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .actionbar .input-group-addon {
+                        border-color: #eaeaea;
+                        color: #999999;
+                    }
+
+                .main .body .content-wrapper .content-container .filterbar .filter {
+                    cursor: pointer;
+                    font-size: 14px;
+                    color: #2055A4;
+                    font-weight: 600;
+                    display: flex;
+                    flex-flow: row nowrap;
+                    align-items: baseline;
+                    flex: 0 0 auto;
+                    padding-top: 5px;
+                }
+
+                    .main .body .content-wrapper .content-container .filterbar .filter .dropdown-menu {
+                        padding: 0;
+                        box-sizing: border-box;
+                        border: 1px solid #eaeaea;
+                        box-shadow: 0 0 5px 0px rgba(0,0,0,0.4);
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .filter button {
+                        background: transparent;
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .filter i {
+                        font-size: 20px;
+                        margin-left: 5px;
+                    }
+
+                    .main .body .content-wrapper .content-container .filterbar .filter .filter-items {
+                        list-style-type: none;
+                        margin: 0;
+                        padding: 0;
+                        line-height: 0;
+                    }
+
+                        .main .body .content-wrapper .content-container .filterbar .filter .filter-items li {
+                            font-size: 14px;
+                            font-weight: 400;
+                            color: #333333;
+                            position: relative;
+                            -webkit-box-sizing: border-box;
+                            box-sizing: border-box;
+                        }
+
+                            .main .body .content-wrapper .content-container .filterbar .filter .filter-items li.seperator {
+                                border-top: 1px solid #dddddd;
+                            }
+
+                        .main .body .content-wrapper .content-container .filterbar .filter .filter-items .filter-item {
+                            text-decoration: none;
+                            color: #333333;
+                            position: relative;
+                            display: block;
+                            width: 100%;
+                            height: 32px;
+                            line-height: 32px;
+                            cursor: pointer;
+                            padding: 0px 6px;
+                        }
+
+                            .main .body .content-wrapper .content-container .filterbar .filter .filter-items .filter-item:hover {
+                                background: #f4f4f4;
+                            }
+
+                            .main .body .content-wrapper .content-container .filterbar .filter .filter-items .filter-item i {
+                                font-size: 14px;
+                                color: #333333;
+                                margin-right: 5px;
+                                visibility: hidden;
+                            }
+
+                            .main .body .content-wrapper .content-container .filterbar .filter .filter-items .filter-item.active i {
+                                visibility: visible;
+                            }
+
+                .main .body .content-wrapper .content-container .filterbar .checkbox-all {
+                    margin-left: 32px;
+                    align-self: center;
+                    align-items: center;
+                    display: flex;
+                    justify-content: center;
+                    width: 28px;
+                    height: 28px;
+                    cursor: pointer;
+                    flex: 0 0 auto;
+                    padding-top: 10px;
+                }
+
+                .main .body .content-wrapper .content-container .filterbar:hover .checkbox-all {
+                    visibility: visible;
+                }
+
+        .main .body .content-wrapper .data-container {
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            flex: 1 1 auto;
+        }
+
+            .main .body .content-wrapper .data-container .data-view {
+                overflow-y: auto;
+                overflow-x: hidden;
+                flex: 1 1 auto;
+            }
+
+        .main .body .content-wrapper .data-view .datalist {
+            background-color: #eaeaea;
+            width: 100%;
+            overflow: visible;
+        }
+
+            .main .body .content-wrapper .data-view .datalist.hover .data-row:hover {
+                background-color: #eaeaea;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-row {
+                margin-bottom: 1px;
+                padding-right: 24px;
+                cursor: default;
+                height: 40px;
+                line-height: 40px;
+                background: #fff;
+                display: flex;
+                flex: 1 1 auto;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-head {
+                background-color: #f8f8f8;
+                cursor: default;
+                height: 40px;
+                line-height: 40px;
+                display: flex;
+                flex-flow: row nowrap;
+                overflow: hidden;
+                flex: 1 1 auto;
+                font-size: 14px;
+                font-weight: 600;
+                color: #333333;
+                padding-left: 12px;
+                margin-bottom: 1px;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox {
+                margin-left: 32px;
+                margin-right: 10px;
+                align-self: center;
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                width: 28px;
+                height: 28px;
+                cursor: pointer;
+                flex: 0 0 auto;
+            }
+
+                .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox .moz-checkbox {
+                    margin: 0;
+                }
+
+            .main .body .content-wrapper .data-view .datalist .data-row.head-blue {
+                border-left: 4px solid #2055A4;
+            }
+
+                .main .body .content-wrapper .data-view .datalist .data-row.head-blue .data-checkbox {
+                    margin-left: 28px;
+                }
+
+            .main .body .content-wrapper .data-view .datalist .data-row .data-col,
+            .main .body .content-wrapper .data-view .datalist .data-row .data-date {
+                display: flex;
+                position: relative;
+                flex: 1 1 auto;
+                box-sizing: border-box;
+                align-items: center;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-row .data-date {
+                flex: 0 0 auto;
+                padding-left: 15px;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-row .actionbar {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                top: 0;
+                right: 0;
+                display: none;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-row:hover .actionbar {
+                display: block;
+            }
+
+            .main .body .content-wrapper .data-view .datalist .data-row .actionbar i {
+                padding-left: 4px;
+                color: #666666;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+                .main .body .content-wrapper .data-view .datalist .data-row .actionbar i:hover {
+                    color: #212121;
+                }
+
+        .main .body .content-wrapper .data-view .data-col.w100 {
+            flex: 0 0 100px;
+            max-width: 100px;
+        }
+
+        .main .body .content-wrapper .data-view .data-col.w200 {
+            flex: 0 0 200px;
+            max-width: 200px;
+        }
+
+        .main .body .content-wrapper .data-view .data-col.w300 {
+            flex: 0 0 300px;
+            max-width: 300px;
+        }
 
 .win {
     z-index: 1030;

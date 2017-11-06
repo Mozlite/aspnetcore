@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Mozlite.Mvc.TagHelpers.Bootstrap
@@ -51,8 +50,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             }
             var builder = new TagBuilder("div");
             builder.AddCssClass("moz-checkboxlist");
-            output.TagName = builder.TagName;
-            output.MergeAttributes(builder);
+            output.SetTag(builder);
         }
 
         /// <summary>
