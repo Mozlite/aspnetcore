@@ -963,6 +963,7 @@ body {
                 cursor: default;
                 height: 40px;
                 line-height: 40px;
+                font-size: 14px;
                 background: #fff;
                 display: flex;
                 flex: 1 1 auto;
@@ -1020,6 +1021,8 @@ body {
 
             .main .body .content-wrapper .data-view .datalist .data-row .data-date {
                 flex: 0 0 auto;
+                font-size: 12px;
+                color: #666666;
                 padding-left: 15px;
             }
 
