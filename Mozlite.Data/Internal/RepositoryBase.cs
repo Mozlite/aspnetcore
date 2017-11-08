@@ -206,7 +206,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回是否更新成功。</returns>
         public virtual bool Update(Expression<Predicate<TModel>> expression, object statement)
         {
-            var sql = SqlGenerator.Update(EntityType, expression, expression);
+            var sql = SqlGenerator.Update(EntityType, expression, statement);
             return ExecuteNonQuery(sql, sql.Parameters);
         }
 
@@ -227,7 +227,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回是否更新成功。</returns>
         public virtual async Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, object statement, CancellationToken cancellationToken = default)
         {
-            var sql = SqlGenerator.Update(EntityType, expression, expression);
+            var sql = SqlGenerator.Update(EntityType, expression, statement);
             return await ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
         }
 

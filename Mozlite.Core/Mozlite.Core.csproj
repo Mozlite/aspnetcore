@@ -14,7 +14,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+      <HintPath>C:\Users\ztang\.nuget\packages\microsoft.extensions.hosting.abstractions\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

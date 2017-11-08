@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Tasks;
 
 namespace Mozlite.Extensions.Tasks
 {
     /// <summary>
     /// 后台服务。
     /// </summary>
-    public class ServiceTaskStarter : ITaskStarter
+    public class ServiceTaskExecutor : ITaskExecutor
     {
         private readonly Dictionary<string, ITaskService> _services;
         private readonly ITaskManager _taskManager;
         private readonly IMemoryCache _cache;
 
         /// <summary>
-        /// 初始化<see cref="ServiceTaskStarter"/>。
+        /// 初始化<see cref="ServiceTaskExecutor"/>。
         /// </summary>
         /// <param name="services">后台服务列表。</param>
         /// <param name="taskManager">后台服务管理。</param>
         /// <param name="cache">缓存接口。</param>
-        public ServiceTaskStarter(IEnumerable<ITaskService> services, ITaskManager taskManager, IMemoryCache cache)
+        public ServiceTaskExecutor(IEnumerable<ITaskService> services, ITaskManager taskManager, IMemoryCache cache)
         {
             _services = services.ToDictionary(x => x.GetType().DisplayName(), StringComparer.OrdinalIgnoreCase);
             _taskManager = taskManager;
@@ -30,7 +32,7 @@ namespace Mozlite.Extensions.Tasks
 
         private async Task<IEnumerable<TaskContext>> LoadContextsAsync()
         {
-            return await _cache.GetOrCreateAsync(typeof(ServiceTaskStarter), async ctx =>
+            return await _cache.GetOrCreateAsync(typeof(ServiceTaskExecutor), async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(5));//五分钟重新获取一次数据库配置
                 var contexts = new List<TaskContext>();
@@ -63,10 +65,10 @@ namespace Mozlite.Extensions.Tasks
         /// 执行的后台任务方法。
         /// </summary>
         /// <returns>返回任务实例。</returns>
-        public async Task RunAsync()
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await _taskManager.EnsuredTaskServicesAsync(_services.Values);
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
@@ -86,23 +88,28 @@ namespace Mozlite.Extensions.Tasks
                                     await context.ExecuteAsync(context.Argument);
                                     context.LastExecuted = DateTime.Now;
                                     context.NextExecuting = context.Interval.Next();
-                                    await _taskManager.SetExecuteDateAsync(context.Id, context.NextExecuting, context.LastExecuted.Value);
+                                    await _taskManager.SetExecuteDateAsync(context.Id, context.NextExecuting,
+                                        // ReSharper disable once PossibleInvalidOperationException
+                                        context.LastExecuted.Value);
                                     context.IsRunning = false;
-                                });
+                                }, cancellationToken);
                             }
                         }
                         catch (Exception ex)
                         {
                             _taskManager.LogError(context.Name, ex);
                         }
-                        await Task.Delay(TimeSpan.FromSeconds(1));
+                        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                     }
                 }
                 catch (Exception ex)
                 {
                     _taskManager.LogError(null, ex);
                 }
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                finally
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+                }
             }
         }
     }
