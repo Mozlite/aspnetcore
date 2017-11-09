@@ -5,7 +5,7 @@
 <div class="actionbar">
     <div class="toolbar">
         <div class="leftbar">
-            <a href="#" class="action"><i class="glyphicon glyphicon-trash"></i> 编辑</a>
+            <a href="javascript:;" onclick="$alert($('.data-view').checkedVal());" class="action"><i class="fa fa-check"></i> 选中值</a>
             <button><i class="fa fa-trash"></i> 删除</button>
         </div>
         <div class="rightbar">
@@ -17,7 +17,7 @@
 <div class="content-wrapper">
     <div class="content-container">
         <div class="filterbar">
-            <div class="checkbox-all"><moz:checkbox istyle="Check" class="circle"></moz:checkbox></div>
+            <div class="checkbox-all"><moz:checkbox></moz:checkbox></div>
             <div class="actionbar">
                 <label>选择框：</label>
                 <select class="form-control" style="width: 100px;">
@@ -56,7 +56,7 @@
                         10月
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                         <div class="data-col">
                             我说的肯定没有错，即使错了也是对的
                             <div class="actionbar">
@@ -67,46 +67,54 @@
                         <div class="data-date">2017-12-23</div>
                     </div>
                     <div class="data-row head-blue">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox value="1"></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox value="2"></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-head">
                         11月
                     </div>
                     <div class="data-row head-blue">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
                     </div>
                     <div class="data-row">
-                        <div class="data-checkbox"><moz:checkbox class="circle"></moz:checkbox></div>
+                        <div class="data-checkbox"><moz:checkbox></moz:checkbox></div>
+                        <div class="data-col">
+                            这个是最后一行
+                            <div class="actionbar">
+                                <i class="fa fa-trash" title="删除"></i>
+                                <i class="fa fa-pencil" title="编辑"></i>
+                            </div>
+                        </div>
+                        <div class="data-date">2017-12-23</div>
                     </div>
                 </div>
             </div>
@@ -114,6 +122,17 @@
     </div>
 </div>
 
+<div class="actionbar">
+    <div class="toolbar">
+        <div class="leftbar">
+            <a href="#" class="action"><i class="glyphicon glyphicon-trash"></i> 编辑</a>
+            <button><i class="fa fa-trash"></i> 删除</button>
+        </div>
+        <div class="rightbar">
+            <button onclick="$alert('这里是警告信息，也可以是成功信息！');"><i class="fa fa-warning"></i></button>
+        </div>
+    </div>
+</div>
 @section Scripts
     {
 

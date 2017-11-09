@@ -19,6 +19,10 @@ namespace Mozlite.Controllers
             _repository = repository;
         }
 
+        public IActionResult Edit()
+        {
+            return View();
+        }
 
         public IActionResult Index()
         {

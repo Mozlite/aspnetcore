@@ -67,8 +67,8 @@
                         </div>
                         <div class="sub-menu-wrapper" style="width: 222px;">
                             <div class="actionbar">
-                                <button type="button" _modal="@Url.Action("ModalTest")">
-                                    <i class="fa fa-plus"></i> 添加
+                                <button type="button" _href="@Url.Action("Edit", "Home", new{area=""})">
+                                    <i class="fa fa-plus"></i> 添加文章
                                 </button>
                             </div>
                             <div class="sub-menu-container disableTextSelection customScrollBar overlay">
@@ -103,7 +103,7 @@
                                                     <i class="fa fa-pencil"></i>
                                                     <span class="text">草稿箱</span>
                                                     <span class="sub-menu-item-badge">
-                                                        <span class="sub-menu-item-badge-container">  
+                                                        <span class="sub-menu-item-badge-container">
                                                             5
                                                             <span class="sr-only">未读</span>
                                                         </span>
@@ -240,7 +240,7 @@
                                             </div>
                                             <div class="sub-menu-item-new">
                                                 <div class="text">新建文件夹</div>
-                                                <input name="sub" type="text"/>
+                                                <input name="sub" type="text" />
                                             </div>
                                         </div>
                                     </div>

@@ -17,6 +17,12 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         public string Name { get; set; }
 
         /// <summary>
+        /// 当前值。
+        /// </summary>
+        [HtmlAttributeName("value")]
+        public string Value { get; set; }
+
+        /// <summary>
         /// 每项样式类型。
         /// </summary>
         [HtmlAttributeName("iclass")]
@@ -52,8 +58,9 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
 
             var input = new TagBuilder("input");
             input.MergeAttribute("type", "checkbox");
-            input.MergeAttribute("name", Name);
-            input.MergeAttribute("value", "true");
+            if (!string.IsNullOrEmpty(Name))
+                input.MergeAttribute("name", Name);
+            input.MergeAttribute("value", Value ?? "true");
             if (IsChecked)
                 input.MergeAttribute("checked", "checked");
             wrapper.InnerHtml.AppendHtml(input);

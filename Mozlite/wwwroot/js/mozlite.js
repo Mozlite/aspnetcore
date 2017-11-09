@@ -8,6 +8,14 @@
         ///<param name="func" type="Function">方法。</param>
         window['mozlite-ready-functions'].push(func);
     };
+    $.fn.checkedVal = function () {
+        var values = [];
+        this.find('input[type=checkbox], input[type=radio]').each(function () {
+            if (this.checked)
+                values.push(this.value);
+        });
+        return values.join(',');
+    };
     $.fn.dset = function (key, func) {
         ///<summary>获取对象的缓存数据。</summary>
         ///<param name="key" type="String">缓存键。</param>
@@ -51,12 +59,13 @@
         if (value) return this.attr('js-' + name, value);
         return this.attr('js-' + name);
     };
-    $.fn.targetElement = function () {
+    $.fn.targetElement = function (def) {
         ///<summary>返回当前元素内js-target属性指示的元素对象，如果不存在就为当前实例对象。</summary>
+        ///<param name="def" type="Object">没找到对象默认对象，没设置表示当前对象。</param>
         var target = $(this.js('target'));
         if (target.length > 0)
             return target;
-        return this;
+        return def || this;
     };
     $.fn.formSubmit = function (success, error) {
         ///<summary>提交表单。</summary>

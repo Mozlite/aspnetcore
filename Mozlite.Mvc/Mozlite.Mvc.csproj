@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Themes\" />
   </ItemGroup>
 
 </Project>

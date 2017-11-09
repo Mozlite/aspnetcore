@@ -46,8 +46,7 @@ body {
     height: 100%;
     color: #333333;
     background-color: #fff;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: hidden;
     position: absolute !important;
     font-family: "Segoe UI Web (West European)",Segoe UI,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
     -webkit-scrollbar-base-color: #fff;
@@ -807,9 +806,6 @@ body {
                         margin-left: 15px;
                     }
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar select option {
-                    }
-
                     .main .body .content-wrapper .content-container .filterbar .actionbar .form-control,
                     .main .body .content-wrapper .content-container .filterbar .actionbar button {
                         height: 28px;
@@ -1065,6 +1061,56 @@ body {
             flex: 0 0 300px;
             max-width: 300px;
         }
+
+.filterbar .moz-checkbox .box-wrapper,
+.filterbar .moz-radioboxlist .moz-radiobox .box-wrapper,
+.filterbar .moz-checkbox .box-wrapper .box-checked,
+.filterbar .moz-radioboxlist .moz-radiobox .box-wrapper .box-checked,
+.data-view .moz-checkbox .box-wrapper,
+.data-view .moz-radioboxlist .moz-radiobox .box-wrapper,
+.data-view .moz-checkbox .box-wrapper .box-checked,
+.data-view .moz-radioboxlist .moz-radiobox .box-wrapper .box-checked {
+    border-radius: 50%;
+}
+
+.filterbar .moz-checkbox.checked .box-wrapper .box-checked:before,
+.filterbar .moz-radioboxlist .moz-radiobox.checked .box-wrapper .box-checked:before,
+.data-view .moz-checkbox.checked .box-wrapper .box-checked:before,
+.data-view .moz-radioboxlist .moz-radiobox.checked .box-wrapper .box-checked:before {
+    content: '\f00c';
+    color: #fff;
+}
+
+.filterbar .moz-checkbox.checked .box-wrapper .box-checked,
+.filterbar .moz-radioboxlist .moz-radiobox.checked .box-wrapper .box-checked,
+.data-view .moz-checkbox.checked .box-wrapper .box-checked,
+.data-view .moz-radioboxlist .moz-radiobox.checked .box-wrapper .box-checked {
+    background: transparent;
+}
+
+.main .body .content-wrapper .data-view .datalist .data-row.active:hover,
+.main .body .content-wrapper .data-view .datalist .data-row.active {
+    background-color: #A7BCDA;
+}
+
+.filterbar .moz-checkbox.checked .box-wrapper,
+.filterbar .moz-radioboxlist .moz-radiobox.checked .box-wrapper,
+.data-view .data-row.active .moz-checkbox.checked .box-wrapper,
+.data-view .data-row.active .moz-radioboxlist .moz-radiobox.checked .box-wrapper {
+    border-color: #fff;
+    background: #2055a4;
+}
+
+.main .body .content-wrapper .text-field {
+    font-size: 14px;
+    font-weight: 400;
+    width: 100%;
+    height: auto;
+    outline: none;
+    box-sizing: border-box;
+    border: none;
+    margin-bottom: 0;
+}
 
 .win {
     z-index: 1030;
