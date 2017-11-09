@@ -1101,7 +1101,7 @@ body {
     background: #2055a4;
 }
 
-.main .body .content-wrapper .text-field {
+.main .body .content-wrapper form .form-group {
     font-size: 14px;
     font-weight: 400;
     width: 100%;
@@ -1109,8 +1109,27 @@ body {
     outline: none;
     box-sizing: border-box;
     border: none;
-    margin-bottom: 0;
+    padding: 10px 0 11px;
+    border-bottom: solid 1px #eaeaea;
+    display: flex;
+    margin: 0;
 }
+
+    .main .body .content-wrapper form .form-group label {
+        display: flex;
+        flex: 0 0 auto;
+        height: 34px;
+        padding: 6px 0 6px 15px;
+        font-size: 16px;
+    }
+
+    .main .body .content-wrapper form .form-group .form-control {
+        display: flex;
+        flex: 1 1 auto;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
 
 .win {
     z-index: 1030;
