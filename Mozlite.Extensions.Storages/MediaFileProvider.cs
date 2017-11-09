@@ -16,10 +16,14 @@ namespace Mozlite.Extensions.Storages
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
         private readonly string _media;
         private readonly string _temp;
-        protected MediaFileProvider(IStorageDirectory directoryProvider)
+        /// <summary>
+        /// 初始化类<see cref="MediaFileProvider"/>。
+        /// </summary>
+        /// <param name="directory">存储文件夹。</param>
+        protected MediaFileProvider(IStorageDirectory directory)
         {
             //媒体文件夹。
-            _media = directoryProvider.MapPath("media");
+            _media = directory.MapPath("media");
             //临时文件夹。
             _temp = Path.Combine(_media, "temp");
             if (!Directory.Exists(_temp))
