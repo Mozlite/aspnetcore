@@ -23,11 +23,10 @@ namespace Mozlite.Extensions.Storages
         /// <summary>
         /// 访问媒体文件。
         /// </summary>
-        /// <param name="type">媒体类型。</param>
         /// <param name="name">文件名称。</param>
         /// <returns>返回文件结果。</returns>
-        [Route("{type}-medias/{name}")]
-        public async Task<IActionResult> Index(string type, string name)
+        [Route("s-media/{name}")]
+        public async Task<IActionResult> Index(string name)
         {
             name = Path.GetFileNameWithoutExtension(name);
             if (!Guid.TryParse(name, out var id))
@@ -41,11 +40,10 @@ namespace Mozlite.Extensions.Storages
         /// <summary>
         /// 访问媒体文件。
         /// </summary>
-        /// <param name="type">媒体类型。</param>
         /// <param name="name">文件名称。</param>
         /// <returns>返回文件结果。</returns>
-        [Route("{type}-attachments/{name}")]
-        public async Task<IActionResult> Attachment(string type, string name)
+        [Route("s-download/{name}")]
+        public async Task<IActionResult> Attachment(string name)
         {
             name = Path.GetFileNameWithoutExtension(name);
             if (!Guid.TryParse(name, out var id))

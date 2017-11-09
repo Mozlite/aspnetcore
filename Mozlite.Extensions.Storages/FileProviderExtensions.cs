@@ -4,9 +4,17 @@ using System.Security.Cryptography;
 
 namespace Mozlite.Extensions.Storages
 {
-    internal class StorageHelper
+    /// <summary>
+    /// 扩展类。
+    /// </summary>
+    public static class FileProviderExtensions
     {
-        public static string Hashed(FileInfo info)
+        /// <summary>
+        /// 计算文件的哈希值。
+        /// </summary>
+        /// <param name="info">文件信息实例。</param>
+        /// <returns>返回文件的哈希值。</returns>
+        public static string ComputeHash(this FileInfo info)
         {
             using (var fs = new FileStream(info.FullName, FileMode.Open, FileAccess.Read))
             {
@@ -14,14 +22,7 @@ namespace Mozlite.Extensions.Storages
                 return md5.ComputeHash(fs).ToHexString();
             }
         }
-    }
 
-
-    /// <summary>
-    /// 扩展类。
-    /// </summary>
-    public static class FileProviderExtensions
-    {
         /// <summary>
         /// 判断是否为本地媒体文件路径。
         /// </summary>

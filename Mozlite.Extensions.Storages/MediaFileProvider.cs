@@ -16,10 +16,10 @@ namespace Mozlite.Extensions.Storages
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
         private readonly string _media;
         private readonly string _temp;
-        protected MediaFileProvider(IStorageDirectoryProvider directoryProvider)
+        protected MediaFileProvider(IStorageDirectory directoryProvider)
         {
             //媒体文件夹。
-            _media = directoryProvider.PhysicalPath("media");
+            _media = directoryProvider.MapPath("media");
             //临时文件夹。
             _temp = Path.Combine(_media, "temp");
             if (!Directory.Exists(_temp))
@@ -76,7 +76,7 @@ namespace Mozlite.Extensions.Storages
             {
                 var tempFile = Path.Combine(_temp, Guid.NewGuid().ToString());
                 client.DefaultRequestHeaders.Referrer = new Uri($"{uri.Scheme}://{uri.DnsSafeHost}{(uri.IsDefaultPort ? null : ":" + uri.Port)}/");
-                client.DefaultRequestHeaders.Add((string) "User-Agent", (string) UserAgent);
+                client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                 using (var stream = await client.GetStreamAsync(uri))
                 {
                     using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
@@ -96,7 +96,7 @@ namespace Mozlite.Extensions.Storages
             file.Length = tempFile.Length;
             var storedFile = new StoredFile();
             storedFile.ContentType = contentType;
-            storedFile.FileId = StorageHelper.Hashed(tempFile);
+            storedFile.FileId = tempFile.ComputeHash();
             storedFile.Length = tempFile.Length;
             if (await CreateAsync(storedFile))
             {//将文件移动到媒体存储路径下。

@@ -1,9 +1,9 @@
 ﻿namespace Mozlite.Extensions.Storages
 {
     /// <summary>
-    /// 存储文件提供者接口。
+    /// 存储文件。
     /// </summary>
-    public interface IStorageFileProvider
+    public interface IStorageFile
     {
         /// <summary>
         /// 大小。

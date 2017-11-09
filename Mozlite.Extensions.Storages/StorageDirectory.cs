@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Mozlite.Extensions.Storages.Properties;
 
@@ -12,31 +11,35 @@ namespace Mozlite.Extensions.Storages
     /// <summary>
     /// 存储文件夹提供者实现类。
     /// </summary>
-    public class StorageDirectoryProvider : IStorageDirectoryProvider
+    public class StorageDirectory : IStorageDirectory
     {
-        private readonly DirectoryInfo _directory;
         /// <summary>
-        /// 初始化类<see cref="StorageDirectoryProvider"/>。
+        /// 初始化类<see cref="StorageDirectory"/>。
         /// </summary>
         /// <param name="options">存储选项。</param>
         /// <param name="environment">宿主环境接口。</param>
-        public StorageDirectoryProvider(IOptions<StorageOptions> options, IHostingEnvironment environment)
+        public StorageDirectory(IOptions<StorageOptions> options, IHostingEnvironment environment)
         {
             var path = options.Value.StorageDir?.Trim();
             if (path.StartsWith("~/"))
                 path = Path.Combine(environment.WebRootPath, path.Substring(2));
-            _directory = new DirectoryInfo(path);
+            Info = new DirectoryInfo(path);
         }
+
+        /// <summary>
+        /// 存储根目录实例。
+        /// </summary>
+        public DirectoryInfo Info { get; }
 
         /// <summary>
         /// 获取当前路径的物理路径。
         /// </summary>
         /// <param name="path">当前相对路径。</param>
         /// <returns>返回当前路径的物理路径。</returns>
-        public string PhysicalPath(string path)
+        public string MapPath(string path)
         {
             path = path?.Trim(' ', '~', '/', '\\');
-            return Path.Combine(_directory.FullName, path);
+            return Path.Combine(Info.FullName, path);
         }
 
         /// <summary>
@@ -44,10 +47,10 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="path">文件相对路径。</param>
         /// <returns>文件的操作提供者接口实例。</returns>
-        public IStorageFileProvider GetFile(string path)
+        public IStorageFile GetFile(string path)
         {
-            path = PhysicalPath(path);
-            return new StorageFileProvider(path);
+            path = MapPath(path);
+            return new StorageFile(path);
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="directoryName">文件夹名称。</param>
         /// <param name="fileName">文件名称，如果为空，则直接使用表单实例的文件名。</param>
         /// <returns>返回文件提供者操作接口实例。</returns>
-        public async Task<IStorageFileProvider> SaveAsync(IFormFile file, string directoryName, string fileName = null)
+        public async Task<IStorageFile> SaveAsync(IFormFile file, string directoryName, string fileName = null)
         {
             if (file == null || file.Length == 0)
                 throw new Exception(Resources.FormFileInvalid);
@@ -65,7 +68,7 @@ namespace Mozlite.Extensions.Storages
                 fileName = fileName.Substring(0, fileName.Length - 2) + Path.GetExtension(file.FileName);
             else
                 fileName = file.FileName;
-            directoryName = PhysicalPath(directoryName);
+            directoryName = MapPath(directoryName);
             if (!Directory.Exists(directoryName))
                 Directory.CreateDirectory(directoryName);
             fileName = Path.Combine(directoryName, fileName);
@@ -73,13 +76,13 @@ namespace Mozlite.Extensions.Storages
             {
                 await file.CopyToAsync(fs);
             }
-            return new StorageFileProvider(fileName);
+            return new StorageFile(fileName);
         }
 
-        private class StorageFileProvider : IStorageFileProvider
+        private class StorageFile : IStorageFile
         {
             private readonly FileInfo _info;
-            public StorageFileProvider(string path)
+            public StorageFile(string path)
             {
                 _info = new FileInfo(path);
             }
@@ -114,7 +117,7 @@ namespace Mozlite.Extensions.Storages
                 {
                     if (_hashed == null && _info.Exists)
                     {
-                        _hashed = StorageHelper.Hashed(_info);
+                        _hashed = _info.ComputeHash();
                     }
                     return _hashed;
                 }
