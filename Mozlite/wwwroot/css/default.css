@@ -1101,35 +1101,86 @@ body {
     background: #2055a4;
 }
 
-.main .body .content-wrapper form .form-group {
-    font-size: 14px;
-    font-weight: 400;
-    width: 100%;
-    height: auto;
-    outline: none;
-    box-sizing: border-box;
-    border: none;
-    padding: 10px 0 11px;
-    border-bottom: solid 1px #eaeaea;
-    display: flex;
-    margin: 0;
+.main .body .content-wrapper .form {
+    max-height: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    align-content: stretch;
+    align-items: stretch;
+    padding: 0 8px
 }
 
-    .main .body .content-wrapper form .form-group label {
+    .main .body .content-wrapper .form .form-group {
+        font-size: 14px;
+        font-weight: 400;
+        width: 100%;
+        height: auto;
+        outline: none;
+        box-sizing: border-box;
+        border: none;
+        padding: 10px 0 11px;
+        border-bottom: solid 1px #eaeaea;
         display: flex;
-        flex: 0 0 auto;
-        height: 34px;
-        padding: 6px 0 6px 15px;
-        font-size: 16px;
+        margin: 0;
     }
 
-    .main .body .content-wrapper form .form-group .form-control {
+        .main .body .content-wrapper .form .form-group label {
+            display: flex;
+            flex: 0 0 auto;
+            height: 34px;
+            padding: 6px 0 6px 15px;
+            font-size: 16px;
+        }
+
+        .main .body .content-wrapper .form .form-group .form-control {
+            display: flex;
+            flex: 1 1 auto;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+            .main .body .content-wrapper .form .form-group .form-control.title {
+                font-size: 16px;
+                font-weight: 600;
+                text-align: center;
+                color: #333333;
+            }
+
+
+
+    .main .body .content-wrapper .form .form-actionbar {
+        background-color: #f4f4f4;
+        padding: 8px 12px 0;
+        margin-bottom: 8px;
+        border-top: solid 1px #eaeaea;
         display: flex;
-        flex: 1 1 auto;
-        border: none;
-        box-shadow: none;
-        border-radius: 0;
+        overflow: hidden;
     }
+
+        .main .body .content-wrapper .form .form-actionbar .form-action-container {
+            flex-grow: 0;
+            white-space: nowrap;
+            padding-left: 3px;
+            height: 40px;
+        }
+
+        .main .body .content-wrapper .form .form-actionbar .form-addon-container {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            height: 40px;
+        }
+
+        .main .body .content-wrapper .form .form-actionbar .btn {
+            height: 32px;
+            margin-right: 12px;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 0 20px;
+            border-radius: 2px;
+        }
 
 .win {
     z-index: 1030;

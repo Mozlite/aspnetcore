@@ -16,25 +16,52 @@
 
 <div class="content-wrapper">
     <div class="content-container">
-        <form class="form">
+        <form class="form customScrollBar">
             <div class="form-group">
-                <input type="text" placeholder="这里输入文章标题：美丽的家乡" class="form-control text-center" />
+                <input type="text" placeholder="这里输入文章标题：美丽的家乡" class="form-control title" />
             </div>
             <div class="form-group">
                 <label>标签：</label>
                 <input type="text" class="form-control" />
             </div>
-            <div class="moz-markdown">
-                <div class="mozmd-edit">
-
-                </div>
-                <div class="mozmd-preview">
-
+            <div class="mozmd markdown">
+                <div class="mozmd-container">
+                    <div class="mozmd-edit" contenteditable="plaintext-only"></div>
+                    <div class="mozmd-preview"></div>
                 </div>
                 <div class="mozmd-toolbar">
-                    
+                    <div class="mozmd-toolbar-items">
+                        <div class="mozmd-leftbar">
+                            <button type="button"><i class="fa fa-header"></i></button>
+                            <button type="button"><i class="fa fa-font"></i></button>
+                            <button js-action="bold" type="button"><i class="fa fa-bold"></i></button>
+                            <button type="button"><i class="fa fa-list-ul"></i></button>
+                            <button type="button"><i class="fa fa-list-ol"></i></button>
+                            <button type="button"><i class="fa fa-align-left"></i></button>
+                            <button type="button"><i class="fa fa-align-center"></i></button>
+                            <button type="button"><i class="fa fa-align-right"></i></button>
+                            <button type="button"><i class="fa fa-align-justify"></i></button>
+                        </div>
+                        <div class="mozmd-rightbar">
+                            <button type="button"><i class="fa fa-arrows-alt"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actionbar">
+                    <div class="form-action-container">
+                        <button class="btn btn-primary" type="submit">提交</button>
+                        <button class="btn btn-default" type="reset">取消</button>
+                    </div>
+                    <div class="form-addon-container">
+
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/lib/marked/marked.min.js"></script>
+}

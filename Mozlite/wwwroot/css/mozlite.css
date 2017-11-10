@@ -320,12 +320,78 @@
     border-radius: 50%;
 }
 
-.moz-markdown {
+.mozmd {
     width: 100%;
-    max-height: 100%;
+    background: #fff;
+    color: #333;
     display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
+    flex-flow: column;
 }
 
+    .mozmd .mozmd-container {
+        width: 100%;
+        display: flex;
+        overflow: visible;
+        align-content: stretch;
+    }
 
+    .mozmd .mozmd-toolbar {
+        border-top: solid 1px #eaeaea;
+        background: #fff;
+        display: flex;
+        align-self: flex-end;
+        width: 100%;
+    }
+
+        .mozmd .mozmd-toolbar .mozmd-toolbar-items {
+            display: flex;
+            overflow: hidden;
+            padding: 7px 0 3px;
+            background: #fff;
+            width: 100%;
+        }
+
+            .mozmd .mozmd-toolbar .mozmd-toolbar-items .mozmd-leftbar {
+                display: flex;
+                flex: 1 1 auto;
+                flex-flow: row nowrap;
+            }
+
+            .mozmd .mozmd-toolbar .mozmd-toolbar-items .mozmd-rightbar {
+                display: flex;
+                flex: 0 0 auto;
+                flex-flow: row nowrap;
+            }
+
+            .mozmd .mozmd-toolbar .mozmd-toolbar-items button {
+                padding: 0;
+                border-width: 0;
+                margin: 0 4px 4px 0;
+                background: #fff;
+                border-radius: 2px;
+                font-family: inherit;
+                width: 32px;
+                height: 32px;
+                color: #666666;
+                flex: 0 0 auto;
+                position: relative;
+            }
+
+                .mozmd .mozmd-toolbar .mozmd-toolbar-items button:hover {
+                    background-color: #eaeaea;
+                }
+
+    .mozmd .mozmd-container .mozmd-preview,
+    .mozmd .mozmd-container .mozmd-edit {
+        overflow: visible;
+        min-height: 300px;
+        width: 100%;
+        padding: 16px 12px;
+    }
+
+    .mozmd .mozmd-container .mozmd-edit {
+    }
+
+    .mozmd .mozmd-container .mozmd-preview {
+        border-left: solid 1px #eaeaea;
+    }

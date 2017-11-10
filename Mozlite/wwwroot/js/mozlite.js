@@ -364,6 +364,53 @@
             return this + '?_=' + (+new Date);
         return this + '&_=' + (+new Date);
     };
+    window.$selectedText = function () {
+        ///<summary>获取当前鼠标选中的字符串。</summary>
+        if (window.getSelection)
+            return window.getSelection().toString();
+        if (document.selection)
+            return document.selection.createRange().text;
+        return null;
+    };
+    window.$selectedHtml = function () {
+        ///<summary>获取当前鼠标选中的HTML字符串。</summary>
+        if (window.getSelection) {
+            var docFragment = window.getSelection().getRangeAt(0).cloneContents();
+            var tempDiv = document.createElement("div");
+            tempDiv.appendChild(docFragment);
+            return tempDiv.innerHTML;
+        }
+        else if (document.selection)
+            return document.selection.createRange().htmlText;
+        return null;
+    };
+    window.$replaceSelection = function (html) {
+        ///<summary>替换当前鼠标选中的字符串。</summary>
+        if (window.getSelection) {
+            var sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                var range = sel.getRangeAt(0);
+                range.deleteContents();
+                var el = document.createElement("div");
+                el.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ((node = el.firstChild)) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        }
+        else if (document.selection && document.selection.type !== "Control") {
+            document.selection.createRange().pasteHTML(html);
+        }
+    }
 })(jQuery);
 $(document).ready(function () {
     window.$container = $('#modal-container');
@@ -394,3 +441,68 @@ $onready(function (context) {
         $(this).find('input')[0].checked = 'checked';
     });
 });
+$onready(function (context) {
+    if (window.marked) {
+        try {//禁止IE自动链接识别
+            document.execCommand("AutoUrlDetect", false, false);
+        } catch (e) { }
+        $('.mozmd', context).each(function () {
+            var $md = $(this);
+            $md.find('.mozmd-toolbar').find('button').each(function () {
+                var $btn = $(this).click(function () {
+                    switch ($btn.js('action')) {
+                        case 'bold':
+                            bold();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            });
+            var $edit = $md.find('.mozmd-edit');
+            var $preview = $md.find('.mozmd-preview');
+            $edit.on('keyup',
+                function () {
+                    $preview.html(window.marked($edit.text()));
+                }).on('paste', function (e) {
+                    e.preventDefault();
+                    var text = null;
+                    if (window.clipboardData && clipboardData.setData) {
+                        // IE
+                        text = window.clipboardData.getData('text');
+                    } else {
+                        text = (e.originalEvent || e).clipboardData.getData('text/plain') || prompt('在这里输入文本');
+                    }
+                    var textRange, sel;
+                    if (document.body.createTextRange) {
+                        if (document.selection) {
+                            textRange = document.selection.createRange();
+                        } else if (window.getSelection) {
+                            sel = window.getSelection();
+                            var range = sel.getRangeAt(0);
+
+                            // 创建临时元素，使得TextRange可以移动到正确的位置
+                            var tempEl = document.createElement("span");
+                            tempEl.innerHTML = "&#FEFF;";
+                            range.deleteContents();
+                            range.insertNode(tempEl);
+                            textRange = document.body.createTextRange();
+                            textRange.moveToElementText(tempEl);
+                            tempEl.parentNode.removeChild(tempEl);
+                        }
+                        textRange.text = text;
+                        textRange.collapse(false);
+                        textRange.select();
+                    } else {
+                        // Chrome之类浏览器
+                        document.execCommand("insertText", false, text);
+                    }
+                });
+
+            function bold() {
+                $replaceSelection('__ ' + $selectedHtml() + ' __');
+            };
+        });
+    }
+});
+
