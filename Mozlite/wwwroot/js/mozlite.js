@@ -443,6 +443,7 @@ $onready(function (context) {
 });
 $onready(function (context) {
     if (window.marked) {
+        var $range;
         try {//禁止IE自动链接识别
             document.execCommand("AutoUrlDetect", false, false);
         } catch (e) { }
@@ -452,7 +453,19 @@ $onready(function (context) {
                 var $btn = $(this).click(function () {
                     switch ($btn.js('action')) {
                         case 'bold':
-                            bold();
+                            replace('__ ', ' __');
+                            break;
+                        case 'italic':
+                            replace(' _', '_ ');
+                            break;
+                        case 'ol':
+                            ol();
+                            break;
+                        case 'ul':
+                            ul();
+                            break;
+                        case 'quote':
+                            quote();
                             break;
                         default:
                             break;
@@ -460,10 +473,13 @@ $onready(function (context) {
                 });
             });
             var $edit = $md.find('.mozmd-edit');
+            var $counter = $($md.js('counter'));
             var $preview = $md.find('.mozmd-preview');
-            $edit.on('keyup',
+            $edit.on('click,focus,keyup', function () {
+                $range = getSelection().getRangeAt(0);
+            }).on('keyup',
                 function () {
-                    $preview.html(window.marked($edit.text()));
+                    markedText();
                 }).on('paste', function (e) {
                     e.preventDefault();
                     var text = null;
@@ -499,8 +515,63 @@ $onready(function (context) {
                     }
                 });
 
-            function bold() {
-                $replaceSelection('__ ' + $selectedHtml() + ' __');
+            function replace(prefix, suffix) {
+                ///<summary>替换选中的文本。</summary>
+                ///<param name="prefix" type="String">前缀。</param>
+                ///<param name="suffix" type="String">后缀。</param>
+                var selection = getSelection();
+                if (selection.anchorNode && selection.anchorNode.parentNode == $edit.get(0)) {
+                    var range = selection.getRangeAt(0);
+                    $replaceSelection(prefix + range + suffix);
+                    var r = document.createRange();
+                    r.setStart(range.startContainer, 0);
+                    r.setEnd(range.endContainer, 0);
+                    r.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(r);
+                } else {
+                    $edit.append(document.createTextNode(prefix + suffix));
+                    $edit.focus();
+                }
+                markedText();
+            };
+
+            function ol() {
+                var lines = $selectedText().replace(/\r/g, '').split('\n');
+                var result = [];
+                for (var i = 0; i < lines.length; i++) {
+                    result.push((i + 1) + '. ' + lines[i]);
+                }
+                $replaceSelection(result.join('\r\n'));
+                markedText();
+            };
+
+            function ul() {
+                var lines = $selectedText().replace(/\r/g, '').split('\n');
+                var result = [];
+                for (var i = 0; i < lines.length; i++) {
+                    result.push('* ' + lines[i]);
+                }
+                $replaceSelection(result.join('\r\n'));
+                markedText();
+            };
+
+            function quote() {
+                var text = $.trim($selectedText());
+                if (text) {
+                    $replaceSelection('\r\n> ' + text + '\r\n');
+                    markedText();
+                } else {
+                    $replaceSelection('> ');
+                }
+            };
+
+            function markedText() {
+                ///<summary>格式化文本字符串，并显示字符数。</summary>
+                $preview.html(window.marked($edit.text()));
+                if ($counter.length > 0) {//计算字符数量
+                    $counter.html($counter.js('format').replace('$count', $preview.text().length)).show();
+                }
             };
         });
     }
