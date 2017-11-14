@@ -577,3 +577,62 @@ $onready(function (context) {
     }
 });
 
+function Mozmd(md) {
+    var me = this;
+    this.md = typeof md === 'string' ? document.querySelector(md) : md;
+    this.edit = this.md.querySelector('.mozmd-edit');
+    this.preview = this.md.querySelector('.mozmd-preview');
+    this.toolbar = this.md.querySelector('.mozmd-toolbar');
+    var counter = attr('counter');
+    if (counter)
+        this.counter = document.querySelector(counter);
+
+    var lastTextRange;
+    this.edit.onfocus = this.edit.onclick = this.edit.onkeyup = function (e) {
+        lastTextRange = getSelection().getRangeAt(0);
+    };
+
+    this.replace = function (text) {
+        var sel = getSelection();
+        var range = sel.getRangeAt(0);
+        if (!range) {
+            this.edit.appendChild(document.createTextNode(text));
+            this.edit.focus();
+            return;
+        }
+        var el = document.createElement("div");
+        if (!text)
+            el.innerHTML = range.toString();
+        else if (typeof text === 'function')
+            el.innerHTML = text(range.toString());
+        else
+            el.innerHTML = text;
+        range.deleteContents();
+        var frag = document.createDocumentFragment(), node, lastNode;
+        while ((node = el.firstChild)) {
+            lastNode = frag.appendChild(node);
+        }
+        range.insertNode(frag);
+        if (lastNode) {
+            range = range.cloneRange();
+            range.setStartAfter(lastNode);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    };
+
+    function attr(name) {
+        ///<summary>获取当前属性值。</summary>
+        return me.md.getAttribute('js-' + name);
+    };
+
+    function updateCounter() {
+        ///<summary>更新字符数。</summary>
+        if (me.counter) {
+            var count = me.preview.textContent.length;
+            me.counter.innerHTML = me.counter.getAttribute('js-format').replace('$count', count);
+            me.counter.style.display = 'block';
+        }
+    };
+};
