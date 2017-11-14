@@ -406,11 +406,173 @@
                     sel.addRange(range);
                 }
             }
-        }
-        else if (document.selection && document.selection.type !== "Control") {
+        } else if (document.selection && document.selection.type !== "Control") {
             document.selection.createRange().pasteHTML(html);
         }
-    }
+    };
+
+    function Mozmd(md) {
+        var me = this;
+        this.md = typeof md === 'string' ? document.querySelector(md) : md;
+        this.edit = this.md.querySelector('.mozmd-edit');
+        this.edit.onkeyup = update;
+        this.preview = this.md.querySelector('.mozmd-preview');
+        this.toolbar = this.md.querySelector('.mozmd-toolbar');
+        this.isFullscreen = false;
+        var counter = attr('counter');
+        if (counter)
+            this.counter = document.querySelector(counter);
+
+        this.getMD = function () {
+            ///<summary>获取Markdown字符串。</summary>
+            return me.edit.innerHTML;
+        };
+
+        this.getHTML = function () {
+            ///<summary>获取HTML字符串。</summary>
+            update();
+            return me.preview.innerHTML;
+        };
+
+        this.append = function (text) {
+            ///<summary>附加代码。</summary>
+            this.edit.appendChild(document.createTextNode(text));
+            this.edit.focus();
+            update();
+        };
+
+        this.replace = function (text) {
+            ///<summary>替换当前选中代码。</summary>
+            var sel = getSelection();
+            if (!sel) {
+                me.append(text);
+                return;
+            }
+            var range = sel.getRangeAt(0);
+            if (!range) {
+                me.append(text);
+                return;
+            }
+            var el = document.createElement("div");
+            if (!text)
+                el.innerHTML = range.toString();
+            else if (typeof text === 'function')
+                el.innerHTML = text(range.toString());
+            else
+                el.innerHTML = text;
+            range.deleteContents();
+            var frag = document.createDocumentFragment(), node, lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+            update();
+        };
+
+        function attr(name) {
+            ///<summary>获取当前属性值。</summary>
+            return me.md.getAttribute('js-' + name);
+        };
+
+        function update() {
+            ///<summary>更新格式化源码。</summary>
+            var source = me.getMD();
+            me.preview.innerHTML = marked(source);
+            if (me.counter) {
+                var count = (me.preview.textContent || me.preview.innerText).length;
+                me.counter.innerHTML = me.counter.getAttribute('js-format').replace('$count', count);
+                me.counter.style.display = 'block';
+            }
+        };
+
+        var items = {
+            bold: function () {
+                me.replace(function (r) { return '__ ' + r + ' __' });
+            },
+            italic: function () {
+                me.replace(function (r) { return ' _' + r + '_ ' });
+            },
+            ol: function () {
+                me.replace(function (r) {
+                    var lines = r.replace(/\r/g, '').split('\n');
+                    var result = [];
+                    for (var i = 0; i < lines.length; i++) {
+                        result.push((i + 1) + '. ' + lines[i]);
+                    }
+                    return result.join('\r\n');
+                });
+            },
+            ul: function () {
+                me.replace(function (r) {
+                    var lines = r.replace(/\r/g, '').split('\n');
+                    var result = [];
+                    for (var i = 0; i < lines.length; i++) {
+                        result.push('* ' + lines[i]);
+                    }
+                    return result.join('\r\n');
+                });
+            },
+            quote: function () {
+                me.replace(function (r) {
+                    if (r) return '\r\n> ' + r + '\r\n';
+                    return '>';
+                });
+            },
+            fullscreen: function () {
+                var classes = [];
+                me.isFullscreen = false;
+                me.md.className.split(' ').forEach(function (c) {
+                    if (c !== 'mozmd-fullscreen')
+                        classes.push(c);
+                    else
+                        me.isFullscreen = true;
+                });
+                if (!me.isFullscreen) {
+                    classes.push('mozmd-fullscreen');
+                }
+                me.md.className = classes.join(' ');
+            },
+            head: function () {
+                me.replace(function (r) {
+                    if (r && r[0] === '#')
+                        return '#' + r;
+                    else
+                        return '# ' + r;
+                });
+            },
+            quora: function () {
+                me.replace(function (r) {
+                    return '`' + r + '`';
+                });
+            },
+            code: function () {
+                me.replace(function (r) {
+                    return '\r\n``` \r\n' + r + '\r\n```\r\n';
+                });
+            }
+        };
+        this.toolbar.querySelectorAll('button[js-action]').forEach(function (el) {
+            el.onclick = function () {
+                items[el.getAttribute('js-action')]();
+            }
+        });
+    };
+
+    $.fn.mozmd = function () {
+        ///<summary>Markdown编辑器。</summary>
+        return this.each(function () {
+            var md = new Mozmd(this);
+            $(this).data('mozmd', md);
+            return md;
+        });
+    };
 })(jQuery);
 $(document).ready(function () {
     window.$container = $('#modal-container');
@@ -440,199 +602,5 @@ $onready(function (context) {
         $(this).addClass('checked');
         $(this).find('input')[0].checked = 'checked';
     });
+    $('.mozmd', context).mozmd();
 });
-$onready(function (context) {
-    if (window.marked) {
-        var $range;
-        try {//禁止IE自动链接识别
-            document.execCommand("AutoUrlDetect", false, false);
-        } catch (e) { }
-        $('.mozmd', context).each(function () {
-            var $md = $(this);
-            $md.find('.mozmd-toolbar').find('button').each(function () {
-                var $btn = $(this).click(function () {
-                    switch ($btn.js('action')) {
-                        case 'bold':
-                            replace('__ ', ' __');
-                            break;
-                        case 'italic':
-                            replace(' _', '_ ');
-                            break;
-                        case 'ol':
-                            ol();
-                            break;
-                        case 'ul':
-                            ul();
-                            break;
-                        case 'quote':
-                            quote();
-                            break;
-                        default:
-                            break;
-                    }
-                });
-            });
-            var $edit = $md.find('.mozmd-edit');
-            var $counter = $($md.js('counter'));
-            var $preview = $md.find('.mozmd-preview');
-            $edit.on('click,focus,keyup', function () {
-                $range = getSelection().getRangeAt(0);
-            }).on('keyup',
-                function () {
-                    markedText();
-                }).on('paste', function (e) {
-                    e.preventDefault();
-                    var text = null;
-                    if (window.clipboardData && clipboardData.setData) {
-                        // IE
-                        text = window.clipboardData.getData('text');
-                    } else {
-                        text = (e.originalEvent || e).clipboardData.getData('text/plain') || prompt('在这里输入文本');
-                    }
-                    var textRange, sel;
-                    if (document.body.createTextRange) {
-                        if (document.selection) {
-                            textRange = document.selection.createRange();
-                        } else if (window.getSelection) {
-                            sel = window.getSelection();
-                            var range = sel.getRangeAt(0);
-
-                            // 创建临时元素，使得TextRange可以移动到正确的位置
-                            var tempEl = document.createElement("span");
-                            tempEl.innerHTML = "&#FEFF;";
-                            range.deleteContents();
-                            range.insertNode(tempEl);
-                            textRange = document.body.createTextRange();
-                            textRange.moveToElementText(tempEl);
-                            tempEl.parentNode.removeChild(tempEl);
-                        }
-                        textRange.text = text;
-                        textRange.collapse(false);
-                        textRange.select();
-                    } else {
-                        // Chrome之类浏览器
-                        document.execCommand("insertText", false, text);
-                    }
-                });
-
-            function replace(prefix, suffix) {
-                ///<summary>替换选中的文本。</summary>
-                ///<param name="prefix" type="String">前缀。</param>
-                ///<param name="suffix" type="String">后缀。</param>
-                var selection = getSelection();
-                if (selection.anchorNode && selection.anchorNode.parentNode == $edit.get(0)) {
-                    var range = selection.getRangeAt(0);
-                    $replaceSelection(prefix + range + suffix);
-                    var r = document.createRange();
-                    r.setStart(range.startContainer, 0);
-                    r.setEnd(range.endContainer, 0);
-                    r.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(r);
-                } else {
-                    $edit.append(document.createTextNode(prefix + suffix));
-                    $edit.focus();
-                }
-                markedText();
-            };
-
-            function ol() {
-                var lines = $selectedText().replace(/\r/g, '').split('\n');
-                var result = [];
-                for (var i = 0; i < lines.length; i++) {
-                    result.push((i + 1) + '. ' + lines[i]);
-                }
-                $replaceSelection(result.join('\r\n'));
-                markedText();
-            };
-
-            function ul() {
-                var lines = $selectedText().replace(/\r/g, '').split('\n');
-                var result = [];
-                for (var i = 0; i < lines.length; i++) {
-                    result.push('* ' + lines[i]);
-                }
-                $replaceSelection(result.join('\r\n'));
-                markedText();
-            };
-
-            function quote() {
-                var text = $.trim($selectedText());
-                if (text) {
-                    $replaceSelection('\r\n> ' + text + '\r\n');
-                    markedText();
-                } else {
-                    $replaceSelection('> ');
-                }
-            };
-
-            function markedText() {
-                ///<summary>格式化文本字符串，并显示字符数。</summary>
-                $preview.html(window.marked($edit.text()));
-                if ($counter.length > 0) {//计算字符数量
-                    $counter.html($counter.js('format').replace('$count', $preview.text().length)).show();
-                }
-            };
-        });
-    }
-});
-
-function Mozmd(md) {
-    var me = this;
-    this.md = typeof md === 'string' ? document.querySelector(md) : md;
-    this.edit = this.md.querySelector('.mozmd-edit');
-    this.preview = this.md.querySelector('.mozmd-preview');
-    this.toolbar = this.md.querySelector('.mozmd-toolbar');
-    var counter = attr('counter');
-    if (counter)
-        this.counter = document.querySelector(counter);
-
-    var lastTextRange;
-    this.edit.onfocus = this.edit.onclick = this.edit.onkeyup = function (e) {
-        lastTextRange = getSelection().getRangeAt(0);
-    };
-
-    this.replace = function (text) {
-        var sel = getSelection();
-        var range = sel.getRangeAt(0);
-        if (!range) {
-            this.edit.appendChild(document.createTextNode(text));
-            this.edit.focus();
-            return;
-        }
-        var el = document.createElement("div");
-        if (!text)
-            el.innerHTML = range.toString();
-        else if (typeof text === 'function')
-            el.innerHTML = text(range.toString());
-        else
-            el.innerHTML = text;
-        range.deleteContents();
-        var frag = document.createDocumentFragment(), node, lastNode;
-        while ((node = el.firstChild)) {
-            lastNode = frag.appendChild(node);
-        }
-        range.insertNode(frag);
-        if (lastNode) {
-            range = range.cloneRange();
-            range.setStartAfter(lastNode);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
-    };
-
-    function attr(name) {
-        ///<summary>获取当前属性值。</summary>
-        return me.md.getAttribute('js-' + name);
-    };
-
-    function updateCounter() {
-        ///<summary>更新字符数。</summary>
-        if (me.counter) {
-            var count = me.preview.textContent.length;
-            me.counter.innerHTML = me.counter.getAttribute('js-format').replace('$count', count);
-            me.counter.style.display = 'block';
-        }
-    };
-};
