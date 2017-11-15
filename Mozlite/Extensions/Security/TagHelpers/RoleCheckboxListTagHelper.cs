@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Mozlite.Extensions.Security.Models;
+using Mozlite.Extensions.Security.Services;
 using Mozlite.Mvc.TagHelpers.Bootstrap;
 
 namespace Mozlite.Extensions.Security.TagHelpers

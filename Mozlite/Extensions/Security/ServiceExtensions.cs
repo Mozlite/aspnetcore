@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Extensions.Security.Models;
+using Mozlite.Extensions.Security.Services;
 
 namespace Mozlite.Extensions.Security
 {
@@ -23,6 +24,16 @@ namespace Mozlite.Extensions.Security
                 .AddDefaultTokenProviders();
             action?.Invoke(builder);
             return services;
+        }
+
+        /// <summary>
+        /// 注册Identity容器，实现用户和用户组的数据库存储功能。
+        /// </summary>
+        /// <param name="builder">容器注册辅助实例。</param>
+        /// <returns>返回当前实例。</returns>
+        public static IdentityBuilder AddSecurity(this IdentityBuilder builder)
+        {
+            return builder.AddIdentityStores<UserStore, RoleStore>();
         }
     }
 }

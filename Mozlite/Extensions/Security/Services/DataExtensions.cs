@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Mozlite.Data;
+using Mozlite.Extensions.Security.Models;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Services
 {
     /// <summary>
     /// 级联用户选择数据扩展类。

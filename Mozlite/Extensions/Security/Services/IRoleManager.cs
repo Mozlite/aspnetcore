@@ -1,4 +1,6 @@
-﻿namespace Mozlite.Extensions.Security.Models
+﻿using Mozlite.Extensions.Security.Models;
+
+namespace Mozlite.Extensions.Security.Services
 {
     /// <summary>
     /// 用户组管理接口。

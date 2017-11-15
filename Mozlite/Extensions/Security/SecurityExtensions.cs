@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 安全扩展类型。

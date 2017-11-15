@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data.SqlServer;
+using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Models;
 using Mozlite.Mvc;
 

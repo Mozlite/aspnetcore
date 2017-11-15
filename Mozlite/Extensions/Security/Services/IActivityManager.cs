@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mozlite.Data;
+using Mozlite.Extensions.Security.Models;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Services
 {
     /// <summary>
     /// 活动状态。

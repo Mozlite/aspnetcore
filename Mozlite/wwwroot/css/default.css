@@ -975,14 +975,10 @@ body {
             max-width: 300px;
         }
 
-.filterbar .moz-checkbox .box-wrapper,
-.filterbar .moz-radioboxlist .moz-radiobox .box-wrapper,
-.filterbar .moz-checkbox .box-wrapper .box-checked,
-.filterbar .moz-radioboxlist .moz-radiobox .box-wrapper .box-checked,
-.data-view .moz-checkbox .box-wrapper,
-.data-view .moz-radioboxlist .moz-radiobox .box-wrapper,
-.data-view .moz-checkbox .box-wrapper .box-checked,
-.data-view .moz-radioboxlist .moz-radiobox .box-wrapper .box-checked {
+.moz-checkbox .box-wrapper,
+.moz-radioboxlist .moz-radiobox .box-wrapper,
+.moz-checkbox .box-wrapper .box-checked,
+.moz-radioboxlist .moz-radiobox .box-wrapper .box-checked {
     border-radius: 50%;
 }
 
@@ -1024,7 +1020,7 @@ body {
     padding: 0 8px
 }
 
-    .main .body .content-wrapper .form .form-group {
+    .main .body .content-wrapper .form.editor .form-group {
         font-size: 14px;
         font-weight: 400;
         width: 100%;
@@ -1038,7 +1034,7 @@ body {
         margin: 0;
     }
 
-        .main .body .content-wrapper .form .form-group label {
+        .main .body .content-wrapper .form.editor .form-group label {
             display: flex;
             flex: 0 0 auto;
             height: 34px;
@@ -1046,7 +1042,7 @@ body {
             font-size: 16px;
         }
 
-        .main .body .content-wrapper .form .form-group .form-control {
+        .main .body .content-wrapper .form.editor .form-group .form-control {
             display: flex;
             flex: 1 1 auto;
             border: none;
@@ -1054,7 +1050,7 @@ body {
             border-radius: 0;
         }
 
-            .main .body .content-wrapper .form .form-group .form-control.title {
+            .main .body .content-wrapper .form.editor .form-group .form-control.title {
                 font-size: 16px;
                 font-weight: 600;
                 text-align: center;
@@ -1095,6 +1091,78 @@ body {
         font-weight: 400;
         padding: 0 20px;
         border-radius: 2px;
+    }
+
+.main .body .content-wrapper .form.settings {
+    padding-left: 34px;
+}
+
+    .main .body .content-wrapper .form.settings .form-title {
+        font-size: 17px;
+        font-weight: 300;
+        margin-right: 10px;
+        margin: 18px 0 14px;
+    }
+
+    .main .body .content-wrapper .form.settings .form-desc,
+    .main .body .content-wrapper .form.settings p {
+        font-size: 14px;
+        font-weight: 400;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        color: #666666;
+        display: block;
+        padding: 5px 0;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+.main .body .content-wrapper .form.settings p {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666666;
+}
+
+    .main .body .content-wrapper .form.settings .moz-checkboxlist .moz-checkbox,
+    .main .body .content-wrapper .form.settings .moz-radioboxlist .moz-radiobox {
+        box-sizing: border-box;
+        color: #565454;
+        font-size: 14px;
+        font-weight: 400;
+        min-height: 26px;
+        border: none;
+        position: relative;
+        margin-top: 8px;
+    }
+
+        .main .body .content-wrapper .form.settings .moz-checkboxlist .moz-checkbox:hover,
+        .main .body .content-wrapper .form.settings .moz-radioboxlist .moz-radiobox:hover {
+            color: #333333;
+        }
+
+        .main .body .content-wrapper .form.settings .moz-checkbox.checked.checked-style-default .box-wrapper .box-checked,
+        .main .body .content-wrapper .form.settings .moz-radioboxlist .moz-radiobox.checked.checked-style-default .box-wrapper .box-checked {
+            background: #5DB2FF;
+            left: 4px;
+            top: 4px;
+            right: 4px;
+            bottom: 4px;
+        }
+
+        .main .body .content-wrapper .form.settings .moz-checkbox.checked .box-wrapper,
+        .main .body .content-wrapper .form.settings .moz-radioboxlist .moz-radiobox.checked .box-wrapper {
+            border-color: #5DB2FF;
+        }
+
+    .main .body .content-wrapper .form.settings .form-control {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 6px 6px;
     }
 
 .win {

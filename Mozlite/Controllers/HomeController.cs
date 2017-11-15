@@ -24,6 +24,11 @@ namespace Mozlite.Controllers
             return View();
         }
 
+        public IActionResult Settings()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             var tasks = _repository.Fetch();

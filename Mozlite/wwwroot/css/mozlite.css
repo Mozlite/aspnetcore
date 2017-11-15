@@ -278,6 +278,30 @@
     padding-left: 30px !important;
 }
 
+.w100 {
+    width: 100px;
+}
+
+.w200 {
+    width: 200px;
+}
+
+.w300 {
+    width: 300px;
+}
+
+.js-alert .modal-dialog {
+    top: 50%;
+    margin-top: -95px;
+    width: 480px;
+}
+
+.btn {
+    border-radius: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
 .modal-alert {
     display: none;
     text-align: left;
@@ -418,6 +442,7 @@
 
     .mozmd .mozmd-container {
         width: 100%;
+        min-height: 100%;
         display: flex;
         overflow: visible;
         align-content: stretch;
@@ -472,9 +497,10 @@
     .mozmd .mozmd-container .mozmd-preview,
     .mozmd .mozmd-container .mozmd-edit {
         overflow: visible;
-        min-height: 380px;
-        width: 100%;
+        width: 50%;
+        min-height: 400px;
         padding: 16px 12px;
+        flex: 1 1 auto;
     }
 
     .mozmd .mozmd-container .mozmd-edit {
@@ -511,8 +537,7 @@
             overflow: auto;
         }
 
-        .mozmd.mozmd-fullscreen .mozmd-container,
-        .mozmd.mozmd-fullscreen .mozmd-container .mozmd-edit,
-        .mozmd.mozmd-fullscreen .mozmd-container .mozmd-preview {
-            height: 100%;
+        .mozmd.mozmd-fullscreen .mozmd-container .mozmd-preview,
+        .mozmd.mozmd-fullscreen .mozmd-container .mozmd-edit {
+            min-height: 100%;
         }

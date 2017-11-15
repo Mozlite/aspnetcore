@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Mozlite.Extensions.Security.Models;
 using Mozlite.Extensions.Storages;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Services
 {
     /// <summary>
     /// 用户管理接口。

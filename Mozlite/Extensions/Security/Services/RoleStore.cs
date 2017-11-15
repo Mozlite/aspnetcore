@@ -1,6 +1,7 @@
 ﻿using Mozlite.Data;
+using Mozlite.Extensions.Security.Models;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Services
 {
     /// <summary>
     /// 用户组数据存储。

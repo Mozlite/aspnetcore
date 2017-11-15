@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Mozlite.Data;
+using Mozlite.Extensions.Security.Models;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Services
 {
     /// <summary>
     /// 用户数据存储。

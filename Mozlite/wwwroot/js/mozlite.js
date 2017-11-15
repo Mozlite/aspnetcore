@@ -436,6 +436,8 @@
 
         this.append = function (text) {
             ///<summary>附加代码。</summary>
+            if (typeof text === 'function')
+                text = text();
             this.edit.appendChild(document.createTextNode(text));
             this.edit.focus();
             update();
@@ -444,15 +446,11 @@
         this.replace = function (text) {
             ///<summary>替换当前选中代码。</summary>
             var sel = getSelection();
-            if (!sel) {
+            if (!sel || sel.rangeCount === 0 || sel.anchorNode.parentNode !== this.edit) {
                 me.append(text);
                 return;
             }
             var range = sel.getRangeAt(0);
-            if (!range) {
-                me.append(text);
-                return;
-            }
             var el = document.createElement("div");
             if (!text)
                 el.innerHTML = range.toString();
