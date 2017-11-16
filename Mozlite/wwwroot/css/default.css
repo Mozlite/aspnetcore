@@ -1120,13 +1120,13 @@ body {
         overflow-wrap: break-word;
     }
 
-.main .body .content-wrapper .form.settings p {
-    margin-top: 0;
-    margin-bottom: 14px;
-    font-size: 14px;
-    font-weight: 400;
-    color: #666666;
-}
+    .main .body .content-wrapper .form.settings p {
+        margin-top: 0;
+        margin-bottom: 14px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #666666;
+    }
 
     .main .body .content-wrapper .form.settings .moz-checkboxlist .moz-checkbox,
     .main .body .content-wrapper .form.settings .moz-radioboxlist .moz-radiobox {
@@ -1164,6 +1164,101 @@ body {
         border-radius: 0;
         padding: 6px 6px;
     }
+
+.main .body .content-wrapper .archive {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.main .body .content-wrapper .archive-title {
+    margin: 0 20px 0 8px;
+    padding: 18px 0 17px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 17px;
+    font-weight: 600;
+    color: #333333;
+    flex: 0 0 auto;
+    word-wrap: break-word;
+    user-select: text;
+}
+
+
+.main .body .content-wrapper .archive-content {
+    margin: 0 20px 0 8px;
+    padding: 0 0 17px 12px;
+    overflow: visible;
+}
+
+    .main .body .content-wrapper .archive-content .archive-summary {
+        display: flex;
+        align-items: stretch;
+        margin-bottom: 18px;
+    }
+
+        .main .body .content-wrapper .archive-content .archive-summary .archive-avatar {
+            flex: 0 0 55px;
+            width: 55px;
+        }
+
+            .main .body .content-wrapper .archive-content .archive-summary .archive-avatar .avatar {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                margin-right: 15px;
+                background: #603cba;
+                display: block;
+            }
+
+        .main .body .content-wrapper .archive-content .archive-summary .archive-props {
+            flex: 1 1 auto;
+            font-size: 14px;
+            font-weight: 400;
+            color: #333;
+        }
+
+            .main .body .content-wrapper .archive-content .archive-summary .archive-props .date {
+                font-size: 12px;
+                margin: 3px 0;
+                font-weight: 400;
+                color: #666;
+            }
+
+            .main .body .content-wrapper .archive-content .archive-summary .archive-props .label-conatiner span {
+                display: inline-block;
+                font-size: 12px;
+                margin: 3px 0;
+                font-weight: 400;
+                margin-right: 15px;
+            }
+
+            .main .body .content-wrapper .archive-content .archive-summary .archive-props .label-conatiner label {
+                font-weight: 600;
+                display: inline-block;
+                font-size: 12px;
+                margin: 3px 0;
+            }
+
+        .main .body .content-wrapper .archive-content .archive-summary .archive-right {
+            flex: 1 1 auto;
+            text-align: right;
+        }
+
+            .main .body .content-wrapper .archive-content .archive-summary .archive-right i {
+                width: 32px;
+                height: 32px;
+                font-size: 24px;
+                color: #2055A4;
+                cursor: pointer;
+                border-radius: 2px;
+                padding: 0 4px;
+            }
+
+                .main .body .content-wrapper .archive-content .archive-summary .archive-right i:hover {
+                    background: #F0F3F8;
+                }
 
 .win {
     z-index: 1030;

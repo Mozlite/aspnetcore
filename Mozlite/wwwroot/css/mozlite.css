@@ -541,3 +541,11 @@
         .mozmd.mozmd-fullscreen .mozmd-container .mozmd-edit {
             min-height: 100%;
         }
+
+.mozfmt {
+    font-size: 14px;
+}
+
+    .mozfmt p {
+        text-indent: 24px;
+    }
