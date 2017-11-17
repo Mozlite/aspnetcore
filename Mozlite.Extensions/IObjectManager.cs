@@ -105,15 +105,15 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 数据库操作实例。
         /// </summary>
-        protected IRepository<TModel> Repository { get; }
-
+        // ReSharper disable once InconsistentNaming
+        protected readonly IRepository<TModel> db;
         /// <summary>
         /// 初始化类<see cref="ObjectManager{TModel,TKey}"/>。
         /// </summary>
         /// <param name="repository">数据库操作实例。</param>
         protected ObjectManager(IRepository<TModel> repository)
         {
-            Repository = repository;
+            db = repository;
         }
 
         /// <summary>
@@ -125,9 +125,9 @@ namespace Mozlite.Extensions
         {
             if (IsDuplicated(model))
                 return DataAction.Duplicate;
-            if (Repository.Any(model.Id))
-                return DataResult.FromResult(Repository.Update(model), DataAction.Updated);
-            return DataResult.FromResult(Repository.Create(model), DataAction.Created);
+            if (db.Any(model.Id))
+                return DataResult.FromResult(db.Update(model), DataAction.Updated);
+            return DataResult.FromResult(db.Create(model), DataAction.Created);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Mozlite.Extensions
         /// <returns>返回更新结果。</returns>
         public virtual DataResult Update(Expression<Predicate<TModel>> expression, object satement)
         {
-            return DataResult.FromResult(Repository.Update(expression, satement), DataAction.Updated);
+            return DataResult.FromResult(db.Update(expression, satement), DataAction.Updated);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Mozlite.Extensions
         /// <returns>返回删除结果。</returns>
         public virtual DataResult Delete(Expression<Predicate<TModel>> expression)
         {
-            return DataResult.FromResult(Repository.Delete(expression), DataAction.Deleted);
+            return DataResult.FromResult(db.Delete(expression), DataAction.Deleted);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Mozlite.Extensions
         /// <returns>返回删除结果。</returns>
         public virtual DataResult Delete(TKey id)
         {
-            return DataResult.FromResult(Repository.Delete(id), DataAction.Deleted);
+            return DataResult.FromResult(db.Delete(id), DataAction.Deleted);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Mozlite.Extensions
         /// <returns>返回当前模型实例。</returns>
         public virtual TModel Find(TKey id)
         {
-            return Repository.Find(id);
+            return db.Find(id);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Mozlite.Extensions
         /// <returns>返回当前模型实例。</returns>
         public virtual TModel Find(Expression<Predicate<TModel>> expression)
         {
-            return Repository.Find(expression);
+            return db.Find(expression);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Mozlite.Extensions
         /// <returns>返回模型实例列表。</returns>
         public virtual IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null)
         {
-            return Repository.Fetch(expression);
+            return db.Fetch(expression);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Mozlite.Extensions
         /// <returns>返回模型的一个查询实例。</returns>
         public virtual IQueryable<TModel> AsQueryable()
         {
-            return Repository.AsQueryable();
+            return db.AsQueryable();
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Mozlite.Extensions
         /// <returns>返回分页实例列表。</returns>
         public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TModel>
         {
-            return Repository.Load(query);
+            return db.Load(query);
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Mozlite.Extensions
         /// <returns>返回分页实例列表。</returns>
         public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>
         {
-            return Repository.LoadAsync(query, cancellationToken: cancellationToken);
+            return db.LoadAsync(query, cancellationToken: cancellationToken);
         }
     }
 

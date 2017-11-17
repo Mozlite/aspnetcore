@@ -23,7 +23,9 @@
                         if (panel.hasClass('win-right')) {
                             panel.animate({
                                 right: 0
-                            }, 'fast');
+                            }, 'fast', function() {
+                                $('.main-slider').width()
+                            });
                             win.find('.close').click(function () {
                                 s.removeClass('open');
                                 panel.animate({

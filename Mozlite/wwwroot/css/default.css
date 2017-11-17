@@ -139,6 +139,11 @@ body {
             min-width: 50px
         }
 
+a {
+    color: #1A4382;
+    cursor: pointer;
+}
+
 .disableTextSelection {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -321,7 +326,7 @@ body {
             flex-flow: column;
         }
 
-        .main .main-inner .slider {
+        .main .main-inner .main-slider {
             background-color: #f4f4f4;
             display: flex;
             flex: 0 0 auto;
@@ -1195,7 +1200,6 @@ body {
     .main .body .content-wrapper .archive-content .archive-summary {
         display: flex;
         align-items: stretch;
-        margin-bottom: 18px;
     }
 
         .main .body .content-wrapper .archive-content .archive-summary .archive-avatar {
@@ -1246,19 +1250,43 @@ body {
             text-align: right;
         }
 
-            .main .body .content-wrapper .archive-content .archive-summary .archive-right i {
+            .main .body .content-wrapper .archive-content .archive-summary .archive-right button {
                 width: 32px;
                 height: 32px;
-                font-size: 24px;
+                font-size: 16px;
                 color: #2055A4;
                 cursor: pointer;
                 border-radius: 2px;
-                padding: 0 4px;
+                text-align: center;
+                margin-top: 0;
+                background: transparent;
             }
 
-                .main .body .content-wrapper .archive-content .archive-summary .archive-right i:hover {
+                .main .body .content-wrapper .archive-content .archive-summary .archive-right button:hover {
                     background: #F0F3F8;
                 }
+
+        .main .body .content-wrapper .archive-content .archive-note {
+            margin: 10px 0;
+            background: #f4f4f4;
+            min-height: 30px;
+            display: flex;
+            flex-direction: row;
+            margin-left: 55px;
+        }
+
+            .main .body .content-wrapper .archive-content .archive-note .mark {
+                background: #a6a6a6;
+                flex: 0 0 5px;
+            }
+
+            .main .body .content-wrapper .archive-content .archive-note .content {
+                margin: 7px 7px 7px 15px;
+                flex: 1 1 auto;
+                color: #212121;
+                font-size: 12px;
+                font-weight: 400;
+            }
 
 .win {
     z-index: 1030;
