@@ -8,26 +8,50 @@ using Mozlite.Data;
 namespace Mozlite.Extensions
 {
     /// <summary>
-    /// 对象管理接口。
+    /// 对象管理基类。
     /// </summary>
-    /// <typeparam name="TModel">模型类型。</typeparam>
+    /// <typeparam name="TModel">当前模型实例。</typeparam>
     /// <typeparam name="TKey">唯一键类型。</typeparam>
-    public interface IObjectManager<TModel, TKey>
+    public abstract class ObjectManager<TModel, TKey> : IObjectManager<TModel, TKey>
         where TModel : IIdObject<TKey>
     {
         /// <summary>
+        /// 数据库操作实例。
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        protected readonly IRepository<TModel> db;
+        /// <summary>
+        /// 初始化类<see cref="ObjectManager{TModel,TKey}"/>。
+        /// </summary>
+        /// <param name="repository">数据库操作实例。</param>
+        protected ObjectManager(IRepository<TModel> repository)
+        {
+            db = repository;
+        }
+
+        /// <summary>
         /// 保存对象实例。
         /// </summary>
         /// <param name="model">模型实例对象。</param>
         /// <returns>返回保存结果。</returns>
-        DataResult Save(TModel model);
+        public virtual DataResult Save(TModel model)
+        {
+            if (IsDuplicated(model))
+                return DataAction.Duplicate;
+            if (db.Any(model.Id))
+                return DataResult.FromResult(db.Update(model), DataAction.Updated);
+            return DataResult.FromResult(db.Create(model), DataAction.Created);
+        }
 
         /// <summary>
         /// 判断是否重复。
         /// </summary>
         /// <param name="model">模型实例对象。</param>
         /// <returns>返回判断结果。</returns>
-        bool IsDuplicated(TModel model);
+        public virtual bool IsDuplicated(TModel model)
+        {
+            return false;
+        }
 
         /// <summary>
         /// 根据条件更新特定的实例。
@@ -35,42 +59,60 @@ namespace Mozlite.Extensions
         /// <param name="expression">条件表达式。</param>
         /// <param name="satement">更新对象。</param>
         /// <returns>返回更新结果。</returns>
-        DataResult Update(Expression<Predicate<TModel>> expression, object satement);
+        public virtual DataResult Update(Expression<Predicate<TModel>> expression, object satement)
+        {
+            return DataResult.FromResult(db.Update(expression, satement), DataAction.Updated);
+        }
 
         /// <summary>
         /// 根据条件删除实例。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回删除结果。</returns>
-        DataResult Delete(Expression<Predicate<TModel>> expression);
+        public virtual DataResult Delete(Expression<Predicate<TModel>> expression)
+        {
+            return DataResult.FromResult(db.Delete(expression), DataAction.Deleted);
+        }
 
         /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
         /// <param name="id">唯一Id。</param>
         /// <returns>返回删除结果。</returns>
-        DataResult Delete(TKey id);
+        public virtual DataResult Delete(TKey id)
+        {
+            return DataResult.FromResult(db.Delete(id), DataAction.Deleted);
+        }
 
         /// <summary>
         /// 通过唯一键获取当前值。
         /// </summary>
         /// <param name="id">唯一Id。</param>
         /// <returns>返回当前模型实例。</returns>
-        TModel Find(TKey id);
+        public virtual TModel Find(TKey id)
+        {
+            return db.Find(id);
+        }
 
         /// <summary>
         /// 通过唯一键获取当前值。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回当前模型实例。</returns>
-        TModel Find(Expression<Predicate<TModel>> expression);
+        public virtual TModel Find(Expression<Predicate<TModel>> expression)
+        {
+            return db.Find(expression);
+        }
 
         /// <summary>
         /// 根据条件获取列表。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回模型实例列表。</returns>
-        IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null);
+        public virtual IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null)
+        {
+            return db.Fetch(expression);
+        }
 
         /// <summary>
         /// 保存对象实例。
@@ -78,7 +120,14 @@ namespace Mozlite.Extensions
         /// <param name="model">模型实例对象。</param>
         /// <returns>返回保存结果。</returns>
         /// <param name="cancellationToken">取消标识。</param>
-        Task<DataResult> SaveAsync(TModel model, CancellationToken cancellationToken = default);
+        public virtual async Task<DataResult> SaveAsync(TModel model, CancellationToken cancellationToken = default)
+        {
+            if (await IsDuplicatedAsync(model, cancellationToken))
+                return DataAction.Duplicate;
+            if (db.Any(model.Id))
+                return DataResult.FromResult(await db.UpdateAsync(model, cancellationToken), DataAction.Updated);
+            return DataResult.FromResult(await db.CreateAsync(model, cancellationToken), DataAction.Created);
+        }
 
         /// <summary>
         /// 判断是否重复。
@@ -86,7 +135,10 @@ namespace Mozlite.Extensions
         /// <param name="model">模型实例对象。</param>
         /// <returns>返回判断结果。</returns>
         /// <param name="cancellationToken">取消标识。</param>
-        Task<bool> IsDuplicatedAsync(TModel model, CancellationToken cancellationToken = default);
+        public virtual Task<bool> IsDuplicatedAsync(TModel model, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(false);
+        }
 
         /// <summary>
         /// 根据条件更新特定的实例。
@@ -95,7 +147,10 @@ namespace Mozlite.Extensions
         /// <param name="satement">更新对象。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回更新结果。</returns>
-        Task<DataResult> UpdateAsync(Expression<Predicate<TModel>> expression, object satement, CancellationToken cancellationToken = default);
+        public virtual async Task<DataResult> UpdateAsync(Expression<Predicate<TModel>> expression, object satement, CancellationToken cancellationToken = default)
+        {
+            return DataResult.FromResult(await db.UpdateAsync(expression, satement, cancellationToken), DataAction.Updated);
+        }
 
         /// <summary>
         /// 根据条件删除实例。
@@ -103,7 +158,10 @@ namespace Mozlite.Extensions
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回删除结果。</returns>
-        Task<DataResult> DeleteAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default);
+        public virtual async Task<DataResult> DeleteAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        {
+            return DataResult.FromResult(await db.DeleteAsync(expression, cancellationToken), DataAction.Deleted);
+        }
 
         /// <summary>
         /// 通过唯一Id删除对象实例。
@@ -111,7 +169,10 @@ namespace Mozlite.Extensions
         /// <param name="id">唯一Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回删除结果。</returns>
-        Task<DataResult> DeleteAsync(TKey id, CancellationToken cancellationToken = default);
+        public virtual async Task<DataResult> DeleteAsync(TKey id, CancellationToken cancellationToken = default)
+        {
+            return DataResult.FromResult(await db.DeleteAsync(id, cancellationToken), DataAction.Deleted);
+        }
 
         /// <summary>
         /// 通过唯一键获取当前值。
@@ -119,7 +180,10 @@ namespace Mozlite.Extensions
         /// <param name="id">唯一Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前模型实例。</returns>
-        Task<TModel> FindAsync(TKey id, CancellationToken cancellationToken = default);
+        public virtual Task<TModel> FindAsync(TKey id, CancellationToken cancellationToken = default)
+        {
+            return db.FindAsync(id, cancellationToken);
+        }
 
         /// <summary>
         /// 通过唯一键获取当前值。
@@ -127,7 +191,10 @@ namespace Mozlite.Extensions
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前模型实例。</returns>
-        Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default);
+        public virtual Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        {
+            return db.FindAsync(expression, cancellationToken);
+        }
 
         /// <summary>
         /// 根据条件获取列表。
@@ -135,20 +202,29 @@ namespace Mozlite.Extensions
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回模型实例列表。</returns>
-        Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
+        public virtual Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
+        {
+            return db.FetchAsync(expression, cancellationToken);
+        }
 
         /// <summary>
         /// 实例化一个查询实例，这个实例相当于实例化一个查询类，不能当作属性直接调用。
         /// </summary>
         /// <returns>返回模型的一个查询实例。</returns>
-        IQueryable<TModel> AsQueryable();
+        public virtual IQueryable<TModel> AsQueryable()
+        {
+            return db.AsQueryable();
+        }
 
         /// <summary>
         /// 分页获取实例列表。
         /// </summary>
         /// <param name="query">查询实例。</param>
         /// <returns>返回分页实例列表。</returns>
-        TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TModel>;
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TModel>
+        {
+            return db.Load(query);
+        }
 
         /// <summary>
         /// 分页获取实例列表。
@@ -156,22 +232,37 @@ namespace Mozlite.Extensions
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回分页实例列表。</returns>
-        Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>;
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>
+        {
+            return db.LoadAsync(query, cancellationToken: cancellationToken);
+        }
     }
-
+    
     /// <summary>
-    /// 对象管理接口。
+    /// 对象管理实现基类。
     /// </summary>
     /// <typeparam name="TModel">模型类型。</typeparam>
-    public interface IObjectManager<TModel> : IObjectManager<TModel, int>
+    public abstract class ObjectManager<TModel> : ObjectManager<TModel, int>, IObjectManager<TModel>
         where TModel : IIdObject
     {
         /// <summary>
+        /// 初始化类<see cref="ObjectManager{TModel}"/>。
+        /// </summary>
+        /// <param name="repository">数据库操作实例。</param>
+        protected ObjectManager(IRepository<TModel> repository) : base(repository)
+        {
+        }
+
+        /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
         /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
         /// <returns>返回删除结果。</returns>
-        DataResult Delete(string ids);
+        public virtual DataResult Delete(string ids)
+        {
+            var intIds = ids.SplitToInt32();
+            return Delete(x => x.Id.Included(intIds));
+        }
 
         /// <summary>
         /// 通过唯一Id删除对象实例。
@@ -179,6 +270,10 @@ namespace Mozlite.Extensions
         /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回删除结果。</returns>
-        Task<DataResult> DeleteAsync(string ids, CancellationToken cancellationToken = default);
+        public Task<DataResult> DeleteAsync(string ids, CancellationToken cancellationToken = default)
+        {
+            var intIds = ids.SplitToInt32();
+            return DeleteAsync(x => x.Id.Included(intIds), cancellationToken);
+        }
     }
 }
