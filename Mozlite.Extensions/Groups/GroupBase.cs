@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Mozlite.Extensions.Categories;
 using Newtonsoft.Json;
 
-namespace Mozlite.Extensions.Categories
+namespace Mozlite.Extensions.Groups
 {
     /// <summary>
     /// 分组基类。

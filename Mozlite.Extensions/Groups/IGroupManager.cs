@@ -1,4 +1,6 @@
-﻿namespace Mozlite.Extensions.Categories
+﻿using Mozlite.Extensions.Categories;
+
+namespace Mozlite.Extensions.Groups
 {
     /// <summary>
     /// 分组管理接口。

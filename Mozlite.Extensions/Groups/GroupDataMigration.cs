@@ -1,6 +1,7 @@
 ﻿using Mozlite.Data.Migrations;
+using Mozlite.Extensions.Categories;
 
-namespace Mozlite.Extensions.Categories
+namespace Mozlite.Extensions.Groups
 {
     /// <summary>
     /// 分组数据迁移基类。

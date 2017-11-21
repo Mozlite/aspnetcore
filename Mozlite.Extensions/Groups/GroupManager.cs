@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
+using Mozlite.Extensions.Categories;
 
-namespace Mozlite.Extensions.Categories
+namespace Mozlite.Extensions.Groups
 {
     /// <summary>
     /// 初始化类<see cref="GroupManager{TGroup}"/>。
