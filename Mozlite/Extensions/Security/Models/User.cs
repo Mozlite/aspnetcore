@@ -8,7 +8,6 @@
         /// <summary>
         /// 积分。
         /// </summary>
-        [NotUpdated]
         public int Score { get; set; }
 
         /// <summary>

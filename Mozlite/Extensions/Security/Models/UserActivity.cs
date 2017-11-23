@@ -26,15 +26,28 @@ namespace Mozlite.Extensions.Security.Models
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
-        /// 扩展名称。
+        /// IP地址。
         /// </summary>
-        [Size(64)]
-        public string ExtensionName { get; set; }
+        [Size(32)]
+        // ReSharper disable once InconsistentNaming
+        public string IPAdress { get; set; }
 
         /// <summary>
         /// 操作日志。
         /// </summary>
         [Size(512)]
         public string Activity { get; set; }
+        
+        /// <summary>
+        /// 用户名。
+        /// </summary>
+        [NotMapped]
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 昵称。
+        /// </summary>
+        [NotMapped]
+        public string NickName { get; set; }
     }
 }

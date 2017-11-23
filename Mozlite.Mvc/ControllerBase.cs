@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Mozlite.Extensions;
 using Mozlite.Mvc.Messages;
@@ -62,6 +63,20 @@ namespace Mozlite.Mvc
                 }
                 return _areaName;
             }
+        }
+        
+        /// <summary>
+        /// 判断验证码。
+        /// </summary>
+        /// <param name="key">当前唯一键。</param>
+        /// <param name="code">验证码。</param>
+        /// <returns>返回判断结果。</returns>
+        protected virtual bool IsValidateCode(string key, string code)
+        {
+            if (!Request.Cookies.TryGetValue(key, out var value))
+                return false;
+            code = Verifiers.Verifiers.Hashed(code);
+            return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
         }
         #endregion
 
