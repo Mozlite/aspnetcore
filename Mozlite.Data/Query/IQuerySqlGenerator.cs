@@ -32,6 +32,15 @@ namespace Mozlite.Data.Query
         SqlIndentedStringBuilder Update(IEntityType entityType, Expression expression, object parameters);
 
         /// <summary>
+        /// 更新实例。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="parameters">匿名对象。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        SqlIndentedStringBuilder Update(IEntityType entityType, Expression expression, LambdaExpression parameters);
+
+        /// <summary>
         /// 删除实例。
         /// </summary>
         /// <param name="entityType">模型实例。</param>

@@ -569,23 +569,20 @@ namespace Mozlite.Data.Query
             _builder.Append(")");
             return explicitCastExpression;
         }
-
+        
         private static IReadOnlyList<Expression> ProcessInValues(Expression inValues)
         {
             var expressions = new List<Expression>();
-            var inConstant = inValues as ConstantExpression;
-            if (inConstant != null)
+            if (inValues is ConstantExpression inConstant)
             {
                 AddInExpressionValues(inConstant.Value, expressions, inValues);
                 return expressions;
             }
 
-            var arrayExpression = inValues as NewArrayExpression;
-            if (arrayExpression != null)
+            if (inValues is NewArrayExpression arrayExpression)
                 return arrayExpression.Expressions;
 
-            var listExpression = inValues as ListInitExpression;
-            if (listExpression != null)
+            if (inValues is ListInitExpression listExpression)
             {
                 foreach (var initializer in listExpression.Initializers)
                 {
@@ -594,8 +591,7 @@ namespace Mozlite.Data.Query
                 return expressions;
             }
 
-            var memberExpression = inValues as MemberExpression;
-            if (memberExpression != null)
+            if (inValues is MemberExpression memberExpression)
             {
                 AddInExpressionValues(memberExpression.Invoke(), expressions, inValues);
                 return expressions;
@@ -608,9 +604,7 @@ namespace Mozlite.Data.Query
         private static void AddInExpressionValues(
             object value, List<Expression> inConstants, Expression expression)
         {
-            var valuesEnumerable = value as IEnumerable;
-
-            if (valuesEnumerable != null
+            if (value is IEnumerable valuesEnumerable
                 && value.GetType() != typeof(string)
                 && value.GetType() != typeof(byte[]))
             {

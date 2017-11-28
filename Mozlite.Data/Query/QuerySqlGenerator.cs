@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -119,6 +120,22 @@ namespace Mozlite.Data.Query
         }
 
         /// <summary>
+        /// 更新实例。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="parameters">匿名对象。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public virtual SqlIndentedStringBuilder Update(IEntityType entityType, Expression expression, LambdaExpression parameters)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("UPDATE ").Append(SqlHelper.DelimitIdentifier(entityType.Table)).Append(" SET ");
+            builder.Append(VisitUpdateExpression(parameters));
+            builder.AppendEx(Visit(expression), " WHERE {0}").Append(SqlHelper.StatementTerminator);
+            return builder;
+        }
+
+        /// <summary>
         /// 删除实例。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
@@ -195,6 +212,31 @@ namespace Mozlite.Data.Query
             else
                 Query(sql, builder);
             return builder;
+        }
+
+        /// <summary>
+        /// 解析更新项目表达式。
+        /// </summary>
+        /// <param name="expression">更新得表达式。</param>
+        /// <returns>返回解析的表达式字符串。</returns>
+        private string VisitUpdateExpression(LambdaExpression expression)
+        {
+            var statements = new List<string>();
+            if (expression.Body is NewExpression body)
+            {
+                for (int i = 0; i < body.Members.Count; i++)
+                {
+                    var field = SqlHelper.DelimitIdentifier(body.Members[i].Name);
+                    field += " = ";
+                    field += Visit(body.Arguments[i]);
+                    statements.Add(field);
+                }
+                return string.Join(", ", statements);
+            }
+            var parameter = SqlHelper.DelimitIdentifier(expression.Parameters[0].Name);
+            parameter += " = ";
+            parameter += Visit(expression);
+            return parameter;
         }
 
         /// <summary>

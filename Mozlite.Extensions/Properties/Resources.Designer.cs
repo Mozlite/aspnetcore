@@ -169,6 +169,24 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 对数据库中某些列进行分词，生成搜索需求文档，提供前天搜索服务。 的本地化字符串。
+        /// </summary>
+        internal static string Task_Searching_Description {
+            get {
+                return ResourceManager.GetString("Task_Searching_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 搜索引擎服务 的本地化字符串。
+        /// </summary>
+        internal static string Task_Searching_Name {
+            get {
+                return ResourceManager.GetString("Task_Searching_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 [服务]{0}执行错误：{1}。 的本地化字符串。
         /// </summary>
         internal static string TaskExecuteError {

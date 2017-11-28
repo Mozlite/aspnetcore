@@ -156,4 +156,10 @@
   <data name="TaskExecuteError" xml:space="preserve">
     <value>[服务]{0}执行错误：{1}。</value>
   </data>
+  <data name="Task_Searching_Description" xml:space="preserve">
+    <value>对数据库中某些列进行分词，生成搜索需求文档，提供前天搜索服务。</value>
+  </data>
+  <data name="Task_Searching_Name" xml:space="preserve">
+    <value>搜索引擎服务</value>
+  </data>
 </root>

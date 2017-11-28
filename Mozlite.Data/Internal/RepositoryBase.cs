@@ -211,6 +211,49 @@ namespace Mozlite.Data.Internal
         }
 
         /// <summary>
+        /// 根据条件更新相应的模型实例对象。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="statement">更新选项实例，可以为匿名对象或者参数名为字段得表达式。</param>
+        /// <returns>返回是否更新成功。</returns>
+        /// <example>
+        /// public class T{
+        ///     public int Id{get;set;}
+        ///     public int Views{get;set;}
+        ///     public int DayViews{get;set;}
+        /// }
+        /// db.Update(x=>x.Id == 1, x=>new{Views = x.Views + 1,DayViews = x.DayViews + 1});
+        /// db.Update(x=>x.Id == 1, Views=>Views.Views + 1);//这里参数必须为列名称
+        /// </example>
+        public virtual bool Update(Expression<Predicate<TModel>> expression, Expression<Func<TModel, object>> statement)
+        {
+            var sql = SqlGenerator.Update(EntityType, expression, statement);
+            return ExecuteNonQuery(sql, sql.Parameters);
+        }
+
+        /// <summary>
+        /// 根据条件更新相应的模型实例对象。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="statement">更新选项实例，可以为匿名对象或者参数名为字段得表达式。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回是否更新成功。</returns>
+        /// <example>
+        /// public class T{
+        ///     public int Id{get;set;}
+        ///     public int Views{get;set;}
+        ///     public int DayViews{get;set;}
+        /// }
+        /// db.Update(x=>x.Id == 1, x=>new{Views = x.Views + 1,DayViews = x.DayViews + 1});
+        /// db.Update(x=>x.Id == 1, Views=>Views.Views + 1);//这里参数必须为列名称
+        /// </example>
+        public virtual Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, Expression<Func<TModel, object>> statement, CancellationToken cancellationToken = default)
+        {
+            var sql = SqlGenerator.Update(EntityType, expression, statement);
+            return ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
         /// 更新所有模型实例对象。
         /// </summary>
         /// <param name="statement">更新选项实例。</param>

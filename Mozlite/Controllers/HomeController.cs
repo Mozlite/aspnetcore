@@ -36,8 +36,7 @@ namespace Mozlite.Controllers
 
         public IActionResult Index()
         {
-            var tasks = _repository.Fetch();
-            return View(tasks);
+            return View();
         }
 
         [HttpPost]
