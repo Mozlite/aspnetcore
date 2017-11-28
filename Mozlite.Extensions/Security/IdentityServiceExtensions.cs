@@ -1,7 +1,10 @@
 ﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Security.Activities;
 
 namespace Mozlite.Extensions.Security
 {
@@ -62,6 +65,19 @@ namespace Mozlite.Extensions.Security
                 roleStoreType);
             builder.Services.TryAdd(services);
             return builder;
+        }
+
+        /// <summary>
+        /// 使用用户状态日志记录。
+        /// </summary>
+        /// <param name="app">应用程序构建实例。</param>
+        /// <returns>返回应用程序构建实例。</returns>
+        public static IApplicationBuilder UseUserActivity(this IApplicationBuilder app)
+        {
+            var factory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
+            var activityManager = app.ApplicationServices.GetRequiredService<IActivityManager>();
+            factory.AddProvider(new ActivityLoggerProvider(activityManager));
+            return app;
         }
     }
 }

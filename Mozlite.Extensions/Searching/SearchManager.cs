@@ -97,7 +97,7 @@ namespace Mozlite.Extensions.Searching
                 }
 
                 //更新到实体表
-                if (await db.ExecuteNonQueryAsync($"UPDATE {entityType.Table} SET SearchIndexed = {(int)IndexedType.Indexed} WHRE Id = { search.TargetId};"))
+                if (await db.ExecuteNonQueryAsync($"UPDATE {entityType.Table} SET SearchIndexed = {(int)IndexedType.Completed} WHRE Id = { search.TargetId};"))
                     return true;
                 return false;
             }, 300);

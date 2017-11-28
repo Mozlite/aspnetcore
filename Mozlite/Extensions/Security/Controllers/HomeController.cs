@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Security.Activities;
 using Mozlite.Extensions.Security.Models;
 using Mozlite.Extensions.Security.Services;
 using Mozlite.Extensions.Security.ViewModels;
@@ -18,14 +19,12 @@ namespace Mozlite.Extensions.Security.Controllers
         private readonly IUserManager _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<HomeController> _logger;
-        private readonly IActivityManager _activityManager;
 
-        public HomeController(IUserManager userManager, SignInManager<User> signInManager, ILogger<HomeController> logger, IActivityManager activityManager)
+        public HomeController(IUserManager userManager, SignInManager<User> signInManager, ILogger<HomeController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _activityManager = activityManager;
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace Mozlite.Extensions.Security.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.SignInSuccessAsync(model.UserName);
-                    await _activityManager.CreateAsync("成功登入系统.");
+                    _logger.LogUserInformation("成功登入系统.");
                     return Success(new { redirectUrl });
                 }
                 if (result.IsLockedOut)
@@ -86,7 +85,7 @@ namespace Mozlite.Extensions.Security.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
-            await _activityManager.CreateAsync("成功推出系统.");
+            _logger.LogUserInformation("成功退出系统.");
             await _signInManager.SignOutAsync();
             return Redirect("/");
         }

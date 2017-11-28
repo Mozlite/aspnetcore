@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
     /// 用户活动状态。

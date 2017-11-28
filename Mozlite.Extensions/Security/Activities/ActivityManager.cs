@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mozlite.Data;
-using Mozlite.Extensions.Security.Models;
 
-namespace Mozlite.Extensions.Security.Services
+namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
     /// 活动状态管理类。
@@ -30,6 +29,8 @@ namespace Mozlite.Extensions.Security.Services
         public virtual async Task<bool> CreateAsync(UserActivity activity)
         {
             var context = _httpContextAccessor.HttpContext;
+            if (context?.User?.Identity.IsAuthenticated != true)
+                return false;
             activity.UserId = context.User.GetUserId();
             activity.Activity = activity.Activity.Replace("${uname}", context.User.GetUserName())
                 .Replace("${uid}", activity.UserId.ToString());
@@ -50,6 +51,8 @@ namespace Mozlite.Extensions.Security.Services
         public virtual bool Create(UserActivity activity)
         {
             var context = _httpContextAccessor.HttpContext;
+            if (context?.User?.Identity.IsAuthenticated != true)
+                return false;
             activity.UserId = context.User.GetUserId();
             activity.Activity = activity.Activity.Replace("${uname}", context.User.GetUserName())
                 .Replace("${uid}", activity.UserId.ToString());

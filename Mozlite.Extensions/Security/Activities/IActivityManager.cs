@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Mozlite.Extensions.Security.Models;
 
-namespace Mozlite.Extensions.Security.Services
+namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
     /// 活动状态。

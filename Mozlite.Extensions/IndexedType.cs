@@ -16,6 +16,6 @@
         /// <summary>
         /// 索引成功。
         /// </summary>
-        Indexed,
+        Completed,
     }
 }

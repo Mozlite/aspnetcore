@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mozlite.Data;
-using Mozlite.Extensions.Tasks;
+using Microsoft.Extensions.Logging;
 using Mozlite.Models;
 
 namespace Mozlite.Controllers
 {
     public class HomeController : Mozlite.Mvc.ControllerBase
     {
-        private readonly IRepository<TaskDescriptor> _repository;
-        public HomeController(IRepository<TaskDescriptor> repository)
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger)
         {
-            _repository = repository;
+            _logger = logger;
         }
 
         public IActionResult Detail()

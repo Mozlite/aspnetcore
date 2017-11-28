@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data.Migrations;
+using Mozlite.Extensions.Security;
 using Mozlite.Mvc.Routing;
 
 namespace Mozlite.Mvc
@@ -75,6 +76,8 @@ namespace Mozlite.Mvc
             }
             //数据库迁移
             app.UseMigrations();
+            //用户日志操作记录
+            app.UseUserActivity();
             //MVC
             app.UseMvc(builder =>
                 builder.MapLowerCaseRoute("area-default", "{area:exists}/{controller}/{action=Index}/{id?}")

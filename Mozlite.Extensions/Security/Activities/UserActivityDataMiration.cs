@@ -1,6 +1,6 @@
 ﻿using Mozlite.Data.Migrations;
 
-namespace Mozlite.Extensions.Security.Models
+namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
     /// 用户活动数据迁移。

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mozlite.Data.SqlServer;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Models;
@@ -32,7 +33,7 @@ namespace Mozlite
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory)
         {
             if (env.IsDevelopment())
             {
