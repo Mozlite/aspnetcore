@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Activities
@@ -12,13 +11,15 @@ namespace Mozlite.Extensions.Security.Activities
     {
         private readonly IRepository<UserActivity> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<UserActivity> _logger;
-
-        public ActivityManager(IRepository<UserActivity> repository, IHttpContextAccessor httpContextAccessor, ILogger<UserActivity> logger)
+        /// <summary>
+        /// 初始化<see cref="ActivityManager"/>。
+        /// </summary>
+        /// <param name="repository">数据库操作接口。</param>
+        /// <param name="httpContextAccessor">HTTP上下文访问器。</param>
+        public ActivityManager(IRepository<UserActivity> repository, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
         }
 
         /// <summary>
@@ -35,12 +36,7 @@ namespace Mozlite.Extensions.Security.Activities
             activity.Activity = activity.Activity.Replace("${uname}", context.User.GetUserName())
                 .Replace("${uid}", activity.UserId.ToString());
             activity.IPAdress = context.GetUserAddress();
-            if (await _repository.CreateAsync(activity))
-            {
-                _logger.LogInformation("[{0}] {1}{2}.", activity.CreatedDate.ToString("HH:mm"), context.User.GetUserName(), activity.Activity);
-                return true;
-            }
-            return false;
+            return await _repository.CreateAsync(activity);
         }
 
         /// <summary>
@@ -57,12 +53,7 @@ namespace Mozlite.Extensions.Security.Activities
             activity.Activity = activity.Activity.Replace("${uname}", context.User.GetUserName())
                 .Replace("${uid}", activity.UserId.ToString());
             activity.IPAdress = context.GetUserAddress();
-            if (_repository.Create(activity))
-            {
-                _logger.LogInformation("[{0}] {1}{2}.", activity.CreatedDate.ToString("HH:mm"), context.User.GetUserName(), activity.Activity);
-                return true;
-            }
-            return false;
+            return _repository.Create(activity);
         }
 
         /// <summary>
