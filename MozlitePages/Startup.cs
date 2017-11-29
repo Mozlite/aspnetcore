@@ -21,7 +21,12 @@ namespace Mozlite
         {
             services.AddMozlite()
                 .AddSqlServer(Configuration);
-            services.AddMozliteMvc();
+            services.AddMozliteMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.RootDirectory = "/";
+                    options.Conventions.AuthorizeFolder("/admin");
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

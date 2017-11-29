@@ -67,19 +67,8 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回任务实例。</returns>
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            while (true)
-            {//初始化等待表格建立
-                try
-                {
-                    await _taskManager.EnsuredTaskServicesAsync(_services.Values);
-                    break;
-                }
-                catch
-                {
-                    await Task.Delay(1000, cancellationToken);
-                }
-            }
-            
+            await _taskManager.EnsuredTaskServicesAsync(_services.Values);
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try

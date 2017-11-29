@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Mozlite.Pages
+namespace Mozlite
 {
     public class ErrorModel : PageModel
     {

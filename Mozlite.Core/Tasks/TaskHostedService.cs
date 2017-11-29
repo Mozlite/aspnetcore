@@ -27,10 +27,12 @@ namespace Mozlite.Tasks
         /// <summary>
         /// 当应用程序开启时候触发得方法。
         /// </summary>
-        public override Task StartAsync(CancellationToken cancellationToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
+            //延迟执行后台线程
+            await Task.Delay(3000, cancellationToken);
             _logger.LogInformation("后台服务启动！");
-            return base.StartAsync(cancellationToken);
+            await base.StartAsync(cancellationToken);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Mozlite.Pages.Security
+namespace Mozlite.Security
 {
     [Authorize]
     public class IndexModel : PageModel

@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Mozlite.Pages
+namespace Mozlite
 {
-    public class AboutModel : PageModel
+    public class ContactModel : PageModel
     {
         public string Message { get; set; }
 
         public void OnGet()
         {
-            Message = "Your application description page.";
+            Message = "Your contact page.";
         }
     }
 }
