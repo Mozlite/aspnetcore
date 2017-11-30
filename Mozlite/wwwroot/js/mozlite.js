@@ -443,34 +443,31 @@
             update();
         };
 
-        this.replace = function (text) {
+        this.replace = function (prefix, suffix) {
             ///<summary>替换当前选中代码。</summary>
+            ///<param name="prefix" type="Function|String">前缀或者格式化当前选中字符串的函数。</param>
+            ///<param name="suffix" type="String">后缀字符串。</param>
+            if (!prefix) return;
             var sel = getSelection();
             if (!sel || sel.rangeCount === 0 || sel.anchorNode.parentNode !== this.edit) {
-                me.append(text);
-                return;
+                this.edit.focus();
             }
             var range = sel.getRangeAt(0);
-            var el = document.createElement("div");
-            if (!text)
-                el.innerHTML = range.toString();
-            else if (typeof text === 'function')
-                el.innerHTML = text(range.toString());
-            else
-                el.innerHTML = text;
+            var text = range.toString();
             range.deleteContents();
-            var frag = document.createDocumentFragment(), node, lastNode;
-            while ((node = el.firstChild)) {
-                lastNode = frag.appendChild(node);
-            }
-            range.insertNode(frag);
-            if (lastNode) {
-                range = range.cloneRange();
-                range.setStartAfter(lastNode);
-                range.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }
+            if (typeof prefix === 'function') {
+                text = prefix(text);
+            } else
+                range.insertNode(document.createTextNode(prefix));
+            var node = document.createTextNode(text);
+            range.insertNode(node);
+            if (suffix)
+                range.insertNode(document.createTextNode(suffix));
+            range = range.cloneRange();
+            range.setStartAfter(node);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
             update();
         };
 
@@ -492,35 +489,41 @@
 
         var items = {
             bold: function () {
-                me.replace(function (r) { return '__ ' + r + ' __' });
+                me.replace('__ ', ' __');
             },
             italic: function () {
-                me.replace(function (r) { return ' _' + r + '_ ' });
+                me.replace(' _', '_ ');
             },
             ol: function () {
                 me.replace(function (r) {
-                    var lines = r.replace(/\r/g, '').split('\n');
-                    var result = [];
-                    for (var i = 0; i < lines.length; i++) {
-                        result.push((i + 1) + '. ' + lines[i]);
+                    if (r) {
+                        var lines = r.replace(/\r/g, '').split('\n');
+                        var result = [];
+                        for (var i = 0; i < lines.length; i++) {
+                            result.push((i + 1) + '. ' + lines[i]);
+                        }
+                        return result.join('\r\n');
                     }
-                    return result.join('\r\n');
+                    return '1. ';
                 });
             },
             ul: function () {
                 me.replace(function (r) {
-                    var lines = r.replace(/\r/g, '').split('\n');
-                    var result = [];
-                    for (var i = 0; i < lines.length; i++) {
-                        result.push('* ' + lines[i]);
+                    if (r) {
+                        var lines = r.replace(/\r/g, '').split('\n');
+                        var result = [];
+                        for (var i = 0; i < lines.length; i++) {
+                            result.push('* ' + lines[i]);
+                        }
+                        return result.join('\r\n');
                     }
-                    return result.join('\r\n');
+                    return '* ';
                 });
             },
             quote: function () {
                 me.replace(function (r) {
                     if (r) return '\r\n> ' + r + '\r\n';
-                    return '>';
+                    return '> ';
                 });
             },
             fullscreen: function () {
@@ -547,11 +550,13 @@
             },
             quora: function () {
                 me.replace(function (r) {
+                    r = r || '';
                     return '`' + r + '`';
                 });
             },
             code: function () {
                 me.replace(function (r) {
+                    r = r || '';
                     return '\r\n``` \r\n' + r + '\r\n```\r\n';
                 });
             }
