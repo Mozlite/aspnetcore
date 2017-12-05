@@ -581,3 +581,39 @@
     .mozfmt p {
         text-indent: 24px;
     }
+
+.moz-circle-left, .moz-circle-right {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    color: #0078d7;
+    border-radius: 50%;
+    background: #ffffff;
+    position: fixed;
+    top: 50%;
+    margin-top: -40px;
+    z-index: 1051;
+    padding: 0 20px;
+    display: none;
+}
+
+.moz-circle-left {
+    left: 10%;
+    right: auto;
+}
+
+.moz-circle-right {
+    left: auto;
+    right: 10%;
+    padding: 0 30px;
+}
+
+    .moz-circle-left i, .moz-circle-right i {
+        width: 80px;
+        height: 80px;
+        font-size: 80px;
+    }
+
+    .moz-circle-left:hover, .moz-circle-right:hover {
+        background-color: #eaeaea;
+    }

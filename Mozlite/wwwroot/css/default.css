@@ -1266,27 +1266,27 @@ a {
                     background: #F0F3F8;
                 }
 
-        .main .body .content-wrapper .archive-content .archive-note {
-            margin: 10px 0;
-            background: #f4f4f4;
-            min-height: 30px;
-            display: flex;
-            flex-direction: row;
-            margin-left: 55px;
+    .main .body .content-wrapper .archive-content .archive-note {
+        margin: 10px 0;
+        background: #f4f4f4;
+        min-height: 30px;
+        display: flex;
+        flex-direction: row;
+        margin-left: 55px;
+    }
+
+        .main .body .content-wrapper .archive-content .archive-note .mark {
+            background: #a6a6a6;
+            flex: 0 0 5px;
         }
 
-            .main .body .content-wrapper .archive-content .archive-note .mark {
-                background: #a6a6a6;
-                flex: 0 0 5px;
-            }
-
-            .main .body .content-wrapper .archive-content .archive-note .content {
-                margin: 7px 7px 7px 15px;
-                flex: 1 1 auto;
-                color: #212121;
-                font-size: 12px;
-                font-weight: 400;
-            }
+        .main .body .content-wrapper .archive-content .archive-note .content {
+            margin: 7px 7px 7px 15px;
+            flex: 1 1 auto;
+            color: #212121;
+            font-size: 12px;
+            font-weight: 400;
+        }
 
 .win {
     z-index: 1030;
@@ -1443,3 +1443,39 @@ a {
         .win .menu-wrapper .menu a:hover span {
             color: #fff;
         }
+
+        .win .menu-wrapper .menu a.green {
+            color: #217346;
+        }
+
+            .win .menu-wrapper .menu a.green:hover {
+                background: #217346;
+                color: #fff;
+            }
+
+        .win .menu-wrapper .menu a.brown {
+            color: #d24726;
+        }
+
+            .win .menu-wrapper .menu a.brown:hover {
+                background: #d24726;
+                color: #fff;
+            }
+
+        .win .menu-wrapper .menu a.purple {
+            color: #80397b;
+        }
+
+            .win .menu-wrapper .menu a.purple:hover {
+                background: #80397b;
+                color: #fff;
+            }
+
+        .win .menu-wrapper .menu a.wathet {
+            color: #00aff0;
+        }
+
+            .win .menu-wrapper .menu a.wathet:hover {
+                background: #00aff0;
+                color: #fff;
+            }
