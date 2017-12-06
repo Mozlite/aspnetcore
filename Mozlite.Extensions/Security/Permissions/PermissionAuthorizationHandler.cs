@@ -39,7 +39,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 context.Fail();
                 return;
             }
-            if (await _permissionManager.IsAuthorized(permissionName))
+            if (await _permissionManager.IsAuthorizedAsync(permissionName))
                 context.Succeed(requirement);
             else
                 context.Fail();

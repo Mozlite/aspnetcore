@@ -5,7 +5,7 @@ namespace Mozlite.Extensions.Internal
     /// <summary>
     /// 主键或者唯一键类。
     /// </summary>
-    public class Key : IKey
+    internal class Key : IKey
     {
         /// <summary>
         /// 初始化类<see cref="Key"/>。

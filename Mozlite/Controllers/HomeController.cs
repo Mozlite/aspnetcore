@@ -1,18 +1,28 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Security;
+using Mozlite.Extensions.Storages;
 using Mozlite.Models;
+using Mozlite.Mvc.Themes;
 
 namespace Mozlite.Controllers
 {
     public class HomeController : Mozlite.Mvc.ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IThemeApplicationManager _applicationManager;
+        private readonly IMediaFileProvider _fileProvider;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IThemeApplicationManager applicationManager, IMediaFileProvider fileProvider)
         {
             _logger = logger;
+            _applicationManager = applicationManager;
+            _fileProvider = fileProvider;
         }
 
         public IActionResult Detail()
@@ -53,9 +63,18 @@ namespace Mozlite.Controllers
             return View();
         }
 
-        public IActionResult LWin()
+        public async Task<IActionResult> Menu()
         {
-            return View();
+            return View(await _applicationManager.LoadApplicationsAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            var result = await _fileProvider.UploadAsync(file, SecuritySettings.ExtensionName, UserId);
+            if (result.Succeeded)
+                return Success(new {result.Url});
+            return Error(result.Message);
         }
 
         public IActionResult Contact()

@@ -1,54 +1,267 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Mozlite</title>
-
     <environment include="Development">
+        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/mozlite.css" />
+        <link rel="stylesheet" href="~/css/default.css" />
     </environment>
     <environment exclude="Development">
+        <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/mozlite.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/default.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-page="/Index" class="navbar-brand">Mozlite</a>
+    <div class="wrapper">
+        <div class="header">
+            <div class="leftbar">
+                <div _load="@Url.Page("Menu")" class="button">
+                    <i class="fa fa-user-secret"></i>
+                </div>
+                <a href="~/" class="name"><span>Mozlite</span></a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-page="/Index">Home</a></li>
-                    <li><a asp-page="/About">About</a></li>
-                    <li><a asp-page="/Contact">Contact</a></li>
-                </ul>
+            <div class="searchbar">
+
+            </div>
+            <div class="rightbar">
+                <div _load="@Url.Action("RWin")" class="button"><i class="fa fa-cog"></i></div>
+                <div _load="@Url.Action("RWin")" class="button"><i class="fa fa-question"></i></div>
+                <div _load="@Url.Action("RWin")" class="button"><img src="https://cid-2957ca9eb5657373.users.storage.live.com/users/0x2957ca9eb5657373/myprofile/expressionprofile/profilephoto:UserTileStatic,UserTileSmall/MeControlMediumUserTile?ck=1&ex=24&fofoff=1" class="avatar" /></div>
+            </div>
+            <div class="skin"></div>
+        </div>
+        <div class="main">
+            <div class="main-inner">
+                <div class="menu-wrapper" style="width:270px">
+                    <div class="menu-inner">
+                        <div class="menu-main">
+                            <div class="menu-toggle-button">
+                                <button type="button" title="隐藏导航窗格">
+                                    <i class="icon-bar"></i>
+                                    <i class="icon-bar"></i>
+                                    <i class="icon-bar"></i>
+                                </button>
+                            </div>
+                            <div class="menu-container">
+                                <div class="menu-top"></div>
+                                <div class="menu-bottom">
+                                    <a href="#">
+                                        <i class="fa fa-envelope-o"></i>
+                                    </a><a href="#">
+                                        <i class="fa fa-lock"></i>
+                                    </a><a href="#">
+                                        <i class="fa fa-key"></i>
+                                    </a><a asp-page="Settings">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-menu-wrapper" style="width: 222px;">
+                            <div class="actionbar">
+                                <button type="button" _href="@Url.Action("Edit", "Home", new{area=""})">
+                                    <i class="fa fa-plus"></i> 添加文章
+                                </button>
+                            </div>
+                            <div class="sub-menu-container disableTextSelection customScrollBar overlay">
+                                <div>
+                                    <span class="sr-only">导航窗格</span>
+                                    <div class="sub-menu-tree">
+                                        <div class="sub-menu-tree-header">
+                                            <button type="button">
+                                                <i class="fa fa-angle-down"></i>
+                                            </button>
+                                            <span class="text">收藏夹</span>
+                                        </div>
+                                        <div class="sub-menu-tree-body">
+                                            <div draggable="true">
+                                                <div class="sub-menu-item active" title="收件箱">
+                                                    <i class="fa fa-envelope-o"></i>
+                                                    <span class="text">收件箱</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="草稿箱">
+                                                    <i class="fa fa-pencil"></i>
+                                                    <span class="text">草稿箱</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            5
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="测试">
+                                                    <i class="fa fa-key"></i>
+                                                    <span class="text">测试</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="sub-menu-tree">
+                                        <div class="sub-menu-tree-header">
+                                            <button type="button">
+                                                <i class="fa fa-angle-down"></i>
+                                            </button>
+                                            <span class="text">收件箱</span>
+                                        </div>
+                                        <div class="sub-menu-tree-body">
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="收件箱">
+                                                    <i class="fa fa-envelope-o"></i>
+                                                    <span class="text">收件箱</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star-o"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="草稿箱">
+                                                    <i class="fa fa-pencil"></i>
+                                                    <span class="text">草稿箱</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            5
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star-o"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="测试">
+                                                    <i class="fa fa-key"></i>
+                                                    <span class="text">测试</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star-o"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="测试">
+                                                    <i class="fa fa-key"></i>
+                                                    <span class="text">测试</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star-o"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="测试">
+                                                    <i class="fa fa-key"></i>
+                                                    <span class="text">测试</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star-o"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div draggable="true">
+                                                <div class="sub-menu-item" title="测试">
+                                                    <i class="fa fa-key"></i>
+                                                    <span class="text">测试</span>
+                                                    <span class="sub-menu-item-badge">
+                                                        <span class="sub-menu-item-badge-container">
+                                                            <span class="sr-only">未读</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="sub-menu-item-action">
+                                                        <button type="button" title="从收藏夹中删除">
+                                                            <i class="fa fa-star-o"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="sub-menu-item-new">
+                                                <div class="text">新建文件夹</div>
+                                                <input name="sub" type="text" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="splitter"></div>
+                <div class="body">
+                    @RenderBody()
+                </div>
+                <div class="main-slider"></div>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - Mozlite</p>
-        </footer>
     </div>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/mozlite.js" asp-append-version="true"></script>
+        <script src="~/js/default.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -63,7 +276,8 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/mozlite.min.js" asp-append-version="true"></script>
+        <script src="~/js/default.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

@@ -107,6 +107,10 @@ namespace Mozlite.Extensions.Security
         /// <param name="builder">用户表格定义实例。</param>
         protected virtual void Create(CreateTableBuilder<TUser> builder) { }
 
+        /// <summary>
+        /// 添加默认角色。
+        /// </summary>
+        /// <param name="builder">数据迁移构建实例。</param>
         public virtual void Up1(MigrationBuilder builder)
         {
             builder.SqlCreate(new TRole

@@ -15,8 +15,29 @@
     <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
     <ProjectReference Include="..\Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj" />
     <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj" />
     <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
     <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
     <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Error.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="_Layout.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="_ValidationScriptsPartial.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="_ViewImports.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="_ViewStart.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="_Win.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

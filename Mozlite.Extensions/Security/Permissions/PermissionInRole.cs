@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mozlite.Extensions.Security.Permissions
@@ -11,11 +12,13 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// ½ÇÉ«Id¡£
         /// </summary>
+        [Key]
         public int RoleId { get; set; }
 
         /// <summary>
         /// È¨ÏÞId¡£
         /// </summary>
+        [Key]
         public int PermissionId { get; set; }
 
         /// <summary>

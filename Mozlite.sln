@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Core", "Mozlite.Core\Mozlite.Core.csproj", "{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}"
 EndProject
@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Mvc", "Mozlite.Mvc\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Storages", "Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj", "{D5772072-8292-488C-B7B0-1ABE087A8830}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MozlitePages", "MozlitePages\MozlitePages.csproj", "{FE5BA0BB-C55D-494E-939A-9179235AC8E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozlitePages", "MozlitePages\MozlitePages.csproj", "{FE5BA0BB-C55D-494E-939A-9179235AC8E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Security", "Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj", "{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

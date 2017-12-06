@@ -1,10 +1,20 @@
-﻿namespace Mozlite.Extensions.Storages
+﻿using System;
+using System.Data.Common;
+
+namespace Mozlite.Extensions.Storages
 {
     /// <summary>
     /// 存储物理路径文件。
     /// </summary>
     public class StoredPhysicalFile
     {
+        internal StoredPhysicalFile(DbDataReader reader)
+        {
+            FileName = reader["Name"]?.ToString();
+            ContentType = reader["ContentType"]?.ToString();
+            PhysicalPath = reader["FileId"].ToString().MakedPath();
+        }
+
         /// <summary>
         /// 文件名。
         /// </summary>

@@ -36,7 +36,7 @@ namespace Mozlite.Extensions.Storages
             get
             {
                 if (_path == null && FileId != null)
-                    _path = $"{FileId[1]}\\{FileId[3]}\\{FileId[12]}\\{FileId[16]}\\{FileId[20]}\\{FileId}.moz";
+                    _path = FileId.MakedPath();
                 return _path;
             }
         }

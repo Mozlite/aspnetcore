@@ -14,8 +14,7 @@ namespace Mozlite.Extensions.Storages
         /// 文件唯一Id，会暴露给URL地址。
         /// </summary>
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// 实体文件Id。
@@ -47,9 +46,9 @@ namespace Mozlite.Extensions.Storages
         public string ExtensionName { get; set; }
 
         /// <summary>
-        /// 大小。
+        /// 关联Id。
         /// </summary>
-        public long Length { get; set; }
+        public int? TargetId { get; set; }
 
         /// <summary>
         /// 添加日期。
@@ -59,11 +58,11 @@ namespace Mozlite.Extensions.Storages
         /// <summary>
         /// 访问地址。
         /// </summary>
-        public string Url => $"/{ExtensionName}-medias/{FileName}".ToLower();
+        public string Url => $"/s-medias/{FileName}".ToLower();
 
         /// <summary>
         /// 访问地址。
         /// </summary>
-        public string DownloadUrl => $"/{ExtensionName}-attachments/{FileName}".ToLower();
+        public string DownloadUrl => $"/s-download/{FileName}".ToLower();
     }
 }

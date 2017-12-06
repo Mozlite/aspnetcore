@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Permissions
@@ -18,6 +21,7 @@ namespace Mozlite.Extensions.Security.Permissions
         protected readonly IRepository<Permission> db;
         private readonly IRepository<PermissionInRole> _pirs;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMemoryCache _cache;
 
         /// <summary>
         /// 初始化类<see cref="PermissionManager{TUserRole}"/>。
@@ -25,11 +29,31 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="repository">数据库操作接口实例。</param>
         /// <param name="pirs">数据库操作接口。</param>
         /// <param name="httpContextAccessor">当前HTTP上下文访问器。</param>
-        protected PermissionManager(IRepository<Permission> repository, IRepository<PermissionInRole> pirs, IHttpContextAccessor httpContextAccessor)
+        /// <param name="cache">缓存接口。</param>
+        protected PermissionManager(IRepository<Permission> repository, IRepository<PermissionInRole> pirs, IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
         {
             db = repository;
             _pirs = pirs;
             _httpContextAccessor = httpContextAccessor;
+            _cache = cache;
+        }
+
+        /// <summary>
+        /// 获取当前用户的权限。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="permissioName">权限名称。</param>
+        /// <returns>返回权限结果。</returns>
+        public PermissionValue GetPermission(int userId, string permissioName)
+        {
+            var permission = GetOrCreate(permissioName);
+            var values = _pirs.AsQueryable()
+                .InnerJoin<TUserRole>((p, r) => p.RoleId == r.RoleId)
+                .Where<TUserRole>(ur => ur.UserId == userId)
+                .Where(x => x.PermissionId == permission.Id)
+                .Select(x => x.Value)
+                .AsEnumerable(r => (PermissionValue)r.GetInt32(0));
+            return Merged(values);
         }
 
         /// <summary>
@@ -40,13 +64,18 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <returns>返回权限结果。</returns>
         public async Task<PermissionValue> GetPermissionAsync(int userId, string permissioName)
         {
+            var permission = await GetOrCreateAsync(permissioName);
             var values = await _pirs.AsQueryable()
                 .InnerJoin<TUserRole>((p, r) => p.RoleId == r.RoleId)
-                .InnerJoin<Permission>((pi, p) => pi.PermissionId == p.Id)
                 .Where<TUserRole>(ur => ur.UserId == userId)
-                .Where<Permission>(p => p.Name == permissioName)
+                .Where(x => x.PermissionId == permission.Id)
                 .Select(x => x.Value)
                 .AsEnumerableAsync(r => (PermissionValue)r.GetInt32(0));
+            return Merged(values);
+        }
+
+        private PermissionValue Merged(IEnumerable<PermissionValue> values)
+        {
             if (values.Any(x => x == PermissionValue.Deny))
                 return PermissionValue.Deny;
             if (values.Any(x => x == PermissionValue.Allow))
@@ -59,7 +88,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// </summary>
         /// <param name="permissionName">权限名称。</param>
         /// <returns>返回判断结果。</returns>
-        public async Task<bool> IsAuthorized(string permissionName)
+        public async Task<bool> IsAuthorizedAsync(string permissionName)
         {
             var isAuthorized =
                 _httpContextAccessor.HttpContext.Items[typeof(Permission) + ":" + permissionName] as bool?;
@@ -73,6 +102,110 @@ namespace Mozlite.Extensions.Security.Permissions
             }
             _httpContextAccessor.HttpContext.Items[typeof(Permission) + ":" + permissionName] = isAuthorized;
             return isAuthorized.Value;
+        }
+
+        /// <summary>
+        /// 判断当前用户是否拥有<paramref name="permissionName"/>权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public bool IsAuthorized(string permissionName)
+        {
+            var isAuthorized =
+                _httpContextAccessor.HttpContext.Items[typeof(Permission) + ":" + permissionName] as bool?;
+            if (isAuthorized != null) return isAuthorized.Value;
+            isAuthorized = false;
+            var id = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (id > 0)
+            {
+                var permission = GetPermission(id, permissionName);
+                isAuthorized = permission == PermissionValue.Allow;
+            }
+            _httpContextAccessor.HttpContext.Items[typeof(Permission) + ":" + permissionName] = isAuthorized;
+            return isAuthorized.Value;
+        }
+
+        /// <summary>
+        /// 获取或添加权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回当前名称的权限实例。</returns>
+        public Permission GetOrCreate(string permissionName)
+        {
+            if (!LoadPermissions().TryGetValue(permissionName, out var permission))
+            {
+                permission = new Permission { Name = permissionName };
+                db.Create(permission);
+            }
+            return permission;
+        }
+
+        /// <summary>
+        /// 获取或添加权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回当前名称的权限实例。</returns>
+        public async Task<Permission> GetOrCreateAsync(string permissionName)
+        {
+            var permissions = await LoadPermissionsAsync();
+            if (!permissions.TryGetValue(permissionName, out var permission))
+            {
+                permission = new Permission { Name = permissionName };
+                await db.CreateAsync(permission);
+            }
+            return permission;
+        }
+
+        /// <summary>
+        /// 保存权限。
+        /// </summary>
+        /// <param name="permission">权限实例对象。</param>
+        /// <returns>返回保存结果。</returns>
+        public async Task<bool> SaveAsync(Permission permission)
+        {
+            bool result;
+            if ((await LoadPermissionsAsync()).ContainsKey(permission.Name))
+                result = await db.UpdateAsync(x => x.Name == permission.Name, new { permission.Description });
+            else
+                result = await db.CreateAsync(permission);
+            if (result) _cache.Remove(typeof(Permission));
+            return result;
+        }
+
+        /// <summary>
+        /// 保存权限。
+        /// </summary>
+        /// <param name="permission">权限实例对象。</param>
+        /// <returns>返回保存结果。</returns>
+        public bool Save(Permission permission)
+        {
+            bool result;
+            if (LoadPermissions().ContainsKey(permission.Name))
+                result = db.Update(x => x.Name == permission.Name, new { permission.Description });
+            else
+                result = db.Create(permission);
+            if (result) _cache.Remove(typeof(Permission));
+            return result;
+        }
+
+        private IDictionary<string, Permission> LoadPermissions()
+        {
+            return _cache.GetOrCreate(typeof(Permission), ctx =>
+            {
+                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                var permissions = db.Fetch();
+                return permissions.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+            });
+        }
+
+        private async Task<IDictionary<string, Permission>> LoadPermissionsAsync()
+        {
+            return await _cache.GetOrCreateAsync(typeof(Permission), async ctx =>
+            {
+                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                var permissions = await db.FetchAsync();
+                return permissions.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+            });
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="name">文件名称。</param>
         /// <returns>返回文件结果。</returns>
-        [Route("s-media/{name}")]
+        [Route("s-medias/{name}")]
         public async Task<IActionResult> Index(string name)
         {
             name = Path.GetFileNameWithoutExtension(name);

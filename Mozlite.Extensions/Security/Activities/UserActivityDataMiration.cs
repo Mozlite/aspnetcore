@@ -13,7 +13,8 @@ namespace Mozlite.Extensions.Security.Activities
         /// <param name="builder">迁移实例对象。</param>
         public override void Create(MigrationBuilder builder)
         {
-            builder.CreateTable<UserActivity>(table => table.Column(x => x.Id)
+            builder.CreateTable<UserActivity>(table => table
+                .Column(x => x.Id)
                 .Column(x => x.Activity)
                 .Column(x => x.CreatedDate)
                 .Column(x => x.IPAdress)

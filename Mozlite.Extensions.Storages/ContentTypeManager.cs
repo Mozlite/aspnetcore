@@ -1,12 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mozlite.Data.Migrations;
 
 namespace Mozlite.Extensions.Storages
 {
     /// <summary>
-    /// 内容类型。
+    /// 媒体文件存储数据库迁移类。
     /// </summary>
-    public static class ContentTypeManager
+    public class MediaDataMigration : DataMigration
+    {
+        /// <inheritdoc />
+        public override void Create(MigrationBuilder builder)
+        {
+            builder.CreateTable<StoredFile>(table => table
+                .Column(x => x.FileId)
+                .Column(x => x.Length)
+                .Column(x => x.ContentType, nullable: false)
+            );
+
+            builder.CreateTable<MediaFile>(table => table
+                .Column(x => x.Id)
+                .Column(x => x.CreatedDate)
+                .Column(x => x.Name)
+                .Column(x => x.Extension)
+                .Column(x => x.ExtensionName)
+                .Column(x => x.FileId)
+                .Column(x => x.TargetId)
+            );
+        }
+    }
+
+    /// <summary>
+        /// 内容类型。
+        /// </summary>
+        public static class ContentTypeManager
     {
         private static readonly IDictionary<string, string> _contentTypes;
 
