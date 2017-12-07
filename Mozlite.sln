@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Storages
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozlitePages", "MozlitePages\MozlitePages.csproj", "{FE5BA0BB-C55D-494E-939A-9179235AC8E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Security", "Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj", "{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Security", "Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj", "{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
