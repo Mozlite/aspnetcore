@@ -64,5 +64,16 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="permission">权限实例对象。</param>
         /// <returns>返回保存结果。</returns>
         bool Save(Permission permission);
+
+        /// <summary>
+        /// 更新管理员权限配置。
+        /// </summary>
+        Task RefreshAdministratorsAsync();
+
+        /// <summary>
+        /// 更新管理员权限配置。
+        /// </summary>
+        /// <returns>返回更新结果。</returns>
+        void RefreshAdministrators();
     }
 }

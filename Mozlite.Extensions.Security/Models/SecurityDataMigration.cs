@@ -18,7 +18,7 @@ namespace Mozlite.Extensions.Security.Models
                 .Column(x => x.ConcurrencyStamp, "timestamp");
         }
 
-        public virtual void Up2(MigrationBuilder builder)
+        public void Up2(MigrationBuilder builder)
         {
             builder.CreateTable<UserProfile>(table => table
                 .Column(x => x.Id)
@@ -34,5 +34,14 @@ namespace Mozlite.Extensions.Security.Models
                 .ForeignKey<User>(x => x.Id, x => x.UserId, onDelete: ReferentialAction.Cascade)
             );
         }
+
+        //public void Up3(MigrationBuilder builder)
+        //{
+        //    var user = new AdminUser();
+        //    user.UserName = "UserAdmin";
+        //    user.NormalizedUserName = user.UserName.ToUpper();
+        //    user.PasswordHash = "";
+        //    builder.SqlCreate(user);
+        //}
     }
 }

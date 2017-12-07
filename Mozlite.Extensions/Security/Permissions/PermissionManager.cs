@@ -11,31 +11,37 @@ namespace Mozlite.Extensions.Security.Permissions
     /// <summary>
     /// 权限管理实现类。
     /// </summary>
-    public abstract class PermissionManager<TUserRole> : IPermissionManager
+    /// <typeparam name="TUserRole">用户角色关联类型。</typeparam>
+    /// <typeparam name="TRole">角色类型。</typeparam>
+    public abstract class PermissionManager<TUserRole, TRole> : IPermissionManager
         where TUserRole : IdentityUserRole
+        where TRole : IdentityRole
     {
         /// <summary>
         /// 数据库操作实例。
         /// </summary>
         // ReSharper disable once InconsistentNaming
         protected readonly IRepository<Permission> db;
-        private readonly IRepository<PermissionInRole> _pirs;
+        private readonly IRepository<PermissionInRole> _prdb;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
+        private readonly IRepository<TRole> _rdb;
 
         /// <summary>
-        /// 初始化类<see cref="PermissionManager{TUserRole}"/>。
+        /// 初始化类<see cref="PermissionManager{TUserRole, TRole}"/>。
         /// </summary>
         /// <param name="repository">数据库操作接口实例。</param>
-        /// <param name="pirs">数据库操作接口。</param>
+        /// <param name="prdb">数据库操作接口。</param>
         /// <param name="httpContextAccessor">当前HTTP上下文访问器。</param>
         /// <param name="cache">缓存接口。</param>
-        protected PermissionManager(IRepository<Permission> repository, IRepository<PermissionInRole> pirs, IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
+        /// <param name="rdb">角色数据库操作接口。</param>
+        protected PermissionManager(IRepository<Permission> repository, IRepository<PermissionInRole> prdb, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IRepository<TRole> rdb)
         {
             db = repository;
-            _pirs = pirs;
+            _prdb = prdb;
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
+            _rdb = rdb;
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace Mozlite.Extensions.Security.Permissions
         public PermissionValue GetPermission(int userId, string permissioName)
         {
             var permission = GetOrCreate(permissioName);
-            var values = _pirs.AsQueryable()
+            var values = _prdb.AsQueryable()
                 .InnerJoin<TUserRole>((p, r) => p.RoleId == r.RoleId)
                 .Where<TUserRole>(ur => ur.UserId == userId)
                 .Where(x => x.PermissionId == permission.Id)
@@ -65,7 +71,7 @@ namespace Mozlite.Extensions.Security.Permissions
         public async Task<PermissionValue> GetPermissionAsync(int userId, string permissioName)
         {
             var permission = await GetOrCreateAsync(permissioName);
-            var values = await _pirs.AsQueryable()
+            var values = await _prdb.AsQueryable()
                 .InnerJoin<TUserRole>((p, r) => p.RoleId == r.RoleId)
                 .Where<TUserRole>(ur => ur.UserId == userId)
                 .Where(x => x.PermissionId == permission.Id)
@@ -186,6 +192,37 @@ namespace Mozlite.Extensions.Security.Permissions
                 result = db.Create(permission);
             if (result) _cache.Remove(typeof(Permission));
             return result;
+        }
+
+        private const string Administrator = "ADMINISTRATOR";
+        /// <summary>
+        /// 更新管理员权限配置。
+        /// </summary>
+        public async Task RefreshAdministratorsAsync()
+        {
+            var role = await _rdb.FindAsync(x => x.NormalizedRoleName == Administrator);
+            var permissions = await LoadPermissionsAsync();
+            foreach (var permission in permissions.Values)
+            {
+                if (await _prdb.AnyAsync(x => x.PermissionId == permission.Id && x.RoleId == role.RoleId))
+                    continue;
+                await _prdb.CreateAsync(new PermissionInRole { PermissionId = permission.Id, RoleId = role.RoleId, Value = PermissionValue.Allow });
+            }
+        }
+
+        /// <summary>
+        /// 更新管理员权限配置。
+        /// </summary>
+        public void RefreshAdministrators()
+        {
+            var role = _rdb.Find(x => x.NormalizedRoleName == Administrator);
+            var permissions = LoadPermissions().Values;
+            foreach (var permission in permissions)
+            {
+                if (_prdb.Any(x => x.PermissionId == permission.Id && x.RoleId == role.RoleId))
+                    continue;
+                _prdb.Create(new PermissionInRole { PermissionId = permission.Id, RoleId = role.RoleId, Value = PermissionValue.Allow });
+            }
         }
 
         private IDictionary<string, Permission> LoadPermissions()

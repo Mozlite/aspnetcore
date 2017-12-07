@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
     <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
-    <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
     <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
   </ItemGroup>
 

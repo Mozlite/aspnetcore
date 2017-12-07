@@ -14,6 +14,11 @@ table {
     font: inherit
 }
 
+img {
+    vertical-align: middle;
+    border: 0;
+}
+
 input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-search-decoration, input[type=search]::-webkit-search-results-button, input[type=search]::-webkit-search-results-decoration {
     display: none
 }
@@ -1480,3 +1485,148 @@ a {
                 background: #00aff0;
                 color: #fff;
             }
+
+/*login*/
+.login, .register {
+    color: #262626;
+}
+
+    .login .background, .login .background > div, .register .background, .register .background > div {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+        .login .background > div, .register .background > div {
+            background-repeat: no-repeat,no-repeat;
+            background-position: center center,center center;
+            background-size: cover,cover;
+        }
+
+        .login .background .small, .register .background .small {
+            background-image: url("/images/0-small.jpg");
+        }
+
+        .login .background .real, .register .background .real {
+            animation: fadeIn 1s;
+            background-image: url("/images/0.jpg");
+        }
+
+        .login .background .overlay, .register .background .overlay {
+            background: rgba(0,0,0,.55);
+        }
+
+    .login .login-wrapper, .register .register-wrapper {
+        display: table;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+        .login .login-wrapper .login-middle, .register .register-wrapper .register-middle {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+            .login .login-wrapper .login-middle .login-inner, .register .register-wrapper .register-middle .register-inner {
+                margin-left: auto;
+                margin-right: auto;
+                min-height: 364px;
+                min-width: 320px;
+                max-width: 412px;
+                width: calc(100% - 40px);
+                padding: 36px;
+                margin-bottom: 28px;
+                background-color: #fff;
+                box-shadow: 0 2px 3px rgba(0,0,0,.55);
+                border: 1px solid rgba(0,0,0,.4);
+            }
+
+    .login .logo, .register .logo {
+        max-width: 256px;
+        height: 24px;
+    }
+
+    .login .title, .register .title {
+        padding: 0;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        font-weight: 300;
+        font-size: 1.5rem;
+        line-height: 1.75rem;
+    }
+
+    .login .row, .register .row {
+        margin-left: -2px;
+        margin-right: -2px;
+    }
+
+        .login .row:before, .login .row:after, .register .row:before, .register .row:after {
+            content: " ";
+            display: table;
+        }
+
+        .login .row:after, .register .row:after {
+            clear: both;
+        }
+
+    .login .form-control, .register .form-control {
+        padding: 6px 10px;
+        border: solid 1px rgba(0,0,0,.6);
+        background-color: rgba(255,255,255,.4);
+        height: 36px;
+        outline: none;
+        border-radius: 0;
+    }
+
+        .login .form-control:focus, .register .form-control:focus {
+            border-color: #0067b8;
+            background-color: #fff;
+        }
+
+    .login button.btn-primary, .register button.btn-primary {
+        height: 36px;
+        width: 100%;
+    }
+
+    .login .row-left, .register .row-left {
+        width: 50%;
+        float: left;
+    }
+
+    .login .img-vcode, .register .img-vcode {
+        float: right;
+        height: 36px;
+        cursor: pointer;
+    }
+
+    .login .box-wrapper {
+        margin-top: 3px;
+        border-radius: 2px;
+        border-color: rgba(0, 0, 0, .6);
+    }
+
+    .register .box-wrapper {
+        margin-top: 6px;
+        border-radius: 2px;
+        border-color: rgba(0, 0, 0, .6);
+    }
+
+    .login .moz-checkbox.checked.checked-style-check .box-wrapper .box-checked:before,
+    .register .moz-checkbox.checked.checked-style-check .box-wrapper .box-checked:before {
+        color: rgba(0, 0, 0, .6);
+    }
+
+    .login .text, .register .text {
+        font-size: .8125rem;
+        line-height: 31px;
+    }
+
+    .login .login-msg, .register .register-msg {
+        color: #e81123;
+        margin-bottom: 8px;
+        margin-top: 8px;
+        font-size: 15px;
+        display: none;
+    }
