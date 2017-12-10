@@ -11,9 +11,8 @@ namespace Mozlite.Data.SqlServer.Query.Translators
     /// </summary>
     public class StringReplaceTranslator : IMethodCallTranslator
     {
-        private static readonly MethodInfo _methodInfo = typeof(string).GetTypeInfo()
-            .GetDeclaredMethods(nameof(string.Replace))
-            .Single(m => m.GetParameters()[0].ParameterType == typeof(string));
+        private static readonly MethodInfo _methodInfo
+            = typeof(string).GetRuntimeMethod(nameof(string.Replace), new[] { typeof(string), typeof(string) });
 
         /// <summary>
         /// 转换表达式。

@@ -37,13 +37,7 @@ namespace Mozlite.Extensions.Security.Controllers
             _nameManager = nameManager;
             _messageManager = messageManager;
         }
-
-        [Route("dashboard/security")]
-        public IActionResult Index(UserQuery query)
-        {
-            return View(_userManager.Load(query));
-        }
-
+        
         /// <summary>
         /// 登入页面。
         /// </summary>

@@ -903,11 +903,12 @@ a {
                 color: #333333;
                 padding-left: 12px;
                 margin-bottom: 1px;
+                padding-right: 24px;
             }
 
             .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox {
                 margin-left: 32px;
-                margin-right: 10px;
+                margin-right: 0;
                 align-self: center;
                 align-items: center;
                 display: flex;
@@ -930,58 +931,66 @@ a {
                     margin-left: 28px;
                 }
 
-            .main .body .content-wrapper .data-view .datalist .data-row .data-col,
-            .main .body .content-wrapper .data-view .datalist .data-row .data-date {
-                display: flex;
-                position: relative;
-                flex: 1 1 auto;
-                box-sizing: border-box;
-                align-items: center;
+        .main .body .content-wrapper .data-view .col-auto {
+            position: relative;
+            flex: 1 1 auto;
+            padding-left: 10px;
+        }
+
+        .main .body .content-wrapper .data-view .col-dt {
+            flex: 0 0 120px;
+            width: 120px;
+            padding-left: 10px;
+        }
+
+        .main .body .content-wrapper .data-view .col-date {
+            flex: 0 0 100px;
+            width: 100px;
+            padding-left: 10px;
+        }
+
+        .main .body .content-wrapper .data-view .datalist .data-row .col-date,
+        .main .body .content-wrapper .data-view .datalist .data-row .col-dt {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .main .body .content-wrapper .data-view .datalist .data-row .actionbar {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            top: 0;
+            right: 0;
+            display: none;
+        }
+
+        .main .body .content-wrapper .data-view .datalist .data-row:hover .actionbar {
+            display: block;
+        }
+
+        .main .body .content-wrapper .data-view .datalist .data-row .actionbar i {
+            padding-left: 4px;
+            color: #666666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+            .main .body .content-wrapper .data-view .datalist .data-row .actionbar i:hover {
+                color: #212121;
             }
 
-            .main .body .content-wrapper .data-view .datalist .data-row .data-date {
-                flex: 0 0 auto;
-                font-size: 12px;
-                color: #666666;
-                padding-left: 15px;
-            }
-
-            .main .body .content-wrapper .data-view .datalist .data-row .actionbar {
-                position: absolute;
-                display: flex;
-                align-items: center;
-                height: 100%;
-                top: 0;
-                right: 0;
-                display: none;
-            }
-
-            .main .body .content-wrapper .data-view .datalist .data-row:hover .actionbar {
-                display: block;
-            }
-
-            .main .body .content-wrapper .data-view .datalist .data-row .actionbar i {
-                padding-left: 4px;
-                color: #666666;
-                font-size: 14px;
-                cursor: pointer;
-            }
-
-                .main .body .content-wrapper .data-view .datalist .data-row .actionbar i:hover {
-                    color: #212121;
-                }
-
-        .main .body .content-wrapper .data-view .data-col.w100 {
+        .main .body .content-wrapper .data-view .col-w100 {
             flex: 0 0 100px;
             max-width: 100px;
         }
 
-        .main .body .content-wrapper .data-view .data-col.w200 {
+        .main .body .content-wrapper .data-view .col-w200 {
             flex: 0 0 200px;
             max-width: 200px;
         }
 
-        .main .body .content-wrapper .data-view .data-col.w300 {
+        .main .body .content-wrapper .data-view .col-w300 {
             flex: 0 0 300px;
             max-width: 300px;
         }

@@ -140,6 +140,13 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 删除用户。
         /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        bool DeleteUser(int userId);
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
         /// <param name="userIds">用户Id集合。</param>
         /// <returns>返回删除结果。</returns>
         bool DeleteUsers(int[] userIds);
@@ -151,6 +158,13 @@ namespace Mozlite.Extensions.Security
         /// <param name="lockoutEnd">锁定过期时间。</param>
         /// <returns>返回锁定结果。</returns>
         Task<bool> LockoutUsersAsync(int[] userIds, DateTimeOffset? lockoutEnd);
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<bool> DeleteUserAsync(int userId);
 
         /// <summary>
         /// 删除用户。

@@ -152,6 +152,16 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 删除用户。
         /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public bool DeleteUser(int userId)
+        {
+            return Repository.Delete(userId);
+        }
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
         /// <param name="userIds">用户Id集合。</param>
         /// <returns>返回删除结果。</returns>
         public bool DeleteUsers(int[] userIds)
@@ -168,6 +178,16 @@ namespace Mozlite.Extensions.Security
         public Task<bool> LockoutUsersAsync(int[] userIds, DateTimeOffset? lockoutEnd)
         {
             return Repository.UpdateAsync(user => user.LockoutEnabled && user.UserId.Included(userIds), new { lockoutEnd });
+        }
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public Task<bool> DeleteUserAsync(int userId)
+        {
+            return Repository.DeleteAsync(userId);
         }
 
         /// <summary>

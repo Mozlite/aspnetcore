@@ -1,5 +1,5 @@
 ﻿$onready(function (context) {
-    $('a[target=win]', context).click(function() {
+    $('a[target=win]', context).click(function () {
 
     });
     $('[_load]', context).css('cursor', 'pointer').exec(function (s) {
@@ -26,7 +26,7 @@
                         if (panel.hasClass('win-right')) {
                             panel.animate({
                                 right: 0
-                            }, 'fast', function() {
+                            }, 'fast', function () {
                                 $('.main-slider').width();
                             });
                             win.find('.close').click(function () {
@@ -52,15 +52,51 @@
             $(this).parents('.data-row').removeClass('active');
         }
     });
+    $('.data-view', context).find('[post-id],[get-id]').click(function () {
+        var id = $(this).parents('.data-row').find('input[type=checkbox]').val();
+        var url = $(this).attr('get-id');
+        if (url) {
+            location.href = url + '?id=' + id;
+            return;
+        }
+        $ajax($(this).attr('post-id'), { id: id });
+    });
     $('.filterbar .checkbox-all', context).find('.moz-checkbox').click(function () {
         var target = $(this).targetElement($(this).parents('.content-container').find('.data-view').find('.moz-checkbox'));
         if ($(this).hasClass('checked')) {
             target.addClass('checked').parents('.data-row').addClass('active');
-            target.find('input').each(function() { this.checked = 'checked'; });
+            target.find('input').each(function () { this.checked = 'checked'; });
         } else {
             target.removeClass('checked').parents('.data-row').removeClass('active');
             target.find('input').removeAttr('checked');
         }
+    });
+    $('.filterbar', context).find('[type=submit]').click(function () {
+        var qs = [];
+        $(this).parents('.filterbar').find('input[name],select[name]').each(function () {
+            if ((this.type === 'radio' || this.type === 'checkbox') && !this.checked)
+                return;
+            if (this.value)
+                qs.push(this.name.toLowerCase() + '=' + this.value);
+        });
+        if (qs.length > 0)
+            location.href = '?' + qs.join('&');
+        else
+            location.href = location.href;
+    });
+    $('.actionbar', context).find('[post-ids],[get-ids]').click(function () {
+        var ids = $('.data-view').checkedVal();
+        if (!ids) {
+            $alert('请选择项目后再执行相关操作！');
+            return;
+        }
+        var url = $(this).attr('get-ids');
+        if (url) {
+            location.href = url + '?ids=' + ids;
+            return;
+        }
+        url = $(this).attr('post-ids');
+        $ajax(url, { ids: ids });
     });
 });
 $(document).ready(function () {
