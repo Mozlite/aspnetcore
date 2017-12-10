@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -59,7 +60,7 @@ namespace Mozlite.Data.Query
         public virtual SqlIndentedStringBuilder Create(IEntityType entityType) => GetOrCreate(entityType, nameof(Create), builder =>
          {
              var names = entityType.GetProperties()
-                 .Where(property => !property.IsIdentity)
+                 .Where(property => property.IsCreatable())
                  .Select(property => property.Name)
                  .ToList();
              builder.Append("INSERT INTO");
@@ -81,7 +82,7 @@ namespace Mozlite.Data.Query
         public virtual SqlIndentedStringBuilder Update(IEntityType entityType) => GetOrCreate(entityType, nameof(Update), builder =>
           {
               var names = entityType.GetProperties()
-                  .Where(property => !property.IsIdentity && !property.PropertyInfo.IsDefined(typeof(NotUpdatedAttribute)))
+                  .Where(property => property.IsUpdatable())
                   .Select(property => property.Name)
                   .ToList();
               builder.Append("UPDATE ").Append(SqlHelper.DelimitIdentifier(entityType.Table)).Append(" SET ");

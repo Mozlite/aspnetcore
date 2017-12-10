@@ -15,13 +15,11 @@ namespace Mozlite.Controllers
     public class HomeController : Mozlite.Mvc.ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IThemeApplicationManager _applicationManager;
         private readonly IMediaFileProvider _fileProvider;
 
-        public HomeController(ILogger<HomeController> logger, IThemeApplicationManager applicationManager, IMediaFileProvider fileProvider)
+        public HomeController(ILogger<HomeController> logger, IMediaFileProvider fileProvider)
         {
             _logger = logger;
-            _applicationManager = applicationManager;
             _fileProvider = fileProvider;
         }
 
@@ -62,12 +60,7 @@ namespace Mozlite.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> Menu()
-        {
-            return View(await _applicationManager.LoadApplicationsAsync());
-        }
-
+        
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {

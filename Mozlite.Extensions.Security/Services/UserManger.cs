@@ -67,8 +67,7 @@ namespace Mozlite.Extensions.Security.Services
         public UserProfile GetProfile(int userId)
         {
             var context = _httpContextAccessor.HttpContext;
-            var profile = context.Items[$"xupc_{userId}"] as UserProfile;
-            if (profile == null)
+            if (!(context.Items[$"xupc_{userId}"] is UserProfile profile))
             {
                 profile = _db.Find(x => x.Id == userId);
                 if (profile == null)

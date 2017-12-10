@@ -16,11 +16,53 @@ namespace Mozlite.Data
         /// </summary>
         /// <param name="info">当前属性实例。</param>
         /// <returns>返回判断结果。</returns>
+        public static bool IsCreatable(this IProperty info)
+        {
+            return info.PropertyInfo.IsCreatable();
+        }
+
+        /// <summary>
+        /// 判断是否能够更新操作。
+        /// </summary>
+        /// <param name="info">当前属性实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool IsUpdatable(this IProperty info)
+        {
+            return info.PropertyInfo.IsUpdatable();
+        }
+
+        /// <summary>
+        /// 判断是否能够新建操作。
+        /// </summary>
+        /// <param name="info">当前属性实例。</param>
+        /// <returns>返回判断结果。</returns>
         public static bool IsCreatable(this PropertyInfo info)
         {
             if (!info.CanWrite)
                 return false;
             if (!info.CanRead)
+                return false;
+            if (info.IsDefined(typeof(NotMappedAttribute)))
+                return false;
+            if (info.IsDefined(typeof(IdentityAttribute)))
+                return false;
+            if (info.IsDefined(typeof(RowVersionAttribute)))
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// 判断是否能够更新操作。
+        /// </summary>
+        /// <param name="info">当前属性实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool IsUpdatable(this PropertyInfo info)
+        {
+            if (!info.CanWrite)
+                return false;
+            if (!info.CanRead)
+                return false;
+            if (info.IsDefined(typeof(NotUpdatedAttribute)))
                 return false;
             if (info.IsDefined(typeof(NotMappedAttribute)))
                 return false;

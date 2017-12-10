@@ -45,7 +45,7 @@ namespace Mozlite.Mvc.Themes
         /// <summary>
         /// 链接地址。
         /// </summary>
-        public virtual string LinkUrl => $"/{ApplicationName}";
+        public virtual string LinkUrl => $"/dashboard/{ApplicationName}";
 
         /// <summary>
         /// 图标样式。
@@ -56,5 +56,10 @@ namespace Mozlite.Mvc.Themes
         /// 优先级，越大越靠前。
         /// </summary>
         public virtual int Priority { get; } = 0;
+
+        /// <summary>
+        /// 导航模式。
+        /// </summary>
+        public virtual NavigateMode Mode { get; } = NavigateMode.Module;
     }
 }

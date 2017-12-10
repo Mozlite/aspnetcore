@@ -10,7 +10,7 @@
     <div class="overlay"></div>
 </div>
 
-<form class="form" method="post">
+<form class="form" method="post" onsubmit="return $(this).formSubmit(callback);">
     <div class="register-wrapper">
         <div class="register-middle">
             <div class="register-inner">
@@ -60,5 +60,17 @@
         } else {
             obj.parents('form').find('[type=submit]').removeAttr('disabled');
         }
+    };
+    function callback(data, form) {
+        if (data.type === 'success') {
+            if (data.data.redirectUrl)
+                location.href = data.data.redirectUrl;
+            else
+                location.href = '/';
+            return;
+        }
+        $('#VCode').val('');
+        $('.img-vcode').src = '/login-vcode.png'.randomSuffix();
+        $('.login-msg').html(data.message).show();
     };
 </script>

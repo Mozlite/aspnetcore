@@ -1630,3 +1630,37 @@ a {
         font-size: 15px;
         display: none;
     }
+
+.avatar-panel {
+    height: 40px;
+    line-height: 40px;
+}
+
+    .avatar-panel img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+.menu-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 20px;
+}
+
+    .menu-links li {
+        font-size: 13px;
+        margin: 0;
+        padding: 0 4px;
+        height: 40px;
+        line-height: 40px;
+    }
+
+.h1-title {
+    font-size: 28px;
+    font-weight: 200;
+    line-height: 1.22em;
+    padding: 30px 0 2px 0;
+}

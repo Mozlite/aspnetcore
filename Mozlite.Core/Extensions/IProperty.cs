@@ -42,7 +42,7 @@ namespace Mozlite.Extensions
         /// 最大长度。
         /// </summary>
         int? MaxLength { get; }
-
+        
         /// <summary>
         /// 版本列。
         /// </summary>

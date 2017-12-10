@@ -77,7 +77,7 @@
         icon.attr('class', 'fa fa-spinner fa-spin');
         $.ajax({
             type: "POST",
-            url: form.attr('action'),
+            url: form.attr('action') || location.href,
             contentType: false,
             processData: false,
             data: data,
@@ -107,6 +107,7 @@
                 else $alert('很抱歉，发生了错误！');
             }
         });
+        return false;
     };
     $.fn.loadModal = function (url) {
         ///<summary>显示当前地址的Modal模式窗口。</summary>
@@ -197,8 +198,12 @@
         var button = modal.find('button').attr('class', 'btn btn-' + type);
         if (func) {
             button.removeAttr('data-dismiss').bind('click', function () {
-                func(modal.data('bs.modal'));
-                modal.data('bs.modal').hide();
+                if (typeof func === 'function') {
+                    func(modal.data('bs.modal'));
+                    modal.data('bs.modal').hide();
+                } else {
+                    location.href = location.href;
+                }
             });
         }
         else button.attr('data-dismiss', 'modal').unbind('click');
@@ -446,7 +451,7 @@
             return me.edit.innerText;
         };
 
-        this.upload = function(file) {
+        this.upload = function (file) {
             ///<summary>上传图片。</summary>
             var data = new FormData();
             data.append("file", file);
@@ -456,14 +461,14 @@
                 contentType: false,
                 processData: false,
                 data: data,
-                success: function(d) {
+                success: function (d) {
                     if (d.message && d.type !== 'success') {
                         $alert(d.message, d.type);
                     }
                     if (d.type === 'success')
-                        me.replace(function(r) { return '![](' + d.data.url + ')' });
+                        me.replace(function (r) { return '![](' + d.data.url + ')' });
                 },
-                error: function(e) {
+                error: function (e) {
                     if (e.status === 401) {
                         $alert('需要登陆才能够上传文件！<a href="/login">点击登陆...</a>', 'warning');
                         return;

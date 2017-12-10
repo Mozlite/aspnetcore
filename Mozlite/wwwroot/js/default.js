@@ -21,13 +21,13 @@
                 $('[_load]').removeClass('open');
                 s.addClass('open');
                 win.load(s.attr('_load'),
-                    function () {
+                    function (e) {
                         var panel = win.find('.win-panel');
                         if (panel.hasClass('win-right')) {
                             panel.animate({
                                 right: 0
                             }, 'fast', function() {
-                                $('.main-slider').width()
+                                $('.main-slider').width();
                             });
                             win.find('.close').click(function () {
                                 s.removeClass('open');

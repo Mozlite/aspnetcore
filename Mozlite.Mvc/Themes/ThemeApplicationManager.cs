@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,16 +35,48 @@ namespace Mozlite.Mvc.Themes
         /// <summary>
         /// 获取当前应用程序列表。
         /// </summary>
+        /// <param name="mode">显示模式。</param>
         /// <returns>返回当前用户的应用程序列表。</returns>
-        public async Task<IEnumerable<IThemeApplication>> LoadApplicationsAsync()
+        public async Task<IEnumerable<IThemeApplication>> LoadApplicationsAsync(NavigateMode mode = NavigateMode.Module)
         {
             var applications = new List<IThemeApplication>();
             foreach (var application in _applications)
             {
+                if ((application.Mode & mode) != mode)
+                    continue;
                 if (await _permissionManager.IsAuthorizedAsync($"app.{application.ApplicationName}"))
                     applications.Add(application);
             }
             return applications;
+        }
+
+        /// <summary>
+        /// 获取当前应用程序列表。
+        /// </summary>
+        /// <param name="mode">显示模式。</param>
+        /// <returns>返回当前用户的应用程序列表。</returns>
+        public IEnumerable<IThemeApplication> LoadApplications(NavigateMode mode = NavigateMode.Module)
+        {
+            var applications = new List<IThemeApplication>();
+            foreach (var application in _applications)
+            {
+                if ((application.Mode & mode) != mode)
+                    continue;
+                if (_permissionManager.IsAuthorized($"app.{application.ApplicationName}"))
+                    applications.Add(application);
+            }
+            return applications;
+        }
+
+        /// <summary>
+        /// 获取应用程序。
+        /// </summary>
+        /// <param name="applicationName">应用程序名称。</param>
+        /// <returns>返回应用程序实例。</returns>
+        public IThemeApplication GetApplication(string applicationName)
+        {
+            return _applications.SingleOrDefault(x =>
+                x.ApplicationName.Equals(applicationName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

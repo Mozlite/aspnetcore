@@ -1,9 +1,12 @@
-﻿@{
+﻿@using Mozlite.Mvc.Themes
+@{
     Layout = "_Global";
 }
+@inject User CurrentUser
+@inject IThemeApplicationManager ThemeApplicationManager
 <div class="header">
     <div class="leftbar">
-        <div _load="@Url.Action("Menu", "Home", new{Area=""})" class="button">
+        <div _load="@Url.Action("Menu", "Admin", new{Area=""})" class="button">
             <i class="fa fa-user-secret"></i>
         </div>
         <a href="~/" class="name"><span>Mozlite</span></a>
@@ -14,7 +17,7 @@
     <div class="rightbar">
         <div _load="@Url.Action("RWin")" class="button"><i class="fa fa-cog"></i></div>
         <div _load="@Url.Action("RWin")" class="button"><i class="fa fa-question"></i></div>
-        <div _load="@Url.Action("RWin")" class="button"><img src="https://cid-2957ca9eb5657373.users.storage.live.com/users/0x2957ca9eb5657373/myprofile/expressionprofile/profilephoto:UserTileStatic,UserTileSmall/MeControlMediumUserTile?ck=1&ex=24&fofoff=1" class="avatar" /></div>
+        <div _load="@Url.Action("Menu", "Account", new{Area = SecuritySettings.ExtensionName})" class="button"><img src="@(CurrentUser.Avatar??"/images/avatar.png")" class="avatar" /></div>
     </div>
     <div class="skin"></div>
 </div>
@@ -31,17 +34,21 @@
                         </button>
                     </div>
                     <div class="menu-container">
-                        <div class="menu-top"></div>
+                        <div class="menu-top">
+                            @foreach (var application in ThemeApplicationManager.LoadApplications(NavigateMode.MenuTop))
+                            {
+                                <a href="@application.LinkUrl">
+                                    <i class="@application.IconClass"></i>
+                                </a>
+                            }
+                        </div>
                         <div class="menu-bottom">
-                            <a href="#">
-                                <i class="fa fa-envelope-o"></i>
-                            </a><a href="#">
-                                <i class="fa fa-lock"></i>
-                            </a><a href="#">
-                                <i class="fa fa-key"></i>
-                            </a><a asp-action="Settings" asp-controller="Home" asp-area="">
-                                <i class="fa fa-cog"></i>
-                            </a>
+                            @foreach (var application in ThemeApplicationManager.LoadApplications(NavigateMode.MenuBottom))
+                            {
+                                <a href="@application.LinkUrl">
+                                    <i class="@application.IconClass"></i>
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -241,7 +248,8 @@
 {
     @RenderSection("header", false)
 }
-@if (IsSectionDefined("footer"))
+@section footer
 {
     @RenderSection("footer", false)
+    <moz:alert></moz:alert>
 }

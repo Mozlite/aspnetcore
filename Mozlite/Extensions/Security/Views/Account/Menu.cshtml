@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "_Win";
+    ViewBag.Title = "我的账户";
+    ViewBag.Position = "win-right";
+}
+@inject User CurrentUser
+
+<div class="avatar-panel">
+    <img src="@(CurrentUser.Avatar??"/images/avatar.png")" />
+    <span>@CurrentUser.NickName</span>
+</div>
+<ul class="menu-links">
+    <li><a asp-action="Profile" asp-controller="Account" asp-area="@SecuritySettings.ExtensionName">编辑个人资料</a></li>
+    <li><a asp-action="ChangePassword" asp-controller="Account" asp-area="@SecuritySettings.ExtensionName">修改密码</a></li>
+    <li><a asp-action="Logout" asp-controller="Home" asp-area="@SecuritySettings.ExtensionName">注销</a></li>
+</ul>

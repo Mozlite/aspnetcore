@@ -39,5 +39,10 @@
         /// 优先级，越大越靠前。
         /// </summary>
         int Priority { get; }
+
+        /// <summary>
+        /// 导航模式。
+        /// </summary>
+        NavigateMode Mode { get; }
     }
 }
