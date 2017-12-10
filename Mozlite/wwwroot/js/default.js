@@ -1,7 +1,4 @@
 ﻿$onready(function (context) {
-    $('a[target=win]', context).click(function () {
-
-    });
     $('[_load]', context).css('cursor', 'pointer').exec(function (s) {
         s.on('click',
             function () {
