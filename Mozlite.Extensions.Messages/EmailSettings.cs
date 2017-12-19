@@ -34,5 +34,10 @@
         /// 密码。
         /// </summary>
         public string SmtpPassword { get; set; }
+
+        /// <summary>
+        /// 最大发送次数。
+        /// </summary>
+        public int MaxTryTimes { get; set; } = 5;
     }
 }

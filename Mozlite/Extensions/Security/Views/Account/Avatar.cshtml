@@ -2,3 +2,24 @@
     Layout = "_Admin";
     ViewData["Title"] = "编辑头像";
 }
+
+@model User
+
+<div class="content-wrapper">
+    <div class="content-container">
+        <form method="post" class="form settings customScrollBar">
+            <div class="form-title">
+                用户头像
+            </div>
+            <hr />
+            <div title="点击上传新头像！">
+                <img src="@Model.Avatar"/>
+            </div>
+            <hr />
+            <div class="form-title">密码建议</div>
+            <p>
+                密码最好包含英文大小写字母，和符号，最少需要6个字符串长度。
+            </p>
+        </form>
+    </div>
+</div>

@@ -31,6 +31,11 @@ namespace Mozlite.Extensions.Security.Controllers
             return View(_userManager.GetProfile(user));
         }
 
+        public IActionResult Avatar()
+        {
+            return View(_userManager.GetUser());
+        }
+
         public IActionResult ChangePassword()
         {
             return View();

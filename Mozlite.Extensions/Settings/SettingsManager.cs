@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 using Newtonsoft.Json;
@@ -33,7 +34,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreate($"sitesettings[{key}]", entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return _repository.Find(x=>x.SettingsId == key)?.SettingsValue;
+                return _repository.Find(x => x.SettingsId == key)?.SettingsValue;
             });
         }
 
@@ -66,6 +67,49 @@ namespace Mozlite.Extensions.Settings
         }
 
         /// <summary>
+        /// 获取配置字符串。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        /// <returns>返回当前配置字符串实例。</returns>
+        public Task<string> GetSettingsAsync(string key)
+        {
+            return _cache.GetOrCreateAsync($"sitesettings[{key}]", async entry =>
+            {
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                var settings = await _repository.FindAsync(x => x.SettingsId == key);
+                return settings?.SettingsValue;
+            });
+        }
+
+        /// <summary>
+        /// 获取网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        /// <param name="key">配置唯一键。</param>
+        /// <returns>返回网站配置实例。</returns>
+        public Task<TSiteSettings> GetSettingsAsync<TSiteSettings>(string key) where TSiteSettings : class, new()
+        {
+            return _cache.GetOrCreateAsync($"sitesettings[{key}]", async entry =>
+            {
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                var settings = await _repository.FindAsync(x => x.SettingsId == key);
+                if (settings?.SettingsValue == null)
+                    return new TSiteSettings();
+                return JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingsValue);
+            });
+        }
+
+        /// <summary>
+        /// 获取网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        /// <returns>返回网站配置实例。</returns>
+        public Task<TSiteSettings> GetSettingsAsync<TSiteSettings>() where TSiteSettings : class, new()
+        {
+            return GetSettingsAsync<TSiteSettings>(typeof(TSiteSettings).FullName);
+        }
+
+        /// <summary>
         /// 保存网站配置实例。
         /// </summary>
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
@@ -94,7 +138,7 @@ namespace Mozlite.Extensions.Settings
         public bool SaveSettings(string key, string settings)
         {
             var adapter = new SettingsAdapter { SettingsId = key, SettingsValue = settings };
-            if (_repository.Any(x=>x.SettingsId == key))
+            if (_repository.Any(x => x.SettingsId == key))
             {
                 if (_repository.Update(adapter))
                 {

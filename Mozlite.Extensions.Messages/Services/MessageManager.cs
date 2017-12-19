@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mozlite.Data;
 using Mozlite.Extensions.Messages.Models;
 
@@ -140,6 +142,49 @@ namespace Mozlite.Extensions.Messages.Services
             message.MessageType = MessageType.Message;
             message.Content = content;
             return CreateAsync(message);
+        }
+
+        /// <summary>
+        /// 加载消息列表。
+        /// </summary>
+        /// <param name="messageType">消息类型。</param>
+        /// <param name="status">状态。</param>
+        /// <returns>返回消息列表。</returns>
+        public Task<IEnumerable<Message>> LoadAsync(MessageType messageType, MessageStatus? status = null)
+        {
+            var query = _repository.AsQueryable();
+            query.Where(x => x.MessageType == messageType);
+            if (status != null)
+                query.Where(x => x.Status == status);
+            query.OrderBy(x => x.Id);
+            return query.AsEnumerableAsync(100);
+        }
+
+        /// <summary>
+        /// 设置失败状态。
+        /// </summary>
+        /// <param name="id">当前消息Id。</param>
+        /// <param name="maxTryTimes">最大失败次数。</param>
+        /// <returns>返回设置结果。</returns>
+        public Task<bool> SetFailuredAsync(int id, int maxTryTimes)
+        {
+            return _repository.BeginTransactionAsync(async db =>
+            {
+                await db.UpdateAsync(x => x.Id == id, x => new { TryTimes = x.TryTimes + 1 });
+                await db.UpdateAsync(x => x.Id == id && x.TryTimes > maxTryTimes,
+                    new { Status = MessageStatus.Failured, ConfirmDate = DateTimeOffset.Now });
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// 设置成功状态。
+        /// </summary>
+        /// <param name="id">当前消息Id。</param>
+        /// <returns>返回设置结果。</returns>
+        public Task<bool> SetSuccessAsync(int id)
+        {
+            return _repository.UpdateAsync(x => x.Id == id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
         }
     }
 }

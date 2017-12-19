@@ -58,7 +58,7 @@ namespace Mozlite.Extensions.Messages.Models
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
-        /// 发送日期，或者已读日期。
+        /// 发送/失败日期，或者已读日期。
         /// </summary>
         public DateTimeOffset? ConfirmDate { get; set; }
     }

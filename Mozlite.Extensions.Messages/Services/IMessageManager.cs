@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mozlite.Extensions.Messages.Models;
 
 namespace Mozlite.Extensions.Messages.Services
@@ -78,5 +79,27 @@ namespace Mozlite.Extensions.Messages.Services
         /// <returns>返回发送结果。</returns>
         Task<bool> SendMessageAsync(int userId, string title, string content);
 
+        /// <summary>
+        /// 加载消息列表。
+        /// </summary>
+        /// <param name="messageType">消息类型。</param>
+        /// <param name="status">状态。</param>
+        /// <returns>返回消息列表。</returns>
+        Task<IEnumerable<Message>> LoadAsync(MessageType messageType, MessageStatus? status = null);
+
+        /// <summary>
+        /// 设置失败状态。
+        /// </summary>
+        /// <param name="id">当前消息Id。</param>
+        /// <param name="maxTryTimes">最大失败次数。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SetFailuredAsync(int id, int maxTryTimes);
+
+        /// <summary>
+        /// 设置成功状态。
+        /// </summary>
+        /// <param name="id">当前消息Id。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SetSuccessAsync(int id);
     }
 }
