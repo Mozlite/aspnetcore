@@ -1667,9 +1667,18 @@ a {
         line-height: 40px;
     }
 
-.h1-title {
-    font-size: 28px;
-    font-weight: 200;
-    line-height: 1.22em;
-    padding: 30px 0 2px 0;
+.avatar-edit {
+    width: 202px;
+    height: 202px;
+    margin: 20px auto;
+    border: 1px solid #eee;
+}
+
+    .avatar-edit img {
+        width: 200px;
+        height: 200px;
+    }
+
+.browse-upload {
+    text-align: center;
 }

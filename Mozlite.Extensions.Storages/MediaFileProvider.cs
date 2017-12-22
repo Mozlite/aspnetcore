@@ -108,20 +108,30 @@ namespace Mozlite.Extensions.Storages
 
         private async Task<MediaResult> CreateAsync(FileInfo tempFile, MediaFile file, string contentType, int? targetId)
         {
-            file.TargetId = targetId;
-            var storedFile = new StoredFile();
-            storedFile.ContentType = contentType;
-            storedFile.FileId = tempFile.ComputeHash();
-            storedFile.Length = tempFile.Length;
-            if (await _sfdb.CreateAsync(storedFile))
-            {//将文件移动到媒体存储路径下。
-                var mediaPath = Path.Combine(_media, storedFile.Path);
-                var dir = Path.GetDirectoryName(mediaPath);
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
-                File.Move(tempFile.FullName, mediaPath);
+            var fileId = tempFile.ComputeHash();
+            if (await _sfdb.AnyAsync(fileId))
+            {
+                //实体文件已经存在，删除临时目录下的文件
+                tempFile.Delete();
             }
-            file.FileId = storedFile.FileId;
+            else
+            {
+                //如果实体文件不存在则创建
+                var storedFile = new StoredFile();
+                storedFile.ContentType = contentType;
+                storedFile.FileId = fileId;
+                storedFile.Length = tempFile.Length;
+                if (await _sfdb.CreateAsync(storedFile))
+                {//将文件移动到媒体存储路径下。
+                    var mediaPath = Path.Combine(_media, storedFile.Path);
+                    var dir = Path.GetDirectoryName(mediaPath);
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+                    File.Move(tempFile.FullName, mediaPath);
+                }
+            }
+            file.TargetId = targetId;
+            file.FileId = fileId;
             if (await _mfdb.CreateAsync(file)) return new MediaResult(file.Url);
             return new MediaResult(null, Resources.StoredFileFailured);
         }

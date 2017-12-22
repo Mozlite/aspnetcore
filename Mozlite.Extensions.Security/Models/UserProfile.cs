@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Mozlite.Extensions.Security.Models
 {
     /// <summary>
-    /// 用户档案。
+    /// 用户资料。
     /// </summary>
     [Table("core_Users_Profiles")]
     public class UserProfile
@@ -34,6 +34,7 @@ namespace Mozlite.Extensions.Security.Models
         /// 用户Id。
         /// </summary>
         [Key]
+        [NotUpdated]
         public int Id { get; set; }
         
         /// <summary>
@@ -45,26 +46,31 @@ namespace Mozlite.Extensions.Security.Models
         /// <summary>
         /// 评论Id。
         /// </summary>
+        [NotUpdated]
         public int CommentId { get; set; }
 
         /// <summary>
         /// 评论数量。
         /// </summary>
+        [NotUpdated]
         public int Comments { get; set; }
 
         /// <summary>
         /// 是否允许评论。
         /// </summary>
+        [NotUpdated]
         public bool EnabledComment { get; set; }
 
         /// <summary>
         /// 粉丝数量。
         /// </summary>
+        [NotUpdated]
         public int Follows { get; set; }
 
         /// <summary>
         /// 关注数量。
         /// </summary>
+        [NotUpdated]
         public int Followeds { get; set; }
 
         /// <summary>

@@ -12,14 +12,23 @@
                 用户头像
             </div>
             <hr />
-            <div title="点击上传新头像！">
-                <img src="@Model.Avatar"/>
+            <div class="avatar-edit" title="用户头像">
+                <img src="@Model.Avatar" />
             </div>
-            <hr />
-            <div class="form-title">密码建议</div>
-            <p>
-                密码最好包含英文大小写字母，和符号，最少需要6个字符串长度。
-            </p>
+            <div class="browse-upload">
+                <input onchange="$upload('@Url.Action("Avatar", "Account", new { area = SecuritySettings.ExtensionName})', this.files[0], uploadSuccess);" type="file" style="display:none;" name="file" />
+                <button type="button" onclick="$(this).parent().find('input[type=file]').click();" class="btn btn-primary">点击上传头像</button>
+            </div>
         </form>
     </div>
 </div>
+
+@section footer{
+    <script type="text/javascript">
+        function uploadSuccess(data) {
+            if (data) {
+                $('.avatar-edit>img').attr('src', data.url);
+            }
+        };
+    </script>
+}

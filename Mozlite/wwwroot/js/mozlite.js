@@ -416,6 +416,36 @@
         }
     };
 
+    window.$upload = function (url, file, success) {
+        ///<summary>上传图片。</summary>
+        ///<param name="url" type="String">上传地址。</param>
+        ///<param name="file" type="HTMLElement">当前文件实例。</param>
+        ///<param name="success" type="Function">回调函数。</param>
+        var data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (d) {
+                if (d.message && d.type !== 'success') {
+                    $alert(d.message, d.type);
+                }
+                if (d.type === 'success' && success)
+                    success(d.data);
+            },
+            error: function (e) {
+                if (e.status === 401) {
+                    $alert('需要登陆才能够上传文件！<a href="/login">点击登陆...</a>', 'warning');
+                    return;
+                }
+                $alert(e.responseText);
+            }
+        });
+    };
+
     function Mozmd(md) {
         var me = this;
         this.md = typeof md === 'string' ? document.querySelector(md) : md;
@@ -453,28 +483,8 @@
 
         this.upload = function (file) {
             ///<summary>上传图片。</summary>
-            var data = new FormData();
-            data.append("file", file);
-            $.ajax({
-                type: "POST",
-                url: uploadUrl,
-                contentType: false,
-                processData: false,
-                data: data,
-                success: function (d) {
-                    if (d.message && d.type !== 'success') {
-                        $alert(d.message, d.type);
-                    }
-                    if (d.type === 'success')
-                        me.replace(function (r) { return '![](' + d.data.url + ')' });
-                },
-                error: function (e) {
-                    if (e.status === 401) {
-                        $alert('需要登陆才能够上传文件！<a href="/login">点击登陆...</a>', 'warning');
-                        return;
-                    }
-                    $alert(e.responseText);
-                }
+            $upload(uploadUrl, file, function (data) {
+                me.replace(function (r) { return '![](' + data.url + ')' });
             });
         };
 

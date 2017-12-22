@@ -26,38 +26,38 @@ namespace Mozlite.Extensions.Security.Services
         Task<bool> CheckUserNameAsync(string userName);
 
         /// <summary>
-        /// 获取用户档案，缓存上下文。
+        /// 获取用户资料，缓存上下文。
         /// </summary>
         /// <param name="userId">用户实例。</param>
-        /// <returns>返回用户档案实例。</returns>
+        /// <returns>返回用户资料实例。</returns>
         UserProfile GetProfile(int userId);
 
         /// <summary>
-        /// 获取当前用户档案。
+        /// 获取当前用户资料。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <returns>返回用户档案实例。</returns>
+        /// <returns>返回用户资料实例。</returns>
         UserProfile GetProfile(User user);
 
         /// <summary>
-        /// 获取当前用户档案。
+        /// 获取当前用户资料。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <returns>返回用户档案实例。</returns>
+        /// <returns>返回用户资料实例。</returns>
         Task<UserProfile> GetProfileAsync(User user);
 
         /// <summary>
-        /// 获取当前用户档案。
+        /// 获取当前用户资料。
         /// </summary>
         /// <param name="userName">用户名称。</param>
-        /// <returns>返回用户档案实例。</returns>
+        /// <returns>返回用户资料实例。</returns>
         Task<UserProfile> GetProfileAsync(string userName);
 
         /// <summary>
-        /// 获取当前用户档案。
+        /// 获取当前用户资料。
         /// </summary>
         /// <param name="userName">用户名称。</param>
-        /// <returns>返回用户档案实例。</returns>
+        /// <returns>返回用户资料实例。</returns>
         Task<UserProfile> FindAndViewAsync(string userName);
 
         /// <summary>
@@ -67,5 +67,12 @@ namespace Mozlite.Extensions.Security.Services
         /// <param name="intro">用户介绍。</param>
         /// <returns>返回更新结果。</returns>
         Task<DataResult> ChangeIntroAsync(int userId, string intro);
+
+        /// <summary>
+        /// 保存用户资料。
+        /// </summary>
+        /// <param name="profile">用户资料实例对象。</param>
+        /// <returns>返回保存结果。</returns>
+        Task<bool> SaveAsync(UserProfile profile);
     }
 }
