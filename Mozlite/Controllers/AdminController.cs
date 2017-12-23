@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Mozlite.Mvc.Routing;
 using Mozlite.Mvc.Themes;
 
 namespace Mozlite.Controllers
@@ -21,7 +22,7 @@ namespace Mozlite.Controllers
             _applicationManager = applicationManager;
         }
 
-        [Route("dashboard")]
+        [Route(RouteSettings.Dashboard)]
         public IActionResult Index()
         {
             return View();

@@ -80,7 +80,10 @@ namespace Mozlite.Mvc
             app.UseUserActivity();
             //MVC
             app.UseMvc(builder =>
-                builder.MapLowerCaseRoute("area-default", "{area:exists}/{controller}/{action=Index}/{id?}")
+                builder
+                    .MapLowerCaseRoute("dashboard-area-default", RouteSettings.Dashboard + "/{area}/{controller:regex(^admin.*)=Admin}/{action=Index}/{id?}")
+                    .MapLowerCaseRoute("dashboard-default", RouteSettings.Dashboard + "/{controller:regex(^admin.*)=Admin}/{action=Index}/{id?}")
+                    .MapLowerCaseRoute("area-default", "{area:exists}/{controller}/{action=Index}/{id?}")
                     .MapLowerCaseRoute("default", "{controller=Home}/{action=Index}/{id?}"));
             return app;
         }

@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozlitePages", "MozlitePage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Security", "Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj", "{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Messages", "Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj", "{F92153B2-5385-4028-AF3A-15A40CB3D0F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Messages", "Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj", "{F92153B2-5385-4028-AF3A-15A40CB3D0F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

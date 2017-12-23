@@ -17,6 +17,13 @@ namespace Mozlite.Extensions.Security.DisallowNames
         /// <summary>
         /// 删除非法名称。
         /// </summary>
+        /// <param name="id">非法名称Id。</param>
+        /// <returns>返回删除结果。</returns>
+        DataResult Delete(int id);
+
+        /// <summary>
+        /// 删除非法名称。
+        /// </summary>
         /// <param name="ids">非法名称Id。</param>
         /// <returns>返回删除结果。</returns>
         DataResult Delete(string ids);

@@ -1,4 +1,5 @@
 ﻿using Mozlite.Mvc.Themes;
+using Mozlite.Mvc.Themes.Menus;
 
 namespace Mozlite.Extensions.Messages
 {
@@ -31,5 +32,14 @@ namespace Mozlite.Extensions.Messages
         /// 导航模式。
         /// </summary>
         public override NavigateMode Mode => NavigateMode.MenuBottom;
+
+        /// <summary>
+        /// 初始化菜单实例。
+        /// </summary>
+        /// <param name="root">根目录菜单。</param>
+        public override void Init(MenuItem root)
+        {
+            
+        }
     }
 }

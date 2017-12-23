@@ -473,7 +473,6 @@ a {
     }
 
     .main .sub-menu-wrapper .sub-menu-tree {
-        padding-top: 8px;
         width: 100%;
     }
 
@@ -557,7 +556,12 @@ a {
             overflow: hidden;
             text-overflow: ellipsis;
             font-weight: 400;
+            color: #333333;
         }
+
+            .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .text.no-icon {
+                padding-left: 36px;
+            }
 
         .main .sub-menu-wrapper .sub-menu-tree-body .sub-menu-item .sub-menu-item-badge {
             padding-left: 5px;
@@ -652,6 +656,8 @@ a {
 
     .main .sub-menu-wrapper .actionbar button {
         padding-left: 18px;
+        width: 100%;
+        text-align: left;
     }
 
     .main .actionbar button[disabled],

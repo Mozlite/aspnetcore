@@ -1,13 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozlite.Data;
-using Mozlite.Extensions.Messages.Services;
 using Mozlite.Extensions.Security.Activities;
-using Mozlite.Extensions.Security.DisallowNames;
-using Mozlite.Extensions.Security.Models;
 using Mozlite.Extensions.Security.Services;
 using Mozlite.Extensions.Security.ViewModels;
 
@@ -24,8 +20,7 @@ namespace Mozlite.Extensions.Security.Controllers
             _userManager = userManager;
             _logger = logger;
         }
-
-        [Route("dashboard/security")]
+        
         public IActionResult Index(UserQuery query)
         {
             return View(_userManager.Load(query));

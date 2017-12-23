@@ -75,7 +75,7 @@ namespace Mozlite.Mvc.Verifiers
 
 
             //定义图像的大小，生成图像的实例  
-            img = new Bitmap((int)code.Length * 18 + 20, 32);
+            img = new Bitmap(code.Length * 18 + 20, 32);
 
             g = Graphics.FromImage(img);//从Img对象生成新的Graphics对象    
 

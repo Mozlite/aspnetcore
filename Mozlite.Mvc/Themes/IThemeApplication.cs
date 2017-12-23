@@ -1,4 +1,6 @@
-﻿namespace Mozlite.Mvc.Themes
+﻿using Mozlite.Mvc.Themes.Menus;
+
+namespace Mozlite.Mvc.Themes
 {
     /// <summary>
     /// 模板应用程序。
@@ -44,5 +46,11 @@
         /// 导航模式。
         /// </summary>
         NavigateMode Mode { get; }
+
+        /// <summary>
+        /// 初始化菜单实例。
+        /// </summary>
+        /// <param name="root">根目录菜单。</param>
+        void Init(MenuItem root);
     }
 }

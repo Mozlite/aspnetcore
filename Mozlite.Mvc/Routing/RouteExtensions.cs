@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Mvc.Routing
@@ -18,7 +17,7 @@ namespace Mozlite.Mvc.Routing
         /// <returns>返回当前路由实例化对象。</returns>
         public static IRouteBuilder MapLowerCaseRoute(this IRouteBuilder routeBuilder, string name, string template)
         {
-            routeBuilder.MapLowerCaseRoute(name, template, (object)null);
+            routeBuilder.MapLowerCaseRoute(name, template, null);
             return routeBuilder;
         }
 
@@ -32,7 +31,7 @@ namespace Mozlite.Mvc.Routing
         /// <returns>返回当前路由实例化对象。</returns>
         public static IRouteBuilder MapLowerCaseRoute(this IRouteBuilder routeBuilder, string name, string template, object defaults)
         {
-            return routeBuilder.MapLowerCaseRoute(name, template, defaults, (object)null);
+            return routeBuilder.MapLowerCaseRoute(name, template, defaults, null);
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace Mozlite.Mvc.Routing
         /// <returns>返回当前路由实例化对象。</returns>
         public static IRouteBuilder MapLowerCaseRoute(this IRouteBuilder routeBuilder, string name, string template, object defaults, object constraints)
         {
-            return routeBuilder.MapLowerCaseRoute(name, template, defaults, constraints, (object)null);
+            return routeBuilder.MapLowerCaseRoute(name, template, defaults, constraints, null);
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Mozlite.Mvc.Routing
         public static IRouteBuilder MapLowerCaseRoute(this IRouteBuilder routeBuilder, string name, string template, object defaults, object constraints, object dataTokens)
         {
             var requiredService = routeBuilder.ServiceProvider.GetRequiredService<IInlineConstraintResolver>();
-            routeBuilder.Routes.Add(new LowerCaseRoute(routeBuilder.DefaultHandler, name, template, new RouteValueDictionary(defaults), (IDictionary<string, object>)new RouteValueDictionary(constraints), new RouteValueDictionary(dataTokens), requiredService));
+            routeBuilder.Routes.Add(new LowerCaseRoute(routeBuilder.DefaultHandler, name, template, new RouteValueDictionary(defaults), new RouteValueDictionary(constraints), new RouteValueDictionary(dataTokens), requiredService));
             return routeBuilder;
         }
     }

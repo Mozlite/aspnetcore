@@ -1,11 +1,13 @@
 using System;
+using Mozlite.Mvc.Routing;
+using Mozlite.Mvc.Themes.Menus;
 
 namespace Mozlite.Mvc.Themes
 {
     /// <summary>
     /// 模板应用程序配置基类。
     /// </summary>
-    public abstract class ThemeApplicationBase : IThemeApplication
+    public abstract class ThemeApplicationBase : IThemeApplication, IMenuProvider
     {
         /// <summary>
         /// 应用程序名称。
@@ -61,5 +63,16 @@ namespace Mozlite.Mvc.Themes
         /// 导航模式。
         /// </summary>
         public virtual NavigateMode Mode { get; } = NavigateMode.Module;
+
+        /// <summary>
+        /// 提供者名称，同一个名称归为同一个菜单。
+        /// </summary>
+        public string Name { get; } = RouteSettings.Dashboard;
+
+        /// <summary>
+        /// 初始化菜单实例。
+        /// </summary>
+        /// <param name="root">根目录菜单。</param>
+        public abstract void Init(MenuItem root);
     }
 }

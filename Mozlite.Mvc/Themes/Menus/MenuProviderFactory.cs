@@ -58,8 +58,8 @@ namespace Mozlite.Mvc.Themes.Menus
         /// <returns>返回当前菜单项。</returns>
         public MenuItem GetMenu(string provider, string name)
         {
-            MenuItem item;
-            LoadMenus(provider).TryGetValue(name, out item);
+            if (name == null) return null;
+            LoadMenus(provider).TryGetValue(name, out var item);
             return item;
         }
 
@@ -69,8 +69,7 @@ namespace Mozlite.Mvc.Themes.Menus
             provider.Init(root);
             foreach (var menu in root)
             {
-                MenuItem item;
-                if (dic.TryGetValue(menu.Name, out item))
+                if (dic.TryGetValue(menu.Name, out var item))
                     item.Merge(menu);
                 else
                     item = menu;

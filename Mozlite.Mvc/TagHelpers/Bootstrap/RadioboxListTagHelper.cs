@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -46,7 +45,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             Init(items);
             foreach (var item in items)
             {
-                output.Content.AppendHtml((IHtmlContent) Create(item.Key, item.Value, string.Equals(item.Value, (string) Value)));
+                output.Content.AppendHtml(Create(item.Key, item.Value, string.Equals(item.Value, (string)Value)));
             }
             var builder = new TagBuilder("div");
             builder.AddCssClass("moz-radioboxlist");

@@ -251,6 +251,8 @@
         //href
         exec('_href',
             function (s, v) {
+                if (!v || v === 'javascript:;' || v === 'javascript:void(0);')
+                    return;
                 s.css('cursor', 'pointer')
                     .click(function () {
                         var target = s.attr('target') || s.js('target');
@@ -297,7 +299,13 @@
         //modal
         exec('_modal', function (s, v) {
             s.on('click', function () {
-                s.loadModal(s.js('url') || s.attr('href') || v);
+                var url = s.js('url');
+                if (!url) {
+                    url = s.attr('href');
+                    if (!url || url === 'javascript:;' || url === 'javascript:void(0);')
+                        url = v;
+                }
+                s.loadModal(url);
                 return false;
             });
         });

@@ -65,8 +65,14 @@ namespace Mozlite.Mvc.Themes.Menus
         /// <summary>
         /// 链接地址。
         /// </summary>
-        public string LinkUrl { get; private set; }
-
+        /// <param name="prefix">前缀，用于替换“~”符号。</param>
+        /// <returns>返回链接地址。</returns>
+        public string PrefixUrl(string prefix = null)
+        {
+            if (_linkUrl == null) return "javascript:;";
+            return _linkUrl.Replace("~", '/' + prefix?.Trim('/', ' '));
+        }
+        private string _linkUrl;
         /// <summary>
         /// 设置链接地址。
         /// </summary>
@@ -74,7 +80,7 @@ namespace Mozlite.Mvc.Themes.Menus
         /// <returns>返回当前菜单。</returns>
         public MenuItem Hrefed(string linkUrl)
         {
-            LinkUrl = linkUrl;
+            _linkUrl = linkUrl;
             return this;
         }
 
@@ -96,6 +102,30 @@ namespace Mozlite.Mvc.Themes.Menus
             return this;
         }
 
+        /// <summary>
+        /// 标记唯一样式名称，如果为空表示不存在。
+        /// </summary>
+        public string Badge { get; private set; }
+
+        /// <summary>
+        /// 标记图标样式名称，如果为空表示不存在。
+        /// </summary>
+        public string BadgeIcon { get; private set; }
+
+        /// <summary>
+        /// 设置标志样式。
+        /// </summary>
+        /// <param name="badge">标记唯一样式名称。</param>
+        /// <param name="icon">图标样式。</param>
+        /// <returns>返回当前菜单。</returns>
+        public MenuItem Badged(string badge, string icon)
+        {
+            if (icon.StartsWith("fa-"))
+                icon += " fa";
+            BadgeIcon = icon;
+            Badge = badge;
+            return this;
+        }
 
         private readonly IDictionary<string, MenuItem> _children = new Dictionary<string, MenuItem>(StringComparer.OrdinalIgnoreCase);
 
@@ -167,12 +197,11 @@ namespace Mozlite.Mvc.Themes.Menus
             Level = Math.Max(Level, item.Level);
             if (Parent?.Name == null)
                 Parent = item.Parent;
-            LinkUrl = LinkUrl ?? item.LinkUrl;
+            _linkUrl = _linkUrl ?? item._linkUrl;
 
             foreach (var it in item)
             {
-                MenuItem i;
-                if (_children.TryGetValue(it.Name, out i))
+                if (_children.TryGetValue(it.Name, out var i))
                     i.Merge(it);
                 else
                 {
@@ -180,6 +209,34 @@ namespace Mozlite.Mvc.Themes.Menus
                     _children.Add(it.Name, it);
                 }
             }
+        }
+
+        /// <summary>
+        /// 最顶级的菜单。
+        /// </summary>
+        public MenuItem Toppest
+        {
+            get
+            {
+                var toppest = this;
+                while (toppest.Parent?.Name != null)
+                {
+                    toppest = toppest.Parent;
+                }
+                return toppest;
+            }
+        }
+
+        /// <summary>
+        /// 显示样式。
+        /// </summary>
+        /// <param name="current">当前菜单项。</param>
+        /// <returns>返回样式名称。</returns>
+        public string ShowClass(MenuItem current)
+        {
+            if (this == current)
+                return $"active {Name.Replace('.', '-')}";
+            return Name.Replace('.', '-');
         }
     }
 }
