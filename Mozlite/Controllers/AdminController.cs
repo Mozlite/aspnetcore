@@ -28,6 +28,12 @@ namespace Mozlite.Controllers
             return View();
         }
 
+        [Route(RouteSettings.Dashboard + "/editor")]
+        public IActionResult Editor()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Menu()
         {
             return View(await _applicationManager.LoadApplicationsAsync());

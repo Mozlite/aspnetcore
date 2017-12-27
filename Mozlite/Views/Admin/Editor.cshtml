@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "_Admin";
+    ViewData["Title"] = "编辑器";
+}
+
+
+<div class="-v-">
+    <div class="-v-control" style="width: 200px; height: 200px">
+        <canvas class="-v-canvas"></canvas>
+        可以拖拽？
+    </div>
+</div>
+
+@section footer{
+    <script type="text/javascript" src="~/js/common.js"></script>
+    <script type="text/javascript">
+        var hmi = new HMI('.-v-', true);
+    </script>
+}
+
+@section slider
+{
+    <div draggable="true" style="border-radius: 100%; width: 100px; height: 100px; border: 1px solid #00bfff; text-align: center; vertical-align: middle;"><i class="fa fa-user-secret"></i></div>
+}

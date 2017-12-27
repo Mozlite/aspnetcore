@@ -1,16 +1,16 @@
-using System;
+ï»¿using System;
 using Mozlite.Mvc.Routing;
 using Mozlite.Mvc.Themes.Menus;
 
 namespace Mozlite.Mvc.Themes
 {
     /// <summary>
-    /// Ä£°åÓ¦ÓÃ³ÌĞòÅäÖÃ»ùÀà¡£
+    /// æ¨¡æ¿åº”ç”¨ç¨‹åºé…ç½®åŸºç±»ã€‚
     /// </summary>
     public abstract class ThemeApplicationBase : IThemeApplication, IMenuProvider
     {
         /// <summary>
-        /// Ó¦ÓÃ³ÌĞòÃû³Æ¡£
+        /// åº”ç”¨ç¨‹åºåç§°ã€‚
         /// </summary>
         public virtual string ApplicationName
         {
@@ -30,49 +30,49 @@ namespace Mozlite.Mvc.Themes
         }
 
         /// <summary>
-        /// ÏÔÊ¾Ãû³Æ¡£
+        /// æ˜¾ç¤ºåç§°ã€‚
         /// </summary>
         public abstract string DisplayName { get; }
 
         /// <summary>
-        /// ÃèÊö¡£
+        /// æè¿°ã€‚
         /// </summary>
         public virtual string Description { get; } = null;
 
         /// <summary>
-        /// ÑùÊ½¡£
+        /// æ ·å¼ã€‚
         /// </summary>
         public virtual string CssClass => null;
 
         /// <summary>
-        /// Á´½ÓµØÖ·¡£
+        /// é“¾æ¥åœ°å€ã€‚
         /// </summary>
-        public virtual string LinkUrl => $"/dashboard/{ApplicationName}";
+        public virtual string LinkUrl => $"/{RouteSettings.Dashboard}/{ApplicationName}";
 
         /// <summary>
-        /// Í¼±êÑùÊ½¡£
+        /// å›¾æ ‡æ ·å¼ã€‚
         /// </summary>
         public virtual string IconClass => "fa ";
 
         /// <summary>
-        /// ÓÅÏÈ¼¶£¬Ô½´óÔ½¿¿Ç°¡£
+        /// ä¼˜å…ˆçº§ï¼Œè¶Šå¤§è¶Šé å‰ã€‚
         /// </summary>
         public virtual int Priority { get; } = 0;
 
         /// <summary>
-        /// µ¼º½Ä£Ê½¡£
+        /// å¯¼èˆªæ¨¡å¼ã€‚
         /// </summary>
         public virtual NavigateMode Mode { get; } = NavigateMode.Module;
 
         /// <summary>
-        /// Ìá¹©ÕßÃû³Æ£¬Í¬Ò»¸öÃû³Æ¹éÎªÍ¬Ò»¸ö²Ëµ¥¡£
+        /// æä¾›è€…åç§°ï¼ŒåŒä¸€ä¸ªåç§°å½’ä¸ºåŒä¸€ä¸ªèœå•ã€‚
         /// </summary>
         public string Name { get; } = RouteSettings.Dashboard;
 
         /// <summary>
-        /// ³õÊ¼»¯²Ëµ¥ÊµÀı¡£
+        /// åˆå§‹åŒ–èœå•å®ä¾‹ã€‚
         /// </summary>
-        /// <param name="root">¸ùÄ¿Â¼²Ëµ¥¡£</param>
+        /// <param name="root">æ ¹ç›®å½•èœå•ã€‚</param>
         public abstract void Init(MenuItem root);
     }
 }
