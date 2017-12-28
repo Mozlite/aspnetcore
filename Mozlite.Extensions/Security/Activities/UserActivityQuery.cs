@@ -14,6 +14,16 @@ namespace Mozlite.Extensions.Security.Activities
         public int UserId { get; set; }
 
         /// <summary>
+        /// 用户名称。
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// IP地址。
+        /// </summary>
+        public string IP { get; set; }
+
+        /// <summary>
         /// 初始化查询上下文。
         /// </summary>
         /// <param name="context">查询上下文。</param>
@@ -24,6 +34,10 @@ namespace Mozlite.Extensions.Security.Activities
                 .Select<TUser>(x => new { x.UserName, x.NickName });
             if (UserId > 0)
                 context.Where(x => x.UserId == UserId);
+            if (!string.IsNullOrEmpty(Name))
+                context.Where<TUser>(x => x.UserName.Contains(Name) || x.NickName.Contains(Name));
+            if (!string.IsNullOrEmpty(IP))
+                context.Where(x => x.IPAdress == IP);
             context.OrderByDescending(x => x.Id);
         }
     }

@@ -37,7 +37,7 @@ namespace Mozlite.Extensions.Security
             root.AddMenu("users", menu => menu.Titled("用户管理")
                 .AddMenu("index", sub => sub.Titled("用户列表").Iconed("fa-user-o").Hrefed("~/" + ApplicationName))
                 .AddMenu("disallow", sub => sub.Titled("禁用名称管理").Hrefed("~/" + ApplicationName+ "/admindisallowname"))
-                .AddMenu("logs", sub => sub.Titled("日志管理").Hrefed("~/" + ApplicationName + "/adminlogs"))
+                .AddMenu("logs", sub => sub.Titled("日志管理").Hrefed("~/" + ApplicationName + "/adminlog"))
                 .AddMenu("roles", sub => sub.Titled("用户组管理").Iconed("fa-users").Hrefed("~/" + ApplicationName+"/adminrole"))
                 .AddMenu("permissions", sub => sub.Titled("权限管理").Hrefed("~/" + ApplicationName + "/adminpermission"))
             );

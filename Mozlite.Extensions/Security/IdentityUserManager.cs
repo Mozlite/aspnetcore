@@ -115,26 +115,24 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 登入成功后写入登入IP和登入时间。
         /// </summary>
-        /// <param name="userName">登入用户名称。</param>
+        /// <param name="userId">用户Id。</param>
         /// <returns>返回设置是否成功。</returns>
-        public bool SignInSuccess(string userName)
+        public bool SignInSuccess(int userId)
         {
-            userName = userName.ToUpper();
             var userAddress = _httpContextAccessor.HttpContext.GetUserAddress();
-            return Repository.Update(u => u.NormalizedUserName == userName,
+            return Repository.Update(u => u.UserId == userId,
                 new { LoginIP = userAddress, LastLoginDate = DateTimeOffset.Now });
         }
 
         /// <summary>
         /// 登入成功后写入登入IP和登入时间。
         /// </summary>
-        /// <param name="userName">登入用户名称。</param>
+        /// <param name="userId">用户Id。</param>
         /// <returns>返回设置是否成功。</returns>
-        public Task<bool> SignInSuccessAsync(string userName)
+        public Task<bool> SignInSuccessAsync(int userId)
         {
-            userName = userName.ToUpper();
             var userAddress = _httpContextAccessor.HttpContext.GetUserAddress();
-            return Repository.UpdateAsync(u => u.NormalizedUserName == userName,
+            return Repository.UpdateAsync(u => u.UserId == userId,
                 new { LoginIP = userAddress, LastLoginDate = DateTimeOffset.Now });
         }
 
@@ -437,6 +435,30 @@ namespace Mozlite.Extensions.Security
         public async Task<DataResult> UpdateAsync(int id, object user)
         {
             return DataResult.FromResult(await Repository.UpdateAsync(x => x.UserId == id, user), DataAction.Updated);
+        }
+
+        /// <summary>
+        /// 获取用户Id。
+        /// </summary>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回用户Id。</returns>
+        public int GetUserId(string userName)
+        {
+            userName = userName.ToUpper();
+            return Repository.AsQueryable().Where(x => x.NormalizedUserName == userName).Select(x => x.UserId)
+                .SingleOrDefault(x => x.GetInt32(0));
+        }
+
+        /// <summary>
+        /// 获取用户Id。
+        /// </summary>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回用户Id。</returns>
+        public Task<int> GetUserIdAsync(string userName)
+        {
+            userName = userName.ToUpper();
+            return Repository.AsQueryable().Where(x => x.NormalizedUserName == userName).Select(x => x.UserId)
+                .SingleOrDefaultAsync(x => x.GetInt32(0));
         }
     }
 }

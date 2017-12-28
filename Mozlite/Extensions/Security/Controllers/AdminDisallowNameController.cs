@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security.DisallowNames;
 
 namespace Mozlite.Extensions.Security.Controllers
 {
+    [Authorize]
     public class AdminDisallowNameController : ControllerBase
     {
         private readonly INameManager _nameManager;

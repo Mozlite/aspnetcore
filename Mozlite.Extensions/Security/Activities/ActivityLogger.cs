@@ -24,7 +24,7 @@ namespace Mozlite.Extensions.Security.Activities
             var message = formatter(state, null);
             if (string.IsNullOrWhiteSpace(message))
                 return;
-            _activityManager.Create(message);
+            _activityManager.Create(new UserActivity { Activity = message });
         }
 
         public bool IsEnabled(LogLevel logLevel)

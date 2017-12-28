@@ -28,14 +28,21 @@ namespace Mozlite.Extensions.Security.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly INameManager _nameManager;
         private readonly IMessageManager _messageManager;
+        private readonly IActivityManager _activityManager;
 
-        public HomeController(IUserManager userManager, SignInManager<User> signInManager, ILogger<HomeController> logger, INameManager nameManager, IMessageManager messageManager)
+        public HomeController(IUserManager userManager, 
+            SignInManager<User> signInManager, 
+            ILogger<HomeController> logger, 
+            INameManager nameManager, 
+            IMessageManager messageManager, 
+            IActivityManager activityManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _nameManager = nameManager;
             _messageManager = messageManager;
+            _activityManager = activityManager;
         }
         
         /// <summary>
@@ -72,8 +79,9 @@ namespace Mozlite.Extensions.Security.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, SecurityHelper.CreatePassword(model.UserName, model.Password), model.IsRemembered, true);
                 if (result.Succeeded)
                 {
-                    await _userManager.SignInSuccessAsync(model.UserName);
-                    _logger.LogUserInformation("成功登入系统.");
+                    var userId = await _userManager.GetUserIdAsync(model.UserName);
+                    await _userManager.SignInSuccessAsync(userId);
+                    await _activityManager.CreateAsync("成功登入系统.", userId);
                     return Success(new { redirectUrl = redirectUrl ?? "/dashboard" });
                 }
                 if (result.RequiresTwoFactor)
@@ -156,7 +164,7 @@ namespace Mozlite.Extensions.Security.Controllers
                                     kw.Add("name", user.NickName);
                                     kw.Add("link", callbackUrl);
                                 }));
-                    _logger.LogUserInformation("注册了账户[{0}].", user.UserName);
+                    await _activityManager.CreateAsync("注册了账户.", user.UserId);
                     return Success("一封激活邮件已经发送到你的邮箱！该激活链接24小时内有效！");
                 }
                 catch (Exception exception)

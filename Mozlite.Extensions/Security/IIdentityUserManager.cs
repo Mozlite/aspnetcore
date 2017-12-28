@@ -118,16 +118,16 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 登入成功后写入登入IP和登入时间。
         /// </summary>
-        /// <param name="userName">登入用户名称。</param>
+        /// <param name="userId">用户Id。</param>
         /// <returns>返回设置是否成功。</returns>
-        bool SignInSuccess(string userName);
+        bool SignInSuccess(int userId);
 
         /// <summary>
         /// 登入成功后写入登入IP和登入时间。
         /// </summary>
-        /// <param name="userName">登入用户名称。</param>
+        /// <param name="userId">用户Id。</param>
         /// <returns>返回设置是否成功。</returns>
-        Task<bool> SignInSuccessAsync(string userName);
+        Task<bool> SignInSuccessAsync(int userId);
 
         /// <summary>
         /// 锁定用户。
@@ -275,5 +275,19 @@ namespace Mozlite.Extensions.Security
         /// <param name="user">用户实例列。</param>
         /// <returns>返回保存结果。</returns>
         Task<DataResult> UpdateAsync(int id, object user);
+
+        /// <summary>
+        /// 获取用户Id。
+        /// </summary>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回用户Id。</returns>
+        int GetUserId(string userName);
+
+        /// <summary>
+        /// 获取用户Id。
+        /// </summary>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回用户Id。</returns>
+        Task<int> GetUserIdAsync(string userName);
     }
 }

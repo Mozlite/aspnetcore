@@ -24,7 +24,7 @@ var HMI = /** @class */ (function () {
         this.selector.addEventListener("dragover", function (e) { e.preventDefault(); });
         this.selector.addEventListener("drop", function (e) {
             e.preventDefault();
-            _this.selector.appendChild(_this.draggedElement.cloneNode());
+            _this.selector.appendChild(_this.draggedElement.cloneNode(true));
             _this.draggedElement = null;
         });
     };

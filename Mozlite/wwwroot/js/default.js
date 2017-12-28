@@ -43,10 +43,17 @@
             });
     });
     $('.data-view', context).find('.moz-checkbox').click(function () {
+        var container = $('.actionbar>.toolbar', context);
         if ($(this).hasClass('checked')) {
             $(this).parents('.data-row').addClass('active');
+            container.find('.checked-show').show();
+            container.find('.checked-hide').hide();
         } else {
             $(this).parents('.data-row').removeClass('active');
+            if ($('.data-view', context).find('.moz-checkbox.checked').length == 0) {
+                container.find('.checked-show').hide();
+                container.find('.checked-hide').show();
+            }
         }
     });
     $('.data-view', context).find('[post-id],[get-id]').click(function () {
@@ -58,14 +65,19 @@
         }
         $ajax($(this).attr('post-id'), { id: id });
     });
-    $('.filterbar .checkbox-all', context).find('.moz-checkbox').click(function () {
+    $('.filterbar .checkbox-all, .data-head .checkbox-all', context).find('.moz-checkbox').click(function () {
+        var container = $('.actionbar>.toolbar', context);;
         var target = $(this).targetElement($(this).parents('.content-container').find('.data-view').find('.moz-checkbox'));
         if ($(this).hasClass('checked')) {
             target.addClass('checked').parents('.data-row').addClass('active');
             target.find('input').each(function () { this.checked = 'checked'; });
+            container.find('.checked-show').show();
+            container.find('.checked-hide').hide();
         } else {
             target.removeClass('checked').parents('.data-row').removeClass('active');
             target.find('input').removeAttr('checked');
+            container.find('.checked-show').hide();
+            container.find('.checked-hide').show();
         }
     });
     $('.filterbar', context).find('[type=submit]').click(function () {

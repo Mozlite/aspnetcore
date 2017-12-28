@@ -697,6 +697,10 @@ a {
             right: 0;
         }
 
+        .main .body .toolbar .checked-show {
+            display: none;
+        }
+
     .main .body .content-wrapper {
         background-color: #fff;
         flex-flow: row nowrap;
@@ -912,22 +916,29 @@ a {
                 padding-right: 24px;
             }
 
-            .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox {
-                margin-left: 32px;
-                margin-right: 0;
-                align-self: center;
-                align-items: center;
-                display: flex;
-                justify-content: center;
-                width: 28px;
-                height: 28px;
-                cursor: pointer;
-                flex: 0 0 auto;
-            }
-
-                .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox .moz-checkbox {
-                    margin: 0;
+                .main .body .content-wrapper .data-view .datalist .data-head .checkbox-all,
+                .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox {
+                    margin-left: 32px;
+                    margin-right: 0;
+                    align-self: center;
+                    align-items: center;
+                    display: flex;
+                    justify-content: center;
+                    width: 28px;
+                    height: 28px;
+                    cursor: pointer;
+                    flex: 0 0 auto;
                 }
+
+                .main .body .content-wrapper .data-view .datalist .data-head .checkbox-all {
+                    margin-left: 20px;
+                    margin-right: 10px;
+                }
+
+                    .main .body .content-wrapper .data-view .datalist .data-head .checkbox-all .moz-checkbox,
+                    .main .body .content-wrapper .data-view .datalist .data-row .data-checkbox .moz-checkbox {
+                        margin: 0;
+                    }
 
             .main .body .content-wrapper .data-view .datalist .data-row.head-blue {
                 border-left: 4px solid #2055A4;
@@ -1030,8 +1041,8 @@ a {
 
 .filterbar .moz-checkbox.checked .box-wrapper,
 .filterbar .moz-radioboxlist .moz-radiobox.checked .box-wrapper,
-.data-view .data-row.active .moz-checkbox.checked .box-wrapper,
-.data-view .data-row.active .moz-radioboxlist .moz-radiobox.checked .box-wrapper {
+.data-view .moz-checkbox.checked .box-wrapper,
+.data-view .moz-radioboxlist .moz-radiobox.checked .box-wrapper {
     border-color: #fff;
     background: #2055a4;
 }
