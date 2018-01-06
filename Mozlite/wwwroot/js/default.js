@@ -86,7 +86,7 @@
             if ((this.type === 'radio' || this.type === 'checkbox') && !this.checked)
                 return;
             if (this.value)
-                qs.push(this.name.toLowerCase() + '=' + this.value);
+                qs.push(this.name.toLowerCase() + '=' + $.trim(this.value));
         });
         if (qs.length > 0)
             location.href = '?' + qs.join('&');

@@ -40,128 +40,132 @@
                     <div class="menu-container">
                         <div class="menu-top">
                             @foreach (var application in ThemeApplicationManager.LoadApplications(NavigateMode.MenuTop))
-                        {
-                            <a href="@application.LinkUrl">
-                                <i class="@application.IconClass"></i>
-                            </a>
-                    }
+                            {
+                                <a href="@application.LinkUrl">
+                                    <i class="@application.IconClass"></i>
+                                </a>
+                            }
                         </div>
                         <div class="menu-bottom">
                             @foreach (var application in ThemeApplicationManager.LoadApplications(NavigateMode.MenuBottom))
-                        {
-                            <a href="@application.LinkUrl">
-                                <i class="@application.IconClass"></i>
-                            </a>
-                    }
+                            {
+                                <a href="@application.LinkUrl">
+                                    <i class="@application.IconClass"></i>
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
-                @if (menu != null)
-            {
-                <div class="sub-menu-wrapper" style="width: 222px;">
-                    <div class="actionbar">
-                        <button id="@menu.Toppest.Name" type="button" _href="@menu.Toppest.PrefixUrl(RouteSettings.Dashboard)">
-                            <i class="@menu.Toppest.IconName"></i> @menu.Toppest.Title
-                        </button>
+                @if (IsSectionDefined("menu"))
+                {
+                    <div class="sub-menu-wrapper" style="width: 222px;">
+                        @RenderSection("menu", false)
                     </div>
-                    <div class="sub-menu-container disableTextSelection customScrollBar overlay">
-                        <div>
-                            <span class="sr-only">导航窗格</span>
-                            @if (menu.Level == 1)//两级无分组
-                        {
-                            <div class="sub-menu-tree">
-                                <div class="sub-menu-tree-body">
-                                    @foreach (var item in menu.Toppest)
-                                {
-                                    <div draggable="true" _href="@item.PrefixUrl(RouteSettings.Dashboard)">
-                                        <div class="sub-menu-item @item.ShowClass(menu)" title="@item.Title">
-                                            @if (item.IconName != null)
-                                        {
-                                            <i class="@item.IconName"></i>
-                                            <span class="text">@item.Title</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text no-icon">@item.Title</span>
-                                }
-                                            @if (item.Badge != null)
-                                        {
-                                            <span class="sub-menu-item-badge">
-                                                <span class="sub-menu-item-badge-container @item.Badge">
-                                                    <span class="sr-only">未读</span>
-                                                </span>
-                                            </span>
-                                    }
-                                            @if (item.BadgeIcon != null)
-                                        {
-                                            <span class="sub-menu-item-action">
-                                                <button type="button" title="从收藏夹中删除">
-                                                    <i class="@item.BadgeIcon"></i>
-                                                </button>
-                                            </span>
-                                    }
-                                        </div>
-                                    </div>
-                            }
-                                    <div class="sub-menu-item-new">
-                                        <div class="text">新建文件夹</div>
-                                        <input name="sub" type="text" />
-                                    </div>
-                                </div>
-                            </div>
-                    }
-                    else if (menu.Level == 2)
-                    {
-                        foreach (var sub in menu.Toppest)
-                        {
-                            <div class="sub-menu-tree">
-                                <div class="sub-menu-tree-header">
-                                    <button type="button">
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <span class="text">@sub.Title</span>
-                                </div>
-                                <div class="sub-menu-tree-body">
-                                    @foreach (var item in sub)
-                                {
-                                    <div draggable="true" _href="@item.PrefixUrl(RouteSettings.Dashboard)">
-                                        <div class="sub-menu-item @item.ShowClass(menu)" title="@item.Title">
-                                            @if (item.IconName != null)
-                                        {
-                                            <i class="@item.IconName"></i>
-                                            <span class="text">@item.Title</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text no-icon">@item.Title</span>
-                                }
-                                            @if (item.Badge != null)
-                                        {
-                                            <span class="sub-menu-item-badge">
-                                                <span class="sub-menu-item-badge-container @item.Badge">
-                                                    <span class="sr-only">未读</span>
-                                                </span>
-                                            </span>
-                                    }
-                                            @if (item.BadgeIcon != null)
-                                        {
-                                            <span class="sub-menu-item-action">
-                                                <button type="button" title="从收藏夹中删除">
-                                                    <i class="@item.BadgeIcon"></i>
-                                                </button>
-                                            </span>
-                                    }
-                                        </div>
-                                    </div>
-                            }
-                                </div>
-                            </div>
-                    }
                 }
+                else if (menu != null)
+                {
+                    <div class="sub-menu-wrapper" style="width: 222px;">
+                        <div class="headbar">
+                            @(menu.Toppest.Title)导航
+                        </div>
+                        <div class="sub-menu-container disableTextSelection customScrollBar overlay">
+                            <div>
+                                <span class="sr-only">导航窗格</span>
+                                @if (menu.Level == 1)//两级无分组
+                                {
+                                    <div class="sub-menu-tree">
+                                        <div class="sub-menu-tree-body">
+                                            @foreach (var item in menu.Toppest)
+                                            {
+                                                <div draggable="true" _href="@item.PrefixUrl(RouteSettings.Dashboard)">
+                                                    <div class="sub-menu-item @item.ShowClass(menu)" title="@item.Title">
+                                                        @if (item.IconName != null)
+                                                        {
+                                                            <i class="@item.IconName"></i>
+                                                            <span class="text">@item.Title</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text no-icon">@item.Title</span>
+                                                        }
+                                                        @if (item.Badge != null)
+                                                        {
+                                                            <span class="sub-menu-item-badge">
+                                                                <span class="sub-menu-item-badge-container @item.Badge">
+                                                                    <span class="sr-only">未读</span>
+                                                                </span>
+                                                            </span>
+                                                        }
+                                                        @if (item.BadgeIcon != null)
+                                                        {
+                                                            <span class="sub-menu-item-action">
+                                                                <button type="button" title="从收藏夹中删除">
+                                                                    <i class="@item.BadgeIcon"></i>
+                                                                </button>
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="sub-menu-item-new">
+                                                <div class="text">新建文件夹</div>
+                                                <input name="sub" type="text" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (menu.Level == 2)
+                                {
+                                    foreach (var sub in menu.Toppest)
+                                    {
+                                        <div class="sub-menu-tree">
+                                            <div class="sub-menu-tree-header">
+                                                <button type="button">
+                                                    <i class="fa fa-angle-down"></i>
+                                                </button>
+                                                <span class="text">@sub.Title</span>
+                                            </div>
+                                            <div class="sub-menu-tree-body">
+                                                @foreach (var item in sub)
+                                                {
+                                                    <div draggable="true" _href="@item.PrefixUrl(RouteSettings.Dashboard)">
+                                                        <div class="sub-menu-item @item.ShowClass(menu)" title="@item.Title">
+                                                            @if (item.IconName != null)
+                                                            {
+                                                                <i class="@item.IconName"></i>
+                                                                <span class="text">@item.Title</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text no-icon">@item.Title</span>
+                                                            }
+                                                            @if (item.Badge != null)
+                                                            {
+                                                                <span class="sub-menu-item-badge">
+                                                                    <span class="sub-menu-item-badge-container @item.Badge">
+                                                                        <span class="sr-only">未读</span>
+                                                                    </span>
+                                                                </span>
+                                                            }
+                                                            @if (item.BadgeIcon != null)
+                                                            {
+                                                                <span class="sub-menu-item-action">
+                                                                    <button type="button" title="从收藏夹中删除">
+                                                                        <i class="@item.BadgeIcon"></i>
+                                                                    </button>
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-        }
+                }
             </div>
         </div>
         <div class="splitter"></div>

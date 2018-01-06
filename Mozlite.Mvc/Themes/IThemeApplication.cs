@@ -13,6 +13,11 @@ namespace Mozlite.Mvc.Themes
         string ApplicationName { get; }
 
         /// <summary>
+        /// 应用程序名称。
+        /// </summary>
+        string PermissionName { get; }
+
+        /// <summary>
         /// 显示名称。
         /// </summary>
         string DisplayName { get; }

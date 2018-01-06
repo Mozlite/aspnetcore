@@ -456,13 +456,17 @@ a {
         display: flex;
     }
 
-    .main .sub-menu-wrapper .actionbar {
+    .main .sub-menu-wrapper .headbar {
         border-bottom: 1px solid #eaeaea;
+        border-right: 1px solid #eaeaea;
+        height: 40px;
+        line-height: 40px;
+        background-color: #f4f4f4;
+        color: #1A4382;
     }
 
     .main .sub-menu-wrapper .sub-menu-container {
         font-size: 14px;
-        font-weight: 400;
         font-weight: 300;
         color: #333333;
         flex: 1 1 auto;
@@ -736,41 +740,47 @@ a {
                     flex: 1 1 auto;
                 }
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar label {
-                        margin-left: 15px;
-                    }
+                .main .body .content-wrapper .content-container .filterbar .pagebar {
+                    flex: 1 1 auto;
+                    text-align: right;
+                }
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar .form-control,
-                    .main .body .content-wrapper .content-container .filterbar .actionbar button {
-                        height: 28px;
-                        line-height: 28px;
-                        box-shadow: none;
-                        padding: 0 6px;
-                        border-color: #eaeaea;
-                    }
+                .main .body .content-wrapper .content-container .filterbar .actionbar label {
+                    margin-left: 15px;
+                }
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar button {
-                        padding: 0 10px;
-                        border: 1px solid #eaeaea;
-                        border-radius: 4px;
-                    }
+                .main .body .content-wrapper .content-container .filterbar .pagebar select,
+                .main .body .content-wrapper .content-container .filterbar .actionbar .form-control,
+                .main .body .content-wrapper .content-container .filterbar .actionbar button {
+                    height: 28px;
+                    line-height: 28px;
+                    box-shadow: none;
+                    padding: 0 6px;
+                    border-color: #eaeaea;
+                }
+
+                .main .body .content-wrapper .content-container .filterbar .actionbar button {
+                    padding: 0 10px;
+                    border: 1px solid #eaeaea;
+                    border-radius: 4px;
+                }
 
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar .input-group button:last-child {
-                        border-left: none;
-                        border-top-left-radius: 0;
-                        border-bottom-left-radius: 0;
-                    }
+                .main .body .content-wrapper .content-container .filterbar .actionbar .input-group button:last-child {
+                    border-left: none;
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                }
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar button i {
-                        font-size: 14px;
-                        margin: 0;
-                    }
+                .main .body .content-wrapper .content-container .filterbar .actionbar button i {
+                    font-size: 14px;
+                    margin: 0;
+                }
 
-                    .main .body .content-wrapper .content-container .filterbar .actionbar .input-group-addon {
-                        border-color: #eaeaea;
-                        color: #999999;
-                    }
+                .main .body .content-wrapper .content-container .filterbar .actionbar .input-group-addon {
+                    border-color: #eaeaea;
+                    color: #999999;
+                }
 
                 .main .body .content-wrapper .content-container .filterbar .filter {
                     cursor: pointer;
@@ -944,9 +954,14 @@ a {
                 border-left: 4px solid #2055A4;
             }
 
+                .main .body .content-wrapper .data-view .datalist .data-row.head-red .data-checkbox,
                 .main .body .content-wrapper .data-view .datalist .data-row.head-blue .data-checkbox {
                     margin-left: 28px;
                 }
+
+            .main .body .content-wrapper .data-view .datalist .data-row.head-red {
+                border-left: 4px solid #ff0000;
+            }
 
         .main .body .content-wrapper .data-view .col-auto {
             position: relative;

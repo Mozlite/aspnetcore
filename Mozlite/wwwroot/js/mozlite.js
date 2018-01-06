@@ -8,6 +8,46 @@
         ///<param name="func" type="Function">方法。</param>
         window['mozlite-ready-functions'].push(func);
     };
+    //查询字符串
+    window.$query = {};
+    if (location.search) {
+        function split(current) {
+            if (!current) return;
+            var index = current.indexOf('=');
+            if (index != -1)
+                $query[current.substr(0, index)] = current.substr(index + 1);
+        };
+        var qs = location.search.substr(1);
+        var index = qs.indexOf('&');
+        while (index != -1) {
+            split(qs.substr(0, index));
+            qs = qs.substr(index + 1);
+            index = qs.indexOf('&');
+        }
+        split(qs);
+    }
+    window.$href = function () {
+        if (arguments.length == 0) {
+            location.href = location.href;
+            return;
+        }
+        if (arguments.length == 2)
+            $query[arguments[0]] = arguments[1];
+        else if (typeof arguments[0] == "object") {
+            var args = arguments[0];
+            for (var i in args) {
+                $query[i] = args[i];
+            }
+        }
+        var search = [];
+        for (var i in $query) {
+            search.push(i + '=' + $query[i]);
+        }
+        if (search.length > 0)
+            location.href = '?' + search.join('&');
+        else
+            location.href = location.href;
+    };
     $.fn.checkedVal = function () {
         var values = [];
         this.find('input[type=checkbox], input[type=radio]').each(function () {

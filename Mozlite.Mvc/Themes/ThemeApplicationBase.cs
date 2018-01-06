@@ -30,6 +30,11 @@ namespace Mozlite.Mvc.Themes
         }
 
         /// <summary>
+        /// 应用程序名称。
+        /// </summary>
+        public virtual string PermissionName => ApplicationName;
+
+        /// <summary>
         /// 显示名称。
         /// </summary>
         public abstract string DisplayName { get; }

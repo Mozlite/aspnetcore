@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Html;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -26,7 +27,7 @@ namespace Mozlite.Extensions.Tasks
         /// </summary>
         [Size(256)]
         public string Description { get; set; }
-        
+
         /// <summary>
         /// 所属扩展类型，一般为类型Mozlite.Extensions.名称。
         /// </summary>
@@ -44,6 +45,15 @@ namespace Mozlite.Extensions.Tasks
         /// </summary>
         [Size(64)]
         public string Interval { get; set; }
+
+        /// <summary>
+        /// 显示间隔。
+        /// </summary>
+        public IHtmlContent ToHtmlInterval()
+        {
+            TaskInterval interval = Interval;
+            return interval.ToHtmlString();
+        }
 
         /// <summary>
         /// 前一次执行时间。

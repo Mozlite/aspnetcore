@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Mozlite.Extensions.Security.Permissions;
 
 namespace Mozlite.Mvc.Themes
@@ -26,7 +26,7 @@ namespace Mozlite.Mvc.Themes
             applications = applications.OrderByDescending(x => x.Priority).ToList();
             foreach (var application in applications)
             {
-                permissionManager.Save(new Permission { Name = $"app.{application.ApplicationName}", Description = application.Description });
+                permissionManager.Save(new Permission { Name = $"app.{application.PermissionName}", Description = application.Description });
             }
             permissionManager.RefreshAdministrators();
             _applications = new ReadOnlyCollection<IThemeApplication>(applications.ToList());
@@ -44,7 +44,7 @@ namespace Mozlite.Mvc.Themes
             {
                 if ((application.Mode & mode) != mode)
                     continue;
-                if (await _permissionManager.IsAuthorizedAsync($"app.{application.ApplicationName}"))
+                if (await _permissionManager.IsAuthorizedAsync($"app.{application.PermissionName}"))
                     applications.Add(application);
             }
             return applications;
@@ -62,7 +62,7 @@ namespace Mozlite.Mvc.Themes
             {
                 if ((application.Mode & mode) != mode)
                     continue;
-                if (_permissionManager.IsAuthorized($"app.{application.ApplicationName}"))
+                if (_permissionManager.IsAuthorized($"app.{application.PermissionName}"))
                     applications.Add(application);
             }
             return applications;

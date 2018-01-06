@@ -7,10 +7,6 @@
     <UserSecretsId>aspnet-Mozlite-54CD57F1-F07F-4C2B-A6CF-F30A1E4D91FB</UserSecretsId>
     <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\js\common.ts" />
-  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
@@ -32,12 +28,19 @@
     <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\Messages\Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="Scripts\common.ts" />
-  </ItemGroup>
-
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir>./wwwroot/js</TypeScriptOutDir>
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
 </Project>

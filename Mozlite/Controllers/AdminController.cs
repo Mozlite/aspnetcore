@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Tasks;
 using Mozlite.Mvc.Routing;
 using Mozlite.Mvc.Themes;
 
@@ -15,11 +16,13 @@ namespace Mozlite.Controllers
     {
         private readonly ILogger<AdminController> _logger;
         private readonly IThemeApplicationManager _applicationManager;
+        private readonly ITaskManager _taskManager;
 
-        public AdminController(ILogger<AdminController> logger, IThemeApplicationManager applicationManager)
+        public AdminController(ILogger<AdminController> logger, IThemeApplicationManager applicationManager, ITaskManager taskManager)
         {
             _logger = logger;
             _applicationManager = applicationManager;
+            _taskManager = taskManager;
         }
 
         [Route(RouteSettings.Dashboard)]
@@ -30,6 +33,18 @@ namespace Mozlite.Controllers
 
         [Route(RouteSettings.Dashboard + "/editor")]
         public IActionResult Editor()
+        {
+            return View();
+        }
+
+        [Route(RouteSettings.Dashboard + "/tasks")]
+        public async Task<IActionResult> Tasks()
+        {
+            return View(await _taskManager.LoadTasksAsync());
+        }
+
+        [Route(RouteSettings.Dashboard + "/settings")]
+        public IActionResult Settings()
         {
             return View();
         }
