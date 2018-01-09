@@ -22,10 +22,6 @@ namespace Mozlite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddIdentity<User, Role>()
-                .AddSecurity()
-                .AddDefaultTokenProviders();
             services.AddMozlite()
                 .AddSqlServer(Configuration);
             services.AddMozliteMvc()

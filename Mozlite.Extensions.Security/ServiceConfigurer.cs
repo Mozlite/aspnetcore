@@ -21,7 +21,7 @@ namespace Mozlite.Extensions.Security
         {
             services
                 .AddIdentity<User, Role>()
-                .AddSecurity()
+                .AddIdentityStores<UserStore, RoleStore>()
                 .AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(options =>
             {
