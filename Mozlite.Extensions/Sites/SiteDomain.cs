@@ -19,6 +19,7 @@ namespace Mozlite.Extensions.Sites
         /// 网站域名。
         /// </summary>
         [Key]
+        [Size(64)]
         public string Domain { get; set; }
     }
 }
