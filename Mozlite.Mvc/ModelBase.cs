@@ -72,4 +72,16 @@ namespace Mozlite.Mvc
         protected string UserName => _userName ?? (_userName = User.GetUserName());
         #endregion
     }
+
+    /// <summary>
+    /// 页面模型基类。
+    /// </summary>
+    /// <typeparam name="TModel">模型实例类型。</typeparam>
+    public abstract class ModelBase<TModel> : ModelBase
+    {
+        /// <summary>
+        /// 当前模型实例。
+        /// </summary>
+        public TModel Current { get; set; }
+    }
 }
