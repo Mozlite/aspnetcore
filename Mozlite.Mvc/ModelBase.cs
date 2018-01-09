@@ -32,7 +32,7 @@ namespace Mozlite.Mvc
                 return _pageIndex;
             }
         }
-        
+
         /// <summary>
         /// 判断验证码。
         /// </summary>
@@ -41,7 +41,7 @@ namespace Mozlite.Mvc
         /// <returns>返回判断结果。</returns>
         protected virtual bool IsValidateCode(string key, string code)
         {
-            if (!Request.Cookies.TryGetValue(key, out var value))
+            if (string.IsNullOrEmpty(code) || !Request.Cookies.TryGetValue(key, out var value))
                 return false;
             code = Verifiers.Verifiers.Hashed(code);
             return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
