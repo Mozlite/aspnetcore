@@ -42,6 +42,18 @@ namespace Mozlite.Extensions.Sites
         DataResult Delete(SiteDomain domain);
 
         /// <summary>
+        /// 获取当前网站域名。
+        /// </summary>
+        /// <returns>返回当前网站域名实例。</returns>
+        SiteDomain GetSite();
+
+        /// <summary>
+        /// 获取当前网站域名。
+        /// </summary>
+        /// <returns>返回当前网站域名实例。</returns>
+        Task<SiteDomain> GetSiteAsync();
+
+        /// <summary>
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
@@ -85,6 +97,20 @@ namespace Mozlite.Extensions.Sites
         /// 获取当前域名下的网站配置。
         /// </summary>
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <returns>返回当前网站配置。</returns>
+        TSiteSettings GetSiteSettings<TSiteSettings>() where TSiteSettings : SiteSettings, new();
+
+        /// <summary>
+        /// 获取当前网站配置。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <returns>返回当前网站配置。</returns>
+        Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>() where TSiteSettings : SiteSettings, new();
+
+        /// <summary>
+        /// 获取当前域名下的网站配置。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <param name="domain">当前域名。</param>
         /// <returns>返回当前网站配置。</returns>
         TSiteSettings GetSiteSettings<TSiteSettings>(string domain) where TSiteSettings : SiteSettings, new();
@@ -96,7 +122,7 @@ namespace Mozlite.Extensions.Sites
         /// <param name="settingsId">配置ID。</param>
         /// <returns>返回当前网站配置。</returns>
         TSiteSettings GetSiteSettings<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettings, new();
-        
+
         /// <summary>
         /// 保存配置实例。
         /// </summary>

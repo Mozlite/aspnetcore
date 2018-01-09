@@ -6,9 +6,6 @@
     [Target(typeof(SiteSettings))]
     public class SiteSettingsAdapter : SiteSettings
     {
-        [Size(256)]
-        public string Type { get; set; }
-
         /// <summary>
         /// 序列化字符串。
         /// </summary>

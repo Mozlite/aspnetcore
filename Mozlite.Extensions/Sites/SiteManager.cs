@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 using Newtonsoft.Json;
@@ -16,12 +17,14 @@ namespace Mozlite.Extensions.Sites
         private readonly IRepository<SiteSettingsAdapter> _sdb;
         private readonly IRepository<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public SiteManager(IRepository<SiteSettingsAdapter> sdb, IRepository<SiteDomain> sddb, IMemoryCache cache)
+        public SiteManager(IRepository<SiteSettingsAdapter> sdb, IRepository<SiteDomain> sddb, IMemoryCache cache, IHttpContextAccessor contextAccessor)
         {
             _sdb = sdb;
             _sddb = sddb;
             _cache = cache;
+            _contextAccessor = contextAccessor;
         }
 
         private IDictionary<string, SiteDomain> LoadCacheDomains()
@@ -116,6 +119,27 @@ namespace Mozlite.Extensions.Sites
         }
 
         /// <summary>
+        /// 获取当前网站域名。
+        /// </summary>
+        /// <returns>返回当前网站域名实例。</returns>
+        public SiteDomain GetSite()
+        {
+            LoadCacheDomains().TryGetValue(_contextAccessor.HttpContext.Request.Host.Host, out var site);
+            return site;
+        }
+
+        /// <summary>
+        /// 获取当前网站域名。
+        /// </summary>
+        /// <returns>返回当前网站域名实例。</returns>
+        public async Task<SiteDomain> GetSiteAsync()
+        {
+            var sites = await LoadCacheDomainsAsync();
+            sites.TryGetValue(_contextAccessor.HttpContext.Request.Host.Host, out var site);
+            return site;
+        }
+
+        /// <summary>
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
@@ -200,6 +224,32 @@ namespace Mozlite.Extensions.Sites
             if (adapter.SettingsId > 0)
                 return DataResult.FromResult(_sdb.Update(adapter), DataAction.Updated);
             return DataResult.FromResult(_sdb.Create(adapter), DataAction.Created);
+        }
+
+        /// <summary>
+        /// 获取当前域名下的网站配置。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <returns>返回当前网站配置。</returns>
+        public TSiteSettings GetSiteSettings<TSiteSettings>() where TSiteSettings : SiteSettings, new()
+        {
+            var site = GetSite();
+            if (site != null)
+                return GetSiteSettings<TSiteSettings>(site.SiteId);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取当前网站配置。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <returns>返回当前网站配置。</returns>
+        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>() where TSiteSettings : SiteSettings, new()
+        {
+            var site = await GetSiteAsync();
+            if (site != null)
+                return await GetSiteSettingsAsync<TSiteSettings>(site.SiteId);
+            return null;
         }
 
         /// <summary>
