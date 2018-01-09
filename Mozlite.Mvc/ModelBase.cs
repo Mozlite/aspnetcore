@@ -82,6 +82,6 @@ namespace Mozlite.Mvc
         /// <summary>
         /// 当前模型实例。
         /// </summary>
-        public TModel Current { get; set; }
+        public TModel Model { get; set; }
     }
 }
