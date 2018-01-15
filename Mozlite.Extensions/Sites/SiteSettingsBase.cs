@@ -8,7 +8,7 @@ namespace Mozlite.Extensions.Sites
     /// 网站配置基类。
     /// </summary>
     [Table("core_Sites_Settings")]
-    public class SiteSettings
+    public class SiteSettingsBase
     {
         /// <summary>
         /// 配置Id。

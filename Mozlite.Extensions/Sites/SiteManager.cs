@@ -53,11 +53,11 @@ namespace Mozlite.Extensions.Sites
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
-        public IEnumerable<SiteSettings> LoadSites()
+        public IEnumerable<SiteSettingsBase> LoadSites()
         {
             return _sdb.AsQueryable()
                 .Select(x => new { x.SettingsId, x.SiteName, x.UpdatedDate })
-                .AsEnumerable(reader => new SiteSettings
+                .AsEnumerable(reader => new SiteSettingsBase
                 {
                     SettingsId = reader.GetInt32(0),
                     SiteName = reader.GetString(1),
@@ -143,11 +143,11 @@ namespace Mozlite.Extensions.Sites
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
-        public Task<IEnumerable<SiteSettings>> LoadSitesAsync()
+        public Task<IEnumerable<SiteSettingsBase>> LoadSitesAsync()
         {
             return _sdb.AsQueryable()
                 .Select(x => new { x.SettingsId, x.SiteName, x.UpdatedDate })
-                .AsEnumerableAsync(reader => new SiteSettings
+                .AsEnumerableAsync(reader => new SiteSettingsBase
                 {
                     SettingsId = reader.GetInt32(0),
                     SiteName = reader.GetString(1),
@@ -215,7 +215,7 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         /// <param name="siteSettings">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
-        public DataResult Save(SiteSettings siteSettings)
+        public DataResult Save(SiteSettingsBase siteSettings)
         {
             var adapter = new SiteSettingsAdapter();
             adapter.SettingsJSON = JsonConvert.SerializeObject(siteSettings);
@@ -231,7 +231,7 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <returns>返回当前网站配置。</returns>
-        public TSiteSettings GetSiteSettings<TSiteSettings>() where TSiteSettings : SiteSettings, new()
+        public TSiteSettings GetSiteSettings<TSiteSettings>() where TSiteSettings : SiteSettingsBase, new()
         {
             var site = GetSite();
             if (site != null)
@@ -244,7 +244,7 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <returns>返回当前网站配置。</returns>
-        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>() where TSiteSettings : SiteSettings, new()
+        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>() where TSiteSettings : SiteSettingsBase, new()
         {
             var site = await GetSiteAsync();
             if (site != null)
@@ -258,7 +258,7 @@ namespace Mozlite.Extensions.Sites
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <param name="domain">当前域名。</param>
         /// <returns>返回当前网站配置。</returns>
-        public TSiteSettings GetSiteSettings<TSiteSettings>(string domain) where TSiteSettings : SiteSettings, new()
+        public TSiteSettings GetSiteSettings<TSiteSettings>(string domain) where TSiteSettings : SiteSettingsBase, new()
         {
             if (LoadCacheDomains().TryGetValue(domain, out var site))
             {
@@ -273,7 +273,7 @@ namespace Mozlite.Extensions.Sites
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <param name="settingsId">配置ID。</param>
         /// <returns>返回当前网站配置。</returns>
-        public TSiteSettings GetSiteSettings<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettings, new()
+        public TSiteSettings GetSiteSettings<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettingsBase, new()
         {
             var settings = _sdb.Find(settingsId);
             if (settings == null) return null;
@@ -293,7 +293,7 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         /// <param name="siteSettings">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
-        public async Task<DataResult> SaveAsync(SiteSettings siteSettings)
+        public async Task<DataResult> SaveAsync(SiteSettingsBase siteSettings)
         {
             var adapter = new SiteSettingsAdapter();
             adapter.SettingsJSON = JsonConvert.SerializeObject(siteSettings);
@@ -310,7 +310,7 @@ namespace Mozlite.Extensions.Sites
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <param name="domain">当前域名。</param>
         /// <returns>返回当前网站配置。</returns>
-        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(string domain) where TSiteSettings : SiteSettings, new()
+        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(string domain) where TSiteSettings : SiteSettingsBase, new()
         {
             var sites = await LoadCacheDomainsAsync();
             if (sites.TryGetValue(domain, out var site))
@@ -326,7 +326,7 @@ namespace Mozlite.Extensions.Sites
         /// <typeparam name="TSiteSettings">配置类型。</typeparam>
         /// <param name="settingsId">配置ID。</param>
         /// <returns>返回当前网站配置。</returns>
-        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettings, new()
+        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettingsBase, new()
         {
             var settings = await _sdb.FindAsync(settingsId);
             if (settings == null) return null;

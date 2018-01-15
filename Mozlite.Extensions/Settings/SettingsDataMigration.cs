@@ -14,8 +14,9 @@ namespace Mozlite.Extensions.Settings
         public override void Create(MigrationBuilder builder)
         {
             builder.CreateTable<SettingsAdapter>(table => table
-                .Column(s => s.SettingsId)
-                .Column(s => s.SettingsValue)
+                .Column(s => s.SettingId)
+                .Column(s => s.SettingKey)
+                .Column(s => s.SettingValue)
             );
         }
     }
