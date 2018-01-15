@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Mozlite.Extensions.Security.DisallowNames
+namespace Mozlite.Extensions.DisallowNames
 {
     /// <summary>
     /// 非法用户名。
     /// </summary>
-    [Table("core_Users_DisallowNames")]
+    [Table("core_DisallowNames")]
     public class DisallowName
     {
         /// <summary>

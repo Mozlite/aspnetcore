@@ -1,6 +1,6 @@
 ﻿using Mozlite.Data.Migrations;
 
-namespace Mozlite.Extensions.Security.DisallowNames
+namespace Mozlite.Extensions.DisallowNames
 {
     /// <summary>
     /// 禁用名称数据迁移类。

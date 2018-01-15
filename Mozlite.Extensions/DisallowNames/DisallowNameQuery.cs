@@ -1,11 +1,11 @@
 ﻿using Mozlite.Data;
 
-namespace Mozlite.Extensions.Security.DisallowNames
+namespace Mozlite.Extensions.DisallowNames
 {
     /// <summary>
     /// 非法名称分页查询实例。
     /// </summary>
-    public class NameQuery : QueryBase<DisallowName>
+    public class DisallowNameQuery : QueryBase<DisallowName>
     {
         /// <summary>
         /// 名称。

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.DisallowNames;
 using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Messages.Services;
 using Mozlite.Extensions.Security.Activities;
-using Mozlite.Extensions.Security.DisallowNames;
 using Mozlite.Extensions.Security.Models;
 using Mozlite.Extensions.Security.Properties;
 using Mozlite.Extensions.Security.Services;
@@ -26,14 +26,14 @@ namespace Mozlite.Extensions.Security.Controllers
         private readonly IUserManager _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<HomeController> _logger;
-        private readonly INameManager _nameManager;
+        private readonly IDisallowNameManager _nameManager;
         private readonly IMessageManager _messageManager;
         private readonly IActivityManager _activityManager;
 
         public HomeController(IUserManager userManager, 
             SignInManager<User> signInManager, 
             ILogger<HomeController> logger, 
-            INameManager nameManager, 
+            IDisallowNameManager nameManager, 
             IMessageManager messageManager, 
             IActivityManager activityManager)
         {

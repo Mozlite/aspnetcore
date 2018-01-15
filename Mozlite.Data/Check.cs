@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Mozlite.Data.Properties;
 
-namespace Mozlite
+namespace Mozlite.Data
 {
     /// <summary>
     /// 参数判断辅助类。

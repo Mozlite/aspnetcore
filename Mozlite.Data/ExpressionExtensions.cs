@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Mozlite.Data.Properties;
 
-namespace Mozlite
+namespace Mozlite.Data
 {
     /// <summary>
     /// 表达式扩展类。

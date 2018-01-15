@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-namespace Mozlite.Extensions.Security.DisallowNames
+namespace Mozlite.Extensions.DisallowNames
 {
     /// <summary>
     /// 非法名称管理接口。
     /// </summary>
-    public interface INameManager : ISingletonService
+    public interface IDisallowNameManager : ISingletonService
     {
         /// <summary>
         /// 保存非法名称。
@@ -47,6 +47,6 @@ namespace Mozlite.Extensions.Security.DisallowNames
         /// </summary>
         /// <param name="query">非法名称查询实例。</param>
         /// <returns>返回非法名称列表。</returns>
-        NameQuery Load(NameQuery query);
+        DisallowNameQuery Load(DisallowNameQuery query);
     }
 }

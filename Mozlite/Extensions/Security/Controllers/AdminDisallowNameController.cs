@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Security.DisallowNames;
+using Mozlite.Extensions.DisallowNames;
 
 namespace Mozlite.Extensions.Security.Controllers
 {
     [Authorize]
     public class AdminDisallowNameController : ControllerBase
     {
-        private readonly INameManager _nameManager;
-        public AdminDisallowNameController(INameManager nameManager)
+        private readonly IDisallowNameManager _nameManager;
+        public AdminDisallowNameController(IDisallowNameManager nameManager)
         {
             _nameManager = nameManager;
         }
 
-        public IActionResult Index(NameQuery query)
+        public IActionResult Index(DisallowNameQuery query)
         {
             return View(_nameManager.Load(query));
         }

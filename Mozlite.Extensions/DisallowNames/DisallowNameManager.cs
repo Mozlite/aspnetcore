@@ -3,15 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mozlite.Data;
 
-namespace Mozlite.Extensions.Security.DisallowNames
+namespace Mozlite.Extensions.DisallowNames
 {
     /// <summary>
     /// 非法名称管理实现类。
     /// </summary>
-    public class NameManager : INameManager
+    public class DisallowNameManager : IDisallowNameManager
     {
         private readonly IRepository<DisallowName> _repository;
-        public NameManager(IRepository<DisallowName> repository)
+        public DisallowNameManager(IRepository<DisallowName> repository)
         {
             _repository = repository;
         }
@@ -80,7 +80,7 @@ namespace Mozlite.Extensions.Security.DisallowNames
         /// </summary>
         /// <param name="query">非法名称查询实例。</param>
         /// <returns>返回非法名称列表。</returns>
-        public NameQuery Load(NameQuery query)
+        public DisallowNameQuery Load(DisallowNameQuery query)
         {
             return _repository.Load(query);
         }
