@@ -31,6 +31,13 @@ namespace Mozlite.Extensions.Storages
             );
 
             builder.CreateIndex<MediaFile>(x => x.FileId);
+
+            builder.CreateTable<StorageCache>(table => table
+                .Column(x => x.CacheKey)
+                .Column(x => x.ExpiredDate)
+                .Column(x => x.Dependency)
+                .Column(x => x.CreatedDate)
+            );
         }
     }
 }
