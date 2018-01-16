@@ -10,13 +10,6 @@ namespace Mozlite.Extensions.Storages
     public interface IMediaFileProvider : ISingletonService
     {
         /// <summary>
-        /// 判断是否为图片文件。
-        /// </summary>
-        /// <param name="extension">文件扩展名。</param>
-        /// <returns>返回判断结果。</returns>
-        bool IsImage(string extension);
-
-        /// <summary>
         /// 上传文件。
         /// </summary>
         /// <param name="file">表单文件。</param>

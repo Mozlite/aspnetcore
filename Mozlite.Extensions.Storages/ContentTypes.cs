@@ -1,43 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mozlite.Data.Migrations;
 
 namespace Mozlite.Extensions.Storages
 {
     /// <summary>
-    /// 媒体文件存储数据库迁移类。
+    /// 内容类型。
     /// </summary>
-    public class MediaDataMigration : DataMigration
-    {
-        /// <inheritdoc />
-        public override void Create(MigrationBuilder builder)
-        {
-            builder.CreateTable<StoredFile>(table => table
-                .Column(x => x.FileId)
-                .Column(x => x.Length)
-                .Column(x => x.ContentType, nullable: false)
-            );
-
-            builder.CreateTable<MediaFile>(table => table
-                .Column(x => x.Id)
-                .Column(x => x.CreatedDate)
-                .Column(x => x.Name)
-                .Column(x => x.Extension)
-                .Column(x => x.ExtensionName)
-                .Column(x => x.FileId)
-                .Column(x => x.TargetId)
-            );
-        }
-    }
-
-    /// <summary>
-        /// 内容类型。
-        /// </summary>
-        public static class ContentTypeManager
+    public static class ContentTypes
     {
         private static readonly IDictionary<string, string> _contentTypes;
 
-        static ContentTypeManager()
+        static ContentTypes()
         {
             _contentTypes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -389,10 +362,9 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="extension">扩展名称。</param>
         /// <returns>返回内容类型。</returns>
-        public static string GetType(string extension)
+        public static string GetContentType(this string extension)
         {
-            string contentType;
-            if (_contentTypes.TryGetValue(extension, out contentType))
+            if (_contentTypes.TryGetValue(extension, out var contentType))
                 return contentType;
             return "application/octet-stream";
         }

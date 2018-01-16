@@ -6,7 +6,7 @@ namespace Mozlite.Extensions.Storages
     /// <summary>
     /// 存储实体文件。
     /// </summary>
-    [Table("core_Storages_Files")]
+    [Table("core_Storages")]
     public class StoredFile
     {
         /// <summary>

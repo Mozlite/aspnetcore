@@ -13,13 +13,13 @@ namespace Mozlite.Extensions.Storages
     /// </summary>
     public class MediaFileProvider : IMediaFileProvider
     {
+        private readonly IStorageDirectory _directory;
         private readonly IRepository<MediaFile> _mfdb;
         private readonly IRepository<StoredFile> _sfdb;
 
         private const string UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
         private readonly string _media;
-        private readonly string _temp;
 
         /// <summary>
         /// 初始化类<see cref="MediaFileProvider"/>。
@@ -29,30 +29,13 @@ namespace Mozlite.Extensions.Storages
         /// <param name="sfdb">数据库操作接口。</param>
         public MediaFileProvider(IStorageDirectory directory, IRepository<MediaFile> mfdb, IRepository<StoredFile> sfdb)
         {
+            _directory = directory;
             _mfdb = mfdb;
             _sfdb = sfdb;
             //媒体文件夹。
-            _media = directory.MapPath("media");
-            //临时文件夹。
-            _temp = Path.Combine(_media, "temp");
-            if (!Directory.Exists(_temp))
-                Directory.CreateDirectory(_temp);
+            _media = directory.GetPhysicalPath("media");
         }
-
-        private static readonly string _images = ",.png,.jpg,.jpeg,.gif,.bmp,";
-        /// <summary>
-        /// 判断是否为图片文件。
-        /// </summary>
-        /// <param name="extension">文件扩展名。</param>
-        /// <returns>返回判断结果。</returns>
-        public bool IsImage(string extension)
-        {
-            if (extension == null)
-                return false;
-            extension = $",{extension.Trim().ToLower()},";
-            return _images.Contains(extension);
-        }
-
+        
         /// <summary>
         /// 上传文件。
         /// </summary>
@@ -64,7 +47,7 @@ namespace Mozlite.Extensions.Storages
         {
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
-            var tempFile = Path.Combine(_temp, Guid.NewGuid().ToString());
+            var tempFile = _directory.GetTempPath(Guid.NewGuid().ToString());
             using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
             {
                 await file.CopyToAsync(fs);
@@ -88,7 +71,7 @@ namespace Mozlite.Extensions.Storages
             var uri = new Uri(url);
             using (var client = new HttpClient())
             {
-                var tempFile = Path.Combine(_temp, Guid.NewGuid().ToString());
+                var tempFile = _directory.GetTempPath(Guid.NewGuid().ToString());
                 client.DefaultRequestHeaders.Referrer = new Uri($"{uri.Scheme}://{uri.DnsSafeHost}{(uri.IsDefaultPort ? null : ":" + uri.Port)}/");
                 client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                 using (var stream = await client.GetStreamAsync(uri))
@@ -102,7 +85,7 @@ namespace Mozlite.Extensions.Storages
                 media.ExtensionName = extensionName;
                 media.Extension = Path.GetExtension(uri.AbsolutePath);
                 media.Name = Path.GetFileName(uri.AbsolutePath);
-                return await CreateAsync(new FileInfo(tempFile), media, ContentTypeManager.GetType(media.Extension), targetId);
+                return await CreateAsync(new FileInfo(tempFile), media, media.Extension.GetContentType(), targetId);
             }
         }
 

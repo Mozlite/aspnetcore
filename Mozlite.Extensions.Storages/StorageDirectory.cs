@@ -13,6 +13,8 @@ namespace Mozlite.Extensions.Storages
     /// </summary>
     public class StorageDirectory : IStorageDirectory
     {
+        private readonly string _root;
+        private readonly string _temp;
         /// <summary>
         /// 初始化类<see cref="StorageDirectory"/>。
         /// </summary>
@@ -20,26 +22,37 @@ namespace Mozlite.Extensions.Storages
         /// <param name="environment">宿主环境接口。</param>
         public StorageDirectory(IOptions<StorageOptions> options, IHostingEnvironment environment)
         {
-            var path = options.Value.StorageDir?.Trim();
-            if (path.StartsWith("~/"))
-                path = Path.Combine(environment.WebRootPath, path.Substring(2));
-            Info = new DirectoryInfo(path);
+            var path = options.Value.StorageDir.Trim();
+            if (path.StartsWith("~/"))//虚拟目录
+                _root = Path.Combine(environment.WebRootPath, path.Substring(2));
+            else if (path.Length > 2 && path[1] == ':')//物理目录
+                _root = path;
+            else
+                _root = Path.Combine(Directory.GetCurrentDirectory(), path);
+            if (!Directory.Exists(_root)) Directory.CreateDirectory(_root);
+            _temp = Path.Combine(_root, "temp");
+            if (!Directory.Exists(_temp)) Directory.CreateDirectory(_temp);
         }
-
-        /// <summary>
-        /// 存储根目录实例。
-        /// </summary>
-        public DirectoryInfo Info { get; }
 
         /// <summary>
         /// 获取当前路径的物理路径。
         /// </summary>
         /// <param name="path">当前相对路径。</param>
         /// <returns>返回当前路径的物理路径。</returns>
-        public string MapPath(string path)
+        public string GetPhysicalPath(string path)
         {
             path = path?.Trim(' ', '~', '/', '\\');
-            return Path.Combine(Info.FullName, path);
+            return Path.Combine(_root, path);
+        }
+
+        /// <summary>
+        /// 获取临时目录得物理路径。
+        /// </summary>
+        /// <param name="fileName">文件名称。</param>
+        /// <returns>返回当前临时文件物理路径。</returns>
+        public string GetTempPath(string fileName)
+        {
+            return Path.Combine(_temp, fileName);
         }
 
         /// <summary>
@@ -49,7 +62,7 @@ namespace Mozlite.Extensions.Storages
         /// <returns>文件的操作提供者接口实例。</returns>
         public IStorageFile GetFile(string path)
         {
-            path = MapPath(path);
+            path = GetPhysicalPath(path);
             return new StorageFile(path);
         }
 
@@ -68,7 +81,7 @@ namespace Mozlite.Extensions.Storages
                 fileName = fileName.Substring(0, fileName.Length - 2) + Path.GetExtension(file.FileName);
             else
                 fileName = file.FileName;
-            directoryName = MapPath(directoryName);
+            directoryName = GetPhysicalPath(directoryName);
             if (!Directory.Exists(directoryName))
                 Directory.CreateDirectory(directoryName);
             fileName = Path.Combine(directoryName, fileName);
@@ -77,6 +90,46 @@ namespace Mozlite.Extensions.Storages
                 await file.CopyToAsync(fs);
             }
             return new StorageFile(fileName);
+        }
+
+        /// <summary>
+        /// 清理空文件夹。
+        /// </summary>
+        public void ClearEmptyDirectories()
+        {
+            foreach (var info in new DirectoryInfo(_root).GetDirectories("*", SearchOption.TopDirectoryOnly))
+            {
+                if (info.Name.Equals("temp", StringComparison.OrdinalIgnoreCase))
+                {
+                    ClearTempFiles(info);
+                    continue;
+                }
+                var directories = info.GetDirectories("*", SearchOption.AllDirectories);
+                foreach (var directory in directories)
+                {
+                    if (!directory.Exists) continue;
+                    var files = directory.GetFiles("*", SearchOption.AllDirectories);
+                    if (files.Length == 0)
+                    {
+                        try { directory.Delete(true); }
+                        catch { }
+                    }
+                }
+            }
+        }
+
+        private void ClearTempFiles(DirectoryInfo info)
+        {
+            var files = info.GetFiles();
+            var expired = DateTime.Now.AddDays(-1);
+            foreach (var file in files)
+            {
+                if (file.LastAccessTime < expired)
+                {
+                    try { file.Delete(); }
+                    catch { }
+                }
+            }
         }
 
         private class StorageFile : IStorageFile
@@ -121,6 +174,15 @@ namespace Mozlite.Extensions.Storages
                     }
                     return _hashed;
                 }
+            }
+
+            /// <summary>
+            /// 已读取方式打开当前存储文件。
+            /// </summary>
+            /// <returns>返回文件流。</returns>
+            public Stream OpenRead()
+            {
+                return _info.OpenRead();
             }
         }
     }

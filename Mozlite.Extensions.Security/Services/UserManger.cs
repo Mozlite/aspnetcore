@@ -43,7 +43,7 @@ namespace Mozlite.Extensions.Security.Services
         {
             if (file.Length <= 0)
                 return new MediaResult("不能上传空文件！");
-            if (!_fileProvider.IsImage(Path.GetExtension(file.FileName)))
+            if (!file.FileName.IsPictureFile())
                 return new MediaResult("头像只能为图片文件！");
             var user = await FindByIdAsync(id);
             if (user == null)

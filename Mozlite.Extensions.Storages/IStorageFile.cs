@@ -1,4 +1,6 @@
-﻿namespace Mozlite.Extensions.Storages
+﻿using System.IO;
+
+namespace Mozlite.Extensions.Storages
 {
     /// <summary>
     /// 存储文件。
@@ -29,5 +31,11 @@
         /// 文件哈希值，一般为Md5值。
         /// </summary>
         string Hashed { get; }
+
+        /// <summary>
+        /// 已读取方式打开当前存储文件。
+        /// </summary>
+        /// <returns>返回文件流。</returns>
+        Stream OpenRead();
     }
 }

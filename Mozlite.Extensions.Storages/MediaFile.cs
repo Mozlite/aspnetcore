@@ -7,7 +7,7 @@ namespace Mozlite.Extensions.Storages
     /// <summary>
     /// 媒体文件。
     /// </summary>
-    [Table("core_Storages")]
+    [Table("core_Storages_Medias")]
     public class MediaFile
     {
         /// <summary>
