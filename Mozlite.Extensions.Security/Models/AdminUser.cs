@@ -71,7 +71,7 @@ namespace Mozlite.Extensions.Security.Models
         /// </summary>
         [Size(64)]
         [NotUpdated]
-        public string SecurityStamp { get; set; }
+        public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// 电话号码。
