@@ -5,17 +5,17 @@ using Newtonsoft.Json;
 namespace Mozlite.Extensions.Sites
 {
     /// <summary>
-    /// 网站配置基类。
+    /// 网站信息实例基类。
     /// </summary>
-    [Table("core_Sites_Settings")]
-    public class SiteSettingsBase
+    [Table("core_Sites")]
+    public class SiteBase
     {
         /// <summary>
-        /// 配置Id。
+        /// 网站Id。
         /// </summary>
         [Identity]
         [JsonIgnore]
-        public int SettingsId { get; set; }
+        public int SiteId { get; set; }
 
         /// <summary>
         /// 网站名称。

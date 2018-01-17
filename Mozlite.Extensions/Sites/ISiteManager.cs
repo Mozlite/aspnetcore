@@ -9,10 +9,44 @@ namespace Mozlite.Extensions.Sites
     public interface ISiteManager : ISingletonService
     {
         /// <summary>
+        /// 设置默认。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <returns>返回设置结果。</returns>
+        bool SetDefault(int siteId, string domain);
+
+        /// <summary>
+        /// 设置默认。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SetDefaultAsync(int siteId, string domain);
+
+        /// <summary>
+        /// 禁用域名。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <param name="disabled">禁用。</param>
+        /// <returns>返回设置结果。</returns>
+        bool SetDisabled(int siteId, string domain, bool disabled = true);
+
+        /// <summary>
+        /// 禁用域名。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <param name="disabled">禁用。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SetDisabledAsync(int siteId, string domain, bool disabled = true);
+
+        /// <summary>
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
-        IEnumerable<SiteSettingsBase> LoadSites();
+        IEnumerable<SiteBase> LoadSites();
 
         /// <summary>
         /// 加载所有域名。
@@ -35,29 +69,30 @@ namespace Mozlite.Extensions.Sites
         DataResult Create(SiteDomain domain);
 
         /// <summary>
-        /// 添加域名。
+        /// 删除域名。
         /// </summary>
+        /// <param name="siteId">网站Id。</param>
         /// <param name="domain">网站域名。</param>
         /// <returns>返回添加结果。</returns>
-        DataResult Delete(SiteDomain domain);
+        DataResult Delete(int siteId, string domain);
 
         /// <summary>
         /// 获取当前网站域名。
         /// </summary>
         /// <returns>返回当前网站域名实例。</returns>
-        SiteDomain GetSite();
+        SiteDomain GetDomain();
 
         /// <summary>
         /// 获取当前网站域名。
         /// </summary>
         /// <returns>返回当前网站域名实例。</returns>
-        Task<SiteDomain> GetSiteAsync();
+        Task<SiteDomain> GetDomainAsync();
 
         /// <summary>
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
-        Task<IEnumerable<SiteSettingsBase>> LoadSitesAsync();
+        Task<IEnumerable<SiteBase>> LoadSitesAsync();
 
         /// <summary>
         /// 加载所有域名。
@@ -80,70 +115,71 @@ namespace Mozlite.Extensions.Sites
         Task<DataResult> CreateAsync(SiteDomain domain);
 
         /// <summary>
-        /// 添加域名。
+        /// 删除域名。
         /// </summary>
+        /// <param name="siteId">网站Id。</param>
         /// <param name="domain">网站域名。</param>
         /// <returns>返回添加结果。</returns>
-        Task<DataResult> DeleteAsync(SiteDomain domain);
+        Task<DataResult> DeleteAsync(int siteId, string domain);
 
         /// <summary>
         /// 保存配置实例。
         /// </summary>
-        /// <param name="siteSettings">当前配置实例。</param>
+        /// <param name="site">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
-        DataResult Save(SiteSettingsBase siteSettings);
+        DataResult Save(SiteBase site);
 
         /// <summary>
-        /// 获取当前域名下的网站配置。
+        /// 获取当前域名下的网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <returns>返回当前网站配置。</returns>
-        TSiteSettings GetSiteSettings<TSiteSettings>() where TSiteSettings : SiteSettingsBase, new();
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回当前网站信息实例。</returns>
+        TSite GetSite<TSite>() where TSite : SiteBase, new();
 
         /// <summary>
-        /// 获取当前网站配置。
+        /// 获取当前网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <returns>返回当前网站配置。</returns>
-        Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>() where TSiteSettings : SiteSettingsBase, new();
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回当前网站信息实例。</returns>
+        Task<TSite> GetSiteAsync<TSite>() where TSite : SiteBase, new();
 
         /// <summary>
-        /// 获取当前域名下的网站配置。
+        /// 获取当前域名下的网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <typeparam name="TSite">网站类型。</typeparam>
         /// <param name="domain">当前域名。</param>
-        /// <returns>返回当前网站配置。</returns>
-        TSiteSettings GetSiteSettings<TSiteSettings>(string domain) where TSiteSettings : SiteSettingsBase, new();
+        /// <returns>返回当前网站信息实例。</returns>
+        TSite GetSite<TSite>(string domain) where TSite : SiteBase, new();
 
         /// <summary>
-        /// 获取当前网站配置。
+        /// 获取当前网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <param name="settingsId">配置ID。</param>
-        /// <returns>返回当前网站配置。</returns>
-        TSiteSettings GetSiteSettings<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettingsBase, new();
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="siteId">网站Id。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        TSite GetSite<TSite>(int siteId) where TSite : SiteBase, new();
 
         /// <summary>
         /// 保存配置实例。
         /// </summary>
-        /// <param name="siteSettings">当前配置实例。</param>
+        /// <param name="site">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
-        Task<DataResult> SaveAsync(SiteSettingsBase siteSettings);
+        Task<DataResult> SaveAsync(SiteBase site);
 
         /// <summary>
-        /// 获取当前域名下的网站配置。
+        /// 获取当前域名下的网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <typeparam name="TSite">网站类型。</typeparam>
         /// <param name="domain">当前域名。</param>
-        /// <returns>返回当前网站配置。</returns>
-        Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(string domain) where TSiteSettings : SiteSettingsBase, new();
+        /// <returns>返回当前网站信息实例。</returns>
+        Task<TSite> GetSiteAsync<TSite>(string domain) where TSite : SiteBase, new();
 
         /// <summary>
-        /// 获取当前网站配置。
+        /// 获取当前网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <param name="settingsId">配置ID。</param>
-        /// <returns>返回当前网站配置。</returns>
-        Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettingsBase, new();
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="siteId">网站Id。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        Task<TSite> GetSiteAsync<TSite>(int siteId) where TSite : SiteBase, new();
     }
 }

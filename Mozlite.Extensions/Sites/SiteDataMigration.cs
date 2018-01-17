@@ -4,7 +4,7 @@ using Mozlite.Data.Migrations.Builders;
 namespace Mozlite.Extensions.Sites
 {
     /// <summary>
-    /// 网站配置数据迁移类。
+    /// 网站信息实例数据迁移类。
     /// </summary>
     public abstract class SiteDataMigration : DataMigration
     {
@@ -14,29 +14,31 @@ namespace Mozlite.Extensions.Sites
         /// <param name="builder">迁移实例对象。</param>
         public override void Create(MigrationBuilder builder)
         {
-            builder.CreateTable<SiteSettingsAdapter>(table =>
+            builder.CreateTable<SiteAdapter>(table =>
             {
-                table.Column(x => x.SettingsId)
+                table.Column(x => x.SiteId)
                     .Column(x => x.SiteName)
                     .Column(x => x.UpdatedDate)
-                    .Column(x => x.SettingsJSON);
+                    .Column(x => x.SettingValue);
                 Create(table);
             });
             builder.CreateTable<SiteDomain>(table =>
             {
                 table.Column(x => x.SiteId)
                     .Column(x => x.Domain)
-                    .ForeignKey<SiteSettingsAdapter>(x => x.SiteId, x => x.SettingsId,
+                    .Column(x => x.IsDefault)
+                    .Column(x => x.Disabled)
+                    .ForeignKey<SiteAdapter>(x => x.SiteId, x => x.SiteId,
                         onDelete: ReferentialAction.Cascade);
                 Create(table);
             });
         }
 
         /// <summary>
-        /// 添加网站配置列。
+        /// 添加网站信息实例列。
         /// </summary>
         /// <param name="table">构建表格实例。</param>
-        protected virtual void Create(CreateTableBuilder<SiteSettingsAdapter> table) { }
+        protected virtual void Create(CreateTableBuilder<SiteAdapter> table) { }
 
         /// <summary>
         /// 添加网站域名列。

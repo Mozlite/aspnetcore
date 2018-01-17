@@ -29,10 +29,10 @@ namespace Mozlite.Extensions.Settings
             _cache = cache;
         }
 
-        private string GetCacheKey(string key, out int settingId)
+        private string GetCacheKey(string key, out int siteId)
         {
-            settingId = _siteManager.GetSite().SiteId;
-            return $"settings[{settingId}][{key}]";
+            siteId = _siteManager.GetDomain().SiteId;
+            return $"sites[{siteId}][{key}]";
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreate(GetCacheKey(key, out var settingId), entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return _repository.Find(x => x.SettingKey == key && x.SettingId == settingId)?.SettingValue;
+                return _repository.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
             });
         }
 
@@ -60,7 +60,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreate(GetCacheKey(key, out var settingId), entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = _repository.Find(x => x.SettingKey == key && x.SettingId == settingId)?.SettingValue;
+                var settings = _repository.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
                 if (settings == null)
                     return new TSiteSettings();
                 return JsonConvert.DeserializeObject<TSiteSettings>(settings);
@@ -87,7 +87,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreateAsync(GetCacheKey(key, out var settingId), async entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = await _repository.FindAsync(x => x.SettingKey == key && x.SettingId == settingId);
+                var settings = await _repository.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
                 return settings?.SettingValue;
             });
         }
@@ -103,7 +103,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreateAsync(GetCacheKey(key, out var settingId), async entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = await _repository.FindAsync(x => x.SettingKey == key && x.SettingId == settingId);
+                var settings = await _repository.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
                 if (settings?.SettingValue == null)
                     return new TSiteSettings();
                 return JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingValue);
@@ -149,8 +149,8 @@ namespace Mozlite.Extensions.Settings
         public bool SaveSettings(string key, string settings)
         {
             var cacheKey = GetCacheKey(key, out var settingId);
-            var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings, SettingId = settingId };
-            if (_repository.Any(x => x.SettingKey == key && x.SettingId == settingId))
+            var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings, SiteId = settingId };
+            if (_repository.Any(x => x.SettingKey == key && x.SiteId == settingId))
             {
                 if (_repository.Update(adapter))
                 {

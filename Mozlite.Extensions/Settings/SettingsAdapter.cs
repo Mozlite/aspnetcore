@@ -6,14 +6,14 @@ namespace Mozlite.Extensions.Settings
     /// <summary>
     /// 网站配置数据库操作适配器。
     /// </summary>
-    [Table("core_Settings")]
+    [Table("core_Sites_Settings")]
     public class SettingsAdapter
     {
         /// <summary>
-        /// 网站配置ID。
+        /// 网站ID。
         /// </summary>
         [Key]
-        public int SettingId { get; set; }
+        public int SiteId { get; set; }
 
         /// <summary>
         /// 网站配置实例键。

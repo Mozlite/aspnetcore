@@ -14,12 +14,12 @@ namespace Mozlite.Extensions.Sites
     /// </summary>
     public class SiteManager : ISiteManager
     {
-        private readonly IRepository<SiteSettingsAdapter> _sdb;
+        private readonly IRepository<SiteAdapter> _sdb;
         private readonly IRepository<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public SiteManager(IRepository<SiteSettingsAdapter> sdb, IRepository<SiteDomain> sddb, IMemoryCache cache, IHttpContextAccessor contextAccessor)
+        public SiteManager(IRepository<SiteAdapter> sdb, IRepository<SiteDomain> sddb, IMemoryCache cache, IHttpContextAccessor contextAccessor)
         {
             _sdb = sdb;
             _sddb = sddb;
@@ -50,16 +50,92 @@ namespace Mozlite.Extensions.Sites
         }
 
         /// <summary>
+        /// 设置默认。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <returns>返回设置结果。</returns>
+        public bool SetDefault(int siteId, string domain)
+        {
+            if (_sddb.BeginTransaction(db =>
+            {
+                db.Update(x => x.SiteId == siteId, new { IsDefault = false });
+                db.Update(x => x.SiteId == siteId && x.Domain == domain, new { IsDefault = true });
+                return true;
+            }))
+            {
+                _cache.Remove(typeof(SiteDomain));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 设置默认。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <returns>返回设置结果。</returns>
+        public async Task<bool> SetDefaultAsync(int siteId, string domain)
+        {
+            if (await _sddb.BeginTransactionAsync(async db =>
+            {
+                await db.UpdateAsync(x => x.SiteId == siteId, new { IsDefault = false });
+                await db.UpdateAsync(x => x.SiteId == siteId && x.Domain == domain, new { IsDefault = true });
+                return true;
+            }))
+            {
+                _cache.Remove(typeof(SiteDomain));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 禁用域名。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <param name="disabled">禁用。</param>
+        /// <returns>返回设置结果。</returns>
+        public bool SetDisabled(int siteId, string domain, bool disabled = true)
+        {
+            if (_sddb.Update(x => x.SiteId == siteId && x.Domain == domain, new { Disabled = disabled }))
+            {
+                _cache.Remove(typeof(SiteDomain));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 禁用域名。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="domain">域名。</param>
+        /// <param name="disabled">禁用。</param>
+        /// <returns>返回设置结果。</returns>
+        public async Task<bool> SetDisabledAsync(int siteId, string domain, bool disabled = true)
+        {
+            if (await _sddb.UpdateAsync(x => x.SiteId == siteId && x.Domain == domain, new { Disabled = disabled }))
+            {
+                _cache.Remove(typeof(SiteDomain));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
-        public IEnumerable<SiteSettingsBase> LoadSites()
+        public IEnumerable<SiteBase> LoadSites()
         {
             return _sdb.AsQueryable()
-                .Select(x => new { x.SettingsId, x.SiteName, x.UpdatedDate })
-                .AsEnumerable(reader => new SiteSettingsBase
+                .Select(x => new { x.SiteId, x.SiteName, x.UpdatedDate })
+                .AsEnumerable(reader => new SiteBase
                 {
-                    SettingsId = reader.GetInt32(0),
+                    SiteId = reader.GetInt32(0),
                     SiteName = reader.GetString(1),
                     UpdatedDate = reader.GetFieldValue<DateTimeOffset>(2)
                 });
@@ -104,13 +180,14 @@ namespace Mozlite.Extensions.Sites
         }
 
         /// <summary>
-        /// 添加域名。
+        /// 删除域名。
         /// </summary>
+        /// <param name="siteId">网站Id。</param>
         /// <param name="domain">网站域名。</param>
         /// <returns>返回添加结果。</returns>
-        public DataResult Delete(SiteDomain domain)
+        public DataResult Delete(int siteId, string domain)
         {
-            if (_sddb.Delete(x => x.SiteId == domain.SiteId && x.Domain == domain.Domain))
+            if (_sddb.Delete(x => x.SiteId == siteId && x.Domain == domain))
             {
                 _cache.Remove(typeof(SiteDomain));
                 return DataAction.Deleted;
@@ -122,7 +199,7 @@ namespace Mozlite.Extensions.Sites
         /// 获取当前网站域名。
         /// </summary>
         /// <returns>返回当前网站域名实例。</returns>
-        public SiteDomain GetSite()
+        public SiteDomain GetDomain()
         {
             LoadCacheDomains().TryGetValue(_contextAccessor.HttpContext.Request.Host.Host, out var site);
             return site;
@@ -132,7 +209,7 @@ namespace Mozlite.Extensions.Sites
         /// 获取当前网站域名。
         /// </summary>
         /// <returns>返回当前网站域名实例。</returns>
-        public async Task<SiteDomain> GetSiteAsync()
+        public async Task<SiteDomain> GetDomainAsync()
         {
             var sites = await LoadCacheDomainsAsync();
             sites.TryGetValue(_contextAccessor.HttpContext.Request.Host.Host, out var site);
@@ -143,13 +220,13 @@ namespace Mozlite.Extensions.Sites
         /// 加载所有网站。
         /// </summary>
         /// <returns>返回所有网站。</returns>
-        public Task<IEnumerable<SiteSettingsBase>> LoadSitesAsync()
+        public Task<IEnumerable<SiteBase>> LoadSitesAsync()
         {
             return _sdb.AsQueryable()
-                .Select(x => new { x.SettingsId, x.SiteName, x.UpdatedDate })
-                .AsEnumerableAsync(reader => new SiteSettingsBase
+                .Select(x => new { x.SiteId, x.SiteName, x.UpdatedDate })
+                .AsEnumerableAsync(reader => new SiteBase
                 {
-                    SettingsId = reader.GetInt32(0),
+                    SiteId = reader.GetInt32(0),
                     SiteName = reader.GetString(1),
                     UpdatedDate = reader.GetFieldValue<DateTimeOffset>(2)
                 });
@@ -196,13 +273,14 @@ namespace Mozlite.Extensions.Sites
         }
 
         /// <summary>
-        /// 添加域名。
+        /// 删除域名。
         /// </summary>
+        /// <param name="siteId">网站Id。</param>
         /// <param name="domain">网站域名。</param>
         /// <returns>返回添加结果。</returns>
-        public async Task<DataResult> DeleteAsync(SiteDomain domain)
+        public async Task<DataResult> DeleteAsync(int siteId, string domain)
         {
-            if (await _sddb.DeleteAsync(x => x.SiteId == domain.SiteId && x.Domain == domain.Domain))
+            if (await _sddb.DeleteAsync(x => x.SiteId == siteId && x.Domain == domain))
             {
                 _cache.Remove(typeof(SiteDomain));
                 return DataAction.Deleted;
@@ -213,132 +291,132 @@ namespace Mozlite.Extensions.Sites
         /// <summary>
         /// 保存配置实例。
         /// </summary>
-        /// <param name="siteSettings">当前配置实例。</param>
+        /// <param name="site">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
-        public DataResult Save(SiteSettingsBase siteSettings)
+        public DataResult Save(SiteBase site)
         {
-            var adapter = new SiteSettingsAdapter();
-            adapter.SettingsJSON = JsonConvert.SerializeObject(siteSettings);
-            adapter.SettingsId = siteSettings.SettingsId;
-            adapter.SiteName = siteSettings.SiteName;
-            if (adapter.SettingsId > 0)
+            var adapter = new SiteAdapter();
+            adapter.SettingValue = JsonConvert.SerializeObject(site);
+            adapter.SiteId = site.SiteId;
+            adapter.SiteName = site.SiteName;
+            if (adapter.SiteId > 0)
                 return DataResult.FromResult(_sdb.Update(adapter), DataAction.Updated);
             return DataResult.FromResult(_sdb.Create(adapter), DataAction.Created);
         }
 
         /// <summary>
-        /// 获取当前域名下的网站配置。
+        /// 获取当前域名下的网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <returns>返回当前网站配置。</returns>
-        public TSiteSettings GetSiteSettings<TSiteSettings>() where TSiteSettings : SiteSettingsBase, new()
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回当前网站信息实例。</returns>
+        public TSite GetSite<TSite>() where TSite : SiteBase, new()
         {
-            var site = GetSite();
+            var site = GetDomain();
             if (site != null)
-                return GetSiteSettings<TSiteSettings>(site.SiteId);
+                return GetSite<TSite>(site.SiteId);
             return null;
         }
 
         /// <summary>
-        /// 获取当前网站配置。
+        /// 获取当前网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <returns>返回当前网站配置。</returns>
-        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>() where TSiteSettings : SiteSettingsBase, new()
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回当前网站信息实例。</returns>
+        public async Task<TSite> GetSiteAsync<TSite>() where TSite : SiteBase, new()
         {
-            var site = await GetSiteAsync();
+            var site = await GetDomainAsync();
             if (site != null)
-                return await GetSiteSettingsAsync<TSiteSettings>(site.SiteId);
+                return await GetSiteAsync<TSite>(site.SiteId);
             return null;
         }
 
         /// <summary>
-        /// 获取当前域名下的网站配置。
+        /// 获取当前域名下的网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <typeparam name="TSite">网站类型。</typeparam>
         /// <param name="domain">当前域名。</param>
-        /// <returns>返回当前网站配置。</returns>
-        public TSiteSettings GetSiteSettings<TSiteSettings>(string domain) where TSiteSettings : SiteSettingsBase, new()
+        /// <returns>返回当前网站信息实例。</returns>
+        public TSite GetSite<TSite>(string domain) where TSite : SiteBase, new()
         {
             if (LoadCacheDomains().TryGetValue(domain, out var site))
             {
-                return GetSiteSettings<TSiteSettings>(site.SiteId);
+                return GetSite<TSite>(site.SiteId);
             }
             return null;
         }
 
         /// <summary>
-        /// 获取当前网站配置。
+        /// 获取当前网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <param name="settingsId">配置ID。</param>
-        /// <returns>返回当前网站配置。</returns>
-        public TSiteSettings GetSiteSettings<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettingsBase, new()
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="siteId">网站Id。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        public TSite GetSite<TSite>(int siteId) where TSite : SiteBase, new()
         {
-            var settings = _sdb.Find(settingsId);
+            var settings = _sdb.Find(siteId);
             if (settings == null) return null;
-            TSiteSettings siteSettings;
-            if (string.IsNullOrWhiteSpace(settings.SettingsJSON))
-                siteSettings = new TSiteSettings();
+            TSite site;
+            if (string.IsNullOrWhiteSpace(settings.SettingValue))
+                site = new TSite();
             else
-                siteSettings = JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingsJSON);
-            siteSettings.SiteName = settings.SiteName;
-            siteSettings.UpdatedDate = settings.UpdatedDate;
-            siteSettings.SettingsId = settingsId;
-            return siteSettings;
+                site = JsonConvert.DeserializeObject<TSite>(settings.SettingValue);
+            site.SiteName = settings.SiteName;
+            site.UpdatedDate = settings.UpdatedDate;
+            site.SiteId = siteId;
+            return site;
         }
 
         /// <summary>
         /// 保存配置实例。
         /// </summary>
-        /// <param name="siteSettings">当前配置实例。</param>
+        /// <param name="site">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
-        public async Task<DataResult> SaveAsync(SiteSettingsBase siteSettings)
+        public async Task<DataResult> SaveAsync(SiteBase site)
         {
-            var adapter = new SiteSettingsAdapter();
-            adapter.SettingsJSON = JsonConvert.SerializeObject(siteSettings);
-            adapter.SettingsId = siteSettings.SettingsId;
-            adapter.SiteName = siteSettings.SiteName;
-            if (adapter.SettingsId > 0)
+            var adapter = new SiteAdapter();
+            adapter.SettingValue = JsonConvert.SerializeObject(site);
+            adapter.SiteId = site.SiteId;
+            adapter.SiteName = site.SiteName;
+            if (adapter.SiteId > 0)
                 return DataResult.FromResult(await _sdb.UpdateAsync(adapter), DataAction.Updated);
             return DataResult.FromResult(await _sdb.CreateAsync(adapter), DataAction.Created);
         }
 
         /// <summary>
-        /// 获取当前域名下的网站配置。
+        /// 获取当前域名下的网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
+        /// <typeparam name="TSite">网站类型。</typeparam>
         /// <param name="domain">当前域名。</param>
-        /// <returns>返回当前网站配置。</returns>
-        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(string domain) where TSiteSettings : SiteSettingsBase, new()
+        /// <returns>返回当前网站信息实例。</returns>
+        public async Task<TSite> GetSiteAsync<TSite>(string domain) where TSite : SiteBase, new()
         {
             var sites = await LoadCacheDomainsAsync();
             if (sites.TryGetValue(domain, out var site))
             {
-                return await GetSiteSettingsAsync<TSiteSettings>(site.SiteId);
+                return await GetSiteAsync<TSite>(site.SiteId);
             }
             return null;
         }
 
         /// <summary>
-        /// 获取当前网站配置。
+        /// 获取当前网站信息实例。
         /// </summary>
-        /// <typeparam name="TSiteSettings">配置类型。</typeparam>
-        /// <param name="settingsId">配置ID。</param>
-        /// <returns>返回当前网站配置。</returns>
-        public async Task<TSiteSettings> GetSiteSettingsAsync<TSiteSettings>(int settingsId) where TSiteSettings : SiteSettingsBase, new()
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="siteId">网站Id。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        public async Task<TSite> GetSiteAsync<TSite>(int siteId) where TSite : SiteBase, new()
         {
-            var settings = await _sdb.FindAsync(settingsId);
+            var settings = await _sdb.FindAsync(siteId);
             if (settings == null) return null;
-            TSiteSettings siteSettings;
-            if (string.IsNullOrWhiteSpace(settings.SettingsJSON))
-                siteSettings = new TSiteSettings();
+            TSite site;
+            if (string.IsNullOrWhiteSpace(settings.SettingValue))
+                site = new TSite();
             else
-                siteSettings = JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingsJSON);
-            siteSettings.SiteName = settings.SiteName;
-            siteSettings.UpdatedDate = settings.UpdatedDate;
-            siteSettings.SettingsId = settingsId;
-            return siteSettings;
+                site = JsonConvert.DeserializeObject<TSite>(settings.SettingValue);
+            site.SiteName = settings.SiteName;
+            site.UpdatedDate = settings.UpdatedDate;
+            site.SiteId = siteId;
+            return site;
         }
     }
 }

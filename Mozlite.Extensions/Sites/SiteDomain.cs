@@ -6,11 +6,11 @@ namespace Mozlite.Extensions.Sites
     /// <summary>
     /// 网站域名。
     /// </summary>
-    [Table("core_Sites")]
+    [Table("core_Sites_Domains")]
     public class SiteDomain
     {
         /// <summary>
-        /// 网站配置Id。
+        /// 网站信息实例Id。
         /// </summary>
         [Key]
         public int SiteId { get; set; }
@@ -21,5 +21,15 @@ namespace Mozlite.Extensions.Sites
         [Key]
         [Size(64)]
         public string Domain { get; set; }
+
+        /// <summary>
+        /// 是否为默认域名。
+        /// </summary>
+        public bool IsDefault { get; set; }
+
+        /// <summary>
+        /// 禁用。
+        /// </summary>
+        public bool Disabled { get; set; }
     }
 }
