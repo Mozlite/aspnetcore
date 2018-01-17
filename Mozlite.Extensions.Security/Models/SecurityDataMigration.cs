@@ -35,13 +35,13 @@ namespace Mozlite.Extensions.Security.Models
             );
         }
 
-        //public void Up3(MigrationBuilder builder)
-        //{
-        //    var user = new AdminUser();
-        //    user.UserName = "UserAdmin";
-        //    user.NormalizedUserName = user.UserName.ToUpper();
-        //    user.PasswordHash = "";
-        //    builder.SqlCreate(user);
-        //}
+        public void Up3(MigrationBuilder builder)
+        {
+            var user = new AdminUser();
+            user.UserName = "@Admin";
+            user.NormalizedUserName = user.UserName.ToUpper();
+            user.PasswordHash = "AQAAAAEAACcQAAAAEKKqQdrwb4YVV6NOUgPt8YIV9Uky0wIiTsKylZrhp8f8hQpfTojzE6x3JSNoaSYu7g==";//a123456
+            builder.SqlCreate(user);
+        }
     }
 }
