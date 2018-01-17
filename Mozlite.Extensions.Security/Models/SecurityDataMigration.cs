@@ -42,6 +42,10 @@ namespace Mozlite.Extensions.Security.Models
             user.NormalizedUserName = user.UserName.ToUpper();
             user.PasswordHash = "AQAAAAEAACcQAAAAEKKqQdrwb4YVV6NOUgPt8YIV9Uky0wIiTsKylZrhp8f8hQpfTojzE6x3JSNoaSYu7g==";//a123456
             builder.SqlCreate(user);
+            var role1 = new UserRole{RoleId = 1, UserId = 1};
+            builder.SqlCreate(role1);
+            var role2 = new UserRole { RoleId = 2, UserId = 1 };
+            builder.SqlCreate(role2);
         }
     }
 }
