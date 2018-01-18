@@ -88,19 +88,5 @@ namespace Mozlite.Extensions.Storages
             extension = $",{extension.Trim().ToLower()},";
             return _images.Contains(extension);
         }
-
-        /// <summary>
-        /// 转换为缓存依赖项字符串。
-        /// </summary>
-        /// <param name="dependency">缓存依赖项对象。</param>
-        /// <returns>返回缓存依赖项字符串。</returns>
-        public static string ToCacheDependency(this object dependency)
-        {
-            if (dependency == null) return "null";
-            if (dependency is string str) return $"string:{str}";
-            if (dependency is DateTimeOffset offset) return $"dtos:{offset:yyyy-MM-dd HH:mm:ss}";
-            if (dependency is DateTime date) return $"dt:{date:yyyy-MM-dd HH:mm:ss}";
-            return $"o:{dependency}";
-        }
     }
 }

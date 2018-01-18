@@ -23,7 +23,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        string GetOrCreate(object key, object dependency, Func<IStorageContext, string> action);
+        string GetOrCreate(object key, IStorageCacheDependency dependency, Func<IStorageContext, string> action);
 
         /// <summary>
         /// 获取或设置缓存对象。
@@ -40,7 +40,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        Task<string> GetOrCreateAsync(object key, object dependency, Func<IStorageContext, Task<string>> action);
+        Task<string> GetOrCreateAsync(object key, IStorageCacheDependency dependency, Func<IStorageContext, Task<string>> action);
 
         /// <summary>
         /// 获取或设置缓存对象。
@@ -59,7 +59,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        TCache GetOrCreate<TCache>(object key, object dependency, Func<IStorageContext, TCache> action);
+        TCache GetOrCreate<TCache>(object key, IStorageCacheDependency dependency, Func<IStorageContext, TCache> action);
 
         /// <summary>
         /// 获取或设置缓存对象。
@@ -78,7 +78,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        Task<TCache> GetOrCreateAsync<TCache>(object key, object dependency, Func<IStorageContext, Task<TCache>> action);
+        Task<TCache> GetOrCreateAsync<TCache>(object key, IStorageCacheDependency dependency, Func<IStorageContext, Task<TCache>> action);
 
         /// <summary>
         /// 移除缓存。

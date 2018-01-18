@@ -87,8 +87,7 @@ namespace Mozlite.Data
 
         private void AttachParameters(DbParameterCollection dbParameters, object parameters)
         {
-            var dic = parameters as IDictionary<string, object>;
-            if (dic != null)
+            if (parameters is IDictionary<string, object> dic)
             {
                 foreach (var parameter in dic)
                 {
@@ -108,7 +107,9 @@ namespace Mozlite.Data
             }
         }
 
-        private DbCommand GetCommand(DbConnection connection, CommandType commandType, string commandText,
+        private DbCommand GetCommand(DbConnection connection, 
+            CommandType commandType, 
+            string commandText,
             object parameters = null)
         {
             var command = _factory.CreateCommand();
@@ -173,7 +174,9 @@ namespace Mozlite.Data
         /// <param name="parameters">参数实例对象。</param>
         /// <param name="commandType">命令类型。</param>
         /// <returns>返回是否有执行影响到数据行。</returns>
-        public virtual bool ExecuteNonQuery(string commandText, object parameters = null, CommandType commandType = CommandType.Text)
+        public virtual bool ExecuteNonQuery(string commandText, 
+            object parameters = null, 
+            CommandType commandType = CommandType.Text)
         {
             using (var connection = GetConnection())
             {
@@ -191,7 +194,9 @@ namespace Mozlite.Data
         /// <param name="parameters">参数实例对象。</param>
         /// <param name="commandType">命令类型。</param>
         /// <returns>返回数据库读取实例接口。</returns>
-        public virtual DbDataReader ExecuteReader(string commandText, object parameters = null, CommandType commandType = CommandType.Text)
+        public virtual DbDataReader ExecuteReader(string commandText, 
+            object parameters = null, 
+            CommandType commandType = CommandType.Text)
         {
             var connection = GetConnection();
             var command = GetCommand(connection, commandType, commandText, parameters);
@@ -207,7 +212,8 @@ namespace Mozlite.Data
         /// <param name="parameters">参数实例对象。</param>
         /// <param name="commandType">命令类型。</param>
         /// <returns>返回聚合值实例对象。</returns>
-        public virtual object ExecuteScalar(string commandText, object parameters = null,
+        public virtual object ExecuteScalar(string commandText, 
+            object parameters = null,
             CommandType commandType = CommandType.Text)
         {
             using (var connection = GetConnection())
@@ -227,7 +233,8 @@ namespace Mozlite.Data
         /// <param name="commandType">SQL类型。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回影响的行数。</returns>
-        public virtual async Task<bool> ExecuteNonQueryAsync(string commandText, object parameters = null,
+        public virtual async Task<bool> ExecuteNonQueryAsync(string commandText, 
+            object parameters = null,
             CommandType commandType = CommandType.Text,
             CancellationToken cancellationToken = default)
         {
@@ -249,7 +256,8 @@ namespace Mozlite.Data
         /// <param name="parameters">参数匿名类型。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回数据库读取器实例对象。</returns>
-        public virtual async Task<DbDataReader> ExecuteReaderAsync(string commandText, object parameters = null,
+        public virtual async Task<DbDataReader> ExecuteReaderAsync(string commandText, 
+            object parameters = null,
             CommandType commandType = CommandType.Text,
             CancellationToken cancellationToken = default)
         {
@@ -269,7 +277,9 @@ namespace Mozlite.Data
         /// <param name="parameters">参数匿名类型。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回单一结果实例对象。</returns>
-        public virtual async Task<object> ExecuteScalarAsync(string commandText, object parameters = null, CommandType commandType = CommandType.Text,
+        public virtual async Task<object> ExecuteScalarAsync(string commandText, 
+            object parameters = null, 
+            CommandType commandType = CommandType.Text,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();

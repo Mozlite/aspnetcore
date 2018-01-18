@@ -18,11 +18,6 @@ namespace Mozlite.Extensions.Storages
         DateTimeOffset? ExpiredDate { get; }
 
         /// <summary>
-        /// 缓存依赖对象值。
-        /// </summary>
-        string Dependency { get; }
-
-        /// <summary>
         /// 设置绝对过期时间。
         /// </summary>
         /// <param name="offset">绝对过期时间。</param>
@@ -33,11 +28,5 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="offset">相对于当前时间长度。</param>
         void SetAbsoluteExpiredDate(TimeSpan offset);
-
-        /// <summary>
-        /// 设置缓存依赖项。
-        /// </summary>
-        /// <param name="dependency">依赖项，对象的值。</param>
-        void SetDependency(object dependency);
     }
 }

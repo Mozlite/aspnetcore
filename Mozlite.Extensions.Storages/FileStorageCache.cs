@@ -60,7 +60,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="key">缓存键。</param>
         /// <param name="dependency">缓存依赖项。</param>
         /// <returns>返回缓存配置实例。</returns>
-        protected StorageCache GetCache(object key, object dependency)
+        protected StorageCache GetCache(object key, IStorageCacheDependency dependency)
         {
             var hashedKey = GetCacheKey(key);
             var cache = _cache.GetOrCreate(hashedKey, ctx =>
@@ -69,7 +69,7 @@ namespace Mozlite.Extensions.Storages
                 return _repository.Find(hashedKey);
             });
             if (cache == null) return null;
-            if (cache.Dependency != dependency.ToCacheDependency() ||
+            if (dependency?.IsEqual(cache.Dependency) == false ||
                 cache.ExpiredDate != null && cache.ExpiredDate < DateTimeOffset.Now)
             {
                 Remove(hashedKey);
@@ -84,7 +84,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="key">缓存键。</param>
         /// <param name="dependency">缓存依赖项。</param>
         /// <returns>返回缓存配置实例。</returns>
-        protected async Task<StorageCache> GetCacheAsync(object key, object dependency)
+        protected async Task<StorageCache> GetCacheAsync(object key, IStorageCacheDependency dependency)
         {
             var hashedKey = GetCacheKey(key);
             var cache = await _cache.GetOrCreateAsync(hashedKey, async ctx =>
@@ -93,7 +93,7 @@ namespace Mozlite.Extensions.Storages
                 return await _repository.FindAsync(hashedKey);
             });
             if (cache == null) return null;
-            if (cache.Dependency != dependency.ToCacheDependency() ||
+            if (dependency?.IsEqual(cache.Dependency) == false ||
                 cache.ExpiredDate != null && cache.ExpiredDate < DateTimeOffset.Now)
             {
                 await RemoveAsync(hashedKey);
@@ -120,7 +120,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        public virtual string GetOrCreate(object key, object dependency, Func<IStorageContext, string> action)
+        public virtual string GetOrCreate(object key, IStorageCacheDependency dependency, Func<IStorageContext, string> action)
         {
             var cache = GetCache(key, dependency);
             if (cache == null)
@@ -131,7 +131,7 @@ namespace Mozlite.Extensions.Storages
                 cache = new StorageCache
                 {
                     CacheKey = cacheKey,
-                    Dependency = context.Dependency,
+                    Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
                 _repository.Create(cache);
@@ -173,7 +173,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        public virtual async Task<string> GetOrCreateAsync(object key, object dependency, Func<IStorageContext, Task<string>> action)
+        public virtual async Task<string> GetOrCreateAsync(object key, IStorageCacheDependency dependency, Func<IStorageContext, Task<string>> action)
         {
             var cache = await GetCacheAsync(key, dependency);
             if (cache == null)
@@ -184,7 +184,7 @@ namespace Mozlite.Extensions.Storages
                 cache = new StorageCache
                 {
                     CacheKey = cacheKey,
-                    Dependency = context.Dependency,
+                    Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
                 await _repository.CreateAsync(cache);
@@ -226,7 +226,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        public TCache GetOrCreate<TCache>(object key, object dependency, Func<IStorageContext, TCache> action)
+        public TCache GetOrCreate<TCache>(object key, IStorageCacheDependency dependency, Func<IStorageContext, TCache> action)
         {
             var cache = GetCache(key, dependency);
             if (cache == null)
@@ -237,7 +237,7 @@ namespace Mozlite.Extensions.Storages
                 cache = new StorageCache
                 {
                     CacheKey = cacheKey,
-                    Dependency = context.Dependency,
+                    Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
                 _repository.Create(cache);
@@ -282,7 +282,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="dependency">缓存依赖项。</param>
         /// <param name="action">获取和配置缓存实例。</param>
         /// <returns>返回当前缓存对象。</returns>
-        public virtual async Task<TCache> GetOrCreateAsync<TCache>(object key, object dependency, Func<IStorageContext, Task<TCache>> action)
+        public virtual async Task<TCache> GetOrCreateAsync<TCache>(object key, IStorageCacheDependency dependency, Func<IStorageContext, Task<TCache>> action)
         {
             var cache = await GetCacheAsync(key, dependency);
             if (cache == null)
@@ -293,7 +293,7 @@ namespace Mozlite.Extensions.Storages
                 cache = new StorageCache
                 {
                     CacheKey = cacheKey,
-                    Dependency = context.Dependency,
+                    Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
                 await _repository.CreateAsync(cache);
