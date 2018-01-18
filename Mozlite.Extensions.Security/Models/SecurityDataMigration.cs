@@ -1,4 +1,5 @@
-﻿using Mozlite.Data.Migrations;
+﻿using Microsoft.AspNetCore.Identity;
+using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
 
 namespace Mozlite.Extensions.Security.Models
@@ -8,6 +9,13 @@ namespace Mozlite.Extensions.Security.Models
     /// </summary>
     public class SecurityDataMigration : IdentityDataMigration<User, Role, UserClaim, RoleClaim, UserLogin, UserRole, UserToken>
     {
+        private readonly IPasswordHasher<AdminUser> _passwordHasher;
+
+        public SecurityDataMigration(IPasswordHasher<AdminUser> passwordHasher)
+        {
+            _passwordHasher = passwordHasher;
+        }
+
         /// <summary>
         /// 添加用户定义列。
         /// </summary>
@@ -18,8 +26,13 @@ namespace Mozlite.Extensions.Security.Models
                 .Column(x => x.ConcurrencyStamp, "timestamp");
         }
 
-        public void Up2(MigrationBuilder builder)
+        /// <summary>
+        /// 添加默认角色。
+        /// </summary>
+        /// <param name="builder">数据迁移构建实例。</param>
+        public override void Up1(MigrationBuilder builder)
         {
+            base.Up1(builder);
             builder.CreateTable<UserProfile>(table => table
                 .Column(x => x.Id)
                 .Column(x => x.Intro)
@@ -33,16 +46,14 @@ namespace Mozlite.Extensions.Security.Models
                 .Column(x => x.QQ)
                 .ForeignKey<User>(x => x.Id, x => x.UserId, onDelete: ReferentialAction.Cascade)
             );
-        }
-
-        public void Up3(MigrationBuilder builder)
-        {
             var user = new AdminUser();
             user.UserName = "@Admin";
+            user.PasswordHash = "a123456";
             user.NormalizedUserName = user.UserName.ToUpper();
-            user.PasswordHash = "AQAAAAEAACcQAAAAEKKqQdrwb4YVV6NOUgPt8YIV9Uky0wIiTsKylZrhp8f8hQpfTojzE6x3JSNoaSYu7g==";//a123456
+            user.PasswordHash =
+                _passwordHasher.HashPassword(user, SecurityHelper.CreatePassword(user.UserName, user.PasswordHash));
             builder.SqlCreate(user);
-            var role1 = new UserRole{RoleId = 1, UserId = 1};
+            var role1 = new UserRole { RoleId = 1, UserId = 1 };
             builder.SqlCreate(role1);
             var role2 = new UserRole { RoleId = 2, UserId = 1 };
             builder.SqlCreate(role2);
