@@ -29,5 +29,12 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset UpdatedDate { get; set; } = DateTimeOffset.Now;
+
+        /// <summary>
+        /// 是否为空网站，非法站点。
+        /// </summary>
+        [JsonIgnore]
+        [NotMapped]
+        public bool IsNull { get; set; }
     }
 }
