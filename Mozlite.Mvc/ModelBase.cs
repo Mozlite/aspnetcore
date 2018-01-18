@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mozlite.Extensions;
 
@@ -82,6 +83,7 @@ namespace Mozlite.Mvc
         /// <summary>
         /// 当前模型实例。
         /// </summary>
+        [BindProperty]
         public TModel Model { get; set; }
     }
 }
