@@ -7,7 +7,7 @@
 在Mozlite中，可以配置存储文件夹，为了安全性考虑尽量把文件存储放置在同一个目录中，默认为当前文件夹的父级目录下的文件夹：`../storages`。如果直接存储在其他盘下，可以直接配置物理路径。当前文件夹操作使用`IStorageDirectory`接口。
 
 ```csharp
-/// <summary>
+    /// <summary>
     /// 存储文件夹提供者接口。
     /// </summary>
     public interface IStorageDirectory : ISingletonService
