@@ -4,5 +4,5 @@
 
 * [核心框架Mozltie.Core](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Core/README.md)
 * [数据库框架Mozlite.Data](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Data/README.md)
-  数据库框架需要引用特定数据库，如：`Mozlite.Data.SqlServer`，并且在Startup中进行注册：`builder.AddSqlServer(Configuration)`
-* [文件存储Mozltie.Extensions.Storages](https://github.com/Mozlite/aspnetcore/blob/master/Mozltie.Extensions.Storages/README.md)
+   数据库框架需要引用特定数据库，如：`Mozlite.Data.SqlServer`，并且在Startup中进行注册：`builder.AddSqlServer(Configuration)`
+* [文件存储Mozltie.Extensions.Storages](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Extensions.Storages/README.md)
