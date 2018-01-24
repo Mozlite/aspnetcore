@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Security
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Messages", "Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj", "{F92153B2-5385-4028-AF3A-15A40CB3D0F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Core", "Mozlite.Extensions.Core\Mozlite.Extensions.Core.csproj", "{28236808-CF19-4DF1-9E2E-57BA14DA9A45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{F92153B2-5385-4028-AF3A-15A40CB3D0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F92153B2-5385-4028-AF3A-15A40CB3D0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F92153B2-5385-4028-AF3A-15A40CB3D0F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28236808-CF19-4DF1-9E2E-57BA14DA9A45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28236808-CF19-4DF1-9E2E-57BA14DA9A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28236808-CF19-4DF1-9E2E-57BA14DA9A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28236808-CF19-4DF1-9E2E-57BA14DA9A45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
