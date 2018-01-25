@@ -67,7 +67,7 @@
 
 这个接口中包含了数据库ADO.NET的基础操作，主要包含了三个方法：`ExecuteNonQuery`，`ExecuteReader`，`ExecuteScalar`。当然也对数据库事务操作进行了封装：`BeginTransaction`。
 
-## IRepository<TModel>
+## IDbContext<TModel>
 
 这个接口主要对相应的模型对象进行操作，包含了每个实体类的增加(Create)、读取查询(Retrieve)、更新(Update)和删除(Delete)，还封装了判断存在Any，分页查询等等。
 

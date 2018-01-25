@@ -22,10 +22,10 @@ namespace Mozlite.Extensions.Security.Services
         /// </summary>
         /// <param name="userManager">用户管理实例。</param>
         /// <param name="db">用户资料数据库操作接口。</param>
-        /// <param name="db">数据库操作接口。</param>
+        /// <param name="udb">数据库操作接口。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
         /// <param name="fileProvider">媒体文件提供者。</param>
-        public UserManger(UserManager<User> userManager, IDbContext<UserProfile> db, IDbContext<User> db, IHttpContextAccessor httpContextAccessor, IMediaFileProvider fileProvider) : base(userManager, db, httpContextAccessor)
+        public UserManger(UserManager<User> userManager, IDbContext<UserProfile> db, IDbContext<User> udb, IHttpContextAccessor httpContextAccessor, IMediaFileProvider fileProvider) : base(userManager, udb, httpContextAccessor)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
