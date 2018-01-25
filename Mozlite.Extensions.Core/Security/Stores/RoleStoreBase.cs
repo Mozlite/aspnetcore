@@ -22,7 +22,7 @@ namespace Mozlite.Extensions.Security.Stores
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
-        /// 初始化类<see cref="RoleStoreBase{TRole,TKey,TUserRole,TRoleClaim}"/>。
+        /// 初始化类<see cref="RoleStoreBase{TRole,TUserRole,TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         protected RoleStoreBase(IdentityErrorDescriber describer)
@@ -156,11 +156,11 @@ namespace Mozlite.Extensions.Security.Stores
             role.NormalizedName = normalizedName;
             return Task.CompletedTask;
         }
-        
+
         /// <summary>
         /// 释放资源。
         /// </summary>
-        public virtual void Dispose(){}
+        public virtual void Dispose() { }
 
         /// <summary>
         /// 获取角色声明列表。
@@ -189,7 +189,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 获取当前角色可查询实例。
         /// </summary>
-        public virtual IQueryable<TRole> Roles => throw new NotImplementedException();
+        public abstract IQueryable<TRole> Roles { get; }
 
         /// <summary>
         /// 通过角色和声明实例转换为声明实例。

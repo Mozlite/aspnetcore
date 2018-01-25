@@ -10,22 +10,6 @@ namespace Mozlite.Extensions.Security.Stores
     public abstract class UserBase
     {
         /// <summary>
-        /// 初始化类<see cref="UserBase"/>。
-        /// </summary>
-        protected UserBase()
-        {
-        }
-
-        /// <summary>
-        /// 初始化类<see cref="UserBase"/>。
-        /// </summary>
-        /// <param name="userName">用户名称。</param>
-        protected UserBase(string userName)
-        {
-            UserName = userName;
-        }
-
-        /// <summary>
         /// 获取或设置用户ID。
         /// </summary>
         [Identity]

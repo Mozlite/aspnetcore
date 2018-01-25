@@ -9,20 +9,6 @@ namespace Mozlite.Extensions.Security.Stores
     public abstract class RoleBase
     {
         /// <summary>
-        /// 初始化类<see cref="RoleBase"/>。
-        /// </summary>
-        protected RoleBase() { }
-
-        /// <summary>
-        /// 初始化类<see cref="RoleBase"/>。
-        /// </summary>
-        /// <param name="roleName">角色名称。</param>
-        protected RoleBase(string roleName)
-        {
-            Name = roleName;
-        }
-
-        /// <summary>
         /// 角色Id。
         /// </summary>
         [Identity]
@@ -39,6 +25,11 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         [Size(64)]
         public string NormalizedName { get; set; }
+
+        /// <summary>
+        /// 优先级。
+        /// </summary>
+        public int Priority { get; set; }
 
         /// <summary>
         /// 返回角色名称。

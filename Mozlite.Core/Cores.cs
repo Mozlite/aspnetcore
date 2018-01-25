@@ -257,5 +257,5 @@ namespace Mozlite
 		{
 			return _htmlCaseRegex.Replace(name, HtmlCaseRegexReplacement).ToLowerInvariant();
 		}
-	}
+    }
 }
