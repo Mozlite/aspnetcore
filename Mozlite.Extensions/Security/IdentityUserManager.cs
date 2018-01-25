@@ -20,19 +20,19 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 数据库操作实例。
         /// </summary>
-        protected IRepository<TUser> Repository { get; }
+        protected IDbContext<TUser> Repository { get; }
 
         /// <summary>
         /// 初始化类<see cref="IdentityUserManager{TUser}"/>。
         /// </summary>
         /// <param name="userManager">用户管理实例。</param>
-        /// <param name="repository">数据库操作接口。</param>
+        /// <param name="db">数据库操作接口。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected IdentityUserManager(UserManager<TUser> userManager, IRepository<TUser> repository, IHttpContextAccessor httpContextAccessor)
+        protected IdentityUserManager(UserManager<TUser> userManager, IDbContext<TUser> db, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
-            Repository = repository;
+            Repository = db;
         }
 
         /// <summary>

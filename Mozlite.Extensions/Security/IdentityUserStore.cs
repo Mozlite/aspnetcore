@@ -37,12 +37,12 @@ namespace Mozlite.Extensions.Security
         where TUserLogin : IdentityUserLogin, new()
         where TUserToken : IdentityUserToken, new()
     {
-        private readonly IRepository<TUser> _users;
-        private readonly IRepository<TUserClaim> _userClaims;
-        private readonly IRepository<TUserRole> _userRoles;
-        private readonly IRepository<TUserToken> _userTokens;
-        private readonly IRepository<TRole> _roles;
-        private readonly IRepository<TUserLogin> _userLogins;
+        private readonly IDbContext<TUser> _users;
+        private readonly IDbContext<TUserClaim> _userClaims;
+        private readonly IDbContext<TUserRole> _userRoles;
+        private readonly IDbContext<TUserToken> _userTokens;
+        private readonly IDbContext<TRole> _roles;
+        private readonly IDbContext<TUserLogin> _userLogins;
 
         /// <summary>
         /// 初始化类<see cref="IdentityUserStore{TUser, TRole, TUserClaim, TUserRole, TUserLogin,  TUserToken}"/>。
@@ -54,7 +54,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="roles">用户组数据操作接口实例。</param>
         /// <param name="userLogins">用户登入数据操作接口实例。</param>
         /// <param name="describer">错误描述实例。</param>
-        public IdentityUserStore(IRepository<TUser> users, IRepository<TUserClaim> userClaims, IRepository<TUserRole> userRoles, IRepository<TUserToken> userTokens, IRepository<TRole> roles, IRepository<TUserLogin> userLogins, IdentityErrorDescriber describer = null)
+        public IdentityUserStore(IDbContext<TUser> users, IDbContext<TUserClaim> userClaims, IDbContext<TUserRole> userRoles, IDbContext<TUserToken> userTokens, IDbContext<TRole> roles, IDbContext<TUserLogin> userLogins, IdentityErrorDescriber describer = null)
         {
             _users = users;
             _userClaims = userClaims;
@@ -72,7 +72,7 @@ namespace Mozlite.Extensions.Security
 
         public virtual Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
         {
-            return _userClaims.BeginTransactionAsync(async repository =>
+            return _userClaims.BeginTransactionAsync(async db =>
             {
                 foreach (var claim in claims)
                 {
@@ -379,11 +379,11 @@ namespace Mozlite.Extensions.Security
             {
                 throw new ArgumentNullException(nameof(claims));
             }
-            await _userClaims.BeginTransactionAsync(async repository =>
+            await _userClaims.BeginTransactionAsync(async db =>
             {
                 foreach (var claim in claims)
                 {
-                    await repository.DeleteAsync(
+                    await db.DeleteAsync(
                             uc => uc.UserId == user.UserId && uc.ClaimType == claim.Type && uc.ClaimValue == claim.Value, cancellationToken);
                 }
                 return true;

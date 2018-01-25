@@ -21,23 +21,23 @@ namespace Mozlite.Extensions.Security.Permissions
         /// 数据库操作实例。
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        protected readonly IRepository<Permission> db;
-        private readonly IRepository<PermissionInRole> _prdb;
+        protected readonly IDbContext<Permission> db;
+        private readonly IDbContext<PermissionInRole> _prdb;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
-        private readonly IRepository<TRole> _rdb;
+        private readonly IDbContext<TRole> _rdb;
 
         /// <summary>
         /// 初始化类<see cref="PermissionManager{TUserRole, TRole}"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口实例。</param>
+        /// <param name="db">数据库操作接口实例。</param>
         /// <param name="prdb">数据库操作接口。</param>
         /// <param name="httpContextAccessor">当前HTTP上下文访问器。</param>
         /// <param name="cache">缓存接口。</param>
         /// <param name="rdb">角色数据库操作接口。</param>
-        protected PermissionManager(IRepository<Permission> repository, IRepository<PermissionInRole> prdb, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IRepository<TRole> rdb)
+        protected PermissionManager(IDbContext<Permission> db, IDbContext<PermissionInRole> prdb, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IDbContext<TRole> rdb)
         {
-            db = repository;
+            db = db;
             _prdb = prdb;
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;

@@ -19,14 +19,14 @@ namespace Mozlite.Extensions
         /// 数据库操作实例。
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        protected readonly IRepository<TModel> db;
+        protected readonly IDbContext<TModel> db;
         /// <summary>
         /// 初始化类<see cref="ObjectManager{TModel,TKey}"/>。
         /// </summary>
-        /// <param name="repository">数据库操作实例。</param>
-        protected ObjectManager(IRepository<TModel> repository)
+        /// <param name="db">数据库操作实例。</param>
+        protected ObjectManager(IDbContext<TModel> db)
         {
-            db = repository;
+            db = db;
         }
 
         /// <summary>
@@ -248,8 +248,8 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 初始化类<see cref="ObjectManager{TModel}"/>。
         /// </summary>
-        /// <param name="repository">数据库操作实例。</param>
-        protected ObjectManager(IRepository<TModel> repository) : base(repository)
+        /// <param name="db">数据库操作实例。</param>
+        protected ObjectManager(IDbContext<TModel> db) : base(db)
         {
         }
 

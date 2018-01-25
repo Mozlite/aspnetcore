@@ -18,10 +18,10 @@ namespace Mozlite.Extensions.Groups
         /// <summary>
         /// 初始化类<see cref="GroupManager{TCategory}"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口实例。</param>
+        /// <param name="db">数据库操作接口实例。</param>
         /// <param name="cache">缓存接口。</param>
-        protected GroupManager(IRepository<TGroup> repository, IMemoryCache cache)
-            : base(repository, cache)
+        protected GroupManager(IDbContext<TGroup> db, IMemoryCache cache)
+            : base(db, cache)
         {
             _cache = cache;
         }

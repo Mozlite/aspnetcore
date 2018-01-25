@@ -60,7 +60,7 @@ namespace Mozlite.Data.SqlServer
                         o.Schema = source.Schema;
                         o.Provider = "SqlServer";
                     })
-                    .AddSingleton(typeof(IRepository<>), typeof(Repository<>))
+                    .AddSingleton(typeof(IDbContext<>), typeof(DbContext<>))
                     .AddTransient<IDataMigrator, DataMigrator>()
                     .AddTransient<IMigrationRepository, SqlServerMigrationRepository>()
                     .AddTransient<IMigrationsSqlGenerator, SqlServerMigrationsSqlGenerator>()

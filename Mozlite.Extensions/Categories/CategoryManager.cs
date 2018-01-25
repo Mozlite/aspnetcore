@@ -15,14 +15,14 @@ namespace Mozlite.Extensions.Categories
         /// 数据库操作实例。
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        protected readonly IRepository<TCategory> db;
+        protected readonly IDbContext<TCategory> db;
         /// <summary>
         /// 初始化类<see cref="CategoryManager{TCategory}"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口实例。</param>
-        protected CategoryManager(IRepository<TCategory> repository)
+        /// <param name="db">数据库操作接口实例。</param>
+        protected CategoryManager(IDbContext<TCategory> db)
         {
-            db = repository;
+            db = db;
         }
 
         /// <summary>

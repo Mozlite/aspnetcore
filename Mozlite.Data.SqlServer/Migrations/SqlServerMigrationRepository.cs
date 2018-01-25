@@ -49,7 +49,7 @@ namespace Mozlite.Data.SqlServer.Migrations
         /// <param name="db">数据库操作实例。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">SQL迁移脚本生成接口。</param>
-        public SqlServerMigrationRepository(IRepository<Migration> db, ISqlHelper sqlHelper, IMigrationsSqlGenerator sqlGenerator) : 
+        public SqlServerMigrationRepository(IDbContext<Migration> db, ISqlHelper sqlHelper, IMigrationsSqlGenerator sqlGenerator) : 
             base(db, sqlHelper, sqlGenerator)
         {
         }

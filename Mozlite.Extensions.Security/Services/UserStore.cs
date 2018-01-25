@@ -19,7 +19,7 @@ namespace Mozlite.Extensions.Security.Services
         /// <param name="roles">用户组数据操作接口实例。</param>
         /// <param name="userLogins">用户登陆数据操作接口实例。</param>
         /// <param name="describer">错误描述实例。</param>
-        public UserStore(IRepository<User> users, IRepository<UserClaim> userClaims, IRepository<UserRole> userRoles, IRepository<UserToken> userTokens, IRepository<Role> roles, IRepository<UserLogin> userLogins, IdentityErrorDescriber describer = null) : base(users, userClaims, userRoles, userTokens, roles, userLogins, describer)
+        public UserStore(IDbContext<User> users, IDbContext<UserClaim> userClaims, IDbContext<UserRole> userRoles, IDbContext<UserToken> userTokens, IDbContext<Role> roles, IDbContext<UserLogin> userLogins, IdentityErrorDescriber describer = null) : base(users, userClaims, userRoles, userTokens, roles, userLogins, describer)
         {
         }
     }

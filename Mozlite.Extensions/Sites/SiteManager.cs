@@ -14,12 +14,12 @@ namespace Mozlite.Extensions.Sites
     /// </summary>
     public class SiteManager : ISiteManager
     {
-        private readonly IRepository<SiteAdapter> _sdb;
-        private readonly IRepository<SiteDomain> _sddb;
+        private readonly IDbContext<SiteAdapter> _sdb;
+        private readonly IDbContext<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public SiteManager(IRepository<SiteAdapter> sdb, IRepository<SiteDomain> sddb, IMemoryCache cache, IHttpContextAccessor contextAccessor)
+        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache, IHttpContextAccessor contextAccessor)
         {
             _sdb = sdb;
             _sddb = sddb;

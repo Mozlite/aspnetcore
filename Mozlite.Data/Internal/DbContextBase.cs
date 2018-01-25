@@ -16,7 +16,7 @@ namespace Mozlite.Data.Internal
     /// 实体数据库操作基类。
     /// </summary>
     /// <typeparam name="TModel">实体模型。</typeparam>
-    public abstract class RepositoryBase<TModel> : IRepositoryBase<TModel>
+    public abstract class DbContextBase<TModel> : IDbContextBase<TModel>
     {
         /// <summary>
         /// 日志接口。
@@ -35,13 +35,13 @@ namespace Mozlite.Data.Internal
         private readonly IDbExecutor _executor;
 
         /// <summary>
-        /// 初始化类<see cref="RepositoryBase{TModel}"/>。
+        /// 初始化类<see cref="DbContextBase{TModel}"/>。
         /// </summary>
         /// <param name="executor">数据库执行接口。</param>
         /// <param name="logger">日志接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">脚本生成器。</param>
-        protected RepositoryBase(IDbExecutor executor, ILogger logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator)
+        protected DbContextBase(IDbExecutor executor, ILogger logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator)
         {
             Logger = logger;
             SqlHelper = sqlHelper;

@@ -12,8 +12,8 @@ namespace Mozlite.Extensions.Searching
     /// </summary>
     public class SearchManager : ISearchManager
     {
-        private readonly IRepository<SearchIndex> _indexes;
-        private readonly IRepository<SearchDescriptor> _searches;
+        private readonly IDbContext<SearchIndex> _indexes;
+        private readonly IDbContext<SearchDescriptor> _searches;
         private readonly ISqlHelper _sqlHelper;
         private readonly ConcurrentDictionary<Type, string> _scripts = new ConcurrentDictionary<Type, string>();
 
@@ -23,7 +23,7 @@ namespace Mozlite.Extensions.Searching
         /// <param name="indexes">索引数据库操作接口。</param>
         /// <param name="searches">搜索实体数据库操作接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
-        public SearchManager(IRepository<SearchIndex> indexes, IRepository<SearchDescriptor> searches, ISqlHelper sqlHelper)
+        public SearchManager(IDbContext<SearchIndex> indexes, IDbContext<SearchDescriptor> searches, ISqlHelper sqlHelper)
         {
             _indexes = indexes;
             _searches = searches;

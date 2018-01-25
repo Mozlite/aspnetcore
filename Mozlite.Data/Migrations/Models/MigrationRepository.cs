@@ -18,7 +18,7 @@ namespace Mozlite.Data.Migrations.Models
         /// </summary>
         protected ISqlHelper SqlHelper { get; }
         
-        private readonly IRepository<Migration> _db;
+        private readonly IDbContext<Migration> _db;
         /// <summary>
         /// SQL脚本生成接口。
         /// </summary>
@@ -30,7 +30,7 @@ namespace Mozlite.Data.Migrations.Models
         /// <param name="db">数据库操作实例。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">SQL迁移脚本生成接口。</param>
-        protected MigrationRepository(IRepository<Migration> db, ISqlHelper sqlHelper, IMigrationsSqlGenerator sqlGenerator)
+        protected MigrationRepository(IDbContext<Migration> db, ISqlHelper sqlHelper, IMigrationsSqlGenerator sqlGenerator)
         {
             SqlHelper = sqlHelper;
             Table = typeof(Migration).GetTableName();

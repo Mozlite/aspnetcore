@@ -10,10 +10,10 @@ namespace Mozlite.Extensions.DisallowNames
     /// </summary>
     public class DisallowNameManager : IDisallowNameManager
     {
-        private readonly IRepository<DisallowName> _repository;
-        public DisallowNameManager(IRepository<DisallowName> repository)
+        private readonly IDbContext<DisallowName> _db;
+        public DisallowNameManager(IDbContext<DisallowName> db)
         {
-            _repository = repository;
+            _db = db;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Mozlite.Extensions.DisallowNames
             {
                 if (IsDisallowed(word))
                     continue;
-                _repository.Create(new DisallowName { Name = word });
+                _db.Create(new DisallowName { Name = word });
             }
             return DataAction.Created;
         }
@@ -41,7 +41,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回删除结果。</returns>
         public DataResult Delete(int id)
         {
-            return DataResult.FromResult(_repository.Delete(x=>x.Id == id), DataAction.Deleted);
+            return DataResult.FromResult(_db.Delete(x=>x.Id == id), DataAction.Deleted);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.DisallowNames
         public DataResult Delete(string ids)
         {
             var wids = ids.SplitToInt32();
-            return DataResult.FromResult(_repository.Delete(x => x.Id.Included(wids)), DataAction.Deleted);
+            return DataResult.FromResult(_db.Delete(x => x.Id.Included(wids)), DataAction.Deleted);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回判断结果。</returns>
         public bool IsDisallowed(string name)
         {
-            return _repository.Any(x => x.Name == name);
+            return _db.Any(x => x.Name == name);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回判断结果。</returns>
         public async Task<bool> IsDisallowedAsync(string name)
         {
-            return await _repository.AnyAsync(x => x.Name == name);
+            return await _db.AnyAsync(x => x.Name == name);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回非法名称列表。</returns>
         public DisallowNameQuery Load(DisallowNameQuery query)
         {
-            return _repository.Load(query);
+            return _db.Load(query);
         }
     }
 }

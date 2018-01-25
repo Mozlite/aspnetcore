@@ -9,16 +9,16 @@ namespace Mozlite.Extensions.Security.Activities
     /// </summary>
     public class ActivityManager : IActivityManager
     {
-        private readonly IRepository<UserActivity> _repository;
+        private readonly IDbContext<UserActivity> _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
         /// <summary>
         /// 初始化<see cref="ActivityManager"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口。</param>
+        /// <param name="db">数据库操作接口。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问器。</param>
-        public ActivityManager(IRepository<UserActivity> repository, IHttpContextAccessor httpContextAccessor)
+        public ActivityManager(IDbContext<UserActivity> db, IHttpContextAccessor httpContextAccessor)
         {
-            _repository = repository;
+            _db = db;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -34,7 +34,7 @@ namespace Mozlite.Extensions.Security.Activities
                 return false;
             activity.UserId = context.User.GetUserId();
             activity.IPAdress = context.GetUserAddress();
-            return await _repository.CreateAsync(activity);
+            return await _db.CreateAsync(activity);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Mozlite.Extensions.Security.Activities
                 return false;
             activity.UserId = context.User.GetUserId();
             activity.IPAdress = context.GetUserAddress();
-            return _repository.Create(activity);
+            return _db.Create(activity);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Mozlite.Extensions.Security.Activities
             current.UserId = userId;
             current.Activity = activity;
             current.IPAdress = _httpContextAccessor.HttpContext.GetUserAddress();
-            return _repository.CreateAsync(current);
+            return _db.CreateAsync(current);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Mozlite.Extensions.Security.Activities
             current.UserId = userId;
             current.Activity = activity;
             current.IPAdress = _httpContextAccessor.HttpContext.GetUserAddress();
-            return _repository.Create(current);
+            return _db.Create(current);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>查询实例对象。</returns>
         public virtual TQuery Load<TQuery, TUser>(TQuery query) where TQuery : UserActivityQuery<TUser> where TUser : IdentityUser
         {
-            return _repository.Load(query, x => x.Id);
+            return _db.Load(query, x => x.Id);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>查询实例对象。</returns>
         public virtual Task<TQuery> LoadAsync<TQuery, TUser>(TQuery query) where TQuery : UserActivityQuery<TUser> where TUser : IdentityUser
         {
-            return _repository.LoadAsync(query, x => x.Id);
+            return _db.LoadAsync(query, x => x.Id);
         }
     }
 }

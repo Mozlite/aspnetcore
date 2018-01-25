@@ -12,19 +12,19 @@ namespace Mozlite.Extensions.Settings
     /// </summary>
     public class SettingsManager : ISettingsManager
     {
-        private readonly IRepository<SettingsAdapter> _repository;
+        private readonly IDbContext<SettingsAdapter> _db;
         private readonly ISiteManager _siteManager;
         private readonly IMemoryCache _cache;
 
         /// <summary>
         /// 初始化类<see cref="SettingsManager"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口。</param>
+        /// <param name="db">数据库操作接口。</param>
         /// <param name="siteManager">网站配置管理。</param>
         /// <param name="cache">缓存接口。</param>
-        public SettingsManager(IRepository<SettingsAdapter> repository, ISiteManager siteManager, IMemoryCache cache)
+        public SettingsManager(IDbContext<SettingsAdapter> db, ISiteManager siteManager, IMemoryCache cache)
         {
-            _repository = repository;
+            _db = db;
             _siteManager = siteManager;
             _cache = cache;
         }
@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreate(GetCacheKey(key, out var settingId), entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return _repository.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
+                return _db.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
             });
         }
 
@@ -60,7 +60,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreate(GetCacheKey(key, out var settingId), entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = _repository.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
+                var settings = _db.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
                 if (settings == null)
                     return new TSiteSettings();
                 return JsonConvert.DeserializeObject<TSiteSettings>(settings);
@@ -87,7 +87,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreateAsync(GetCacheKey(key, out var settingId), async entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = await _repository.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
+                var settings = await _db.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
                 return settings?.SettingValue;
             });
         }
@@ -103,7 +103,7 @@ namespace Mozlite.Extensions.Settings
             return _cache.GetOrCreateAsync(GetCacheKey(key, out var settingId), async entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = await _repository.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
+                var settings = await _db.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
                 if (settings?.SettingValue == null)
                     return new TSiteSettings();
                 return JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingValue);
@@ -150,15 +150,15 @@ namespace Mozlite.Extensions.Settings
         {
             var cacheKey = GetCacheKey(key, out var settingId);
             var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings, SiteId = settingId };
-            if (_repository.Any(x => x.SettingKey == key && x.SiteId == settingId))
+            if (_db.Any(x => x.SettingKey == key && x.SiteId == settingId))
             {
-                if (_repository.Update(adapter))
+                if (_db.Update(adapter))
                 {
                     _cache.Remove(cacheKey);
                     return true;
                 }
             }
-            return _repository.Create(adapter);
+            return _db.Create(adapter);
         }
 
         /// <summary>

@@ -15,17 +15,17 @@ namespace Mozlite.Extensions.Tasks
     /// </summary>
     public class TaskManager : ITaskManager
     {
-        private readonly IRepository<TaskDescriptor> _repository;
+        private readonly IDbContext<TaskDescriptor> _db;
         private readonly ILogger<TaskManager> _logger;
 
         /// <summary>
         /// 初始化类<see cref="TaskManager"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口。</param>
+        /// <param name="db">数据库操作接口。</param>
         /// <param name="logger">日志接口。</param>
-        public TaskManager(IRepository<TaskDescriptor> repository, ILogger<TaskManager> logger)
+        public TaskManager(IDbContext<TaskDescriptor> db, ILogger<TaskManager> logger)
         {
-            _repository = repository;
+            _db = db;
             _logger = logger;
         }
 
@@ -35,7 +35,7 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="services">当前程序包含的后台服务列表。</param>
         public async Task EnsuredTaskServicesAsync(IEnumerable<ITaskService> services)
         {
-            var descriptors = (await _repository.FetchAsync())?.ToDictionary(x => x.Type, StringComparer.OrdinalIgnoreCase) ??
+            var descriptors = (await _db.FetchAsync())?.ToDictionary(x => x.Type, StringComparer.OrdinalIgnoreCase) ??
                 new Dictionary<string, TaskDescriptor>(StringComparer.OrdinalIgnoreCase);
             foreach (var service in services)
             {
@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Tasks
                         descriptor.Enabled = false;
                     if (descriptor.Name != service.Name ||
                         descriptor.Description != service.Description)
-                        await _repository.UpdateAsync(x => x.Id == descriptor.Id,
+                        await _db.UpdateAsync(x => x.Id == descriptor.Id,
                             new { service.Name, service.Description, descriptor.Enabled });
                 }
                 else
@@ -57,7 +57,7 @@ namespace Mozlite.Extensions.Tasks
                     descriptor.Type = service.GetType().DisplayName();
                     descriptor.ExtensionName = service.ExtensionName;
                     descriptor.Interval = service.Interval.ToString();
-                    await _repository.CreateAsync(descriptor);
+                    await _db.CreateAsync(descriptor);
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回所有后台服务列表。</returns>
         public async Task<IEnumerable<TaskDescriptor>> LoadTasksAsync()
         {
-            return await _repository.FetchAsync();
+            return await _db.FetchAsync();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Mozlite.Extensions.Tasks
         public TaskDescriptor GeTask(Type type)
         {
             var fullName = type.DisplayName();
-            return _repository.Find(t => t.Type == fullName);
+            return _db.Find(t => t.Type == fullName);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回设置结果。</returns>
         public bool SetInterval(int id, TaskInterval interval)
         {
-            return _repository.Update(t => t.Id == id, new { Interval = interval.ToString() });
+            return _db.Update(t => t.Id == id, new { Interval = interval.ToString() });
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回设置结果。</returns>
         public async Task<bool> SetArgumentAsync(int id, string argument)
         {
-            return await _repository.UpdateAsync(t => t.Id == id, new { Argument = argument });
+            return await _db.UpdateAsync(t => t.Id == id, new { Argument = argument });
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回设置结果。</returns>
         public async Task<bool> SetExecuteDateAsync(int id, DateTime next, DateTime last)
         {
-            return await _repository.UpdateAsync(t => t.Id == id, new { NextExecuting = next, LastExecuted = last });
+            return await _db.UpdateAsync(t => t.Id == id, new { NextExecuting = next, LastExecuted = last });
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Mozlite.Extensions.Tasks
             error.AppendFormat(Resources.TaskExecuteError, name, exception.Message);
             error.AppendLine().AppendLine("===========================================================");
             error.AppendLine(exception.StackTrace);
-            await _repository.UpdateAsync(x => x.Id == id, new {Error = error.ToString()});
+            await _db.UpdateAsync(x => x.Id == id, new {Error = error.ToString()});
         }
     }
 }

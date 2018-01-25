@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -40,12 +39,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         [Size(64)]
         public string NormalizedName { get; set; }
-
-        /// <summary>
-        /// 用于多线程更新附加随机条件。
-        /// </summary>
-        [Size(36)]
-        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// 返回角色名称。

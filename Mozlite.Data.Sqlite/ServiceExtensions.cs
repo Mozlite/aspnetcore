@@ -59,7 +59,7 @@ namespace Mozlite.Data.Sqlite
                         o.Schema = source.Schema;
                         o.Provider = "Sqlite";
                     })
-                    .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+                    .AddScoped(typeof(IDbContext<>), typeof(DbContext<>))
                     .AddTransient<IDataMigrator, DataMigrator>()
                     .AddTransient<IMigrationRepository, SqliteMigrationRepository>()
                     .AddTransient<IMigrationsSqlGenerator, MigrationsSqliteGenerator>()

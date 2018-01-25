@@ -18,16 +18,16 @@ namespace Mozlite.Extensions.Security
         where TRole : IdentityRole, new()
         where TRoleClaim : IdentityRoleClaim, new()
     {
-        private readonly IRepository<TRole> _repository;
-        private readonly IRepository<TRoleClaim> _rc;
+        private readonly IDbContext<TRole> _db;
+        private readonly IDbContext<TRoleClaim> _rc;
         /// <summary>
         /// 初始化类<see cref="IdentityIdentityRoleStore{TRole,TRoleClaim}"/>。
         /// </summary>
-        /// <param name="repository">用户组数据库操作接口。</param>
+        /// <param name="db">用户组数据库操作接口。</param>
         /// <param name="rc">用户组声明数据库操作接口。</param>
-        protected IdentityIdentityRoleStore(IRepository<TRole> repository, IRepository<TRoleClaim> rc)
+        protected IdentityIdentityRoleStore(IDbContext<TRole> db, IDbContext<TRoleClaim> rc)
         {
-            _repository = repository;
+            _db = db;
             _rc = rc;
         }
 
@@ -56,7 +56,7 @@ namespace Mozlite.Extensions.Security
             {
                 if (role.NormalizedRoleName == null)
                     role.NormalizedRoleName = role.RoleName.ToUpper();
-                await _repository.CreateAsync(role, cancellationToken);
+                await _db.CreateAsync(role, cancellationToken);
                 return IdentityResult.Success;
             }
             catch (Exception exception)
@@ -76,7 +76,7 @@ namespace Mozlite.Extensions.Security
         {
             try
             {
-                await _repository.DeleteAsync(r => r.RoleId == role.RoleId, cancellationToken);
+                await _db.DeleteAsync(r => r.RoleId == role.RoleId, cancellationToken);
                 return IdentityResult.Success;
             }
             catch (Exception exception)
@@ -116,7 +116,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户组实例对象。</returns>
         public virtual Task<TRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            return _repository.FindAsync(r => r.NormalizedRoleName == normalizedRoleName, cancellationToken);
+            return _db.FindAsync(r => r.NormalizedRoleName == normalizedRoleName, cancellationToken);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Mozlite.Extensions.Security
             try
             {
                 await
-                    _repository.UpdateAsync(r => r.RoleId == role.RoleId, new { role.DisplayName, role.Priority },
+                    _db.UpdateAsync(r => r.RoleId == role.RoleId, new { role.DisplayName, role.Priority },
                         cancellationToken);
                 return IdentityResult.Success;
             }
@@ -225,7 +225,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户组实例对象。</returns>
         public virtual Task<TRole> FindByIdAsync(int roleId, CancellationToken cancellationToken)
         {
-            return _repository.FindAsync(x => x.RoleId == roleId, cancellationToken);
+            return _db.FindAsync(x => x.RoleId == roleId, cancellationToken);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Mozlite.Extensions.Security
         public Task<TRole> FindByRoleNameAsync(string roleName, CancellationToken cancellationToken)
         {
             roleName = roleName?.ToUpper();
-            return _repository.FindAsync(r => r.NormalizedRoleName == roleName, cancellationToken);
+            return _db.FindAsync(r => r.NormalizedRoleName == roleName, cancellationToken);
         }
     }
 }

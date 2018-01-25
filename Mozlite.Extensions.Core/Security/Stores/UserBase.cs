@@ -117,6 +117,43 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         [NotUpdated]
         public int AccessFailedCount { get; set; }
+        
+        /// <summary>
+        /// 注册IP。
+        /// </summary>
+        [Size(20)]
+        [NotUpdated]
+        public string CreatedIP { get; set; }
+
+        /// <summary>
+        /// 登入IP。
+        /// </summary>
+        [Size(20)]
+        [NotUpdated]
+        public string LoginIP { get; set; }
+
+        /// <summary>
+        /// 注册时间。
+        /// </summary>
+        [NotUpdated]
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
+
+        /// <summary>
+        /// 更新时间。
+        /// </summary>
+        public DateTimeOffset UpdatedDate { get; set; } = DateTimeOffset.Now;
+
+        /// <summary>
+        /// 最后登入时间。
+        /// </summary>
+        [NotUpdated]
+        public DateTimeOffset? LastLoginDate { get; set; }
+
+        /// <summary>
+        /// 头像。
+        /// </summary>
+        [Size(256)]
+        public string Avatar { get; set; }
 
         /// <summary>
         /// 返回当前用户的用户名。

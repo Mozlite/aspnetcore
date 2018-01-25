@@ -14,8 +14,8 @@ namespace Mozlite.Extensions.Storages
     public class MediaFileProvider : IMediaFileProvider
     {
         private readonly IStorageDirectory _directory;
-        private readonly IRepository<MediaFile> _mfdb;
-        private readonly IRepository<StoredFile> _sfdb;
+        private readonly IDbContext<MediaFile> _mfdb;
+        private readonly IDbContext<StoredFile> _sfdb;
 
         private const string UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
@@ -27,7 +27,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="directory">存储文件夹。</param>
         /// <param name="mfdb">数据库操作接口。</param>
         /// <param name="sfdb">数据库操作接口。</param>
-        public MediaFileProvider(IStorageDirectory directory, IRepository<MediaFile> mfdb, IRepository<StoredFile> sfdb)
+        public MediaFileProvider(IStorageDirectory directory, IDbContext<MediaFile> mfdb, IDbContext<StoredFile> sfdb)
         {
             _directory = directory;
             _mfdb = mfdb;

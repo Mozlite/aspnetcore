@@ -11,9 +11,9 @@ namespace Mozlite.Extensions.Security.Services
         /// <summary>
         /// 初始化类<see cref="RoleStore"/>。
         /// </summary>
-        /// <param name="repository">用户组数据库操作接口。</param>
+        /// <param name="db">用户组数据库操作接口。</param>
         /// <param name="rc">用户组声明数据库操作接口。</param>
-        public RoleStore(IRepository<Role> repository, IRepository<RoleClaim> rc) : base(repository, rc)
+        public RoleStore(IDbContext<Role> db, IDbContext<RoleClaim> rc) : base(db, rc)
         {
         }
     }

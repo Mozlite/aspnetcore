@@ -11,7 +11,7 @@ namespace Mozlite.Data.Internal
     /// 数据库操作接口。
     /// </summary>
     /// <typeparam name="TModel">模型类型。</typeparam>
-    public interface IRepositoryBase<TModel> : IDbExecutor
+    public interface IDbContextBase<TModel> : IDbExecutor
     {
         /// <summary>
         /// 当前实体类型。

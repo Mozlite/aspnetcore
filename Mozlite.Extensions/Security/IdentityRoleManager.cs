@@ -21,19 +21,19 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 用户组数据库操作接口。
         /// </summary>
-        protected IRepository<TRole> Repository { get; }
+        protected IDbContext<TRole> Repository { get; }
         private readonly IRoleClaimStore<TRole> _store;
 
         /// <summary>
         /// 初始化类<see cref="IdentityRoleManager{TRole}"/>。
         /// </summary>
-        /// <param name="repository">用户组数据库操作接口。</param>
+        /// <param name="db">用户组数据库操作接口。</param>
         /// <param name="store">用户组存储接口实例。</param>
         /// <param name="cache">缓存接口。</param>
-        protected IdentityRoleManager(IRepository<TRole> repository, IRoleStore<TRole> store, IMemoryCache cache)
+        protected IdentityRoleManager(IDbContext<TRole> db, IRoleStore<TRole> store, IMemoryCache cache)
         {
             _cache = cache;
-            Repository = repository;
+            Repository = db;
             _store = store as IRoleClaimStore<TRole>;
         }
 

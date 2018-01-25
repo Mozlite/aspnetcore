@@ -20,10 +20,10 @@ namespace Mozlite.Extensions.Categories
         /// <summary>
         /// 初始化类<see cref="CachableCategoryManager{TCategory}"/>。
         /// </summary>
-        /// <param name="repository">数据库操作接口实例。</param>
+        /// <param name="db">数据库操作接口实例。</param>
         /// <param name="cache">缓存接口。</param>
-        protected CachableCategoryManager(IRepository<TCategory> repository, IMemoryCache cache)
-            : base(repository)
+        protected CachableCategoryManager(IDbContext<TCategory> db, IMemoryCache cache)
+            : base(db)
         {
             _cache = cache;
         }

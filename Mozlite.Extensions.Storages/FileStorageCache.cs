@@ -15,13 +15,13 @@ namespace Mozlite.Extensions.Storages
     {
         private readonly IMemoryCache _cache;
         private readonly IStorageDirectory _root;
-        private readonly IRepository<StorageCache> _repository;
+        private readonly IDbContext<StorageCache> _db;
         private readonly string _cacheRoot;
-        public FileStorageCache(IMemoryCache cache, IStorageDirectory root, IRepository<StorageCache> repository)
+        public FileStorageCache(IMemoryCache cache, IStorageDirectory root, IDbContext<StorageCache> db)
         {
             _cache = cache;
             _root = root;
-            _repository = repository;
+            _db = db;
             _cacheRoot = root.GetPhysicalPath("caches");
             if (!Directory.Exists(_cacheRoot)) Directory.CreateDirectory(_cacheRoot);
         }
@@ -66,7 +66,7 @@ namespace Mozlite.Extensions.Storages
             var cache = _cache.GetOrCreate(hashedKey, ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return _repository.Find(hashedKey);
+                return _db.Find(hashedKey);
             });
             if (cache == null) return null;
             if (dependency?.IsEqual(cache.Dependency) == false ||
@@ -90,7 +90,7 @@ namespace Mozlite.Extensions.Storages
             var cache = await _cache.GetOrCreateAsync(hashedKey, async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return await _repository.FindAsync(hashedKey);
+                return await _db.FindAsync(hashedKey);
             });
             if (cache == null) return null;
             if (dependency?.IsEqual(cache.Dependency) == false ||
@@ -134,7 +134,7 @@ namespace Mozlite.Extensions.Storages
                     Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
-                _repository.Create(cache);
+                _db.Create(cache);
                 using (var fs = new FileStream(GetFilePath(cacheKey, true), FileMode.Create, FileAccess.Write, FileShare.Read))
                 using (var writer = new StreamWriter(fs, Encoding.UTF8))
                 {
@@ -187,7 +187,7 @@ namespace Mozlite.Extensions.Storages
                     Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
-                await _repository.CreateAsync(cache);
+                await _db.CreateAsync(cache);
                 using (var fs = new FileStream(GetFilePath(cacheKey, true), FileMode.Create, FileAccess.Write, FileShare.Read))
                 using (var writer = new StreamWriter(fs, Encoding.UTF8))
                 {
@@ -240,7 +240,7 @@ namespace Mozlite.Extensions.Storages
                     Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
-                _repository.Create(cache);
+                _db.Create(cache);
                 using (var fs = new FileStream(GetFilePath(cacheKey, true), FileMode.Create, FileAccess.Write, FileShare.Read))
                 using (var writer = new StreamWriter(fs, Encoding.UTF8))
                 {
@@ -296,7 +296,7 @@ namespace Mozlite.Extensions.Storages
                     Dependency = dependency?.ToString(),
                     ExpiredDate = context.ExpiredDate
                 };
-                await _repository.CreateAsync(cache);
+                await _db.CreateAsync(cache);
                 using (var fs = new FileStream(GetFilePath(cacheKey, true), FileMode.Create, FileAccess.Write, FileShare.Read))
                 using (var writer = new StreamWriter(fs, Encoding.UTF8))
                 {
@@ -349,7 +349,7 @@ namespace Mozlite.Extensions.Storages
             if (File.Exists(path))
                 File.Delete(path);
             //删除数据库
-            _repository.Delete(hashedKey);
+            _db.Delete(hashedKey);
             //删除缓存
             _cache.Remove(hashedKey);
         }
@@ -365,7 +365,7 @@ namespace Mozlite.Extensions.Storages
             if (File.Exists(path))
                 File.Delete(path);
             //删除数据库
-            await _repository.DeleteAsync(hashedKey);
+            await _db.DeleteAsync(hashedKey);
             //删除缓存
             _cache.Remove(hashedKey);
         }
