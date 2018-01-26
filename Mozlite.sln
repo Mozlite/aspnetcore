@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Data.SqlServer", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite", "Mozlite\Mozlite.csproj", "{27303AD8-9469-42FD-8CA9-2555830C90BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Data.Sqlite", "Mozlite.Data.Sqlite\Mozlite.Data.Sqlite.csproj", "{185A1FE7-7BE9-4033-AD00-BB17FC4A48BE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions", "Mozlite.Extensions\Mozlite.Extensions.csproj", "{1DC7E7CC-F6A1-486A-A8A0-5472B4FF7A9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Mvc", "Mozlite.Mvc\Mozlite.Mvc.csproj", "{843F6068-43F2-4B54-B3E9-6EC7246EA2C1}"
@@ -25,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Security
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Messages", "Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj", "{F92153B2-5385-4028-AF3A-15A40CB3D0F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Core", "Mozlite.Extensions.Core\Mozlite.Extensions.Core.csproj", "{28236808-CF19-4DF1-9E2E-57BA14DA9A45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Core", "Mozlite.Extensions.Core\Mozlite.Extensions.Core.csproj", "{28236808-CF19-4DF1-9E2E-57BA14DA9A45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +47,6 @@ Global
 		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{185A1FE7-7BE9-4033-AD00-BB17FC4A48BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{185A1FE7-7BE9-4033-AD00-BB17FC4A48BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{185A1FE7-7BE9-4033-AD00-BB17FC4A48BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{185A1FE7-7BE9-4033-AD00-BB17FC4A48BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DC7E7CC-F6A1-486A-A8A0-5472B4FF7A9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DC7E7CC-F6A1-486A-A8A0-5472B4FF7A9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DC7E7CC-F6A1-486A-A8A0-5472B4FF7A9B}.Release|Any CPU.ActiveCfg = Release|Any CPU

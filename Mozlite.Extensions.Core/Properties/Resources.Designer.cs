@@ -70,11 +70,128 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 恭喜你，你已经成功添加了“{0}”。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_Created {
+            get {
+                return ResourceManager.GetString("DataAction_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，添加“{0}”失败了。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_CreatedFailured {
+            get {
+                return ResourceManager.GetString("DataAction_CreatedFailured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 恭喜你，你已经成功删除了所选择的{0}。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_Deleted {
+            get {
+                return ResourceManager.GetString("DataAction_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，删除“{0}”失败了。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_DeletedFailured {
+            get {
+                return ResourceManager.GetString("DataAction_DeletedFailured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，删除“{0}”失败了，因为包含的子项不为空。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_DeletedFailuredItemsNotEmpty {
+            get {
+                return ResourceManager.GetString("DataAction_DeletedFailuredItemsNotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，“{0}”已经存在，操作失败。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_Duplicate {
+            get {
+                return ResourceManager.GetString("DataAction_Duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 恭喜你，你已经成功完成了“{0}”。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_Success {
+            get {
+                return ResourceManager.GetString("DataAction_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，发生了未知错误，操作失败，请重试。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_UnknownError {
+            get {
+                return ResourceManager.GetString("DataAction_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 恭喜你，你已经成功更新了“{0}”。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_Updated {
+            get {
+                return ResourceManager.GetString("DataAction_Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，更新“{0}”失败了。 的本地化字符串。
+        /// </summary>
+        internal static string DataAction_UpdatedFailured {
+            get {
+                return ResourceManager.GetString("DataAction_UpdatedFailured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 普通会员 的本地化字符串。
         /// </summary>
         internal static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 对数据库中某些列进行分词，生成搜索需求文档，提供前天搜索服务。 的本地化字符串。
+        /// </summary>
+        internal static string Task_Searching_Description {
+            get {
+                return ResourceManager.GetString("Task_Searching_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 搜索引擎服务 的本地化字符串。
+        /// </summary>
+        internal static string Task_Searching_Name {
+            get {
+                return ResourceManager.GetString("Task_Searching_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [服务]{0}执行错误：{1}。 的本地化字符串。
+        /// </summary>
+        internal static string TaskExecuteError {
+            get {
+                return ResourceManager.GetString("TaskExecuteError", resourceCulture);
             }
         }
     }

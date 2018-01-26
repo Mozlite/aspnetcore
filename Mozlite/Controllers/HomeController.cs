@@ -15,9 +15,9 @@ namespace Mozlite.Controllers
     public class HomeController : Mozlite.Mvc.ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IMediaFileProvider _fileProvider;
+        private readonly IMediaDirectory _fileProvider;
 
-        public HomeController(ILogger<HomeController> logger, IMediaFileProvider fileProvider)
+        public HomeController(ILogger<HomeController> logger, IMediaDirectory fileProvider)
         {
             _logger = logger;
             _fileProvider = fileProvider;

@@ -120,7 +120,46 @@
   <data name="Administrator" xml:space="preserve">
     <value>管理员</value>
   </data>
+  <data name="DataAction_Created" xml:space="preserve">
+    <value>恭喜你，你已经成功添加了“{0}”。</value>
+  </data>
+  <data name="DataAction_CreatedFailured" xml:space="preserve">
+    <value>很抱歉，添加“{0}”失败了。</value>
+  </data>
+  <data name="DataAction_Deleted" xml:space="preserve">
+    <value>恭喜你，你已经成功删除了所选择的{0}。</value>
+  </data>
+  <data name="DataAction_DeletedFailured" xml:space="preserve">
+    <value>很抱歉，删除“{0}”失败了。</value>
+  </data>
+  <data name="DataAction_DeletedFailuredItemsNotEmpty" xml:space="preserve">
+    <value>很抱歉，删除“{0}”失败了，因为包含的子项不为空。</value>
+  </data>
+  <data name="DataAction_Duplicate" xml:space="preserve">
+    <value>很抱歉，“{0}”已经存在，操作失败。</value>
+  </data>
+  <data name="DataAction_Success" xml:space="preserve">
+    <value>恭喜你，你已经成功完成了“{0}”。</value>
+  </data>
+  <data name="DataAction_UnknownError" xml:space="preserve">
+    <value>很抱歉，发生了未知错误，操作失败，请重试。</value>
+  </data>
+  <data name="DataAction_Updated" xml:space="preserve">
+    <value>恭喜你，你已经成功更新了“{0}”。</value>
+  </data>
+  <data name="DataAction_UpdatedFailured" xml:space="preserve">
+    <value>很抱歉，更新“{0}”失败了。</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>普通会员</value>
+  </data>
+  <data name="TaskExecuteError" xml:space="preserve">
+    <value>[服务]{0}执行错误：{1}。</value>
+  </data>
+  <data name="Task_Searching_Description" xml:space="preserve">
+    <value>对数据库中某些列进行分词，生成搜索需求文档，提供前天搜索服务。</value>
+  </data>
+  <data name="Task_Searching_Name" xml:space="preserve">
+    <value>搜索引擎服务</value>
   </data>
 </root>

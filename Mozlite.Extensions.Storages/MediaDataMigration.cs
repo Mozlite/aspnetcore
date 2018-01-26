@@ -1,4 +1,5 @@
 ﻿using Mozlite.Data.Migrations;
+using Mozlite.Extensions.Storages.Caching;
 
 namespace Mozlite.Extensions.Storages
 {

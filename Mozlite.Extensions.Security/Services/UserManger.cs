@@ -15,7 +15,7 @@ namespace Mozlite.Extensions.Security.Services
     {
         private readonly IDbContext<UserProfile> _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMediaFileProvider _fileProvider;
+        private readonly IMediaDirectory _fileProvider;
 
         /// <summary>
         /// 初始化类<see cref="UserManger"/>。
@@ -25,7 +25,7 @@ namespace Mozlite.Extensions.Security.Services
         /// <param name="udb">数据库操作接口。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
         /// <param name="fileProvider">媒体文件提供者。</param>
-        public UserManger(UserManager<User> userManager, IDbContext<UserProfile> db, IDbContext<User> udb, IHttpContextAccessor httpContextAccessor, IMediaFileProvider fileProvider) : base(userManager, udb, httpContextAccessor)
+        public UserManger(UserManager<User> userManager, IDbContext<UserProfile> db, IDbContext<User> udb, IHttpContextAccessor httpContextAccessor, IMediaDirectory fileProvider) : base(userManager, udb, httpContextAccessor)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
