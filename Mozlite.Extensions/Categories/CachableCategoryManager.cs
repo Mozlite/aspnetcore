@@ -1,9 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Linq.Expressions;
+using Mozlite.Extensions.Data;
+using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Categories
 {
@@ -51,13 +54,14 @@ namespace Mozlite.Extensions.Categories
         }
 
         /// <summary>
-        /// 保存分类。
+        /// 保存对象实例。
         /// </summary>
-        /// <param name="category">分类实例。</param>
+        /// <param name="category">模型实例对象。</param>
+        /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回保存结果。</returns>
-        public override async Task<DataResult> SaveAsync(TCategory category)
+        public override async Task<DataResult> SaveAsync(TCategory category, CancellationToken cancellationToken = default)
         {
-            return RefreshCache(await base.SaveAsync(category));
+            return RefreshCache(await base.SaveAsync(category, cancellationToken));
         }
 
         /// <summary>
@@ -67,18 +71,19 @@ namespace Mozlite.Extensions.Categories
         /// <returns>返回判断结果。</returns>
         public override bool IsDuplicated(TCategory category)
         {
-            return Fetch().Any(x => x.Id != category.Id && x.Name == category.Name);
+            return Categories.Any(x => x.Id != category.Id && x.Name == category.Name);
         }
 
         /// <summary>
         /// 判断是否已经存在。
         /// </summary>
         /// <param name="category">分类实例。</param>
+        /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回判断结果。</returns>
-        public override async Task<bool> IsDuplicatedAsync(TCategory category)
+        public override Task<bool> IsDuplicatedAsync(TCategory category, CancellationToken cancellationToken = default)
         {
-            var categories = await FetchAsync();
-            return categories.Any(x => x.Id != category.Id && x.Name == category.Name);
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(Categories.Any(x => x.Id != category.Id && x.Name == category.Name));
         }
 
         /// <summary>
@@ -95,20 +100,11 @@ namespace Mozlite.Extensions.Categories
         /// 删除分类。
         /// </summary>
         /// <param name="id">分类Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回删除结果。</returns>
-        public override async Task<DataResult> DeleteAsync(int id)
+        public override async Task<DataResult> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            return RefreshCache(await base.DeleteAsync(id));
-        }
-
-        /// <summary>
-        /// 删除分类。
-        /// </summary>
-        /// <param name="ids">分类Id集合，以“,”分隔。</param>
-        /// <returns>返回删除结果。</returns>
-        public override async Task<DataResult> DeleteAsync(string ids)
-        {
-            return RefreshCache(await base.DeleteAsync(ids));
+            return RefreshCache(await base.DeleteAsync(id, cancellationToken));
         }
 
         /// <summary>
@@ -124,48 +120,69 @@ namespace Mozlite.Extensions.Categories
         /// <summary>
         /// 加载所有的分类。
         /// </summary>
+        /// <param name="expression">条件表达式。</param>
         /// <returns>返回分类列表。</returns>
-        public override IEnumerable<TCategory> Fetch()
+        public override IEnumerable<TCategory> Fetch(Expression<Predicate<TCategory>> expression = null)
         {
-            return _cache.GetOrCreate(typeof(TCategory), ctx =>
-            {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return base.Fetch();
-            });
+            return Filter(Categories, expression);
         }
 
         /// <summary>
         /// 加载所有的分类。
         /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回分类列表。</returns>
-        public override Task<IEnumerable<TCategory>> FetchAsync()
+        public override Task<IEnumerable<TCategory>> FetchAsync(Expression<Predicate<TCategory>> expression = null, CancellationToken cancellationToken = default)
         {
-            return _cache.GetOrCreateAsync(typeof(TCategory), async ctx =>
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(Filter(Categories, expression));
+        }
+
+        /// <summary>
+        /// 获取分类。
+        /// </summary>
+        /// <param name="id">分类Id。</param>
+        /// <returns>返回分类实例。</returns>
+        public override TCategory Find(int id)
+        {
+            return Categories.FirstOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// 获取分类。
+        /// </summary>
+        /// <param name="id">分类Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回分类实例。</returns>
+        public override Task<TCategory> FindAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Categories.FirstOrDefault(x => x.Id == id));
+        }
+
+        /// <summary>
+        /// 通过表达式过滤列表。
+        /// </summary>
+        /// <param name="categories">当前列表集合。</param>
+        /// <param name="expression">过滤表达式。</param>
+        /// <returns>返回过滤列表。</returns>
+        protected IEnumerable<TCategory> Filter(IEnumerable<TCategory> categories, Expression<Predicate<TCategory>> expression)
+        {
+            if (expression != null)
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return await base.FetchAsync();
-            });
+                var filter = expression.Compile();
+                categories = categories.Where(filter.Invoke).ToList();
+            }
+            return categories;
         }
 
         /// <summary>
-        /// 获取分类。
+        /// 当前分类实例。
         /// </summary>
-        /// <param name="id">分类Id。</param>
-        /// <returns>返回分类实例。</returns>
-        public override TCategory Get(int id)
+        public override IEnumerable<TCategory> Categories => _cache.GetOrCreate(typeof(TCategory), ctx =>
         {
-            return Fetch().FirstOrDefault(x => x.Id == id);
-        }
-
-        /// <summary>
-        /// 获取分类。
-        /// </summary>
-        /// <param name="id">分类Id。</param>
-        /// <returns>返回分类实例。</returns>
-        public override async Task<TCategory> GetAsync(int id)
-        {
-            var categories = await FetchAsync();
-            return categories.FirstOrDefault(x => x.Id == id);
-        }
+            ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+            return Context.Fetch();
+        });
     }
 }

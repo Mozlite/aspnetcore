@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -46,7 +47,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>查询实例对象。</returns>
         TQuery Load<TQuery, TUser>(TQuery query)
             where TQuery : UserActivityQuery<TUser>
-            where TUser : IdentityUser;
+            where TUser : UserBase;
 
         /// <summary>
         /// 查询活动状态。
@@ -57,6 +58,6 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>查询实例对象。</returns>
         Task<TQuery> LoadAsync<TQuery, TUser>(TQuery query)
             where TQuery : UserActivityQuery<TUser>
-            where TUser : IdentityUser;
+            where TUser : UserBase;
     }
 }

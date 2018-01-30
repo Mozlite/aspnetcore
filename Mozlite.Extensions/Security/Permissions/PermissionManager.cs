@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
+using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
@@ -14,14 +15,14 @@ namespace Mozlite.Extensions.Security.Permissions
     /// <typeparam name="TUserRole">用户角色关联类型。</typeparam>
     /// <typeparam name="TRole">角色类型。</typeparam>
     public abstract class PermissionManager<TUserRole, TRole> : IPermissionManager
-        where TUserRole : IdentityUserRole
-        where TRole : IdentityRole
+        where TUserRole : IUserRole
+        where TRole : RoleBase
     {
         /// <summary>
         /// 数据库操作实例。
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        protected readonly IDbContext<Permission> db;
+        protected readonly IDbContext<Permission> _db;
         private readonly IDbContext<PermissionInRole> _prdb;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
@@ -37,7 +38,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="rdb">角色数据库操作接口。</param>
         protected PermissionManager(IDbContext<Permission> db, IDbContext<PermissionInRole> prdb, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IDbContext<TRole> rdb)
         {
-            db = db;
+            _db = db;
             _prdb = prdb;
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
@@ -141,7 +142,7 @@ namespace Mozlite.Extensions.Security.Permissions
             if (!LoadPermissions().TryGetValue(permissionName, out var permission))
             {
                 permission = new Permission { Name = permissionName };
-                db.Create(permission);
+                _db.Create(permission);
             }
             return permission;
         }
@@ -157,7 +158,7 @@ namespace Mozlite.Extensions.Security.Permissions
             if (!permissions.TryGetValue(permissionName, out var permission))
             {
                 permission = new Permission { Name = permissionName };
-                await db.CreateAsync(permission);
+                await _db.CreateAsync(permission);
             }
             return permission;
         }
@@ -171,9 +172,9 @@ namespace Mozlite.Extensions.Security.Permissions
         {
             bool result;
             if ((await LoadPermissionsAsync()).ContainsKey(permission.Name))
-                result = await db.UpdateAsync(x => x.Name == permission.Name, new { permission.Description });
+                result = await _db.UpdateAsync(x => x.Name == permission.Name, new { permission.Description });
             else
-                result = await db.CreateAsync(permission);
+                result = await _db.CreateAsync(permission);
             if (result) _cache.Remove(typeof(Permission));
             return result;
         }
@@ -187,9 +188,9 @@ namespace Mozlite.Extensions.Security.Permissions
         {
             bool result;
             if (LoadPermissions().ContainsKey(permission.Name))
-                result = db.Update(x => x.Name == permission.Name, new { permission.Description });
+                result = _db.Update(x => x.Name == permission.Name, new { permission.Description });
             else
-                result = db.Create(permission);
+                result = _db.Create(permission);
             if (result) _cache.Remove(typeof(Permission));
             return result;
         }
@@ -200,7 +201,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// </summary>
         public async Task RefreshAdministratorsAsync()
         {
-            var role = await _rdb.FindAsync(x => x.NormalizedRoleName == Administrator);
+            var role = await _rdb.FindAsync(x => x.NormalizedName == Administrator);
             var permissions = await LoadPermissionsAsync();
             foreach (var permission in permissions.Values)
             {
@@ -215,7 +216,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// </summary>
         public void RefreshAdministrators()
         {
-            var role = _rdb.Find(x => x.NormalizedRoleName == Administrator);
+            var role = _rdb.Find(x => x.NormalizedName == Administrator);
             var permissions = LoadPermissions().Values;
             foreach (var permission in permissions)
             {
@@ -230,7 +231,7 @@ namespace Mozlite.Extensions.Security.Permissions
             return _cache.GetOrCreate(typeof(Permission), ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var permissions = db.Fetch();
+                var permissions = _db.Fetch();
                 return permissions.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
             });
         }
@@ -240,7 +241,7 @@ namespace Mozlite.Extensions.Security.Permissions
             return await _cache.GetOrCreateAsync(typeof(Permission), async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var permissions = await db.FetchAsync();
+                var permissions = await _db.FetchAsync();
                 return permissions.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
             });
         }

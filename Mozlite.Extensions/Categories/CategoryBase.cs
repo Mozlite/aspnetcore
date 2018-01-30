@@ -1,4 +1,7 @@
-﻿namespace Mozlite.Extensions.Categories
+﻿using System.ComponentModel.DataAnnotations;
+using Mozlite.Extensions.Data;
+
+namespace Mozlite.Extensions.Categories
 {
     /// <summary>
     /// 分类Id。
@@ -8,12 +11,14 @@
         /// <summary>
         /// 获取或设置唯一Id。
         /// </summary>
-        public int Id { get; set; }
+        [Key]
+        [Identity]
+        public virtual int Id { get; set; }
 
         /// <summary>
         /// 分类名称。
         /// </summary>
         [Size(64)]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
     }
 }

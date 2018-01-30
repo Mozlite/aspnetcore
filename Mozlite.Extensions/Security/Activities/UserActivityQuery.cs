@@ -1,4 +1,5 @@
 ﻿using Mozlite.Data;
+using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -6,7 +7,7 @@ namespace Mozlite.Extensions.Security.Activities
     /// 用户活动查询实例。
     /// </summary>
     public abstract class UserActivityQuery<TUser> : QueryBase<UserActivity>
-        where TUser : IdentityUser
+        where TUser : UserBase
     {
         /// <summary>
         /// 用户Id。
@@ -31,11 +32,11 @@ namespace Mozlite.Extensions.Security.Activities
         {
             context.InnerJoin<TUser>((a, u) => a.UserId == u.UserId)
                 .Select()
-                .Select<TUser>(x => new { x.UserName, x.NickName });
+                .Select<TUser>(x => new { x.UserName, x.NormalizedUserName });
             if (UserId > 0)
                 context.Where(x => x.UserId == UserId);
             if (!string.IsNullOrEmpty(Name))
-                context.Where<TUser>(x => x.UserName.Contains(Name) || x.NickName.Contains(Name));
+                context.Where<TUser>(x => x.UserName.Contains(Name) || x.NormalizedUserName.Contains(Name));
             if (!string.IsNullOrEmpty(IP))
                 context.Where(x => x.IPAdress == IP);
             context.OrderByDescending(x => x.Id);

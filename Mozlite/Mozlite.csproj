@@ -24,7 +24,6 @@
     <ProjectReference Include="..\Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj" />
     <ProjectReference Include="..\Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj" />
     <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
-    <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
     <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
   </ItemGroup>
 

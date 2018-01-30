@@ -2,7 +2,6 @@
 using Mozlite.Data;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Mozlite.Extensions.Sites;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Settings
@@ -12,40 +11,34 @@ namespace Mozlite.Extensions.Settings
     /// </summary>
     public class SettingsManager : ISettingsManager
     {
-        private readonly IDbContext<SettingsAdapter> _db;
-        private readonly ISiteManager _siteManager;
+        /// <summary>
+        /// 数据库操作接口。
+        /// </summary>
+        protected IDbContext<SettingsAdapter> Context { get; }
         private readonly IMemoryCache _cache;
 
         /// <summary>
         /// 初始化类<see cref="SettingsManager"/>。
         /// </summary>
         /// <param name="db">数据库操作接口。</param>
-        /// <param name="siteManager">网站配置管理。</param>
         /// <param name="cache">缓存接口。</param>
-        public SettingsManager(IDbContext<SettingsAdapter> db, ISiteManager siteManager, IMemoryCache cache)
+        public SettingsManager(IDbContext<SettingsAdapter> db, IMemoryCache cache)
         {
-            _db = db;
-            _siteManager = siteManager;
+            Context = db;
             _cache = cache;
         }
-
-        private string GetCacheKey(string key, out int siteId)
-        {
-            siteId = _siteManager.GetDomain().SiteId;
-            return $"sites[{siteId}][{key}]";
-        }
-
+        
         /// <summary>
         /// 获取配置字符串。
         /// </summary>
         /// <param name="key">配置唯一键。</param>
         /// <returns>返回当前配置字符串实例。</returns>
-        public string GetSettings(string key)
+        public virtual string GetSettings(string key)
         {
-            return _cache.GetOrCreate(GetCacheKey(key, out var settingId), entry =>
+            return _cache.GetOrCreate(key, entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return _db.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
+                return Context.Find(x => x.SettingKey == key)?.SettingValue;
             });
         }
 
@@ -55,12 +48,12 @@ namespace Mozlite.Extensions.Settings
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <param name="key">配置唯一键。</param>
         /// <returns>返回网站配置实例。</returns>
-        public TSiteSettings GetSettings<TSiteSettings>(string key) where TSiteSettings : class, new()
+        public virtual TSiteSettings GetSettings<TSiteSettings>(string key) where TSiteSettings : class, new()
         {
-            return _cache.GetOrCreate(GetCacheKey(key, out var settingId), entry =>
+            return _cache.GetOrCreate(key, entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = _db.Find(x => x.SettingKey == key && x.SiteId == settingId)?.SettingValue;
+                var settings = Context.Find(x => x.SettingKey == key)?.SettingValue;
                 if (settings == null)
                     return new TSiteSettings();
                 return JsonConvert.DeserializeObject<TSiteSettings>(settings);
@@ -72,7 +65,7 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <returns>返回网站配置实例。</returns>
-        public TSiteSettings GetSettings<TSiteSettings>() where TSiteSettings : class, new()
+        public virtual TSiteSettings GetSettings<TSiteSettings>() where TSiteSettings : class, new()
         {
             return GetSettings<TSiteSettings>(typeof(TSiteSettings).FullName);
         }
@@ -82,12 +75,12 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <param name="key">配置唯一键。</param>
         /// <returns>返回当前配置字符串实例。</returns>
-        public Task<string> GetSettingsAsync(string key)
+        public virtual Task<string> GetSettingsAsync(string key)
         {
-            return _cache.GetOrCreateAsync(GetCacheKey(key, out var settingId), async entry =>
+            return _cache.GetOrCreateAsync(key, async entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = await _db.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
+                var settings = await Context.FindAsync(x => x.SettingKey == key);
                 return settings?.SettingValue;
             });
         }
@@ -98,12 +91,12 @@ namespace Mozlite.Extensions.Settings
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <param name="key">配置唯一键。</param>
         /// <returns>返回网站配置实例。</returns>
-        public Task<TSiteSettings> GetSettingsAsync<TSiteSettings>(string key) where TSiteSettings : class, new()
+        public virtual Task<TSiteSettings> GetSettingsAsync<TSiteSettings>(string key) where TSiteSettings : class, new()
         {
-            return _cache.GetOrCreateAsync(GetCacheKey(key, out var settingId), async entry =>
+            return _cache.GetOrCreateAsync(key, async entry =>
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var settings = await _db.FindAsync(x => x.SettingKey == key && x.SiteId == settingId);
+                var settings = await Context.FindAsync(x => x.SettingKey == key);
                 if (settings?.SettingValue == null)
                     return new TSiteSettings();
                 return JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingValue);
@@ -115,7 +108,7 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <returns>返回网站配置实例。</returns>
-        public Task<TSiteSettings> GetSettingsAsync<TSiteSettings>() where TSiteSettings : class, new()
+        public virtual Task<TSiteSettings> GetSettingsAsync<TSiteSettings>() where TSiteSettings : class, new()
         {
             return GetSettingsAsync<TSiteSettings>(typeof(TSiteSettings).FullName);
         }
@@ -125,7 +118,7 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <param name="settings">网站配置实例。</param>
-        public bool SaveSettings<TSiteSettings>(TSiteSettings settings) where TSiteSettings : class, new()
+        public virtual bool SaveSettings<TSiteSettings>(TSiteSettings settings) where TSiteSettings : class, new()
         {
             return SaveSettings(typeof(TSiteSettings).FullName, settings);
         }
@@ -136,7 +129,7 @@ namespace Mozlite.Extensions.Settings
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <param name="key">配置唯一键。</param>
         /// <param name="settings">网站配置实例。</param>
-        public bool SaveSettings<TSiteSettings>(string key, TSiteSettings settings)
+        public virtual bool SaveSettings<TSiteSettings>(string key, TSiteSettings settings)
         {
             return SaveSettings(key, JsonConvert.SerializeObject(settings));
         }
@@ -146,28 +139,28 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <param name="key">配置唯一键。</param>
         /// <param name="settings">网站配置实例。</param>
-        public bool SaveSettings(string key, string settings)
+        public virtual bool SaveSettings(string key, string settings)
         {
-            var cacheKey = GetCacheKey(key, out var settingId);
-            var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings, SiteId = settingId };
-            if (_db.Any(x => x.SettingKey == key && x.SiteId == settingId))
+            var cacheKey = key;
+            var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings };
+            if (Context.Any(x => x.SettingKey == key))
             {
-                if (_db.Update(adapter))
+                if (Context.Update(adapter))
                 {
                     _cache.Remove(cacheKey);
                     return true;
                 }
             }
-            return _db.Create(adapter);
+            return Context.Create(adapter);
         }
 
         /// <summary>
         /// 刷新缓存。
         /// </summary>
         /// <param name="key">配置唯一键。</param>
-        public void Refresh(string key)
+        public virtual void Refresh(string key)
         {
-            _cache.Remove(GetCacheKey(key, out _));
+            _cache.Remove(key);
         }
     }
 }

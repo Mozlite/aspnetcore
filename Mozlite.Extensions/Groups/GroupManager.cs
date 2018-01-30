@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
@@ -40,18 +42,20 @@ namespace Mozlite.Extensions.Groups
         /// 判断是否已经存在。
         /// </summary>
         /// <param name="category">分类实例。</param>
+        /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回判断结果。</returns>
-        public override async Task<bool> IsDuplicatedAsync(TGroup category)
+        public override async Task<bool> IsDuplicatedAsync(TGroup category, CancellationToken cancellationToken = default)
         {
-            var groups = await FetchAsync();
+            var groups = await FetchAsync(cancellationToken: cancellationToken);
             return groups.Any(x => x.ParentId == category.ParentId && x.Id != category.Id && x.Name == category.Name);
         }
 
         /// <summary>
         /// 加载所有的分类。
         /// </summary>
+        /// <param name="expression">条件表达式。</param>
         /// <returns>返回分类列表。</returns>
-        public override IEnumerable<TGroup> Fetch()
+        public override IEnumerable<TGroup> Fetch(Expression<Predicate<TGroup>> expression = null)
         {
             return _cache.GetOrCreate(typeof(TGroup), ctx =>
             {
@@ -71,8 +75,10 @@ namespace Mozlite.Extensions.Groups
         /// <summary>
         /// 加载所有的分类。
         /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回分类列表。</returns>
-        public override async Task<IEnumerable<TGroup>> FetchAsync()
+        public override async Task<IEnumerable<TGroup>> FetchAsync(Expression<Predicate<TGroup>> expression = null, CancellationToken cancellationToken = default)
         {
             return await _cache.GetOrCreateAsync(typeof(TGroup), async ctx =>
             {

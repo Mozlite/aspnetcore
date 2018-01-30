@@ -1,35 +1,62 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozlite.Extensions.Security
 {
     /// <summary>
-    /// 安全扩展类型。
+    /// 用户扩展类。
     /// </summary>
     public static class SecurityExtensions
     {
         /// <summary>
-        /// 判断当前用户是否符合要求。
+        /// 获取用户的IP地址。
         /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="userId">当前用户Id。</param>
-        /// <returns>返回判断结果。</returns>
-        public static bool IsCurrent(this ClaimsPrincipal user, int userId)
+        /// <param name="httpContext">当前HTTP上下文。</param>
+        /// <returns>返回当前用户IP地址。</returns>
+        public static string GetUserAddress(this HttpContext httpContext)
         {
-            if (userId <= 0)
-                return false;
-            return user.IsInRole(IdentitySettings.Administrator) ||
-                   user.FindFirstValue(ClaimTypes.NameIdentifier) ==
-                   userId.ToString();
+            var ipAddress = httpContext.Connection?.RemoteIpAddress?.ToString();
+            if (ipAddress != null)
+                return ipAddress;
+            var xff = httpContext.Request.Headers["x-forwarded-for"];
+            if (xff.Count > 0)
+            {
+                ipAddress = xff.FirstOrDefault();
+                return ipAddress?.Split(':').FirstOrDefault();
+            }
+            return null;
         }
 
         /// <summary>
-        /// 判断当前用户是否位管理员。
+        /// 获取当前登入用户的Id。
         /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <returns>返回判断结果。</returns>
-        public static bool IsAdministrator(this ClaimsPrincipal user)
+        /// <param name="claims">当前用户接口实例。</param>
+        /// <returns>返回用户Id，如果未登入则返回0。</returns>
+        public static int GetUserId(this ClaimsPrincipal claims)
         {
-            return user.IsInRole(IdentitySettings.Administrator);
+            int.TryParse(claims.FindFirstValue(ClaimTypes.NameIdentifier), out var userId);
+            return userId;
+        }
+
+        /// <summary>
+        /// 获取当前用户的用户名称。
+        /// </summary>
+        /// <param name="claims">当前用户接口实例。</param>
+        /// <returns>返回用户名称，如果未登入则返回“Anonymous”。</returns>
+        public static string GetUserName(this ClaimsPrincipal claims)
+        {
+            return claims.FindFirstValue(ClaimTypes.Name);
+        }
+
+        /// <summary>
+        /// 获取当前用户的用户名称。
+        /// </summary>
+        /// <param name="claims">当前用户接口实例。</param>
+        /// <returns>返回用户名称，如果未登入则返回“Anonymous”。</returns>
+        public static string GetRoleName(this ClaimsPrincipal claims)
+        {
+            return claims.FindFirstValue(ClaimTypes.Role);
         }
     }
 }

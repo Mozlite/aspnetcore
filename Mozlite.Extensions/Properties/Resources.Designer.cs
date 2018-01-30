@@ -160,7 +160,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 会员 的本地化字符串。
+        ///   查找类似 普通会员 的本地化字符串。
         /// </summary>
         internal static string Register {
             get {

@@ -151,7 +151,7 @@
     <value>很抱歉，更新“{0}”失败了。</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>会员</value>
+    <value>普通会员</value>
   </data>
   <data name="TaskExecuteError" xml:space="preserve">
     <value>[服务]{0}执行错误：{1}。</value>
