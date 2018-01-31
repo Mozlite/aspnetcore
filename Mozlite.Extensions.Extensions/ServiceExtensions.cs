@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions
 {
@@ -17,6 +18,17 @@ namespace Mozlite.Extensions
             where TSiteContextAccessor : class, ISiteContextAccessorBase, new()
         {
             return services.AddSingleton<ISiteContextAccessorBase, TSiteContextAccessor>();
+        }
+
+        public static IApplicationBuilder UseSitable(this IApplicationBuilder app)
+        {
+            return app.Use((context, next) =>
+            {
+                var siteContextAccessor = context.RequestServices.GetRequiredService<ISiteContextAccessorBase>();
+                if (siteContextAccessor.SiteContext != null)
+                    return next();
+                return null;
+            });
         }
     }
 }
