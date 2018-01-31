@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Mozlite.Extensions;
+using Mozlite.Extensions.Security;
 
 namespace Mozlite.Mvc
 {

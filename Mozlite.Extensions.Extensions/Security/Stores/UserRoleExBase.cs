@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Mozlite.Extensions.Data;
 
-namespace Mozlite.Extensions.Categories
+namespace Mozlite.Extensions.Security.Stores
 {
     /// <summary>
-    /// 分类Id。
+    /// 用户和用户组。
     /// </summary>
-    public abstract class CategoryExBase : CategoryBase, IIdSiteObject
+    public abstract class UserRoleExBase : UserRoleBase, IUserRoleEx
     {
         /// <summary>
         /// 获取当前站Id。
         /// </summary>
+        [Key]
         public int SiteId { get; set; }
     }
 }

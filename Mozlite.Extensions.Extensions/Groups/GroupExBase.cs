@@ -7,8 +7,8 @@ namespace Mozlite.Extensions.Groups
     /// <summary>
     /// 分组基类。
     /// </summary>
-    public abstract class GroupBase<TGroup> : CategoryExBase
-        where TGroup : GroupBase<TGroup>
+    public abstract class GroupExBase<TGroup> : CategoryExBase
+        where TGroup : GroupExBase<TGroup>
     {
         private readonly List<TGroup> _groups = new List<TGroup>();
 

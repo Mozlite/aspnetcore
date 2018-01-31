@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Mozlite.Data;
@@ -39,6 +38,18 @@ namespace Mozlite.Extensions.Data
         }
 
         /// <summary>
+        /// 附加多站Id。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回附加后得条件表达式。</returns>
+        protected virtual Expression<Predicate<TModel>> AttachSitable(Expression<Predicate<TModel>> expression)
+        {
+            if (expression == null)
+                return x => x.SiteId == Site.SiteId;
+            return expression.AndAlso(x => x.SiteId == Site.SiteId);
+        }
+
+        /// <summary>
         /// 保存对象实例。
         /// </summary>
         /// <param name="model">模型实例对象。</param>
@@ -72,6 +83,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回更新结果。</returns>
         public virtual DataResult Update(Expression<Predicate<TModel>> expression, object satement)
         {
+            expression = AttachSitable(expression);
             return DataResult.FromResult(Context.Update(expression, satement), DataAction.Updated);
         }
 
@@ -82,6 +94,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回删除结果。</returns>
         public virtual DataResult Delete(Expression<Predicate<TModel>> expression)
         {
+            expression = AttachSitable(expression);
             return DataResult.FromResult(Context.Delete(expression), DataAction.Deleted);
         }
 
@@ -92,7 +105,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回删除结果。</returns>
         public virtual DataResult Delete(TKey id)
         {
-            return DataResult.FromResult(Context.Delete(id), DataAction.Deleted);
+            return DataResult.FromResult(Context.Delete(x => x.Id.Equals(id) && x.SiteId == Site.SiteId), DataAction.Deleted);
         }
 
         /// <summary>
@@ -102,7 +115,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回当前模型实例。</returns>
         public virtual TModel Find(TKey id)
         {
-            return Context.Find(id);
+            return Context.Find(x => x.Id.Equals(id) && x.SiteId == Site.SiteId);
         }
 
         /// <summary>
@@ -112,6 +125,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回当前模型实例。</returns>
         public virtual TModel Find(Expression<Predicate<TModel>> expression)
         {
+            expression = AttachSitable(expression);
             return Context.Find(expression);
         }
 
@@ -122,6 +136,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回模型实例列表。</returns>
         public virtual IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null)
         {
+            expression = AttachSitable(expression);
             return Context.Fetch(expression);
         }
 
@@ -133,6 +148,8 @@ namespace Mozlite.Extensions.Data
         /// <param name="cancellationToken">取消标识。</param>
         public virtual async Task<DataResult> SaveAsync(TModel model, CancellationToken cancellationToken = default)
         {
+            if (model.SiteId == 0)
+                model.SiteId = Site.SiteId;
             if (await IsDuplicatedAsync(model, cancellationToken))
                 return DataAction.Duplicate;
             if (Context.Any(model.Id))
@@ -160,6 +177,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回更新结果。</returns>
         public virtual async Task<DataResult> UpdateAsync(Expression<Predicate<TModel>> expression, object satement, CancellationToken cancellationToken = default)
         {
+            expression = AttachSitable(expression);
             return DataResult.FromResult(await Context.UpdateAsync(expression, satement, cancellationToken), DataAction.Updated);
         }
 
@@ -171,6 +189,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回删除结果。</returns>
         public virtual async Task<DataResult> DeleteAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
         {
+            expression = AttachSitable(expression);
             return DataResult.FromResult(await Context.DeleteAsync(expression, cancellationToken), DataAction.Deleted);
         }
 
@@ -182,7 +201,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回删除结果。</returns>
         public virtual async Task<DataResult> DeleteAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            return DataResult.FromResult(await Context.DeleteAsync(id, cancellationToken), DataAction.Deleted);
+            return DataResult.FromResult(await Context.DeleteAsync(x => x.Id.Equals(id) && x.SiteId == Site.SiteId, cancellationToken), DataAction.Deleted);
         }
 
         /// <summary>
@@ -193,7 +212,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回当前模型实例。</returns>
         public virtual Task<TModel> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            return Context.FindAsync(id, cancellationToken);
+            return Context.FindAsync(x => x.Id.Equals(id) && x.SiteId == Site.SiteId, cancellationToken);
         }
 
         /// <summary>
@@ -204,6 +223,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回当前模型实例。</returns>
         public virtual Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
         {
+            expression = AttachSitable(expression);
             return Context.FindAsync(expression, cancellationToken);
         }
 
@@ -215,6 +235,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回模型实例列表。</returns>
         public virtual Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
+            expression = AttachSitable(expression);
             return Context.FetchAsync(expression, cancellationToken);
         }
 
@@ -232,7 +253,7 @@ namespace Mozlite.Extensions.Data
         /// </summary>
         /// <param name="query">查询实例。</param>
         /// <returns>返回分页实例列表。</returns>
-        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TModel>
+        TQuery IObjectExManager<TModel, TKey>.Load<TQuery>(TQuery query)
         {
             return Context.Load(query);
         }
@@ -243,7 +264,28 @@ namespace Mozlite.Extensions.Data
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回分页实例列表。</returns>
-        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>
+        Task<TQuery> IObjectExManager<TModel, TKey>.LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken)
+        {
+            return Context.LoadAsync(query, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 分页获取实例列表。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回分页实例列表。</returns>
+        TQuery IObjectManager<TModel, TKey>.Load<TQuery>(TQuery query)
+        {
+            return Context.Load(query);
+        }
+
+        /// <summary>
+        /// 分页获取实例列表。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回分页实例列表。</returns>
+        Task<TQuery> IObjectManager<TModel, TKey>.LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken)
         {
             return Context.LoadAsync(query, cancellationToken: cancellationToken);
         }
@@ -257,14 +299,6 @@ namespace Mozlite.Extensions.Data
         where TModel : IIdSiteObject
     {
         /// <summary>
-        /// 初始化类<see cref="ObjectExManager{TModel}"/>。
-        /// </summary>
-        /// <param name="db">数据库操作实例。</param>
-        protected ObjectExManager(IDbContext<TModel> db) : base(db)
-        {
-        }
-
-        /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
         /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
@@ -272,7 +306,7 @@ namespace Mozlite.Extensions.Data
         public virtual DataResult Delete(string ids)
         {
             var intIds = ids.SplitToInt32();
-            return Delete(x => x.Id.Included(intIds));
+            return Delete(x => x.Id.Included(intIds) && x.SiteId == Site.SiteId);
         }
 
         /// <summary>
@@ -284,7 +318,17 @@ namespace Mozlite.Extensions.Data
         public Task<DataResult> DeleteAsync(string ids, CancellationToken cancellationToken = default)
         {
             var intIds = ids.SplitToInt32();
-            return DeleteAsync(x => x.Id.Included(intIds), cancellationToken);
+            return DeleteAsync(x => x.Id.Included(intIds) && x.SiteId == Site.SiteId, cancellationToken);
+        }
+
+        /// <summary>
+        /// 初始化类<see cref="ObjectExManager{TModel}"/>。
+        /// </summary>
+        /// <param name="db">数据库操作实例。</param>
+        /// <param name="siteContextAccessor">当前网站访问接口。</param>
+        protected ObjectExManager(IDbContext<TModel> db, ISiteContextAccessorBase siteContextAccessor)
+            : base(db, siteContextAccessor)
+        {
         }
     }
 }

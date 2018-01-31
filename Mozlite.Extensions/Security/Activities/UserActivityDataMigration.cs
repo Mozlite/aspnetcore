@@ -5,7 +5,7 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 用户活动数据迁移。
     /// </summary>
-    public class UserActivityDataMiration : DataMigration
+    public class UserActivityDataMigration : DataMigration
     {
         /// <summary>
         /// 当模型建立时候构建的表格实例。

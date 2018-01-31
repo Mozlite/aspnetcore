@@ -23,6 +23,9 @@ namespace Mozlite.Extensions.Data
                     .Column(x => x.SiteId);
                 Create(table);
             });
+
+            //建立索引
+            builder.CreateIndex<TObject>(x => x.SiteId, true);
         }
 
         /// <summary>

@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Mozlite.Data;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
-using Mozlite.Extensions.Data;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
+using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Categories
 {
@@ -14,22 +14,14 @@ namespace Mozlite.Extensions.Categories
     /// 缓存分类管理实现类基类。
     /// </summary>
     /// <typeparam name="TCategory">分类类型。</typeparam>
-    public abstract class CachableCategoryManager<TCategory> : CategoryManager<TCategory>,
-        ICachableCategoryManager<TCategory>
-        where TCategory : CategoryBase
+    public abstract class CachableCategoryExManager<TCategory> : CategoryExManager<TCategory>,
+        ICachableCategoryExManager<TCategory>
+        where TCategory : CategoryExBase
     {
-        private readonly IMemoryCache _cache;
-
         /// <summary>
-        /// 初始化类<see cref="CachableCategoryManager{TCategory}"/>。
+        /// 缓存实例。
         /// </summary>
-        /// <param name="db">数据库操作接口实例。</param>
-        /// <param name="cache">缓存接口。</param>
-        protected CachableCategoryManager(IDbContext<TCategory> db, IMemoryCache cache)
-            : base(db)
-        {
-            _cache = cache;
-        }
+        protected IMemoryCache Cache { get; }
 
         /// <summary>
         /// 根据结果刷新缓存。
@@ -39,8 +31,22 @@ namespace Mozlite.Extensions.Categories
         protected virtual DataResult RefreshCache(DataResult result)
         {
             if (result.Succeed())
-                _cache.Remove(typeof(TCategory));
+                Cache.Remove(CacheKey);
             return result;
+        }
+
+        private Tuple<int, Type> _cacheKey;
+        /// <summary>
+        /// 缓存键。
+        /// </summary>
+        protected Tuple<int, Type> CacheKey
+        {
+            get
+            {
+                if (_cacheKey == null)
+                    _cacheKey = new Tuple<int, Type>(Site.SiteId, typeof(TCategory));
+                return _cacheKey;
+            }
         }
 
         /// <summary>
@@ -71,8 +77,7 @@ namespace Mozlite.Extensions.Categories
         /// <returns>返回判断结果。</returns>
         public override bool IsDuplicated(TCategory category)
         {
-            var categories = Fetch();
-            return categories.Any(x => x.Id != category.Id && x.Name == category.Name);
+            return Categories.Any(x => x.Id != category.Id && x.SiteId == Site.SiteId && x.Name == category.Name);
         }
 
         /// <summary>
@@ -81,11 +86,10 @@ namespace Mozlite.Extensions.Categories
         /// <param name="category">分类实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回判断结果。</returns>
-        public override async Task<bool> IsDuplicatedAsync(TCategory category, CancellationToken cancellationToken = default)
+        public override Task<bool> IsDuplicatedAsync(TCategory category, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var categories = await FetchAsync(cancellationToken: cancellationToken);
-            return categories.Any(x => x.Id != category.Id && x.Name == category.Name);
+            return Task.FromResult(Categories.Any(x => x.Id != category.Id && x.SiteId == Site.SiteId && x.Name == category.Name));
         }
 
         /// <summary>
@@ -126,10 +130,10 @@ namespace Mozlite.Extensions.Categories
         /// <returns>返回分类列表。</returns>
         public override IEnumerable<TCategory> Fetch(Expression<Predicate<TCategory>> expression = null)
         {
-            var categories = _cache.GetOrCreate(typeof(TCategory), ctx =>
+            var categories = Cache.GetOrCreate(CacheKey, ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return Context.Fetch();
+                return Context.Fetch(x => x.SiteId == Site.SiteId);
             });
             return categories.Filter(expression);
         }
@@ -143,10 +147,10 @@ namespace Mozlite.Extensions.Categories
         public override async Task<IEnumerable<TCategory>> FetchAsync(Expression<Predicate<TCategory>> expression = null, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var categories = await _cache.GetOrCreateAsync(typeof(TCategory), async ctx =>
+            var categories = await Cache.GetOrCreateAsync(CacheKey, async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                return await Context.FetchAsync(cancellationToken: cancellationToken);
+                return await Context.FetchAsync(x => x.SiteId == Site.SiteId, cancellationToken);
             });
             return categories.Filter(expression);
         }
@@ -178,5 +182,17 @@ namespace Mozlite.Extensions.Categories
         /// 当前分类实例。
         /// </summary>
         public override IEnumerable<TCategory> Categories => Fetch();
+
+        /// <summary>
+        /// 初始化类<see cref="CategoryExManager{TCategory}"/>。
+        /// </summary>
+        /// <param name="db">数据库操作实例。</param>
+        /// <param name="siteContextAccessor">当前网站访问接口。</param>
+        /// <param name="cache">缓存接口。</param>
+        protected CachableCategoryExManager(IDbContext<TCategory> db, ISiteContextAccessorBase siteContextAccessor, IMemoryCache cache)
+            : base(db, siteContextAccessor)
+        {
+            Cache = cache;
+        }
     }
 }

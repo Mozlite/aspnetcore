@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Security\Permissions\" />
     <Folder Include="Tasks\" />
   </ItemGroup>
 
