@@ -1,4 +1,5 @@
-﻿using Mozlite.Extensions.Security.Stores;
+﻿using System.Threading.Tasks;
+using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
 {
@@ -15,7 +16,19 @@ namespace Mozlite.Extensions.Security
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
+        /// <summary>
+        /// 通过用户Id查询用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例。</returns>
+        Task<TUser> FindByIdAsync(int userId);
 
+        /// <summary>
+        /// 通过用户Id查询用户实例。
+        /// </summary>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回用户实例。</returns>
+        Task<TUser> FindByNameAsync(string userName);
     }
 
     /// <summary>

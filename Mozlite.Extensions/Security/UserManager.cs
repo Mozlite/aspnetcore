@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -51,6 +52,26 @@ namespace Mozlite.Extensions.Security
         /// <param name="key">原有键值。</param>
         /// <returns>返回正常化后的字符串。</returns>
         public virtual string NormalizeKey(string key) => Manager.NormalizeKey(key);
+
+        /// <summary>
+        /// 通过用户Id查询用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例。</returns>
+        public virtual Task<TUser> FindByIdAsync(int userId)
+        {
+            return Store.FindUserAsync(userId);
+        }
+
+        /// <summary>
+        /// 通过用户Id查询用户实例。
+        /// </summary>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回用户实例。</returns>
+        public virtual Task<TUser> FindByNameAsync(string userName)
+        {
+            return Store.FindByNameAsync(userName);
+        }
     }
 
     /// <summary>

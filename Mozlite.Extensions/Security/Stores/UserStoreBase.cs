@@ -279,7 +279,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        protected abstract Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken);
+        public abstract Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// 获取用户登陆信息。

@@ -99,7 +99,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        protected override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken)
+        public override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return UserContext.FindAsync(x => x.UserId == userId && x.SiteId == Site.SiteId, cancellationToken);
         }

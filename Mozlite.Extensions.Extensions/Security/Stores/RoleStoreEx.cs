@@ -30,7 +30,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 缓存键。
         /// </summary>
-        protected override object CacheKey => new Tuple<int, Type>(Site.SiteId, typeof(TRole));
+        public override object CacheKey => new Tuple<int, Type>(Site.SiteId, typeof(TRole));
 
         /// <summary>
         /// 添加用户角色。
@@ -75,12 +75,12 @@ namespace Mozlite.Extensions.Security.Stores
             Cache.Remove(CacheKey);
             return IdentityResult.Success;
         }
-        
+
         /// <summary>
         /// 获取所有角色。
         /// </summary>
         /// <returns>返回角色列表。</returns>
-        protected override async Task<IEnumerable<TRole>> LoadRolesAsync()
+        public override async Task<IEnumerable<TRole>> LoadRolesAsync()
         {
             return await Cache.GetOrCreateAsync(CacheKey, async ctx =>
             {
@@ -93,7 +93,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取所有角色。
         /// </summary>
         /// <returns>返回角色列表。</returns>
-        protected override IEnumerable<TRole> LoadRoles()
+        public override IEnumerable<TRole> LoadRoles()
         {
             return Cache.GetOrCreate(CacheKey, ctx =>
             {

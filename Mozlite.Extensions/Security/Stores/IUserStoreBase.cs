@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Stores
@@ -33,6 +35,24 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         IDbContext<TUserToken> UserTokenContext { get; }
 
+        /// <summary>
+        /// 通过用户验证名称查询用户实例。
+        /// </summary>
+        /// <param name="normalizedUserName">当前验证名称。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        Task<TUser> FindByNameAsync(string normalizedUserName,
+           CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 通过Id获取用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户实例。</returns>
+        Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
     }
     /// <summary>
     /// 用户存储接口。

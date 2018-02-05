@@ -229,5 +229,10 @@ namespace Mozlite.Extensions.Security.Stores
                 return RoleContext.Fetch();
             });
         }
+
+        /// <summary>
+        /// 获取当前角色可查询实例。
+        /// </summary>
+        public override System.Linq.IQueryable<TRole> Roles => LoadRoles().AsQueryable();
     }
 }
