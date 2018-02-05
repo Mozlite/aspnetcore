@@ -44,6 +44,13 @@ namespace Mozlite.Extensions.Security
             SignInManager = signInManager;
             Store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
         }
+        
+        /// <summary>
+        /// 正常实例化键。
+        /// </summary>
+        /// <param name="key">原有键值。</param>
+        /// <returns>返回正常化后的字符串。</returns>
+        public virtual string NormalizeKey(string key) => Manager.NormalizeKey(key);
     }
 
     /// <summary>
