@@ -1,10 +1,10 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Mozlite.Extensions.Security.Activities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Security.Activities;
 
 namespace Mozlite.Extensions.Security
 {

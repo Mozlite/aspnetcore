@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Mozlite.Extensions.Sites;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions
 {

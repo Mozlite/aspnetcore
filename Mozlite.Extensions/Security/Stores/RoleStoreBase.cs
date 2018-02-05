@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace Mozlite.Extensions.Security.Stores
@@ -114,7 +114,21 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="id">角色Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前角色实例对象。</returns>
-        public abstract Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
+        public virtual async Task<TRole> FindByIdAsync(string id,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (int.TryParse(id, out var roleId))
+                return await FindByIdAsync(roleId, cancellationToken);
+            return null;
+        }
+
+        /// <summary>
+        /// 通过ID获取角色实例。
+        /// </summary>
+        /// <param name="id">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回当前角色实例对象。</returns>
+        public abstract Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// 通过角色名称获取角色实例。

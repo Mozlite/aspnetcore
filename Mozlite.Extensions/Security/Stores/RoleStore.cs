@@ -16,7 +16,9 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserRole">用户角色类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public class RoleStore<TRole, TUserRole, TRoleClaim> : RoleStoreBase<TRole, TUserRole, TRoleClaim>
+    public abstract class RoleStore<TRole, TUserRole, TRoleClaim>
+        : RoleStoreBase<TRole, TUserRole, TRoleClaim>,
+        IRoleStoreBase<TRole, TUserRole, TRoleClaim>
         where TRole : RoleBase
         where TUserRole : IUserRole
         where TRoleClaim : RoleClaimBase, new()
@@ -24,28 +26,28 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 缓存实例。
         /// </summary>
-        protected IMemoryCache Cache { get; }
+        public IMemoryCache Cache { get; }
 
         /// <summary>
         /// 角色数据库操作接口。
         /// </summary>
-        protected IDbContext<TRole> RoleContext { get; }
+        public IDbContext<TRole> RoleContext { get; }
 
         /// <summary>
         /// 用户角色数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserRole> UserRoleContext { get; }
+        public IDbContext<TUserRole> UserRoleContext { get; }
 
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        protected IDbContext<TRoleClaim> RoleClaimContext { get; }
+        public IDbContext<TRoleClaim> RoleClaimContext { get; }
 
         private static readonly Type _cacheKey = typeof(TRole);
         /// <summary>
         /// 缓存键。
         /// </summary>
-        protected virtual object CacheKey => _cacheKey;
+        public virtual object CacheKey => _cacheKey;
 
         /// <summary>
         /// 初始化类<see cref="RoleStore{TRole,TUserRole,TRoleClaim}"/>。
@@ -55,7 +57,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
         /// <param name="cache">缓存接口。</param>
-        public RoleStore(IdentityErrorDescriber describer,
+        protected RoleStore(IdentityErrorDescriber describer,
             IDbContext<TRole> roleContext,
             IDbContext<TUserRole> userRoleContext,
             IDbContext<TRoleClaim> roleClaimContext,
@@ -127,12 +129,10 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="id">角色Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前角色实例对象。</returns>
-        public override async Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!int.TryParse(id, out var roleId))
-                return null;
             var roles = await LoadRolesAsync();
-            return roles.SingleOrDefault(x => x.RoleId == roleId);
+            return roles.SingleOrDefault(x => x.RoleId == id);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取所有角色。
         /// </summary>
         /// <returns>返回角色列表。</returns>
-        protected virtual async Task<IEnumerable<TRole>> LoadRolesAsync()
+        public virtual async Task<IEnumerable<TRole>> LoadRolesAsync()
         {
             return await Cache.GetOrCreateAsync(CacheKey, async ctx =>
             {
@@ -221,7 +221,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取所有角色。
         /// </summary>
         /// <returns>返回角色列表。</returns>
-        protected virtual IEnumerable<TRole> LoadRoles()
+        public virtual IEnumerable<TRole> LoadRoles()
         {
             return Cache.GetOrCreate(CacheKey, ctx =>
             {
@@ -229,10 +229,5 @@ namespace Mozlite.Extensions.Security.Stores
                 return RoleContext.Fetch();
             });
         }
-
-        /// <summary>
-        /// 获取当前角色可查询实例。
-        /// </summary>
-        public override System.Linq.IQueryable<TRole> Roles => LoadRoles().AsQueryable();
     }
 }

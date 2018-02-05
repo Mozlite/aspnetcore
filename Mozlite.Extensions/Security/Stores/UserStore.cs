@@ -21,8 +21,9 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public class UserStore<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+    public abstract class UserStore<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
+        IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserBase
         where TRole : RoleBase
         where TUserClaim : UserClaimBase, new()
@@ -34,39 +35,39 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 缓存实例。
         /// </summary>
-        protected IMemoryCache Cache { get; }
+        public IMemoryCache Cache { get; }
 
         /// <summary>
         /// 用户数据库操作接口。
         /// </summary>
-        protected IDbContext<TUser> UserContext { get; }
+        public IDbContext<TUser> UserContext { get; }
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserClaim> UserClaimContext { get; }
+        public IDbContext<TUserClaim> UserClaimContext { get; }
         /// <summary>
         /// 用户登陆数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserLogin> UserLoginContext { get; }
+        public IDbContext<TUserLogin> UserLoginContext { get; }
         /// <summary>
         /// 用户标识数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserToken> UserTokenContext { get; }
+        public IDbContext<TUserToken> UserTokenContext { get; }
 
         /// <summary>
         /// 角色数据库操作接口。
         /// </summary>
-        protected IDbContext<TRole> RoleContext { get; }
+        public IDbContext<TRole> RoleContext { get; }
 
         /// <summary>
         /// 用户角色数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserRole> UserRoleContext { get; }
+        public IDbContext<TUserRole> UserRoleContext { get; }
 
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        protected IDbContext<TRoleClaim> RoleClaimContext { get; }
+        public IDbContext<TRoleClaim> RoleClaimContext { get; }
 
         /// <summary>
         /// 初始化类<see cref="UserStore{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
@@ -80,7 +81,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
         /// <param name="cache">缓存接口。</param>
-        public UserStore(IdentityErrorDescriber describer,
+        protected UserStore(IdentityErrorDescriber describer,
             IDbContext<TUser> userContext,
             IDbContext<TUserClaim> userClaimContext,
             IDbContext<TUserLogin> userLoginContext,

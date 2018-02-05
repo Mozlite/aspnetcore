@@ -16,7 +16,9 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public class UserOnlyStore<TUser, TUserClaim, TUserLogin, TUserToken> : UserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class UserOnlyStore<TUser, TUserClaim, TUserLogin, TUserToken>
+        : UserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>,
+        IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -25,19 +27,19 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 用户数据库操作接口。
         /// </summary>
-        protected IDbContext<TUser> UserContext { get; }
+        public IDbContext<TUser> UserContext { get; }
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserClaim> UserClaimContext { get; }
+        public IDbContext<TUserClaim> UserClaimContext { get; }
         /// <summary>
         /// 用户登陆数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserLogin> UserLoginContext { get; }
+        public IDbContext<TUserLogin> UserLoginContext { get; }
         /// <summary>
         /// 用户标识数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserToken> UserTokenContext { get; }
+        public IDbContext<TUserToken> UserTokenContext { get; }
 
         /// <summary>
         /// 初始化类<see cref="UserOnlyStore{TUser,TRole, TUserLogin, TUserToken}"/>。
@@ -47,7 +49,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
-        public UserOnlyStore(IdentityErrorDescriber describer,
+        protected UserOnlyStore(IdentityErrorDescriber describer,
             IDbContext<TUser> userContext,
             IDbContext<TUserClaim> userClaimContext,
             IDbContext<TUserLogin> userLoginContext,
