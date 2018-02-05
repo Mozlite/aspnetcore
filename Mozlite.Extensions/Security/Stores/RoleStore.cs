@@ -43,6 +43,11 @@ namespace Mozlite.Extensions.Security.Stores
 
         private static readonly Type _cacheKey = typeof(TRole);
         /// <summary>
+        /// 缓存键。
+        /// </summary>
+        protected virtual object CacheKey => _cacheKey;
+
+        /// <summary>
         /// 初始化类<see cref="RoleStore{TRole,TUserRole,TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
@@ -76,7 +81,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(role));
             }
             await RoleContext.CreateAsync(role, cancellationToken);
-            Cache.Remove(_cacheKey);
+            Cache.Remove(CacheKey);
             return IdentityResult.Success;
         }
 
@@ -94,7 +99,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(role));
             }
             await RoleContext.UpdateAsync(role, cancellationToken);
-            Cache.Remove(_cacheKey);
+            Cache.Remove(CacheKey);
             return IdentityResult.Success;
         }
 
@@ -112,7 +117,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(role));
             }
             await RoleContext.DeleteAsync(role.RoleId, cancellationToken);
-            Cache.Remove(_cacheKey);
+            Cache.Remove(CacheKey);
             return IdentityResult.Success;
         }
 
@@ -205,7 +210,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回角色列表。</returns>
         protected virtual async Task<IEnumerable<TRole>> LoadRolesAsync()
         {
-            return await Cache.GetOrCreateAsync(_cacheKey, async ctx =>
+            return await Cache.GetOrCreateAsync(CacheKey, async ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
                 return await RoleContext.FetchAsync();
@@ -213,12 +218,21 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
+        /// 获取所有角色。
+        /// </summary>
+        /// <returns>返回角色列表。</returns>
+        protected virtual IEnumerable<TRole> LoadRoles()
+        {
+            return Cache.GetOrCreate(CacheKey, ctx =>
+            {
+                ctx.SetDefaultAbsoluteExpiration();
+                return RoleContext.Fetch();
+            });
+        }
+
+        /// <summary>
         /// 获取当前角色可查询实例。
         /// </summary>
-        public override System.Linq.IQueryable<TRole> Roles => Cache.GetOrCreate(_cacheKey, ctx =>
-        {
-            ctx.SetDefaultAbsoluteExpiration();
-            return RoleContext.Fetch();
-        }).AsQueryable();
+        public override System.Linq.IQueryable<TRole> Roles => LoadRoles().AsQueryable();
     }
 }

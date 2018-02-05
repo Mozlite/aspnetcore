@@ -31,7 +31,10 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
-        private readonly IMemoryCache _cache;
+        /// <summary>
+        /// 缓存实例。
+        /// </summary>
+        protected IMemoryCache Cache { get; }
 
         /// <summary>
         /// 用户数据库操作接口。
@@ -87,7 +90,7 @@ namespace Mozlite.Extensions.Security.Stores
             IDbContext<TRoleClaim> roleClaimContext,
             IMemoryCache cache) : base(describer)
         {
-            _cache = cache;
+            Cache = cache;
             UserContext = userContext;
             UserClaimContext = userClaimContext;
             UserLoginContext = userLoginContext;
@@ -569,7 +572,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回角色列表。</returns>
         protected virtual async Task<IEnumerable<TRole>> LoadRolesAsync()
         {
-            return await _cache.GetOrCreateAsync(typeof(TRole), async ctx =>
+            return await Cache.GetOrCreateAsync(typeof(TRole), async ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
                 return await RoleContext.FetchAsync();

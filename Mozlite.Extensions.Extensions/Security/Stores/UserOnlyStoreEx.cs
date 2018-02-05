@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+using Mozlite.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -16,50 +13,18 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public class UserOnlyStoreEx<TUser, TUserClaim, TUserLogin, TUserToken> : UserStoreExBase<TUser, TUserClaim, TUserLogin, TUserToken>
+    public class UserOnlyStoreEx<TUser, TUserClaim, TUserLogin, TUserToken> : UserOnlyStore<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserExBase
-        where TUserClaim : UserClaimExBase, new()
-        where TUserLogin : UserLoginExBase, new()
-        where TUserToken : UserTokenExBase, new()
+        where TUserClaim : UserClaimBase, new()
+        where TUserLogin : UserLoginBase, new()
+        where TUserToken : UserTokenBase, new()
     {
-        /// <summary>
-        /// 用户数据库操作接口。
-        /// </summary>
-        protected IDbContext<TUser> UserContext { get; }
-        /// <summary>
-        /// 用户声明数据库操作接口。
-        /// </summary>
-        protected IDbContext<TUserClaim> UserClaimContext { get; }
-        /// <summary>
-        /// 用户登陆数据库操作接口。
-        /// </summary>
-        protected IDbContext<TUserLogin> UserLoginContext { get; }
-        /// <summary>
-        /// 用户标识数据库操作接口。
-        /// </summary>
-        protected IDbContext<TUserToken> UserTokenContext { get; }
+        private readonly ISiteContextAccessorBase _siteContextAccessor;
 
         /// <summary>
-        /// 初始化类<see cref="UserOnlyStoreEx{TUser,TRole, TUserLogin, TUserToken}"/>。
+        /// 当前网站上下文。
         /// </summary>
-        /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
-        /// <param name="userContext">用户数据库接口。</param>
-        /// <param name="userClaimContext">用户声明数据库接口。</param>
-        /// <param name="userLoginContext">用户登陆数据库接口。</param>
-        /// <param name="userTokenContext">用户标识数据库接口。</param>
-        /// <param name="siteContextAccessor">当前网站访问接口。</param>
-        public UserOnlyStoreEx(IdentityErrorDescriber describer,
-            IDbContext<TUser> userContext,
-            IDbContext<TUserClaim> userClaimContext,
-            IDbContext<TUserLogin> userLoginContext,
-            IDbContext<TUserToken> userTokenContext,
-            ISiteContextAccessorBase siteContextAccessor) : base(describer, siteContextAccessor)
-        {
-            UserContext = userContext;
-            UserClaimContext = userClaimContext;
-            UserLoginContext = userLoginContext;
-            UserTokenContext = userTokenContext;
-        }
+        protected SiteContextBase Site => _siteContextAccessor.SiteContext;
 
         /// <summary>
         /// 新建用户实例。
@@ -67,17 +32,11 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回添加用户结果。</returns>
-        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (user.SiteId == 0)
+            if (user?.SiteId == 0)
                 user.SiteId = Site.SiteId;
-            await UserContext.CreateAsync(user, cancellationToken);
-            return IdentityResult.Success;
+            return base.CreateAsync(user, cancellationToken);
         }
 
         /// <summary>
@@ -86,17 +45,11 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回更新结果。</returns>
-        public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (user.SiteId == 0)
+            if (user?.SiteId == 0)
                 user.SiteId = Site.SiteId;
-            await UserContext.UpdateAsync(user, cancellationToken);
-            return IdentityResult.Success;
+            return base.UpdateAsync(user, cancellationToken);
         }
 
         /// <summary>
@@ -115,23 +68,7 @@ namespace Mozlite.Extensions.Security.Stores
             await UserContext.DeleteAsync(x => x.UserId == user.UserId && x.SiteId == Site.SiteId, cancellationToken);
             return IdentityResult.Success;
         }
-
-        /// <summary>
-        /// 通过用户ID查询用户实例。
-        /// </summary>
-        /// <param name="userId">当前用户ID。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回当前用户实例对象。
-        /// </returns>
-        public override async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (int.TryParse(userId, out var id))
-                return await FindUserAsync(id, cancellationToken);
-            return null;
-        }
-
+        
         /// <summary>
         /// 通过用户验证名称查询用户实例。
         /// </summary>
@@ -155,280 +92,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             return UserContext.FindAsync(x => x.UserId == userId && x.SiteId == Site.SiteId, cancellationToken);
         }
-
-        /// <summary>
-        /// 获取用户登陆信息。
-        /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
-        protected override Task<TUserLogin> FindUserLoginAsync(int userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
-        {
-            return UserLoginContext.FindAsync(
-                x => x.UserId == userId && x.SiteId == Site.SiteId && x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// 获取用户登陆信息。
-        /// </summary>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
-        protected override Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
-        {
-            return UserLoginContext.FindAsync(
-                x => x.LoginProvider == loginProvider && x.SiteId == Site.SiteId && x.ProviderKey == providerKey,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// 获取当前用户实例的所有声明列表。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户实例的所有声明列表。</returns>
-        public override async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            var claims = await UserClaimContext.FetchAsync(x => x.UserId == user.UserId && x.SiteId == Site.SiteId, cancellationToken);
-            return claims.Select(x => x.ToClaim()).ToList();
-        }
-
-        /// <summary>
-        /// 添加用户声明。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="claims">声明列表。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public override async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (claims == null)
-            {
-                throw new ArgumentNullException(nameof(claims));
-            }
-            await UserClaimContext.BeginTransactionAsync(async db =>
-            {
-                foreach (var claim in claims)
-                {
-                    var dbClaim = CreateUserClaim(user, claim);
-                    await db.CreateAsync(dbClaim, cancellationToken);
-                }
-                return true;
-            }, cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// 实例化当前用户的声明实例。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="claim">声明实例。</param>
-        /// <returns>返回用户声明实例对象。</returns>
-        protected override TUserClaim CreateUserClaim(TUser user, Claim claim)
-        {
-            var userClaim = new TUserClaim();
-            userClaim.UserId = user.UserId;
-            userClaim.SiteId = Site.SiteId;
-            userClaim.InitializeFromClaim(claim);
-            return userClaim;
-        }
-
-        /// <summary>
-        /// 替换用户声明。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="claim">声明实例对象。</param>
-        /// <param name="newClaim">新的声明实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public override async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (claim == null)
-            {
-                throw new ArgumentNullException(nameof(claim));
-            }
-            if (newClaim == null)
-            {
-                throw new ArgumentNullException(nameof(newClaim));
-            }
-            await UserClaimContext.UpdateAsync(
-                uc => uc.UserId == user.UserId && uc.SiteId == Site.SiteId && uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type,
-                new { ClaimType = newClaim.Type, ClaimValue = newClaim.Value }, cancellationToken);
-        }
-
-        /// <summary>
-        /// 移除用户声明。
-        /// </summary>
-        /// <param name="user">用户实例。</param>
-        /// <param name="claims">声明列表。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public override async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (claims == null)
-            {
-                throw new ArgumentNullException(nameof(claims));
-            }
-            await UserClaimContext.BeginTransactionAsync(async db =>
-            {
-                foreach (var claim in claims)
-                {
-                    await db.DeleteAsync(
-                        uc => uc.UserId == user.UserId && uc.SiteId == Site.SiteId && uc.ClaimType == claim.Type && uc.ClaimValue == claim.Value, cancellationToken);
-                }
-                return true;
-            }, cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// 获取当前声明的所有用户。
-        /// </summary>
-        /// <param name="claim">声明实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回用户列表。 
-        /// </returns>
-        public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (claim == null)
-            {
-                throw new ArgumentNullException(nameof(claim));
-            }
-
-            var users = await UserContext.AsQueryable().InnerJoin<TUserClaim>((u, c) => u.UserId == c.UserId)
-                .Where<TUserClaim>(x => x.ClaimType == claim.Type && x.ClaimValue == claim.Value && x.SiteId == Site.SiteId)
-                .Where(x => x.SiteId == Site.SiteId)
-                .AsEnumerableAsync(cancellationToken);
-
-            return users.ToList();
-        }
-
-        /// <summary>
-        /// 获取用户标识。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户标识实例。</returns>
-        protected override Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
-        {
-            return UserTokenContext.FindAsync(
-                x => x.UserId == user.UserId && x.SiteId == Site.SiteId && x.LoginProvider == loginProvider && x.Name == name, cancellationToken);
-        }
-
-        /// <summary>
-        /// 添加新的用户标识。
-        /// </summary>
-        /// <param name="token">用户标识实例对象。</param>
-        protected override async Task AddUserTokenAsync(TUserToken token)
-        {
-            if (token?.SiteId == 0)
-                token.SiteId = Site.SiteId;
-            await UserTokenContext.CreateAsync(token);
-        }
-
-        /// <summary>
-        /// 移除用户标识。
-        /// </summary>
-        /// <param name="token">用户标识实例对象。</param>
-        protected override async Task RemoveUserTokenAsync(TUserToken token)
-        {
-            await UserTokenContext.DeleteAsync(x =>
-                x.UserId == token.UserId && x.SiteId == Site.SiteId && x.LoginProvider == token.LoginProvider && x.Name == token.Name);
-        }
-
-        /// <summary>
-        /// 添加用户登陆信息。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="login">用户登陆信息实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (login == null)
-            {
-                throw new ArgumentNullException(nameof(login));
-            }
-            await UserLoginContext.CreateAsync(CreateUserLogin(user, login), cancellationToken);
-        }
-
-        /// <summary>
-        /// 实例化当前用户的登陆信息实例。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="login">登陆信息实例。</param>
-        /// <returns>返回用户登陆信息实例。</returns>
-        protected override TUserLogin CreateUserLogin(TUser user, UserLoginInfo login)
-        {
-            return new TUserLogin
-            {
-                UserId = user.UserId,
-                ProviderKey = login.ProviderKey,
-                LoginProvider = login.LoginProvider,
-                ProviderDisplayName = login.ProviderDisplayName,
-                SiteId = Site.SiteId
-            };
-        }
-
-        /// <summary>
-        /// 移除用户登陆信息。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public override async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            await UserLoginContext.DeleteAsync(
-                x => x.UserId == user.UserId && x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// 获取当前用户的登陆信息列表。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回当前用户所有登陆信息。
-        /// </returns>
-        public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var loginInfos = await UserLoginContext.FetchAsync(x => x.UserId == user.UserId && x.SiteId == Site.SiteId, cancellationToken);
-            return loginInfos.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName)).ToList();
-        }
-
+        
         /// <summary>
         /// 通过电子邮件获取用户实例。
         /// </summary>
@@ -438,6 +102,21 @@ namespace Mozlite.Extensions.Security.Stores
         public override Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
         {
             return UserContext.FindAsync(x => x.NormalizedEmail == normalizedEmail && x.SiteId == Site.SiteId, cancellationToken);
+        }
+
+        /// <summary>
+        /// 初始化类<see cref="UserOnlyStore{TUser,TRole, TUserLogin, TUserToken}"/>。
+        /// </summary>
+        /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
+        /// <param name="userContext">用户数据库接口。</param>
+        /// <param name="userClaimContext">用户声明数据库接口。</param>
+        /// <param name="userLoginContext">用户登陆数据库接口。</param>
+        /// <param name="userTokenContext">用户标识数据库接口。</param>
+        /// <param name="siteContextAccessor">当前网站访问接口。</param>
+        public UserOnlyStoreEx(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext, ISiteContextAccessorBase siteContextAccessor) 
+            : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext)
+        {
+            _siteContextAccessor = siteContextAccessor;
         }
     }
 }
