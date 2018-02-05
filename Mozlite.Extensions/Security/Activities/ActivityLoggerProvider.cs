@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -7,14 +9,14 @@ namespace Mozlite.Extensions.Security.Activities
     /// </summary>
     public class ActivityLoggerProvider : ILoggerProvider
     {
-        private readonly IActivityManager _activityManager;
+        private readonly IActivityManagerBase _activityManager;
         /// <summary>
         /// 初始化类<see cref="ActivityLoggerProvider"/>。
         /// </summary>
-        /// <param name="activityManager">用户活动状态管理接口。</param>
-        public ActivityLoggerProvider(IActivityManager activityManager)
+        /// <param name="serviceProvider">服务提供者接口。</param>
+        public ActivityLoggerProvider(IServiceProvider serviceProvider)
         {
-            _activityManager = activityManager;
+            _activityManager = serviceProvider.GetRequiredService<IActivityManager>();
         }
 
         /// <summary>

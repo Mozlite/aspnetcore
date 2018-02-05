@@ -8,9 +8,9 @@ namespace Mozlite.Extensions.Security.Activities
     {
         public static readonly EventId EventId = new EventId(0, "{:user<->activity:}");
 
-        private readonly IActivityManager _activityManager;
+        private readonly IActivityManagerBase _activityManager;
 
-        public ActivityLogger(IActivityManager activityManager)
+        public ActivityLogger(IActivityManagerBase activityManager)
         {
             _activityManager = activityManager;
         }
@@ -24,7 +24,7 @@ namespace Mozlite.Extensions.Security.Activities
             var message = formatter(state, null);
             if (string.IsNullOrWhiteSpace(message))
                 return;
-            _activityManager.Create(new UserActivity { Activity = message });
+            _activityManager.Create(message);
         }
 
         public bool IsEnabled(LogLevel logLevel)

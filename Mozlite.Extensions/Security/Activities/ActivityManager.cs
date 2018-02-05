@@ -8,18 +8,22 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 活动状态管理类。
     /// </summary>
-    public class ActivityManager : IActivityManager
+    public abstract class ActivityManager<TActivity> : IActivityManager<TActivity>
+        where TActivity : UserActivity, new()
     {
-        private readonly IDbContext<UserActivity> _db;
+        /// <summary>
+        /// 数据库操作上下文。
+        /// </summary>
+        protected IDbContext<TActivity> Context { get; }
         private readonly IHttpContextAccessor _httpContextAccessor;
         /// <summary>
-        /// 初始化<see cref="ActivityManager"/>。
+        /// 初始化<see cref="ActivityManager{TActivity}"/>。
         /// </summary>
         /// <param name="db">数据库操作接口。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问器。</param>
-        public ActivityManager(IDbContext<UserActivity> db, IHttpContextAccessor httpContextAccessor)
+        protected ActivityManager(IDbContext<TActivity> db, IHttpContextAccessor httpContextAccessor)
         {
-            _db = db;
+            Context = db;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -28,14 +32,11 @@ namespace Mozlite.Extensions.Security.Activities
         /// </summary>
         /// <param name="activity">活动状态实例。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual async Task<bool> CreateAsync(UserActivity activity)
+        public virtual async Task<bool> CreateAsync(TActivity activity)
         {
-            var context = _httpContextAccessor.HttpContext;
-            if (context?.User?.Identity.IsAuthenticated != true)
-                return false;
-            activity.UserId = context.User.GetUserId();
-            activity.IPAdress = context.GetUserAddress();
-            return await _db.CreateAsync(activity);
+            if (Init(activity))
+                return await Context.CreateAsync(activity);
+            return false;
         }
 
         /// <summary>
@@ -43,14 +44,48 @@ namespace Mozlite.Extensions.Security.Activities
         /// </summary>
         /// <param name="activity">活动状态实例。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual bool Create(UserActivity activity)
+        public virtual bool Create(TActivity activity)
+        {
+            if (Init(activity))
+                return Context.Create(activity);
+            return false;
+        }
+
+        /// <summary>
+        /// 查询活动状态。
+        /// </summary>
+        /// <typeparam name="TQuery">查询实例类型。</typeparam>
+        /// <typeparam name="TUser">用户类型。</typeparam>
+        /// <param name="query">当前查询实例对象。</param>
+        /// <returns>查询实例对象。</returns>
+        public virtual TQuery Load<TQuery, TUser>(TQuery query) where TQuery : QueryBase<TActivity> where TUser : UserBase
+        {
+            return Context.Load(query);
+        }
+
+        /// <summary>
+        /// 查询活动状态。
+        /// </summary>
+        /// <typeparam name="TQuery">查询实例类型。</typeparam>
+        /// <typeparam name="TUser">用户类型。</typeparam>
+        /// <param name="query">当前查询实例对象。</param>
+        /// <returns>查询实例对象。</returns>
+        public virtual Task<TQuery> LoadAsync<TQuery, TUser>(TQuery query) where TQuery : QueryBase<TActivity> where TUser : UserBase
+        {
+            return Context.LoadAsync(query);
+        }
+
+        /// <summary>
+        /// 实例化类<see cref="TActivity"/>。
+        /// </summary>
+        /// <param name="activity">用户活动实例。</param>
+        /// <returns>返回是否实例化成功。</returns>
+        protected virtual bool Init(TActivity activity)
         {
             var context = _httpContextAccessor.HttpContext;
-            if (context?.User?.Identity.IsAuthenticated != true)
-                return false;
-            activity.UserId = context.User.GetUserId();
             activity.IPAdress = context.GetUserAddress();
-            return _db.Create(activity);
+            activity.UserId = context.User.GetUserId();
+            return activity.UserId > 0;
         }
 
         /// <summary>
@@ -59,15 +94,17 @@ namespace Mozlite.Extensions.Security.Activities
         /// <param name="activity">活动状态实例。</param>
         /// <param name="userId">当前用户。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual Task<bool> CreateAsync(string activity, int userId)
+        public virtual Task<bool> CreateAsync(string activity, int userId = 0)
         {
-            var current = new UserActivity();
-            current.UserId = userId;
+            var current = new TActivity();
+            if (!Init(current))
+                current.UserId = userId;
             current.Activity = activity;
-            current.IPAdress = _httpContextAccessor.HttpContext.GetUserAddress();
-            return _db.CreateAsync(current);
+            if (current.UserId > 0)
+                return Context.CreateAsync(current);
+            return Task.FromResult(false);
         }
-
+        
         /// <summary>
         /// 添加活动状态。
         /// </summary>
@@ -76,35 +113,29 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>返回添加结果。</returns>
         public virtual bool Create(string activity, int userId)
         {
-            var current = new UserActivity();
-            current.UserId = userId;
+            var current = new TActivity();
+            if (!Init(current))
+                current.UserId = userId;
             current.Activity = activity;
-            current.IPAdress = _httpContextAccessor.HttpContext.GetUserAddress();
-            return _db.Create(current);
+            if (current.UserId > 0)
+                return Context.Create(current);
+            return false;
         }
+    }
 
+    /// <summary>
+    /// 活动状态管理类。
+    /// </summary>
+    public class ActivityManager : ActivityManager<UserActivity>
+    {
         /// <summary>
-        /// 查询活动状态。
+        /// 初始化<see cref="ActivityManager"/>。
         /// </summary>
-        /// <typeparam name="TQuery">查询实例类型。</typeparam>
-        /// <typeparam name="TUser">用户类型。</typeparam>
-        /// <param name="query">当前查询实例对象。</param>
-        /// <returns>查询实例对象。</returns>
-        public virtual TQuery Load<TQuery, TUser>(TQuery query) where TQuery : UserActivityQuery<TUser> where TUser : UserBase
+        /// <param name="db">数据库操作接口。</param>
+        /// <param name="httpContextAccessor">HTTP上下文访问器。</param>
+        public ActivityManager(IDbContext<UserActivity> db, IHttpContextAccessor httpContextAccessor)
+            : base(db, httpContextAccessor)
         {
-            return _db.Load(query, x => x.Id);
-        }
-
-        /// <summary>
-        /// 查询活动状态。
-        /// </summary>
-        /// <typeparam name="TQuery">查询实例类型。</typeparam>
-        /// <typeparam name="TUser">用户类型。</typeparam>
-        /// <param name="query">当前查询实例对象。</param>
-        /// <returns>查询实例对象。</returns>
-        public virtual Task<TQuery> LoadAsync<TQuery, TUser>(TQuery query) where TQuery : UserActivityQuery<TUser> where TUser : UserBase
-        {
-            return _db.LoadAsync(query, x => x.Id);
         }
     }
 }

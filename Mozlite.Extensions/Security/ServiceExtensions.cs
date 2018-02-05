@@ -53,8 +53,7 @@ namespace Mozlite.Extensions.Security
         public static IApplicationBuilder UseUserActivity(this IApplicationBuilder app)
         {
             var factory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
-            var activityManager = app.ApplicationServices.GetRequiredService<IActivityManager>();
-            factory.AddProvider(new ActivityLoggerProvider(activityManager));
+            factory.AddProvider(new ActivityLoggerProvider(app.ApplicationServices));
             return app;
         }
     }
