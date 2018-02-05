@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Security.Stores
 {

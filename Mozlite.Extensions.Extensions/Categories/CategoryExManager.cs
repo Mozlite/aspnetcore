@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mozlite.Data;
 using Mozlite.Extensions.Data;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Categories
 {

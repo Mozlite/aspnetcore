@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 using Mozlite.Extensions.Categories;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Groups
 {

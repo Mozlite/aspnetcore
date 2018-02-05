@@ -3,6 +3,7 @@ using Mozlite.Data;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Settings
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Mozlite.Data;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Security.Activities
 {

@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Mozlite.Data;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Data
 {

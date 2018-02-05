@@ -3,6 +3,7 @@ using Mozlite.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Mozlite.Extensions.Sites;
 
 namespace Mozlite.Extensions.Security.Stores
 {

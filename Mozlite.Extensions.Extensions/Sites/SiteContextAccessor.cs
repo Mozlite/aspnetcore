@@ -1,16 +1,15 @@
 using System;
 using Microsoft.AspNetCore.Http;
 using Mozlite.Extensions.Properties;
-using Mozlite.Extensions.Sites;
 
-namespace Mozlite.Extensions
+namespace Mozlite.Extensions.Sites
 {
     /// <summary>
     /// 实现当前网站上下文访问实例。
     /// </summary>
     /// <typeparam name="TSite">网站类型。</typeparam>
     /// <typeparam name="TSiteContext">网站上下文。</typeparam>
-    public class SiteContextAccessor<TSite, TSiteContext> : ISiteContextAccessor<TSite, TSiteContext>
+    public abstract class SiteContextAccessor<TSite, TSiteContext> : ISiteContextAccessor<TSite, TSiteContext>
         where TSite : SiteBase, new()
         where TSiteContext : SiteContextBase<TSite>, new()
     {
@@ -22,7 +21,7 @@ namespace Mozlite.Extensions
         /// </summary>
         /// <param name="siteManager">网站管理接口。</param>
         /// <param name="contextAccessor">HTTP访问上下文。</param>
-        public SiteContextAccessor(ISiteManager siteManager, IHttpContextAccessor contextAccessor)
+        protected SiteContextAccessor(ISiteManager siteManager, IHttpContextAccessor contextAccessor)
         {
             _siteManager = siteManager;
             _contextAccessor = contextAccessor;
