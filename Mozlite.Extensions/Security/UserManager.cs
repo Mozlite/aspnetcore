@@ -113,7 +113,20 @@ namespace Mozlite.Extensions.Security
         /// <param name="password">密码。</param>
         /// <param name="isRemembered">是否记住登陆状态。</param>
         /// <returns>返回登陆结果。</returns>
-        public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered)
+        public Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered)
+        {
+            return PasswordSignInAsync(userName, password, isRemembered, null);
+        }
+
+        /// <summary>
+        /// 密码登陆。
+        /// </summary>
+        /// <param name="userName">用户名。</param>
+        /// <param name="password">密码。</param>
+        /// <param name="isRemembered">是否记住登陆状态。</param>
+        /// <param name="success">成功后执行的方法。</param>
+        /// <returns>返回登陆结果。</returns>
+        public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Action<TUser> success)
         {
             var user = await FindByNameAsync(userName);
             var result = await SignInManager.PasswordSignInAsync(user, PasswordSalt(userName, password), isRemembered, true);
@@ -124,6 +137,7 @@ namespace Mozlite.Extensions.Security
                     LoginIP = HttpContext.GetUserAddress(),
                     LastLoginDate = DateTimeOffset.Now
                 });
+                success?.Invoke(user);
             }
             return result;
         }
