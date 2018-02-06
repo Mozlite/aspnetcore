@@ -107,6 +107,50 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 密码登陆。
+        /// </summary>
+        /// <param name="userName">用户名。</param>
+        /// <param name="password">密码。</param>
+        /// <param name="isRemembered">是否记住登陆状态。</param>
+        /// <returns>返回登陆结果。</returns>
+        public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered)
+        {
+            var user = await FindByNameAsync(userName);
+            var result = await SignInManager.PasswordSignInAsync(user, PasswordSalt(userName, password), isRemembered, true);
+            if (result.Succeeded)
+            {
+                await UpdateAsync(user.UserId, new
+                {
+                    LoginIP = HttpContext.GetUserAddress(),
+                    LastLoginDate = DateTimeOffset.Now
+                });
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual bool Update(int userId, object fields)
+        {
+            return Store.UserContext.Update(x => x.UserId == userId, fields);
+        }
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual Task<bool> UpdateAsync(int userId, object fields)
+        {
+            return Store.UserContext.UpdateAsync(x => x.UserId == userId, fields);
+        }
+
+        /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>

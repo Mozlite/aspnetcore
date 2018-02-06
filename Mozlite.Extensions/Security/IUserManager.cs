@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -84,6 +85,31 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <returns>返回判断结果。</returns>
         bool IsSignedIn();
+
+        /// <summary>
+        /// 密码登陆。
+        /// </summary>
+        /// <param name="userName">用户名。</param>
+        /// <param name="password">密码。</param>
+        /// <param name="isRemembered">是否记住登陆状态。</param>
+        /// <returns>返回登陆结果。</returns>
+        Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered);
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        bool Update(int userId, object fields);
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        Task<bool> UpdateAsync(int userId, object fields);
     }
 
     /// <summary>
