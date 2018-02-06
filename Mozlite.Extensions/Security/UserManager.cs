@@ -126,7 +126,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="isRemembered">是否记住登陆状态。</param>
         /// <param name="success">成功后执行的方法。</param>
         /// <returns>返回登陆结果。</returns>
-        public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Action<TUser> success)
+        public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Action<TUser, Task> success)
         {
             var user = await FindByNameAsync(userName);
             var result = await SignInManager.PasswordSignInAsync(user, PasswordSalt(userName, password), isRemembered, true);
