@@ -69,7 +69,19 @@ namespace Mozlite.Extensions.Security.Stores
             await UserContext.DeleteAsync(x => x.UserId == user.UserId && x.SiteId == Site.SiteId, cancellationToken);
             return IdentityResult.Success;
         }
-        
+
+        /// <summary>
+        /// 通过用户验证名称查询用户实例。
+        /// </summary>
+        /// <param name="normalizedUserName">当前验证名称。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        public override TUser FindByName(string normalizedUserName)
+        {
+            return UserContext.Find(x => x.NormalizedUserName == normalizedUserName && x.SiteId == Site.SiteId);
+        }
+
         /// <summary>
         /// 通过用户验证名称查询用户实例。
         /// </summary>
@@ -81,6 +93,16 @@ namespace Mozlite.Extensions.Security.Stores
         public override Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken))
         {
             return UserContext.FindAsync(x => x.NormalizedUserName == normalizedUserName && x.SiteId == Site.SiteId, cancellationToken);
+        }
+
+        /// <summary>
+        /// 通过Id获取用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public override TUser FindUser(int userId)
+        {
+            return UserContext.Find(x => x.UserId == userId && x.SiteId == Site.SiteId);
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -67,6 +66,24 @@ namespace Mozlite.Extensions.Security
         /// <param name="key">原有键值。</param>
         /// <returns>返回正常化后的字符串。</returns>
         string NormalizeKey(string key);
+
+        /// <summary>
+        /// 获取当前用户。
+        /// </summary>
+        /// <returns>返回当前用户实例。</returns>
+        TUser GetUser();
+
+        /// <summary>
+        /// 获取当前用户。
+        /// </summary>
+        /// <returns>返回当前用户实例。</returns>
+        Task<TUser> GetUserAsync();
+
+        /// <summary>
+        /// 判断当前用户是否已经登陆。
+        /// </summary>
+        /// <returns>返回判断结果。</returns>
+        bool IsSignedIn();
     }
 
     /// <summary>

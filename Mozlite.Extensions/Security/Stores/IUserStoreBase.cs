@@ -39,6 +39,22 @@ namespace Mozlite.Extensions.Security.Stores
         /// 通过用户验证名称查询用户实例。
         /// </summary>
         /// <param name="normalizedUserName">当前验证名称。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        TUser FindByName(string normalizedUserName);
+
+        /// <summary>
+        /// 通过Id获取用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回当前用户实例。</returns>
+        TUser FindUser(int userId);
+
+        /// <summary>
+        /// 通过用户验证名称查询用户实例。
+        /// </summary>
+        /// <param name="normalizedUserName">当前验证名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
         /// 返回当前用户实例对象。

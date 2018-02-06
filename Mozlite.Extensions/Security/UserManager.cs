@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
 
@@ -18,6 +20,8 @@ namespace Mozlite.Extensions.Security
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         /// <summary>
         /// 系统管理实例。
         /// </summary>
@@ -34,13 +38,20 @@ namespace Mozlite.Extensions.Security
         protected IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> Store { get; }
 
         /// <summary>
-        /// 初始化类<see cref="UserManager{TUser}"/>。
+        /// 当前HTTP上下文。
+        /// </summary>
+        protected HttpContext HttpContext => _httpContextAccessor.HttpContext;
+
+        /// <summary>
+        /// 初始化类<see cref="UserManager{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="manager">系统管理实例。</param>
         /// <param name="signInManager"> 登陆管理实例。</param>
         /// <param name="store">用户存储实例。</param>
-        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store)
+        /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
+        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             Manager = manager;
             SignInManager = signInManager;
             Store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
@@ -52,6 +63,48 @@ namespace Mozlite.Extensions.Security
         /// <param name="key">原有键值。</param>
         /// <returns>返回正常化后的字符串。</returns>
         public virtual string NormalizeKey(string key) => Manager.NormalizeKey(key);
+
+        private readonly Type _currentUserCacheKey = typeof(TUser);
+        /// <summary>
+        /// 获取当前用户。
+        /// </summary>
+        /// <returns>返回当前用户实例。</returns>
+        public TUser GetUser()
+        {
+            if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
+                return current;
+            if (int.TryParse(Manager.GetUserId(HttpContext.User), out var userId))
+                current = Store.FindUser(userId);
+            else
+                current = null;
+            HttpContext.Items[_currentUserCacheKey] = current;
+            return current;
+        }
+
+        /// <summary>
+        /// 获取当前用户。
+        /// </summary>
+        /// <returns>返回当前用户实例。</returns>
+        public async Task<TUser> GetUserAsync()
+        {
+            if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
+                return current;
+            if (int.TryParse(Manager.GetUserId(HttpContext.User), out var userId))
+                current = await Store.FindUserAsync(userId);
+            else
+                current = null;
+            HttpContext.Items[_currentUserCacheKey] = current;
+            return current;
+        }
+
+        /// <summary>
+        /// 判断当前用户是否已经登陆。
+        /// </summary>
+        /// <returns>返回判断结果。</returns>
+        public bool IsSignedIn()
+        {
+            return SignInManager.IsSignedIn(HttpContext.User);
+        }
 
         /// <summary>
         /// 通过用户Id查询用户实例。
@@ -140,17 +193,6 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
-        /// <summary>
-        /// 初始化类<see cref="UserManager{TUser}"/>。
-        /// </summary>
-        /// <param name="manager">系统管理实例。</param>
-        /// <param name="signInManager"> 登陆管理实例。</param>
-        /// <param name="store">用户存储实例。</param>
-        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store)
-            : base(manager, signInManager, store)
-        {
-        }
-
         private IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> _store;
         /// <summary>
         /// 用户存储实例。
@@ -158,5 +200,17 @@ namespace Mozlite.Extensions.Security
         protected new IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> Store => _store ?? (_store =
                                                                                                                            base.Store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken,
                                                                                                                                TRoleClaim>);
+
+        /// <summary>
+        /// 初始化类<see cref="UserManager{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
+        /// </summary>
+        /// <param name="manager">系统管理实例。</param>
+        /// <param name="signInManager"> 登陆管理实例。</param>
+        /// <param name="store">用户存储实例。</param>
+        /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
+        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor)
+            : base(manager, signInManager, store, httpContextAccessor)
+        {
+        }
     }
 }

@@ -42,6 +42,28 @@ namespace Mozlite.Extensions.Security.Stores
         public IDbContext<TUserToken> UserTokenContext { get; }
 
         /// <summary>
+        /// 通过用户验证名称查询用户实例。
+        /// </summary>
+        /// <param name="normalizedUserName">当前验证名称。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        public virtual TUser FindByName(string normalizedUserName)
+        {
+            return UserContext.Find(x => x.NormalizedUserName == normalizedUserName);
+        }
+
+        /// <summary>
+        /// 通过Id获取用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public virtual TUser FindUser(int userId)
+        {
+            return UserContext.Find(userId);
+        }
+
+        /// <summary>
         /// 初始化类<see cref="UserOnlyStore{TUser,TRole, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
