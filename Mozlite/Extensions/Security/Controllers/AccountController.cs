@@ -43,7 +43,7 @@ namespace Mozlite.Extensions.Security.Controllers
             model.Id = UserId;
             if (await _userManager.SaveAsync(model))
             {
-                _logger.LogUserInformation("编辑了用户资料信息！");
+                _logger.Info("编辑了用户资料信息！");
                 return SuccessView("恭喜你，你已经成功更新了用户资料！", model);
             }
             return ErrorView("很抱歉，更新用户资料错误！", model);
@@ -92,7 +92,7 @@ namespace Mozlite.Extensions.Security.Controllers
                         SecurityHelper.CreatePassword(user.UserName, model.NewPassword));
             if (result.Succeeded)
             {
-                _logger.LogUserInformation("更改了新密码为：{0}", model.NewPassword);
+                _logger.Info("更改了新密码为：{0}", model.NewPassword);
                 return SuccessView("你已经成功更新了密码，下次登陆时候需要使用新密码进行登陆！", model);
             }
             var error = result.Errors.FirstOrDefault();

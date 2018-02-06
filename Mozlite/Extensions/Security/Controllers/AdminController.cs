@@ -51,7 +51,7 @@ namespace Mozlite.Extensions.Security.Controllers
             }
             if (await _userManager.DeleteUsersAsync(intIds))
             {
-                _logger.LogUserInformation("删除了用户：{0}.", string.Join(",", intIds));
+                _logger.Info("删除了用户：{0}.", string.Join(",", intIds));
                 return Success("你已经成功删除了所选择的用户！");
             }
             return Error("删除用户失败！");

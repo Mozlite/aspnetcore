@@ -227,7 +227,7 @@ namespace Mozlite.Extensions.Security.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
-            _logger.LogUserInformation("成功退出系统.");
+            _logger.Info("成功退出系统.");
             await _signInManager.SignOutAsync();
             return Redirect("/");
         }

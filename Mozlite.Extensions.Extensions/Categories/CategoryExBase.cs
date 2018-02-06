@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Mozlite.Extensions.Data;
+﻿using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Categories
 {

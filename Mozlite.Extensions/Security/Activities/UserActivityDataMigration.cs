@@ -15,6 +15,7 @@ namespace Mozlite.Extensions.Security.Activities
         {
             builder.CreateTable<UserActivity>(table => table
                 .Column(x => x.Id)
+                .Column(x => x.CategoryId)
                 .Column(x => x.Activity)
                 .Column(x => x.CreatedDate)
                 .Column(x => x.IPAdress)

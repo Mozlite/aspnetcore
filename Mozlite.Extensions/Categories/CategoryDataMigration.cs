@@ -28,6 +28,6 @@ namespace Mozlite.Extensions.Categories
         /// 编辑表格其他属性列。
         /// </summary>
         /// <param name="table">当前表格构建实例对象。</param>
-        protected abstract void Create(CreateTableBuilder<TCategory> table);
+        protected virtual void Create(CreateTableBuilder<TCategory> table) { }
     }
 }

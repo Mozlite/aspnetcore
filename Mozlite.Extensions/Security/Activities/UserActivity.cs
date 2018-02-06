@@ -21,6 +21,11 @@ namespace Mozlite.Extensions.Security.Activities
         public int UserId { get; set; }
 
         /// <summary>
+        /// 分类Id。
+        /// </summary>
+        public int CategoryId { get; set; }
+
+        /// <summary>
         /// 活动时间。
         /// </summary>
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;

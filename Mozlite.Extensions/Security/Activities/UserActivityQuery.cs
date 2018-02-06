@@ -10,6 +10,11 @@ namespace Mozlite.Extensions.Security.Activities
         where TUser : UserBase
     {
         /// <summary>
+        /// 分类Id。
+        /// </summary>
+        public int Cid { get; set; }
+
+        /// <summary>
         /// 用户Id。
         /// </summary>
         public int UserId { get; set; }
