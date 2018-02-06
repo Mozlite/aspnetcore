@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Security
             SignInManager = signInManager;
             Store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
         }
-        
+
         /// <summary>
         /// 正常实例化键。
         /// </summary>
@@ -71,6 +71,39 @@ namespace Mozlite.Extensions.Security
         public virtual Task<TUser> FindByNameAsync(string userName)
         {
             return Store.FindByNameAsync(userName);
+        }
+
+        /// <summary>
+        /// 加密字符串。
+        /// </summary>
+        /// <param name="password">原始密码。</param>
+        /// <returns>返回加密后得字符串。</returns>
+        public virtual string HashPassword(string password)
+        {
+            return Manager.PasswordHasher.HashPassword(null, password);
+        }
+
+        /// <summary>
+        /// 验证密码。
+        /// </summary>
+        /// <param name="hashedPassword">原始已经加密得密码。</param>
+        /// <param name="providedPassword">要验证得原始密码。</param>
+        /// <returns>验证结果。</returns>
+        public virtual bool VerifyHashedPassword(string hashedPassword, string providedPassword)
+        {
+            return Manager.PasswordHasher.VerifyHashedPassword(null, hashedPassword, providedPassword) !=
+                   PasswordVerificationResult.Failed;
+        }
+
+        /// <summary>
+        /// 拼接密码。
+        /// </summary>
+        /// <param name="userName">当前用户名。</param>
+        /// <param name="password">密码。</param>
+        /// <returns>返回拼接后得字符串。</returns>
+        public virtual string PasswordSalt(string userName, string password)
+        {
+            return $"{NormalizeKey(userName)}2018{password}";
         }
     }
 

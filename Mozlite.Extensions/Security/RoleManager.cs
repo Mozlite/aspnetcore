@@ -31,7 +31,7 @@ namespace Mozlite.Extensions.Security
         protected IRoleStoreBase<TRole, TUserRole, TRoleClaim> Store { get; }
 
         /// <summary>
-        /// 初始化类<see cref="RoleManager{TRole}"/>。
+        /// 初始化类<see cref="RoleManager{TRole, TUserRole, TRoleClaim}"/>。
         /// </summary>
         /// <param name="manager">系统用户角色管理实例。</param>
         /// <param name="store">角色存储接口。</param>
