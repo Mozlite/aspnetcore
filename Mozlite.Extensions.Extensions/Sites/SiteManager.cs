@@ -17,17 +17,21 @@ namespace Mozlite.Extensions.Sites
         private readonly IDbContext<SiteAdapter> _sdb;
         private readonly IDbContext<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
+        private readonly IEnumerable<ISitableCreatedHandler> _handlers;
+
         /// <summary>
         /// <see cref="SiteManager"/>。
         /// </summary>
         /// <param name="sdb">网站数据库操作。</param>
         /// <param name="sddb">域名数据库操作。</param>
         /// <param name="cache">缓存数据库操作。</param>
-        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache)
+        /// <param name="handlers">处理方法列表。</param>
+        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache, IEnumerable<ISitableCreatedHandler> handlers)
         {
             _sdb = sdb;
             _sddb = sddb;
             _cache = cache;
+            _handlers = handlers;
         }
 
         private IDictionary<string, SiteDomain> LoadCacheDomains()
@@ -308,7 +312,16 @@ namespace Mozlite.Extensions.Sites
             adapter.SiteName = site.SiteName;
             if (adapter.SiteId > 0)
                 return DataResult.FromResult(_sdb.Update(adapter), DataAction.Updated);
-            return DataResult.FromResult(_sdb.Create(adapter), DataAction.Created);
+            return DataResult.FromResult(_sdb.BeginTransaction(db =>
+            {
+                if (!db.Create(adapter))
+                    return false;
+                foreach (var handler in _handlers)
+                {
+                    handler.OnCreated(site);
+                }
+                return true;
+            }), DataAction.Created);
         }
 
         /// <summary>
@@ -360,7 +373,16 @@ namespace Mozlite.Extensions.Sites
             adapter.SiteName = site.SiteName;
             if (adapter.SiteId > 0)
                 return DataResult.FromResult(await _sdb.UpdateAsync(adapter), DataAction.Updated);
-            return DataResult.FromResult(await _sdb.CreateAsync(adapter), DataAction.Created);
+            return DataResult.FromResult(await _sdb.BeginTransactionAsync(async db =>
+            {
+                if (!await db.CreateAsync(adapter))
+                    return false;
+                foreach (var handler in _handlers)
+                {
+                    await handler.OnCreatedAsync(site);
+                }
+                return true;
+            }), DataAction.Created);
         }
 
         /// <summary>
