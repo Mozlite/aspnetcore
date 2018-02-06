@@ -60,6 +60,13 @@ namespace Mozlite.Extensions.Security
         /// <param name="password">密码。</param>
         /// <returns>返回拼接后得字符串。</returns>
         string PasswordSalt(string userName, string password);
+
+        /// <summary>
+        /// 正常实例化键。
+        /// </summary>
+        /// <param name="key">原有键值。</param>
+        /// <returns>返回正常化后的字符串。</returns>
+        string NormalizeKey(string key);
     }
 
     /// <summary>
