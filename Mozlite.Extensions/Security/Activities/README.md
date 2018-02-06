@@ -43,6 +43,8 @@
 
 ## 集成系统日志
 
+添加IOC，只需要实现类`ServiceConfigurer{TActivityManager, TActivityManagerImplementation, TUserActivity}`即可。
+
 需要在Startup配置时候，使用用户活动日志。
 
 ```csharp

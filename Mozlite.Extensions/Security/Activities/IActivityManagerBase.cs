@@ -5,7 +5,7 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 活动状态。
     /// </summary>
-    public interface IActivityManagerBase : ISingletonService
+    public interface IActivityManagerBase
     {
         /// <summary>
         /// 添加活动状态。
