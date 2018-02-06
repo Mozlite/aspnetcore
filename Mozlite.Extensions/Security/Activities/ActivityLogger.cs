@@ -15,7 +15,7 @@ namespace Mozlite.Extensions.Security.Activities
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (eventId.Name != CategoryBase.EventId.Name)
+            if (eventId.Name != CategoryHelper.EventName)
                 return;
             if (formatter == null)
                 throw new ArgumentNullException(nameof(formatter));

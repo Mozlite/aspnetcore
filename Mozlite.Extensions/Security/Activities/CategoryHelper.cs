@@ -1,18 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
-    /// 分类。
+    /// 分类辅助类。
     /// </summary>
-    [Table("core_Users_Activities_Categories")]
-    public abstract class CategoryBase : Categories.CategoryBase
+    public class CategoryHelper
     {
         /// <summary>
-        /// 默认事件ID。
+        /// 用户活动日志默认事件实例。
         /// </summary>
         public static readonly EventId EventId = Create(0);
+
+        /// <summary>
+        /// 事件名称。
+        /// </summary>
+        public static readonly string EventName = "{:user<->activity:}";
 
         /// <summary>
         /// 实例化一个事件实例。
@@ -21,7 +24,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>返回事件实例。</returns>
         public static EventId Create(int categoryId)
         {
-            return new EventId(categoryId, "{:user<->activity:}");
+            return new EventId(categoryId, EventName);
         }
     }
 }

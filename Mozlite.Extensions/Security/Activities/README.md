@@ -4,15 +4,17 @@
 
 ## 定义分类
 
-在扩展得项目中，需要重新定义分类`Category`继承自`CategoryBase`，并且按照Mozlite规则，定义`ICategoryManager`，`CategoryManager`，以及`CategoryDataMigration`继承自各自得接口或者实现类。并且泛型类型使用`Category`。
-
-这样就可以在前端使用分类得相关操作。
+在用户活动状态日志中，分类可以在扩展项目中，定义一个枚举类型，这样在编写代码的时候可以指定特定的事件实例。
 
 ## 定义用户活动实例UserActivity
 
 如果不需要扩展其他属性，可以直接使用`UserActivity`类型，不过推荐扩展得项目定义一个类并继承`UserActivity`，这样命名空间将会和扩展得项目一样。
 
 同样按照Mozlite规则，定义`IUserActivityManager`，`UserActivityManager`，以及`UserActivityDataMigration`继承自各自得接口或者实现类。并且泛型类型使用`UserActivity`。
+
+## 分页查询支持
+
+分页查询实体继承自`UserActivityQuery{TUser, TUserActivity}`。
 
 ## 日志扩展
 
@@ -34,12 +36,7 @@
         /// <param name="categoryId">分类Id。</param>
         /// <param name="message">用户操作信息。</param>
         /// <param name="args">格式化参数。</param>
-        public static void Info(this ILogger logger, int categoryId, string message, params object[] args)
-        {
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            logger.LogInformation(CategoryBase.Create(categoryId), message, args);
-        }
+        public static void Info(this ILogger logger, int categoryId, string message, params object[] args);
 ```
 
 如果直接使用`ILogger`的扩展方法记录用户活动日志，需要将EventId设置为分类的ID（可以使用`CategoryBase.Create`方法实例化）。
