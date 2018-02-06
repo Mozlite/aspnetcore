@@ -34,6 +34,13 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 加密字符串。
         /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回加密后得字符串。</returns>
+        string HashPassword(TUser user);
+
+        /// <summary>
+        /// 加密字符串。
+        /// </summary>
         /// <param name="password">原始密码。</param>
         /// <returns>返回加密后得字符串。</returns>
         string HashPassword(string password);
