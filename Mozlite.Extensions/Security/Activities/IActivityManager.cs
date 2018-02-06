@@ -7,14 +7,6 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 激活状态管理接口。
     /// </summary>
-    public interface IActivityManager : IActivityManager<UserActivity>
-    {
-
-    }
-
-    /// <summary>
-    /// 激活状态管理接口。
-    /// </summary>
     /// <typeparam name="TActivity">当前活动状态类型。</typeparam>
     public interface IActivityManager<TActivity> : IActivityManagerBase
         where TActivity : UserActivity, new()

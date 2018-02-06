@@ -1,11 +1,11 @@
-﻿using Mozlite.Extensions.Categories;
-
-namespace Mozlite.Extensions.Security.Activities
+﻿namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
     /// 分类迁移类。
     /// </summary>
-    public class CategoryDataMigration : CategoryDataMigration<Category>
+    /// <typeparam name="TCategory">分类类型。</typeparam>
+    public abstract class CategoryDataMigration<TCategory> : Categories.CategoryDataMigration<TCategory>
+        where TCategory : CategoryBase
     {
     }
 }

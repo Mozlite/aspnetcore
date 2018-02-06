@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data.Migrations;
 using Mozlite.Extensions.Security;
+using Mozlite.Extensions.Security.Activities;
 using Mozlite.Mvc.Routing;
 
 namespace Mozlite.Mvc

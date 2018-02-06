@@ -1,9 +1,9 @@
 ﻿namespace Mozlite.Extensions.Security.Activities
 {
     /// <summary>
-    /// 用户活动状态。
+    /// 分类。
     /// </summary>
-    public abstract class UserActivityEx : UserActivity, ISitable
+    public abstract class CategoryExBase : CategoryBase, ISitable
     {
         /// <summary>
         /// 获取当前站Id。

@@ -7,7 +7,7 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 用户活动状态日志提供者。
     /// </summary>
-    public class ActivityLoggerProvider : ILoggerProvider
+    internal class ActivityLoggerProvider : ILoggerProvider
     {
         private readonly IActivityManagerBase _activityManager;
         /// <summary>
@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <param name="serviceProvider">服务提供者接口。</param>
         public ActivityLoggerProvider(IServiceProvider serviceProvider)
         {
-            _activityManager = serviceProvider.GetRequiredService<IActivityManager>();
+            _activityManager = serviceProvider.GetRequiredService<IActivityManagerBase>();
         }
 
         /// <summary>

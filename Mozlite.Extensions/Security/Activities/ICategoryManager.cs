@@ -5,8 +5,9 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 分类管理接口。
     /// </summary>
-    public interface ICategoryManager : ICachableCategoryManager<Category>, ISingletonService
+    /// <typeparam name="TCategory">分类类型。</typeparam>
+    public interface ICategoryManager<TCategory> : ICachableCategoryManager<TCategory>
+        where TCategory : CategoryBase
     {
-
     }
 }

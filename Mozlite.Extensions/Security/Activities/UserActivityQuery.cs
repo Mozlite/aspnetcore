@@ -6,8 +6,11 @@ namespace Mozlite.Extensions.Security.Activities
     /// <summary>
     /// 用户活动查询实例。
     /// </summary>
-    public abstract class UserActivityQuery<TUser> : QueryBase<UserActivity>
+    /// <typeparam name="TUser">用户类型。</typeparam>
+    /// <typeparam name="TUserActivity">用户活动状态类型。</typeparam>
+    public abstract class UserActivityQuery<TUser, TUserActivity> : QueryBase<TUserActivity>
         where TUser : UserBase
+        where TUserActivity : UserActivity
     {
         /// <summary>
         /// 分类Id。
@@ -33,11 +36,13 @@ namespace Mozlite.Extensions.Security.Activities
         /// 初始化查询上下文。
         /// </summary>
         /// <param name="context">查询上下文。</param>
-        protected override void Init(IQueryContext<UserActivity> context)
+        protected override void Init(IQueryContext<TUserActivity> context)
         {
             context.InnerJoin<TUser>((a, u) => a.UserId == u.UserId)
                 .Select()
                 .Select<TUser>(x => new { x.UserName, x.NormalizedUserName });
+            if (Cid > 0)
+                context.Where(x => x.CategoryId == Cid);
             if (UserId > 0)
                 context.Where(x => x.UserId == UserId);
             if (!string.IsNullOrEmpty(Name))

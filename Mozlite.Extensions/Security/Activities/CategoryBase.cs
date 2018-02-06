@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Categories;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -8,7 +7,7 @@ namespace Mozlite.Extensions.Security.Activities
     /// 分类。
     /// </summary>
     [Table("core_Users_Activities_Categories")]
-    public class Category : CategoryBase
+    public abstract class CategoryBase : Categories.CategoryBase
     {
         /// <summary>
         /// 默认事件ID。
@@ -16,17 +15,13 @@ namespace Mozlite.Extensions.Security.Activities
         public static readonly EventId EventId = Create(0);
 
         /// <summary>
-        /// 隐式转换事件ID。
+        /// 实例化一个事件实例。
         /// </summary>
-        /// <param name="category">当前分类实例。</param>
-        public static implicit operator EventId(Category category)
+        /// <param name="categoryId">当前分类ID。</param>
+        /// <returns>返回事件实例。</returns>
+        public static EventId Create(int categoryId)
         {
-            return new EventId(category.Id, EventId.Name);
-        }
-
-        internal static EventId Create(int eventId)
-        {
-            return new EventId(eventId, "{:user<->activity:}");
+            return new EventId(categoryId, "{:user<->activity:}");
         }
     }
 }

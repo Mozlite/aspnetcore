@@ -18,7 +18,7 @@ namespace Mozlite.Extensions.Security.Activities
         {
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
-            logger.LogInformation(Category.EventId, message, args);
+            logger.LogInformation(CategoryBase.EventId, message, args);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Security.Activities
         {
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
-            logger.LogInformation(Category.Create(categoryId), message, args);
+            logger.LogInformation(CategoryBase.Create(categoryId), message, args);
         }
     }
 }
