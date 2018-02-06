@@ -104,7 +104,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="isRemembered">是否记住登陆状态。</param>
         /// <param name="success">成功后执行的方法。</param>
         /// <returns>返回登陆结果。</returns>
-        Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Action<TUser, Task> success);
+        Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Func<TUser, Task> success);
 
         /// <summary>
         /// 通过用户ID更新用户列。
