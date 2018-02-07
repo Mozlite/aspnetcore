@@ -10,6 +10,7 @@ namespace Mozlite.Mvc
     /// </summary>
     public abstract class ModelBase : PageModel
     {
+        #region common
         private int _pageIndex = -1;
         /// <summary>
         /// 当前页码。
@@ -47,8 +48,14 @@ namespace Mozlite.Mvc
             code = Verifiers.Verifiers.Hashed(code);
             return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
         }
+        #endregion
 
         #region users
+        /// <summary>
+        /// 是否已经登入。
+        /// </summary>
+        protected bool IsAuthenticated => User.Identity.IsAuthenticated;
+
         private int _userId = -1;
         /// <summary>
         /// 当前用户ID。

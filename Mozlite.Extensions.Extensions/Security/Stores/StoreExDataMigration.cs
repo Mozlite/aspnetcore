@@ -1,6 +1,5 @@
 ﻿using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
-using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Security.Stores
 {
