@@ -311,7 +311,7 @@ namespace Mozlite
             {
                 var encrypto = rijndael.CreateDecryptor();
                 var cs = new CryptoStream(ms, encrypto, CryptoStreamMode.Read);
-                using (var sr = new StreamReader(cs))
+                using (var sr = new StreamReader(cs, Encoding.UTF8))
                     return sr.ReadToEnd();
             }
         }
