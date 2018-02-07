@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 using Mozlite.Data;
+using Mozlite.Extensions.Installers;
 using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Sites
@@ -56,7 +57,7 @@ namespace Mozlite.Extensions.Sites
             if (domain == null)
                 domain = _contextAccessor.HttpContext?.Request.Host.Host;
             _context.Domain = domain;
-            if (!Database.IsMigrated) return _context;
+            if (Installer.Current != InstallerResult.Success) return _context;
             var siteDomain = _siteManager.GetDomain(domain);
             if (siteDomain != null)
             {
