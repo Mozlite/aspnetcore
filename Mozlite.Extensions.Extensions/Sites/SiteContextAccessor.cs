@@ -54,7 +54,7 @@ namespace Mozlite.Extensions.Sites
                 throw new Exception(Resources.SiteContextIsInitialized);
             _context = new TSiteContext();
             if (domain == null)
-                domain = _contextAccessor.HttpContext.Request.Host.Host;
+                domain = _contextAccessor.HttpContext?.Request.Host.Host;
             _context.Domain = domain;
             if (!Database.IsMigrated) return _context;
             var siteDomain = _siteManager.GetDomain(domain);
