@@ -28,11 +28,6 @@ namespace Mozlite.Extensions
         public virtual string Domain { get; internal set; }
 
         /// <summary>
-        /// 是否已经初始化。
-        /// </summary>
-        public virtual bool Initialized { get; internal set; }
-
-        /// <summary>
         /// 是否为默认域名。
         /// </summary>
         public virtual bool IsDefault { get; internal set; }

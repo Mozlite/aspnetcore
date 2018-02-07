@@ -18,6 +18,10 @@ namespace Mozlite.Data
     /// </summary>
     public abstract class Database : IDatabase
     {
+        /// <summary>
+        /// 是否已经迁移成功。
+        /// </summary>
+        public static bool IsMigrated = false;
         private readonly DbProviderFactory _factory;
         private readonly ISqlHelper _sqlHelper;
         private readonly string _connectionString;

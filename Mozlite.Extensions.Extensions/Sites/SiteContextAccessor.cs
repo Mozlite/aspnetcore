@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Http;
+using Mozlite.Data;
 using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Sites
@@ -49,19 +50,19 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回当前网站上下文实例。</returns>
         public TSiteContext CreateSiteContext(string domain = null)
         {
-            if (_context?.Initialized == true)
+            if (_context != null)
                 throw new Exception(Resources.SiteContextIsInitialized);
             _context = new TSiteContext();
             if (domain == null)
                 domain = _contextAccessor.HttpContext.Request.Host.Host;
+            _context.Domain = domain;
+            if (!Database.IsMigrated) return _context;
             var siteDomain = _siteManager.GetDomain(domain);
             if (siteDomain != null)
             {
                 _context.IsDefault = siteDomain.IsDefault;
                 _context.Disabled = siteDomain.Disabled;
-                _context.Domain = siteDomain.Domain;
                 _context.Site = _siteManager.GetSite<TSite>(siteDomain.SiteId);
-                _context.Initialized = true;
             }
             return _context;
         }

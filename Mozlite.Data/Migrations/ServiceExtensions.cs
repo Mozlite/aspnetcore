@@ -14,15 +14,21 @@ namespace Mozlite.Data.Migrations
         /// </summary>
         /// <param name="app">应用程序构建实例接口。</param>
         /// <returns>返回当前应用程序构建实例接口。</returns>
-        public static IApplicationBuilder UseMigrations( this IApplicationBuilder app)
+        public static IApplicationBuilder UseMigrations(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())
             {
                 Task.Run(
-                    async () => await serviceScope.ServiceProvider
-                    .GetService<IDataMigrator>()
-                    .MigrateAsync());
+                    async () =>
+                    {
+                        if (Database.IsMigrated)
+                            return;
+                        await serviceScope.ServiceProvider
+                            .GetService<IDataMigrator>()
+                            .MigrateAsync();
+                        Database.IsMigrated = true;
+                    });
             }
             return app;
         }
