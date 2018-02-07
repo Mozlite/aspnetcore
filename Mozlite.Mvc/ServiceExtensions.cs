@@ -73,8 +73,6 @@ namespace Mozlite.Mvc
             {
                 service.Configure(app, configuration);
             }
-            //数据库迁移
-            app.UseMigrations();
             //MVC
             app.UseMvc(builder =>
                 builder
