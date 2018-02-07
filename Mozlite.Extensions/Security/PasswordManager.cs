@@ -59,7 +59,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="key">原有键值。</param>
         /// <returns>返回正常化后的字符串。</returns>
-        protected string NormalizeKey(string key)
+        public string NormalizeKey(string key)
         {
             if (_normalizer != null)
                 return _normalizer.Normalize(key);
