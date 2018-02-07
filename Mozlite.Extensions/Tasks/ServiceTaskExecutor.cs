@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
 using Mozlite.Tasks;
 
 namespace Mozlite.Extensions.Tasks
@@ -67,8 +68,17 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回任务实例。</returns>
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            //等待数据迁移
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                if(Database.IsMigrated)
+                    break;
+                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+                await ExecuteAsync(cancellationToken);
+            }
+            //将后台服务添加到数据库中
             await _taskManager.EnsuredTaskServicesAsync(_services.Values);
-
+            //开启后台服务线程，执行后台服务
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
