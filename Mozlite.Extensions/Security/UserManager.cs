@@ -65,7 +65,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="key">原有键值。</param>
         /// <returns>返回正常化后的字符串。</returns>
-        public virtual string NormalizeKey(string key) => Manager.NormalizeKey(key);
+        public virtual string NormalizeKey(string key) => _passwordManager.NormalizeKey(key);
 
         private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>

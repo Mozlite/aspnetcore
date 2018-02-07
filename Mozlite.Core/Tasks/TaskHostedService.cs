@@ -55,18 +55,18 @@ namespace Mozlite.Tasks
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                var executors = _serviceProvider.GetServices<ITaskExecutor>();
-                foreach (var executor in executors)
+                using (var scope = _serviceProvider.CreateScope())
                 {
-#pragma warning disable 4014
-                    Task.Run(async () =>
+                    var executors = scope.ServiceProvider.GetServices<ITaskExecutor>();
+                    foreach (var executor in executors)
                     {
-                        using (_serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+#pragma warning disable 4014
+                        Task.Run(async () =>
                         {
                             await executor.ExecuteAsync(cancellationToken);
-                        }
-                    }, cancellationToken);
-#pragma warning restore 4014 
+                        }, cancellationToken);
+#pragma warning restore 4014
+                    }
                 }
             }
             return Task.CompletedTask;

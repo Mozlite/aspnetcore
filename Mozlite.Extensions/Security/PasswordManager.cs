@@ -8,16 +8,13 @@ namespace Mozlite.Extensions.Security
     public abstract class PasswordManager<TUser> : IPasswordManager
         where TUser : class
     {
-        private readonly ILookupNormalizer _normalizer;
         private readonly IPasswordHasher<TUser> _passwordHasher;
         /// <summary>
         /// 初始化类<see cref="PasswordManager{TUser}"/>。
         /// </summary>
-        /// <param name="normalizer">格式化键接口。</param>
         /// <param name="passwordHasher">密码加密器。</param>
-        protected PasswordManager(ILookupNormalizer normalizer, IPasswordHasher<TUser> passwordHasher)
+        protected PasswordManager(IPasswordHasher<TUser> passwordHasher)
         {
-            _normalizer = normalizer;
             _passwordHasher = passwordHasher;
         }
 
@@ -61,9 +58,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回正常化后的字符串。</returns>
         public string NormalizeKey(string key)
         {
-            if (_normalizer != null)
-                return _normalizer.Normalize(key);
-            return key;
+            return key?.ToUpper();
         }
     }
 }
