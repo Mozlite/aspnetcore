@@ -21,6 +21,7 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPasswordManager _passwordManager;
 
         /// <summary>
         /// 系统管理实例。
@@ -49,9 +50,11 @@ namespace Mozlite.Extensions.Security
         /// <param name="signInManager"> 登陆管理实例。</param>
         /// <param name="store">用户存储实例。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor)
+        /// <param name="passwordManager">密码管理接口。</param>
+        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor, IPasswordManager passwordManager)
         {
             _httpContextAccessor = httpContextAccessor;
+            _passwordManager = passwordManager;
             Manager = manager;
             SignInManager = signInManager;
             Store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
@@ -194,7 +197,7 @@ namespace Mozlite.Extensions.Security
         {
             var userName = user.NormalizedUserName ?? NormalizeKey(user.UserName);
             var password = PasswordSalt(userName, user.PasswordHash);
-            return Manager.PasswordHasher.HashPassword(user, password);
+            return HashPassword(password);
         }
 
         /// <summary>
@@ -202,9 +205,9 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="password">原始密码。</param>
         /// <returns>返回加密后得字符串。</returns>
-        public virtual string HashPassword(string password)
+        public string HashPassword(string password)
         {
-            return Manager.PasswordHasher.HashPassword(null, password);
+            return _passwordManager.HashPassword(password);
         }
 
         /// <summary>
@@ -215,8 +218,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>验证结果。</returns>
         public virtual bool VerifyHashedPassword(string hashedPassword, string providedPassword)
         {
-            return Manager.PasswordHasher.VerifyHashedPassword(null, hashedPassword, providedPassword) !=
-                   PasswordVerificationResult.Failed;
+            return _passwordManager.VerifyHashedPassword(hashedPassword, providedPassword);
         }
 
         /// <summary>
@@ -225,9 +227,9 @@ namespace Mozlite.Extensions.Security
         /// <param name="userName">当前用户名。</param>
         /// <param name="password">密码。</param>
         /// <returns>返回拼接后得字符串。</returns>
-        public virtual string PasswordSalt(string userName, string password)
+        public string PasswordSalt(string userName, string password)
         {
-            return $"{NormalizeKey(userName)}2018{password}";
+            return _passwordManager.PasswordSalt(userName, password);
         }
     }
 
@@ -267,8 +269,8 @@ namespace Mozlite.Extensions.Security
         /// <param name="signInManager"> 登陆管理实例。</param>
         /// <param name="store">用户存储实例。</param>
         /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor)
-            : base(manager, signInManager, store, httpContextAccessor)
+        /// <param name="passwordManager">密码管理接口。</param>
+        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor, IPasswordManager passwordManager) : base(manager, signInManager, store, httpContextAccessor, passwordManager)
         {
         }
     }

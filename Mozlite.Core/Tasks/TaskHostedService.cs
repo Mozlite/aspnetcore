@@ -58,12 +58,15 @@ namespace Mozlite.Tasks
                 var executors = _serviceProvider.GetServices<ITaskExecutor>();
                 foreach (var executor in executors)
                 {
-                    using (_serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                    {
 #pragma warning disable 4014
-                        Task.Run(async () => await executor.ExecuteAsync(cancellationToken), cancellationToken);
+                    Task.Run(async () =>
+                    {
+                        using (_serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                        {
+                            await executor.ExecuteAsync(cancellationToken);
+                        }
+                    }, cancellationToken);
 #pragma warning restore 4014 
-                    }
                 }
             }
             return Task.CompletedTask;
