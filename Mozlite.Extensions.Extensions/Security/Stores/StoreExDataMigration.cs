@@ -89,23 +89,5 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.RoleId)
                 .ForeignKey<TRole>(x => x.RoleId, onDelete: ReferentialAction.Cascade));
         }
-
-        /// <summary>
-        /// 添加初始数据，如添加管理员和初始角色等等。
-        /// </summary>
-        /// <param name="builder">数据迁移构建实例。</param>
-        public virtual void Up1(MigrationBuilder builder)
-        {
-            builder.SqlCreate(new TRole
-            {
-                Name = Resources.Administrator,
-                NormalizedName = "ADMINISTRATOR"
-            });
-            builder.SqlCreate(new TRole
-            {
-                Name = Resources.Register,
-                NormalizedName = "REGISTER"
-            });
-        }
     }
 }

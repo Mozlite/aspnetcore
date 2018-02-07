@@ -61,15 +61,6 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 管理员 的本地化字符串。
-        /// </summary>
-        internal static string Administrator {
-            get {
-                return ResourceManager.GetString("Administrator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 恭喜你，你已经成功添加了“{0}”。 的本地化字符串。
         /// </summary>
         internal static string DataAction_Created {
@@ -156,15 +147,6 @@ namespace Mozlite.Extensions.Properties {
         internal static string DataAction_UpdatedFailured {
             get {
                 return ResourceManager.GetString("DataAction_UpdatedFailured", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 会员 的本地化字符串。
-        /// </summary>
-        internal static string Register {
-            get {
-                return ResourceManager.GetString("Register", resourceCulture);
             }
         }
         
