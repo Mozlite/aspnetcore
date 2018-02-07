@@ -14,7 +14,11 @@ namespace Mozlite.Extensions.Settings
         /// <param name="builder">迁移实例对象。</param>
         public override void Create(MigrationBuilder builder)
         {
-            builder.AddColumn<SettingsExAdapter>(s => s.SiteId);
+            builder.CreateTable<SettingsExAdapter>(table => table
+                .Column(x => x.SiteId)
+                .Column(s => s.SettingKey)
+                .Column(s => s.SettingValue)
+            );
         }
     }
 }
