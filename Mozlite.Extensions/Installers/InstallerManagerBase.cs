@@ -74,7 +74,7 @@ namespace Mozlite.Extensions.Installers
                 throw new Exception("注册码不能为空！");
             registration = registration.Trim();
             var lisence = new Lisence { Registration = Cores.Encrypto(registration) };
-            if (await _context.AnyAsync())
+            if (!await _context.AnyAsync())
                 return await _context.CreateAsync(lisence);
             if (await _context.UpdateAsync(lisence))
             {//验证
