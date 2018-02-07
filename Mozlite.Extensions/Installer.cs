@@ -53,7 +53,10 @@ namespace Mozlite.Extensions
             {
                 Current = await installerManager.IsInstalledAsync(cancellationToken);
                 if (Current == InstallerResult.New)
+                {
                     await installerManager.SetupAsync(cancellationToken);
+                    Current = InstallerResult.Success;
+                }
             }
             else
                 Current = InstallerResult.Success;
