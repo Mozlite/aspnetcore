@@ -271,16 +271,19 @@ namespace Mozlite
             rijndael.GenerateIV();
             rijndael.GenerateKey();
             var buffer = Encoding.UTF8.GetBytes(text);
-            var ms = new MemoryStream();
-            var encrypto = rijndael.CreateEncryptor();
-            var cs = new CryptoStream(ms, encrypto, CryptoStreamMode.Write);
-            cs.Write(buffer, 0, buffer.Length);
-            cs.FlushFinalBlock();
-            ms.Close();
-            buffer = new byte[rijndael.IV.Length + rijndael.Key.Length + ms.Length];
+            byte[] result;
+            using (var ms = new MemoryStream())
+            {
+                var encrypto = rijndael.CreateEncryptor();
+                var cs = new CryptoStream(ms, encrypto, CryptoStreamMode.Write);
+                cs.Write(buffer, 0, buffer.Length);
+                cs.FlushFinalBlock();
+                result = ms.ToArray();
+            }
+            buffer = new byte[48 + result.Length];
             rijndael.IV.CopyTo(buffer, 0);
-            ms.ToArray().CopyTo(buffer, rijndael.IV.Length);
-            rijndael.Key.CopyTo(buffer, rijndael.IV.Length + ms.Length);
+            result.CopyTo(buffer, 16);
+            rijndael.Key.CopyTo(buffer, 16 + result.Length);
             return Convert.ToBase64String(buffer);
         }
 
@@ -292,21 +295,25 @@ namespace Mozlite
         public static string Decrypto(string text)
         {
             var buffer = Convert.FromBase64String(text);
-            //var rijndael = Rijndael.Create();
-            //rijndael.GenerateIV();
-            //rijndael.GenerateKey();
-            //using (var ms = new MemoryStream(buffer, 0, buffer.Length))
-            //using (var reader = new StreamReader(ms))
-            //{
-            //    reader.ReadBlock(rijndael.IV, 0, rijndael.IV.Length);
-            //}
-            //buffer.CopyTo();
-            //rijndael.IV = GetIV();
-            //ICryptoTransform encrypto = _symmetricAlgorithm.CreateDecryptor();
-            //CryptoStream cs = new CryptoStream(ms, encrypto, CryptoStreamMode.Read);
-            //StreamReader sr = new StreamReader(cs);
-            //return sr.ReadToEnd();
-            return text;
+            var rijndael = Rijndael.Create();
+            var iv = new byte[16];
+            var key = new byte[32];
+            using (var ms = new MemoryStream(buffer, 0, buffer.Length))
+            {
+                ms.Read(iv, 0, 16);
+                ms.Read(key, buffer.Length - 32, 32);
+                buffer = new byte[buffer.Length - 48];
+                ms.Read(buffer, 16, buffer.Length);
+            }
+            rijndael.IV = iv;
+            rijndael.Key = key;
+            using (var ms = new MemoryStream())
+            {
+                var encrypto = rijndael.CreateDecryptor();
+                var cs = new CryptoStream(ms, encrypto, CryptoStreamMode.Read);
+                using (var sr = new StreamReader(cs))
+                    return sr.ReadToEnd();
+            }
         }
     }
 }
