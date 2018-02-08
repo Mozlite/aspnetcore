@@ -54,9 +54,11 @@ namespace Mozlite.Extensions
                 var installManager = _serviceProvider.GetRequiredService<IInstallerManager>();
                 if (await installManager.IsNewAsync())
                 {
-                    var installer = _serviceProvider.GetService<IInstaller>();
-                    if (installer != null && !await installer.ExecuteAsync())
-                        Current = InstallerStatus.Failured;
+                    var installer = _serviceProvider.GetRequiredService<IInstaller>();
+                    if (await installer.ExecuteAsync())
+                        Current = InstallerStatus.Initialize;//新站需要初始化。
+                    else
+                        Current = InstallerStatus.Failured;//失败。
                 }
             }
         }

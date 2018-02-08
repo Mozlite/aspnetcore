@@ -16,6 +16,11 @@
         Success,
 
         /// <summary>
+        /// 初始化。
+        /// </summary>
+        Initialize,
+
+        /// <summary>
         /// 过期。
         /// </summary>
         Expired,
