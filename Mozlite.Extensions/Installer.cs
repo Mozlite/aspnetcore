@@ -43,20 +43,20 @@ namespace Mozlite.Extensions
             //数据库迁移
             if (Current == InstallerStatus.Data)
             {
-                try
+                _logger.LogInformation("数据库迁移开始！");
+                await _serviceProvider.GetRequiredService<IDataMigrator>().MigrateAsync();
+                _logger.LogInformation("数据库迁移完成！");
+                Current = InstallerStatus.Success;
+            }
+            //执行安装接口
+            if (Current == InstallerStatus.Success)
+            {
+                var installManager = _serviceProvider.GetRequiredService<IInstallerManager>();
+                if (await installManager.IsNewAsync())
                 {
-                    _logger.LogInformation("数据库迁移开始！");
-                    await _serviceProvider.GetRequiredService<IDataMigrator>().MigrateAsync();
-                    _logger.LogInformation("数据库迁移完成！");
-                    Current = InstallerStatus.DataSuccess;
-                }
-                catch (Exception exception)
-                {
-                    _logger.LogInformation($"数据库迁移错误：{exception.Message}！");
-#if DEBUG
-                    _logger.LogError(exception.StackTrace);
-#endif
-                    Current = InstallerStatus.DataError;
+                    var installer = _serviceProvider.GetService<IInstaller>();
+                    if (installer != null && !await installer.ExecuteAsync())
+                        Current = InstallerStatus.Failured;
                 }
             }
         }

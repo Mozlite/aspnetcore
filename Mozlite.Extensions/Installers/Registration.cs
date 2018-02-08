@@ -21,10 +21,5 @@ namespace Mozlite.Extensions.Installers
         /// 过期时间。
         /// </summary>
         public DateTimeOffset Expired { get; set; } = DateTimeOffset.MaxValue;
-
-        /// <summary>
-        /// 当前步骤，用于记录当前安装进度。
-        /// </summary>
-        public InstallerStatus Current { get; set; }
     }
 }
