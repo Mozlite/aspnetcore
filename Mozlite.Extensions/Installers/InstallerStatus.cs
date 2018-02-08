@@ -3,7 +3,7 @@
     /// <summary>
     /// 验证结果。
     /// </summary>
-    public enum InstallerResult
+    public enum InstallerStatus
     {
         /// <summary>
         /// 数据迁移。
@@ -11,9 +11,24 @@
         Data,
 
         /// <summary>
+        /// 数据迁移错误。
+        /// </summary>
+        DataError,
+
+        /// <summary>
+        /// 数据迁移完成。
+        /// </summary>
+        DataSuccess,
+
+        /// <summary>
         /// 新产品。
         /// </summary>
         New,
+
+        /// <summary>
+        /// 配置。
+        /// </summary>
+        Config,
 
         /// <summary>
         /// 成功。

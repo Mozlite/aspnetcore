@@ -21,7 +21,7 @@ namespace Mozlite.Extensions.Tasks
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (Installer.Current == InstallerResult.Success)
+                if (Installer.Current == InstallerStatus.Success)
                     break;
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                 await executor(cancellationToken);

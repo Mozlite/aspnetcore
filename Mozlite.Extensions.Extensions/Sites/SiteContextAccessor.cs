@@ -57,7 +57,7 @@ namespace Mozlite.Extensions.Sites
             if (domain == null)
                 domain = _contextAccessor.HttpContext?.Request.Host.Host;
             _context.Domain = domain;
-            if (Installer.Current != InstallerResult.Success) return _context;
+            if (Installer.Current != InstallerStatus.Success) return _context;
             var siteDomain = _siteManager.GetDomain(domain);
             if (siteDomain != null)
             {
