@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
 using Mozlite.Tasks;
 
 namespace Mozlite.Extensions.Tasks

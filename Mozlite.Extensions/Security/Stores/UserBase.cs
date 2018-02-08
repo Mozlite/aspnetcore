@@ -58,7 +58,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         [Size(36)]
         [NotUpdated]
-        public string SecurityStamp { get; set; }
+        public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// 用于多线程更新附加随机条件。
