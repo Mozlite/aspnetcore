@@ -54,14 +54,22 @@ namespace Mozlite.Extensions
                 var installManager = _serviceProvider.GetRequiredService<IInstallerManager>();
                 if (await installManager.IsNewAsync())
                 {
+                    _logger.LogInformation("初始化网站！");
                     var installer = _serviceProvider.GetRequiredService<IInstaller>();
                     if (await installer.ExecuteAsync())
+                    {
                         Current = InstallerStatus.Initialize; //新站需要初始化。
+                        _logger.LogInformation("完成网站初始化！");
+                    }
                     else
+                    {
                         Current = InstallerStatus.Failured; //失败。
+                        _logger.LogInformation("网站初始化失败！");
+                    }
                 }
                 else
                 {
+                    _logger.LogInformation("启动网站！");
                     Current = InstallerStatus.Success;
                 }
             }
