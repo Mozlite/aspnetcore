@@ -301,9 +301,9 @@ namespace Mozlite
             using (var ms = new MemoryStream(buffer, 0, buffer.Length))
             {
                 ms.Read(iv, 0, 16);
-                ms.Read(key, buffer.Length - 32, 32);
                 buffer = new byte[buffer.Length - 48];
-                ms.Read(buffer, 16, buffer.Length);
+                ms.Read(buffer, 0, buffer.Length);
+                ms.Read(key, 0, 32);
             }
             rijndael.IV = iv;
             rijndael.Key = key;
