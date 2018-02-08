@@ -170,5 +170,19 @@ namespace Mozlite.Extensions.Sites
         /// <param name="siteId">网站Id。</param>
         /// <returns>返回当前网站信息实例。</returns>
         Task<TSite> GetSiteAsync<TSite>(int siteId) where TSite : SiteBase, new();
+
+        /// <summary>
+        /// 判断是否已经存在，唯一键重复。
+        /// </summary>
+        /// <param name="site">当前网站实例。</param>
+        /// <returns>返回判断结果。</returns>
+        bool IsDuplicated(SiteBase site);
+
+        /// <summary>
+        /// 判断是否已经存在，唯一键重复。
+        /// </summary>
+        /// <param name="site">当前网站实例。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<bool> IsDuplicatedAsync(SiteBase site);
     }
 }

@@ -306,12 +306,11 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回数据结果。</returns>
         public virtual DataResult Save(SiteBase site)
         {
-            var adapter = new SiteAdapter();
-            adapter.SettingValue = JsonConvert.SerializeObject(site);
-            adapter.SiteId = site.SiteId;
-            adapter.SiteName = site.SiteName;
+            var adapter = CreateInstance(site);
             if (adapter.SiteId > 0)
                 return DataResult.FromResult(_sdb.Update(adapter), DataAction.Updated);
+            if (IsDuplicated(site))
+                return DataResult.FromResult(_sdb.Update(x => x.SiteKey == adapter.SiteKey, new { adapter.SiteName, adapter.UpdatedDate, adapter.SettingValue }), DataAction.Updated);
             return DataResult.FromResult(_sdb.BeginTransaction(db =>
             {
                 if (!db.Create(adapter))
@@ -349,16 +348,7 @@ namespace Mozlite.Extensions.Sites
         public virtual TSite GetSite<TSite>(int siteId) where TSite : SiteBase, new()
         {
             var settings = _sdb.Find(siteId);
-            if (settings == null) return null;
-            TSite site;
-            if (string.IsNullOrWhiteSpace(settings.SettingValue))
-                site = new TSite();
-            else
-                site = JsonConvert.DeserializeObject<TSite>(settings.SettingValue);
-            site.SiteName = settings.SiteName;
-            site.UpdatedDate = settings.UpdatedDate;
-            site.SiteId = siteId;
-            return site;
+            return CreateInstance<TSite>(settings);
         }
 
         /// <summary>
@@ -368,12 +358,11 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回数据结果。</returns>
         public virtual async Task<DataResult> SaveAsync(SiteBase site)
         {
-            var adapter = new SiteAdapter();
-            adapter.SettingValue = JsonConvert.SerializeObject(site);
-            adapter.SiteId = site.SiteId;
-            adapter.SiteName = site.SiteName;
+            var adapter = CreateInstance(site);
             if (adapter.SiteId > 0)
                 return DataResult.FromResult(await _sdb.UpdateAsync(adapter), DataAction.Updated);
+            if (await IsDuplicatedAsync(site))
+                return DataResult.FromResult(await _sdb.UpdateAsync(x => x.SiteKey == adapter.SiteKey, new { adapter.SiteName, adapter.UpdatedDate, adapter.SettingValue }), DataAction.Updated);
             return DataResult.FromResult(await _sdb.BeginTransactionAsync(async db =>
             {
                 if (!await db.CreateAsync(adapter))
@@ -412,16 +401,63 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<TSite> GetSiteAsync<TSite>(int siteId) where TSite : SiteBase, new()
         {
             var settings = await _sdb.FindAsync(siteId);
-            if (settings == null) return null;
+            return CreateInstance<TSite>(settings);
+        }
+
+        /// <summary>
+        /// 实例化网站。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="site">网站实例。</param>
+        /// <returns>返回网站实例。</returns>
+        protected SiteAdapter CreateInstance<TSite>(TSite site) where TSite : SiteBase, new()
+        {
+            var adapter = new SiteAdapter();
+            adapter.SettingValue = JsonConvert.SerializeObject(site);
+            adapter.SiteKey = site.SiteKey;
+            adapter.SiteId = site.SiteId;
+            adapter.SiteName = site.SiteName;
+            return adapter;
+        }
+
+        /// <summary>
+        /// 实例化网站。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="adapter">网站适配实例。</param>
+        /// <returns>返回网站实例。</returns>
+        protected TSite CreateInstance<TSite>(SiteAdapter adapter) where TSite : SiteBase, new()
+        {
+            if (adapter == null) return null;
             TSite site;
-            if (string.IsNullOrWhiteSpace(settings.SettingValue))
+            if (string.IsNullOrWhiteSpace(adapter.SettingValue))
                 site = new TSite();
             else
-                site = JsonConvert.DeserializeObject<TSite>(settings.SettingValue);
-            site.SiteName = settings.SiteName;
-            site.UpdatedDate = settings.UpdatedDate;
-            site.SiteId = siteId;
+                site = JsonConvert.DeserializeObject<TSite>(adapter.SettingValue);
+            site.SiteName = adapter.SiteName;
+            site.UpdatedDate = adapter.UpdatedDate;
+            site.SiteId = adapter.SiteId;
             return site;
+        }
+
+        /// <summary>
+        /// 判断是否已经存在，唯一键重复。
+        /// </summary>
+        /// <param name="site">当前网站实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual bool IsDuplicated(SiteBase site)
+        {
+            return _sdb.Any(x => x.SiteId != site.SiteId && x.SiteKey == site.SiteKey);
+        }
+
+        /// <summary>
+        /// 判断是否已经存在，唯一键重复。
+        /// </summary>
+        /// <param name="site">当前网站实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual Task<bool> IsDuplicatedAsync(SiteBase site)
+        {
+            return _sdb.AnyAsync(x => x.SiteId != site.SiteId && x.SiteKey == site.SiteKey);
         }
     }
 }
