@@ -316,6 +316,7 @@ namespace Mozlite.Extensions.Sites
             {
                 if (!db.Create(adapter))
                     return false;
+                site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
                     handler.OnCreated(site);
@@ -377,6 +378,7 @@ namespace Mozlite.Extensions.Sites
             {
                 if (!await db.CreateAsync(adapter))
                     return false;
+                site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
                     await handler.OnCreatedAsync(site);
