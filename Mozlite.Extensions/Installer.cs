@@ -18,7 +18,7 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 当前安装状态。
         /// </summary>
-        public static InstallerStatus Current { get; internal set; } = InstallerStatus.Data;
+        public static InstallerStatus Current { get; internal set; } = InstallerStatus.DataMigration;
 
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
@@ -41,24 +41,28 @@ namespace Mozlite.Extensions
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             //数据库迁移
-            if (Current == InstallerStatus.Data)
+            if (Current == InstallerStatus.DataMigration)
             {
                 _logger.LogInformation("数据库迁移开始！");
                 await _serviceProvider.GetRequiredService<IDataMigrator>().MigrateAsync();
                 _logger.LogInformation("数据库迁移完成！");
-                Current = InstallerStatus.Success;
+                Current = InstallerStatus.MigrationCompleted;
             }
             //执行安装接口
-            if (Current == InstallerStatus.Success)
+            if (Current == InstallerStatus.MigrationCompleted)
             {
                 var installManager = _serviceProvider.GetRequiredService<IInstallerManager>();
                 if (await installManager.IsNewAsync())
                 {
                     var installer = _serviceProvider.GetRequiredService<IInstaller>();
                     if (await installer.ExecuteAsync())
-                        Current = InstallerStatus.Initialize;//新站需要初始化。
+                        Current = InstallerStatus.Initialize; //新站需要初始化。
                     else
-                        Current = InstallerStatus.Failured;//失败。
+                        Current = InstallerStatus.Failured; //失败。
+                }
+                else
+                {
+                    Current = InstallerStatus.Success;
                 }
             }
         }

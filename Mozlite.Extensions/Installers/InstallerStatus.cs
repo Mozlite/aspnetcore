@@ -8,8 +8,13 @@
         /// <summary>
         /// 数据迁移。
         /// </summary>
-        Data,
-        
+        DataMigration,
+
+        /// <summary>
+        /// 数据库完成。
+        /// </summary>
+        MigrationCompleted,
+
         /// <summary>
         /// 成功。
         /// </summary>
