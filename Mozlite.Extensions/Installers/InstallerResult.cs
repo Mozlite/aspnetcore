@@ -6,6 +6,11 @@
     public enum InstallerResult
     {
         /// <summary>
+        /// 数据迁移。
+        /// </summary>
+        Data,
+
+        /// <summary>
         /// 新产品。
         /// </summary>
         New,
@@ -21,7 +26,7 @@
         Expired,
 
         /// <summary>
-        /// 验证码错误。
+        /// 注册码错误。
         /// </summary>
         Failured,
     }

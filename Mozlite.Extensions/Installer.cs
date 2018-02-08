@@ -18,7 +18,7 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 当前安装状态。
         /// </summary>
-        public static InstallerResult Current { get; internal set; } = InstallerResult.New;
+        public static InstallerResult Current { get; internal set; } = InstallerResult.Data;
 
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
@@ -41,25 +41,13 @@ namespace Mozlite.Extensions
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             //数据库迁移
-            if (Current == InstallerResult.New)
+            if (Current == InstallerResult.Data)
             {
                 _logger.LogInformation("数据库迁移开始！");
                 await _serviceProvider.GetRequiredService<IDataMigrator>().MigrateAsync();
                 _logger.LogInformation("数据库迁移完成！");
+                Current = InstallerResult.New;
             }
-            //安装初始化
-            var installerManager = _serviceProvider.GetService<IInstallerManager>();
-            if (installerManager != null)
-            {
-                Current = await installerManager.IsInstalledAsync(cancellationToken);
-                if (Current == InstallerResult.New)
-                {
-                    await installerManager.SetupAsync(cancellationToken);
-                    Current = InstallerResult.Success;
-                }
-            }
-            else
-                Current = InstallerResult.Success;
         }
     }
 }

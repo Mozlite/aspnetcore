@@ -13,14 +13,7 @@ namespace Mozlite.Extensions.Installers
         /// </summary>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回判断结果。</returns>
-        Task<InstallerResult> IsInstalledAsync(CancellationToken cancellationToken);
-
-        /// <summary>
-        /// 安装程序。
-        /// </summary>
-        /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回安装任务。</returns>
-        Task SetupAsync(CancellationToken cancellationToken);
+        Task<InstallerResult> InstalledAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// 保存注册码。

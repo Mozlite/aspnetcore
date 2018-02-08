@@ -27,14 +27,30 @@ namespace Mozlite.Extensions.Installers
         /// </summary>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回判断结果。</returns>
-        public async Task<InstallerResult> IsInstalledAsync(CancellationToken cancellationToken)
+        public async Task<InstallerResult> InstalledAsync(CancellationToken cancellationToken)
         {
+            //等待数据迁移
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                if (Installer.Current == InstallerResult.New)
+                    break;
+                await Task.Delay(100, cancellationToken);
+                await InstalledAsync(cancellationToken);
+            }
+
             var lisence = (await _context.FetchAsync(cancellationToken: cancellationToken)).FirstOrDefault();
-            if (lisence == null || string.IsNullOrWhiteSpace(lisence.Registration))
-                return InstallerResult.New;
+            var registration = lisence?.Registration;
+            if (string.IsNullOrWhiteSpace(registration))
+            {
+                registration = await SetupAsync(cancellationToken);
+                if (string.IsNullOrEmpty(registration))
+                    return InstallerResult.Failured;
+                if (await SaveLisenceAsync(registration))
+                    return InstallerResult.Success;
+            }
             try
             {
-                var registration = Cores.Decrypto(lisence.Registration);
+                registration = Cores.Decrypto(registration);
                 return await IsValidAsync(registration, cancellationToken);
             }
             catch { }
@@ -50,17 +66,6 @@ namespace Mozlite.Extensions.Installers
         protected virtual Task<InstallerResult> IsValidAsync(string registration, CancellationToken cancellationToken)
         {
             return Task.FromResult(InstallerResult.Success);
-        }
-
-        /// <summary>
-        /// 安装程序。
-        /// </summary>
-        /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回安装任务。</returns>
-        public async Task SetupAsync(CancellationToken cancellationToken)
-        {
-            var registration = await SetupCoreAsync(cancellationToken);
-            await SaveLisenceAsync(registration);
         }
 
         /// <summary>
@@ -100,6 +105,6 @@ namespace Mozlite.Extensions.Installers
         /// </summary>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回执行后的注册码实例。</returns>
-        protected abstract Task<string> SetupCoreAsync(CancellationToken cancellationToken);
+        protected abstract Task<string> SetupAsync(CancellationToken cancellationToken);
     }
 }
