@@ -298,7 +298,7 @@ namespace Mozlite
             var rijndael = Rijndael.Create();
             var iv = new byte[16];
             var key = new byte[32];
-            using (var ms = new MemoryStream(buffer, 0, buffer.Length))
+            using (var ms = new MemoryStream(buffer))
             {
                 ms.Read(iv, 0, 16);
                 buffer = new byte[buffer.Length - 48];
@@ -307,7 +307,7 @@ namespace Mozlite
             }
             rijndael.IV = iv;
             rijndael.Key = key;
-            using (var ms = new MemoryStream())
+            using (var ms = new MemoryStream(buffer))
             {
                 var encrypto = rijndael.CreateDecryptor();
                 var cs = new CryptoStream(ms, encrypto, CryptoStreamMode.Read);
