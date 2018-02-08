@@ -133,6 +133,14 @@ namespace Mozlite.Extensions.Sites
         DataResult Save(SiteBase site);
 
         /// <summary>
+        /// 获取网站信息实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="key">网站唯一键。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        TSite GetSiteByKey<TSite>(string key) where TSite : SiteBase, new();
+
+        /// <summary>
         /// 获取当前域名下的网站信息实例。
         /// </summary>
         /// <typeparam name="TSite">网站类型。</typeparam>
@@ -154,6 +162,14 @@ namespace Mozlite.Extensions.Sites
         /// <param name="site">当前配置实例。</param>
         /// <returns>返回数据结果。</returns>
         Task<DataResult> SaveAsync(SiteBase site);
+
+        /// <summary>
+        /// 获取网站信息实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="key">网站唯一键。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        Task<TSite> GetSiteByKeyAsync<TSite>(string key) where TSite : SiteBase, new();
 
         /// <summary>
         /// 获取当前域名下的网站信息实例。

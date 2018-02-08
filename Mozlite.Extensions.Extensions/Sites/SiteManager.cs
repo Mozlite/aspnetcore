@@ -325,6 +325,18 @@ namespace Mozlite.Extensions.Sites
         }
 
         /// <summary>
+        /// 获取网站信息实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="key">网站唯一键。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        public virtual TSite GetSiteByKey<TSite>(string key) where TSite : SiteBase, new()
+        {
+            var settings = _sdb.Find(x => x.SiteKey == key);
+            return CreateInstance<TSite>(settings);
+        }
+
+        /// <summary>
         /// 获取当前域名下的网站信息实例。
         /// </summary>
         /// <typeparam name="TSite">网站类型。</typeparam>
@@ -374,6 +386,18 @@ namespace Mozlite.Extensions.Sites
                 }
                 return true;
             }), DataAction.Created);
+        }
+
+        /// <summary>
+        /// 获取网站信息实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="key">网站唯一键。</param>
+        /// <returns>返回当前网站信息实例。</returns>
+        public virtual async Task<TSite> GetSiteByKeyAsync<TSite>(string key) where TSite : SiteBase, new()
+        {
+            var settings = await _sdb.FindAsync(x=>x.SiteKey == key);
+            return CreateInstance<TSite>(settings);
         }
 
         /// <summary>
