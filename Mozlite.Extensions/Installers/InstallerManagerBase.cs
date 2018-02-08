@@ -46,7 +46,7 @@ namespace Mozlite.Extensions.Installers
                 if (string.IsNullOrEmpty(registration))
                     return InstallerResult.Failured;
                 if (await SaveLisenceAsync(registration))
-                    return InstallerResult.Success;
+                    return InstallerResult.New;
             }
             try
             {
@@ -75,8 +75,6 @@ namespace Mozlite.Extensions.Installers
         /// <returns>返回保存结果。</returns>
         public virtual async Task<bool> SaveLisenceAsync(string registration)
         {
-            if (string.IsNullOrWhiteSpace(registration))
-                throw new Exception("注册码不能为空！");
             registration = registration.Trim();
             var lisence = new Lisence { Registration = Cores.Encrypto(registration) };
             if (!await _context.AnyAsync())
