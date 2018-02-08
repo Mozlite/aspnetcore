@@ -16,14 +16,14 @@
         MigrationCompleted,
 
         /// <summary>
-        /// 成功。
-        /// </summary>
-        Success,
-
-        /// <summary>
         /// 初始化。
         /// </summary>
         Initialize,
+
+        /// <summary>
+        /// 成功。
+        /// </summary>
+        Success,
 
         /// <summary>
         /// 过期。

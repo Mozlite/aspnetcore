@@ -69,7 +69,7 @@ namespace Mozlite.Extensions.Tasks
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             //等待数据迁移
-            await cancellationToken.WaitInstalledAsync(ExecuteAsync);
+            await cancellationToken.WaitInstalledAsync();
             //将后台服务添加到数据库中
             await _taskManager.EnsuredTaskServicesAsync(_services.Values);
             //开启后台服务线程，执行后台服务
