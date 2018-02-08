@@ -18,7 +18,7 @@
         /// <summary>
         /// 初始化。
         /// </summary>
-        Initialize,
+        Initializing,
 
         /// <summary>
         /// 成功。

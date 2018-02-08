@@ -29,11 +29,11 @@ namespace Mozlite.Extensions.Tasks
         /// 等待到安装初始化完成。
         /// </summary>
         /// <returns>返回当前任务。</returns>
-        public static async Task WaitInstalledAsync()
+        public static async Task WaitInitializingAsync()
         {
             while (true)
             {
-                if (Installer.Current >= InstallerStatus.Success)
+                if (Installer.Current >= InstallerStatus.Initializing)
                     break;
                 await Task.Delay(100);
             }
