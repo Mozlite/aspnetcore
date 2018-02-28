@@ -144,6 +144,17 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 修改密码。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="password">原始密码。</param>
+        /// <param name="newPassword">新密码。</param>
+        /// <returns>返回修改结果。</returns>
+        public virtual Task<ChangePasswordResult> ChangePasswordAsync(TUser user, string password, string newPassword){
+            return Manager.ChangePasswordAsync(user, password, newPassword);
+        }
+
+        /// <summary>
         /// 通过用户ID更新用户列。
         /// </summary>
         /// <param name="userId">用户ID。</param>
