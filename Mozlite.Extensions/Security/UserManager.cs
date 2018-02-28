@@ -150,8 +150,8 @@ namespace Mozlite.Extensions.Security
         /// <param name="password">原始密码。</param>
         /// <param name="newPassword">新密码。</param>
         /// <returns>返回修改结果。</returns>
-        public virtual Task<ChangePasswordResult> ChangePasswordAsync(TUser user, string password, string newPassword){
-            return Manager.ChangePasswordAsync(user, password, newPassword);
+        public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string password, string newPassword){
+            return await Manager.ChangePasswordAsync(user, password, newPassword);
         }
 
         /// <summary>

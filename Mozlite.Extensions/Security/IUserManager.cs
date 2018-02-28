@@ -113,7 +113,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="password">原始密码。</param>
         /// <param name="newPassword">新密码。</param>
         /// <returns>返回修改结果。</returns>
-        Task<ChangePasswordResult> ChangePasswordAsync(TUser user, string password, string newPassword);
+        Task<IdentityResult> ChangePasswordAsync(TUser user, string password, string newPassword);
 
         /// <summary>
         /// 通过用户ID更新用户列。
