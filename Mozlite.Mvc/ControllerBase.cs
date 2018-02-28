@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Mozlite.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Security;
 using Mozlite.Mvc.Messages;
@@ -14,6 +15,23 @@ namespace Mozlite.Mvc
     public abstract class ControllerBase : Controller
     {
         #region commons
+        private ILogger _logger;
+        /// <summary>
+        /// 日志接口。
+        /// </summary>
+        protected virtual ILogger Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    _logger = HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                        .CreateLogger(GetType());
+                }
+                return _logger;
+            }
+        }
+
         private int _pageIndex = -1;
         /// <summary>
         /// 当前页码。
@@ -66,7 +84,7 @@ namespace Mozlite.Mvc
                 return _areaName;
             }
         }
-        
+
         /// <summary>
         /// 判断验证码。
         /// </summary>
@@ -364,6 +382,11 @@ namespace Mozlite.Mvc
         #endregion
 
         #region users
+        /// <summary>
+        /// 是否已经登入。
+        /// </summary>
+        protected bool IsAuthenticated => User.Identity.IsAuthenticated;
+
         private int _userId = -1;
         /// <summary>
         /// 当前用户ID。
