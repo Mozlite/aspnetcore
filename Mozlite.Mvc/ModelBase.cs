@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
@@ -208,6 +210,20 @@ namespace Mozlite.Mvc
 
         private IActionResult Json(BsType type, string message)
         {
+            if (ModelState.Count > 0)
+            {
+                type = BsType.Danger;
+                var dic = new Dictionary<string, string>();
+                foreach (var key in ModelState.Keys)
+                {
+                    var error = ModelState[key].Errors.FirstOrDefault()?.ErrorMessage;
+                    if (string.IsNullOrEmpty(key))
+                        message = message ?? error;
+                    else
+                        dic[key] = error;
+                }
+                return Json(type, message, dic);
+            }
             return new JsonResult(new JsonMesssage(type, message));
         }
 
