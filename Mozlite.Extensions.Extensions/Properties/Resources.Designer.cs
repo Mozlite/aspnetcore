@@ -151,6 +151,15 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 当前不是在HTTP上下文中，不能实例化当前站点。 的本地化字符串。
+        /// </summary>
+        internal static string HttpContextNotInitialized {
+            get {
+                return ResourceManager.GetString("HttpContextNotInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 当前网站上下文已经初始化过一次了，不能再进行初始化！ 的本地化字符串。
         /// </summary>
         internal static string SiteContextIsInitialized {

@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Mozlite.Data;
 using Mozlite.Extensions.Installers;
 using Mozlite.Extensions.Properties;
@@ -55,7 +56,14 @@ namespace Mozlite.Extensions.Sites
                 throw new Exception(Resources.SiteContextIsInitialized);
             _context = new TSiteContext();
             if (domain == null)
-                domain = _contextAccessor.HttpContext?.Request.Host.Host;
+            {
+                if(_contextAccessor.HttpContext?.Request == null)
+                    throw new Exception(Resources.HttpContextNotInitialized);
+                var uri = new Uri(_contextAccessor.HttpContext.Request.GetDisplayUrl());
+                domain = uri.DnsSafeHost;
+                if (!uri.IsDefaultPort)
+                    domain += ":" + uri.Port;
+            }
             _context.Domain = domain;
             if (Installer.Current != InstallerStatus.Success) return _context;
             var siteDomain = _siteManager.GetDomain(domain);
