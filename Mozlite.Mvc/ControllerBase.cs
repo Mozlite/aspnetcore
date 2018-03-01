@@ -194,7 +194,7 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="message">消息字符串。</param>
         /// <returns>返回JSON结果。</returns>
-        protected IActionResult Info(string message)
+        protected IActionResult Info(string message = null)
         {
             return Json(BsType.Info, message);
         }
@@ -215,7 +215,7 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="message">消息字符串。</param>
         /// <returns>返回JSON结果。</returns>
-        protected IActionResult Warning(string message)
+        protected IActionResult Warning(string message = null)
         {
             return Json(BsType.Warning, message);
         }
@@ -236,7 +236,7 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="message">消息字符串。</param>
         /// <returns>返回JSON结果。</returns>
-        protected IActionResult Error(string message)
+        protected IActionResult Error(string message = null)
         {
             return Json(BsType.Danger, message);
         }
@@ -277,7 +277,7 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="message">消息字符串。</param>
         /// <returns>返回JSON结果。</returns>
-        protected IActionResult Success(string message)
+        protected IActionResult Success(string message = null)
         {
             return Json(BsType.Success, message);
         }
@@ -295,7 +295,7 @@ namespace Mozlite.Mvc
 
         private IActionResult Json(BsType type, string message)
         {
-            if (ModelState.Count > 0)
+            if (!ModelState.IsValid)
             {
                 type = BsType.Danger;
                 var dic = new Dictionary<string, string>();
