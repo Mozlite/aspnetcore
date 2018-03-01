@@ -36,12 +36,9 @@ namespace Mozlite.Extensions.Security.Activities
         /// <returns>返回是否实例化成功。</returns>
         protected override bool Init(TUserActivity activity)
         {
-            if (base.Init(activity) && activity.SiteId == 0)
-            {
+            if (activity.SiteId == 0)
                 activity.SiteId = Site.SiteId;
-                return true;
-            }
-            return false;
+            return base.Init(activity);
         }
     }
 }
