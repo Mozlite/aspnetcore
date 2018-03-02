@@ -200,5 +200,19 @@ namespace Mozlite.Extensions.Sites
         /// <param name="site">当前网站实例。</param>
         /// <returns>返回判断结果。</returns>
         Task<bool> IsDuplicatedAsync(SiteBase site);
+
+        /// <summary>
+        /// 加载所有网站。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回所有网站。</returns>
+        IEnumerable<TSite> LoadSites<TSite>() where TSite : SiteBase, new();
+
+        /// <summary>
+        /// 加载所有网站。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回所有网站。</returns>
+        Task<IEnumerable<TSite>> LoadSitesAsync<TSite>() where TSite : SiteBase, new();
     }
 }

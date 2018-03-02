@@ -396,7 +396,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回当前网站信息实例。</returns>
         public virtual async Task<TSite> GetSiteByKeyAsync<TSite>(string key) where TSite : SiteBase, new()
         {
-            var settings = await _sdb.FindAsync(x=>x.SiteKey == key);
+            var settings = await _sdb.FindAsync(x => x.SiteKey == key);
             return CreateInstance<TSite>(settings);
         }
 
@@ -482,6 +482,27 @@ namespace Mozlite.Extensions.Sites
         public virtual Task<bool> IsDuplicatedAsync(SiteBase site)
         {
             return _sdb.AnyAsync(x => x.SiteId != site.SiteId && x.SiteKey == site.SiteKey);
+        }
+
+        /// <summary>
+        /// 加载所有网站。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回所有网站。</returns>
+        public virtual IEnumerable<TSite> LoadSites<TSite>() where TSite : SiteBase, new()
+        {
+            return _sdb.Fetch().Select(CreateInstance<TSite>);
+        }
+
+        /// <summary>
+        /// 加载所有网站。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <returns>返回所有网站。</returns>
+        public virtual async Task<IEnumerable<TSite>> LoadSitesAsync<TSite>() where TSite : SiteBase, new()
+        {
+            var sites = await _sdb.FetchAsync();
+            return sites.Select(CreateInstance<TSite>);
         }
     }
 }
