@@ -192,7 +192,7 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="message">消息字符串。</param>
         /// <returns>返回JSON结果。</returns>
-        protected IActionResult Success(string message = null)
+        protected IActionResult Success(string message)
         {
             return Json(BsType.Success, message);
         }
