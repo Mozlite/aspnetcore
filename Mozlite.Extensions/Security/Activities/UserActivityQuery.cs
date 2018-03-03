@@ -1,4 +1,5 @@
-﻿using Mozlite.Data;
+﻿using System;
+using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security.Activities
@@ -33,6 +34,16 @@ namespace Mozlite.Extensions.Security.Activities
         public string IP { get; set; }
 
         /// <summary>
+        /// 起始时间。
+        /// </summary>
+        public DateTimeOffset? Start { get; set; }
+
+        /// <summary>
+        /// 结束时间。
+        /// </summary>
+        public DateTimeOffset? End { get; set; }
+
+        /// <summary>
         /// 初始化查询上下文。
         /// </summary>
         /// <param name="context">查询上下文。</param>
@@ -45,6 +56,10 @@ namespace Mozlite.Extensions.Security.Activities
                 context.Where(x => x.CategoryId == Cid);
             if (UserId > 0)
                 context.Where(x => x.UserId == UserId);
+            if (Start != null)
+                context.Where(x => x.CreatedDate >= Start);
+            if (End != null)
+                context.Where(x => x.CreatedDate <= End);
             if (!string.IsNullOrEmpty(Name))
                 context.Where<TUser>(x => x.UserName.Contains(Name) || x.NormalizedUserName.Contains(Name));
             if (!string.IsNullOrEmpty(IP))
