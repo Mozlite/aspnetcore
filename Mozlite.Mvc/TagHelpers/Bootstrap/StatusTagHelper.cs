@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Mozlite.Mvc.TagHelpers.Bootstrap
 {
@@ -43,24 +41,21 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var builder = new TagBuilder("div");
-            var icon = new TagBuilder("i");
+            output.TagName = "div";
             if (Status)
             {
+                output.AddCssClass(TrueClass);
+                output.AppendHtml("i", i => i.AddCssClass(TrueIcon));
                 if (!string.IsNullOrEmpty(TrueText))
-                    output.Content.AppendHtml($"<span>{TrueText}</span>");
-                builder.AddCssClass(TrueClass);
-                icon.AddCssClass(TrueIcon);
+                    output.AppendHtml("span", span => span.InnerHtml.AppendHtml(TrueText));
             }
             else
             {
+                output.AddCssClass(FalseClass);
+                output.AppendHtml("i", i => i.AddCssClass(FalseIcon));
                 if (!string.IsNullOrEmpty(FalseText))
-                    output.Content.AppendHtml($"<span>{FalseText}</span>");
-                builder.AddCssClass(FalseClass);
-                icon.AddCssClass(FalseClass);
+                    output.AppendHtml("span", span => span.InnerHtml.AppendHtml(FalseText));
             }
-            output.PreContent.AppendHtml(icon);
-            output.MergeAttributes(builder);
         }
     }
 }
