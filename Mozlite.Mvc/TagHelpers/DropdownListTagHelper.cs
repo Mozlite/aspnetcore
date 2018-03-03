@@ -32,6 +32,7 @@ namespace Mozlite.Mvc.TagHelpers
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            output.TagName = "select";
             if (For != null)
             {
                 var htmlGenerator = HttpContext.RequestServices.GetRequiredService<IHtmlGenerator>();
@@ -44,7 +45,6 @@ namespace Mozlite.Mvc.TagHelpers
             }
             else
             {
-                output.TagName = "select";
                 var value = Value?.ToString();
                 if (value != null) output.SetAttribute("value", value);
                 foreach (var item in Init())
