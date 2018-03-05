@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Mozlite.Extensions;
 
-namespace Mozlite.Mvc.TagHelpers
+namespace Mozlite.Mvc.TagHelpers.Common
 {
     /// <summary>
     /// 下拉框标签。
     /// </summary>
-    [HtmlTargetElement("moz:pager-select")]
-    public class PagerSelectTagHelper : ViewContextableTagHelperBase
+    [HtmlTargetElement("moz:page-dropdownlist")]
+    public class PageDropdownListTagHelper : ViewContextableTagHelperBase
     {
         /// <summary>
         /// 当前分页实例对象。

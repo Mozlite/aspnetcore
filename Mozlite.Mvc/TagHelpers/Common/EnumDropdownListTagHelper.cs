@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Mozlite.Mvc.TagHelpers
+namespace Mozlite.Mvc.TagHelpers.Common
 {
     /// <summary>
     /// 枚举下拉列表框。

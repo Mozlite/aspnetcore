@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Mozlite.Mvc.TagHelpers
+namespace Mozlite.Mvc.TagHelpers.Common
 {
     /// <summary>
     /// 是否添加当前按钮样式。
