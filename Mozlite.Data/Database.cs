@@ -404,7 +404,7 @@ namespace Mozlite.Data
             public DbDataReader ExecuteReader(string commandText, object parameters = null, CommandType commandType = CommandType.Text)
             {
                 SetCommand(commandType, commandText, parameters);
-                return ExecuteCommand(_command, cmd => cmd.ExecuteReader(CommandBehavior.CloseConnection));
+                return ExecuteCommand(_command, cmd => cmd.ExecuteReader());
             }
 
             public object ExecuteScalar(string commandText, object parameters = null, CommandType commandType = CommandType.Text)
