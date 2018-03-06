@@ -20,6 +20,10 @@ namespace Mozlite.Mvc.TagHelpers.Common
             _permissionManager = permissionManager;
         }
 
+        /// <summary>
+        /// 排序。
+        /// </summary>
+        public override int Order => int.MaxValue;
         private const string AttributeName = ".permission";
         /// <summary>
         /// 权限名称。
@@ -32,7 +36,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
         /// </summary>
         /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
-        /// .
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (string.IsNullOrWhiteSpace(PermissionName))
