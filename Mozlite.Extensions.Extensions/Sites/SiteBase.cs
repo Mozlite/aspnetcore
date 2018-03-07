@@ -22,7 +22,6 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         [Size(64)]
         [JsonIgnore]
-        [NotUpdated]
         public string SiteKey { get; set; }
 
         /// <summary>
