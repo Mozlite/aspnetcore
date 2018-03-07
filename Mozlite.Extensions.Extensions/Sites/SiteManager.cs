@@ -459,6 +459,7 @@ namespace Mozlite.Extensions.Sites
             else
                 site = JsonConvert.DeserializeObject<TSite>(adapter.SettingValue);
             site.SiteName = adapter.SiteName;
+            site.SiteKey = adapter.SiteKey;
             site.UpdatedDate = adapter.UpdatedDate;
             site.SiteId = adapter.SiteId;
             return site;
