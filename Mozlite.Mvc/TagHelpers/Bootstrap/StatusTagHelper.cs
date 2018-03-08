@@ -47,14 +47,22 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
                 output.AddCssClass(TrueClass);
                 output.AppendHtml("i", i => i.AddCssClass(TrueIcon));
                 if (!string.IsNullOrEmpty(TrueText))
-                    output.AppendHtml("span", span => span.InnerHtml.AppendHtml(TrueText));
+                    output.AppendHtml("span", span =>
+                    {
+                        span.AddCssClass("ml-1");
+                        span.InnerHtml.AppendHtml(TrueText);
+                    });
             }
             else
             {
                 output.AddCssClass(FalseClass);
                 output.AppendHtml("i", i => i.AddCssClass(FalseIcon));
                 if (!string.IsNullOrEmpty(FalseText))
-                    output.AppendHtml("span", span => span.InnerHtml.AppendHtml(FalseText));
+                    output.AppendHtml("span", span =>
+                    {
+                        span.AddCssClass("ml-1");
+                        span.InnerHtml.AppendHtml(FalseText);
+                    });
             }
         }
     }
