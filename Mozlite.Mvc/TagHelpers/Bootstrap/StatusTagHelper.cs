@@ -17,10 +17,10 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         public bool Status { get; set; }
 
         [HtmlAttributeName(".true")]
-        public string TrueIcon { get; set; } = "fa fa-check-square-o";
+        public string TrueIcon { get; set; } = "fa fa-check-circle-o";
 
         [HtmlAttributeName(".false")]
-        public string FalseIcon { get; set; } = "fa fa-dot-circle-o";
+        public string FalseIcon { get; set; } = "fa fa-minus-circle";
 
         [HtmlAttributeName(".true-text")]
         public string TrueText { get; set; }
