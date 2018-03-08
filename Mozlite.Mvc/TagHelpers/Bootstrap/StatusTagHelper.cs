@@ -20,7 +20,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         public string TrueIcon { get; set; } = "fa fa-check-square-o";
 
         [HtmlAttributeName(".false")]
-        public string FalseIcon { get; set; } = "fa dot-circle-o";
+        public string FalseIcon { get; set; } = "fa fa-dot-circle-o";
 
         [HtmlAttributeName(".true-text")]
         public string TrueText { get; set; }
