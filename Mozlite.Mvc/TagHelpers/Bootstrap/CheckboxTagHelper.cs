@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Mozlite.Mvc.TagHelpers.Bootstrap
@@ -23,6 +25,12 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         public string Value { get; set; }
 
         /// <summary>
+        /// 设置属性模型。
+        /// </summary>
+        [HtmlAttributeName("for")]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
         /// 每项样式类型。
         /// </summary>
         [HtmlAttributeName("iclass")]
@@ -39,6 +47,19 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         /// </summary>
         [HtmlAttributeName("checked")]
         public bool IsChecked { get; set; }
+
+        /// <summary>
+        /// 初始化当前标签上下文。
+        /// </summary>
+        /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
+        public override void Init(TagHelperContext context)
+        {
+            if (string.IsNullOrEmpty(Name) && For != null)
+            {
+                Name = ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(For.Name);
+                IsChecked = Convert.ToBoolean(For.Model);
+            }
+        }
 
         /// <summary>
         /// 异步访问并呈现当前标签实例。
