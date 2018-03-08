@@ -17,7 +17,7 @@ namespace Mozlite.Extensions.Sites
         private readonly IDbContext<SiteAdapter> _sdb;
         private readonly IDbContext<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
-        private readonly IEnumerable<ISitableCreatedHandler> _handlers;
+        private readonly IEnumerable<ISitableHandler> _handlers;
 
         /// <summary>
         /// <see cref="SiteManager"/>。
@@ -26,7 +26,7 @@ namespace Mozlite.Extensions.Sites
         /// <param name="sddb">域名数据库操作。</param>
         /// <param name="cache">缓存数据库操作。</param>
         /// <param name="handlers">处理方法列表。</param>
-        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache, IEnumerable<ISitableCreatedHandler> handlers)
+        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache, IEnumerable<ISitableHandler> handlers)
         {
             _sdb = sdb;
             _sddb = sddb;
@@ -318,7 +318,8 @@ namespace Mozlite.Extensions.Sites
                 site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
-                    handler.OnCreated(site);
+                    if (!handler.OnCreated(site))
+                        return false;
                 }
                 return true;
             }), DataAction.Created);
@@ -382,7 +383,8 @@ namespace Mozlite.Extensions.Sites
                 site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
-                    await handler.OnCreatedAsync(site);
+                    if (!await handler.OnCreatedAsync(site))
+                        return false;
                 }
                 return true;
             }), DataAction.Created);
@@ -504,6 +506,46 @@ namespace Mozlite.Extensions.Sites
         {
             var sites = await _sdb.FetchAsync();
             return sites.Select(CreateInstance<TSite>);
+        }
+
+        /// <summary>
+        /// 删除网站。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual DataResult Delete(int siteId)
+        {
+            return DataResult.FromResult(_sdb.BeginTransaction(db =>
+            {
+                foreach (var handler in _handlers)
+                {
+                    if (!handler.OnDeleted(siteId))
+                        return false;
+                }
+                if (!db.Delete(siteId))
+                    return false;
+                return true;
+            }), DataAction.Created);
+        }
+
+        /// <summary>
+        /// 删除网站。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<DataResult> DeleteAsync(int siteId)
+        {
+            return DataResult.FromResult(await _sdb.BeginTransactionAsync(async db =>
+            {
+                foreach (var handler in _handlers)
+                {
+                    if (!await handler.OnDeletedAsync(siteId))
+                        return false;
+                }
+                if (!await db.DeleteAsync(siteId))
+                    return false;
+                return true;
+            }), DataAction.Created);
         }
     }
 }

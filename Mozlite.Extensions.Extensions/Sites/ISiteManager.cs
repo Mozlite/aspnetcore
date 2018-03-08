@@ -214,5 +214,19 @@ namespace Mozlite.Extensions.Sites
         /// <typeparam name="TSite">网站类型。</typeparam>
         /// <returns>返回所有网站。</returns>
         Task<IEnumerable<TSite>> LoadSitesAsync<TSite>() where TSite : SiteBase, new();
+
+        /// <summary>
+        /// 删除网站。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回删除结果。</returns>
+        DataResult Delete(int siteId);
+
+        /// <summary>
+        /// 删除网站。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<DataResult> DeleteAsync(int siteId);
     }
 }
