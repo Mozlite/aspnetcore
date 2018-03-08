@@ -525,7 +525,7 @@ namespace Mozlite.Extensions.Sites
                 if (!db.Delete(siteId))
                     return false;
                 return true;
-            }), DataAction.Created);
+            }), DataAction.Deleted);
         }
 
         /// <summary>
@@ -545,7 +545,7 @@ namespace Mozlite.Extensions.Sites
                 if (!await db.DeleteAsync(siteId))
                     return false;
                 return true;
-            }), DataAction.Created);
+            }), DataAction.Deleted);
         }
     }
 }
