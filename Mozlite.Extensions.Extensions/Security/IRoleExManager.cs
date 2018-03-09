@@ -17,6 +17,22 @@ namespace Mozlite.Extensions.Security
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
+        /// 获取角色实例。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回当前角色实例。</returns>
+        TRole GetRole(int siteId, int roleId);
+
+        /// <summary>
+        /// 获取角色实例。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回当前角色实例。</returns>
+        Task<TRole> GetRoleAsync(int siteId, int roleId);
+
+        /// <summary>
         /// 获取所有角色。
         /// </summary>
         /// <param name="siteId">网站Id。</param>

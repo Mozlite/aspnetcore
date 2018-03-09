@@ -38,6 +38,28 @@ namespace Mozlite.Extensions.Security
         protected SiteContextBase Site => _siteContextAccessor.SiteContext;
 
         /// <summary>
+        /// 获取角色实例。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回当前角色实例。</returns>
+        public virtual TRole GetRole(int siteId, int roleId)
+        {
+            return Store.RoleContext.Find(x => x.SiteId == siteId && x.RoleId == roleId);
+        }
+
+        /// <summary>
+        /// 获取角色实例。
+        /// </summary>
+        /// <param name="siteId">网站Id。</param>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回当前角色实例。</returns>
+        public virtual Task<TRole> GetRoleAsync(int siteId, int roleId)
+        {
+            return Store.RoleContext.FindAsync(x => x.SiteId == siteId && x.RoleId == roleId);
+        }
+
+        /// <summary>
         /// 获取所有角色。
         /// </summary>
         /// <param name="siteId">网站Id。</param>

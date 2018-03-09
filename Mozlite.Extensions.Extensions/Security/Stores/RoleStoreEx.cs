@@ -71,7 +71,9 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            await RoleContext.DeleteAsync(x => x.RoleId == role.RoleId && x.SiteId == Site.SiteId, cancellationToken);
+            if (role.SiteId == 0)
+                role.SiteId = Site.SiteId;
+            await RoleContext.DeleteAsync(x => x.RoleId == role.RoleId && x.SiteId == role.SiteId, cancellationToken);
             Cache.Remove(CacheKey);
             return IdentityResult.Success;
         }
