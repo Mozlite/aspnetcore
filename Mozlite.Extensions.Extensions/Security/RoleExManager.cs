@@ -26,7 +26,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="manager">系统用户角色管理实例。</param>
         /// <param name="store">角色存储接口。</param>
         /// <param name="siteContextAccessor">网站上下文访问器。</param>
-        protected RoleExManager(RoleManager<TRole> manager, IRoleStore<TRole> store, ISiteContextAccessorBase siteContextAccessor) 
+        protected RoleExManager(RoleManager<TRole> manager, IRoleStore<TRole> store, ISiteContextAccessorBase siteContextAccessor)
             : base(manager, store)
         {
             _siteContextAccessor = siteContextAccessor;
@@ -46,7 +46,7 @@ namespace Mozlite.Extensions.Security
         {
             if (siteId == 0)
                 return await LoadRolesAsync();
-            return await Store.RoleContext.FetchAsync();
+            return await Store.RoleContext.FetchAsync(x => x.SiteId == siteId);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Mozlite.Extensions.Security
         {
             if (siteId == 0)
                 return LoadRoles();
-            return Store.RoleContext.Fetch();
+            return Store.RoleContext.Fetch(x => x.SiteId == siteId);
         }
     }
 }
