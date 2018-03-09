@@ -71,7 +71,6 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.Name, nullable: false)
                 .Column(x => x.NormalizedName, nullable: false)
                 .Column(x => x.RoleLevel));
-            builder.CreateIndex<TRole>(x => x.NormalizedName, true);
 
             //判断TUserRole是否单独一个表格，也可以把这个表格合并到TUser中，每一个用户只是应对一个角色
             if (typeof(UserRoleBase).IsAssignableFrom(typeof(TUserRole)))
@@ -97,7 +96,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             //索引。
             base.CreateIndex(builder);
-            builder.CreateIndex<TRole>(x => new { x.NormalizedName, x.SiteId });
+            builder.CreateIndex<TRole>(x => new { x.NormalizedName, x.SiteId }, true);
         }
     }
 }

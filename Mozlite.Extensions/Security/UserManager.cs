@@ -318,12 +318,23 @@ namespace Mozlite.Extensions.Security
         where TRoleClaim : RoleClaimBase, new()
     {
         private IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> _store;
+
         /// <summary>
         /// 用户存储实例。
         /// </summary>
-        protected new IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> Store => _store ?? (_store =
-                                                                                                                           base.Store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken,
-                                                                                                                               TRoleClaim>);
+        protected new IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> Store
+        {
+            get
+            {
+                if (_store == null)
+                {
+                    _store =
+                        base.Store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken,
+                            TRoleClaim>;
+                }
+                return _store;
+            }
+        }
 
         /// <summary>
         /// 初始化类<see cref="UserManager{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。

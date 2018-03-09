@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
