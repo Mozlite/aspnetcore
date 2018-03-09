@@ -15,10 +15,28 @@ namespace Mozlite.Extensions
     /// </summary>
     public class Installer : ITaskExecutor
     {
+        private static InstallerStatus _current = InstallerStatus.DataMigration;
+        private static readonly object _locker = new object();
         /// <summary>
         /// 当前安装状态。
         /// </summary>
-        public static InstallerStatus Current { get; internal set; } = InstallerStatus.DataMigration;
+        public static InstallerStatus Current
+        {
+            get
+            {
+                lock (_locker)
+                {
+                    return _current;
+                }
+            }
+            set
+            {
+                lock (_locker)
+                {
+                    _current = value;
+                }
+            }
+        }
 
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
