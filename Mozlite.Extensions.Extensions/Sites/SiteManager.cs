@@ -318,7 +318,7 @@ namespace Mozlite.Extensions.Sites
                 site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
-                    if (!handler.OnCreate(site))
+                    if (!handler.OnCreate(db, site))
                         return false;
                 }
                 return true;
@@ -383,7 +383,7 @@ namespace Mozlite.Extensions.Sites
                 site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
-                    if (!await handler.OnCreateAsync(site))
+                    if (!await handler.OnCreateAsync(db, site))
                         return false;
                 }
                 return true;
@@ -519,7 +519,7 @@ namespace Mozlite.Extensions.Sites
             {
                 foreach (var handler in _handlers)
                 {
-                    if (!handler.OnDelete(siteId))
+                    if (!handler.OnDelete(db, siteId))
                         return false;
                 }
                 if (!db.Delete(siteId))
@@ -539,7 +539,7 @@ namespace Mozlite.Extensions.Sites
             {
                 foreach (var handler in _handlers)
                 {
-                    if (!await handler.OnDeleteAsync(siteId))
+                    if (!await handler.OnDeleteAsync(db, siteId))
                         return false;
                 }
                 if (!await db.DeleteAsync(siteId))
