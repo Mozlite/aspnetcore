@@ -33,7 +33,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <param name="query">当前查询实例对象。</param>
         /// <returns>查询实例对象。</returns>
         TQuery Load<TQuery, TUser>(TQuery query)
-            where TQuery : QueryBase<TActivity>
+            where TQuery : UserActivityQueryBase<TUser, TActivity>
             where TUser : UserBase;
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <param name="query">当前查询实例对象。</param>
         /// <returns>查询实例对象。</returns>
         Task<TQuery> LoadAsync<TQuery, TUser>(TQuery query)
-            where TQuery : QueryBase<TActivity>
+            where TQuery : UserActivityQueryBase<TUser, TActivity>
             where TUser : UserBase;
     }
 }
