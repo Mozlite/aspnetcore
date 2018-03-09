@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -130,6 +131,22 @@ namespace Mozlite.Extensions.Security
         /// <param name="fields">用户列。</param>
         /// <returns>返回更新结果。</returns>
         Task<bool> UpdateAsync(int userId, object fields);
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
     }
 
     /// <summary>

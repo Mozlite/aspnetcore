@@ -180,6 +180,28 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
+        {
+            return Store.UserContext.Load(query);
+        }
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
+        {
+            return Store.UserContext.LoadAsync(query);
+        }
+
+        /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
