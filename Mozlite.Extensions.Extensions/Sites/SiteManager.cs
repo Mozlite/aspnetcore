@@ -210,8 +210,9 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回当前网站域名实例。</returns>
         public virtual SiteDomain GetDomain(string domain)
         {
-            LoadCacheDomains().TryGetValue(domain, out var site);
-            return site;
+            if (LoadCacheDomains().TryGetValue(domain, out var site))
+                return site;
+            return _sddb.Find(x => x.Domain == domain);
         }
 
         /// <summary>
@@ -222,8 +223,9 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<SiteDomain> GetDomainAsync(string domain)
         {
             var sites = await LoadCacheDomainsAsync();
-            sites.TryGetValue(domain, out var site);
-            return site;
+            if (sites.TryGetValue(domain, out var site))
+                return site;
+            return await _sddb.FindAsync(x => x.Domain == domain);
         }
 
         /// <summary>
