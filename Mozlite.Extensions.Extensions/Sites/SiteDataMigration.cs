@@ -1,4 +1,5 @@
-﻿using Mozlite.Data.Migrations;
+﻿using System;
+using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
 
 namespace Mozlite.Extensions.Sites
@@ -8,6 +9,11 @@ namespace Mozlite.Extensions.Sites
     /// </summary>
     public abstract class SiteDataMigration : DataMigration
     {
+        /// <summary>
+        /// 优先级，在两个迁移数据需要先后时候使用。
+        /// </summary>
+        public override int Priority => Int32.MaxValue;
+
         /// <summary>
         /// 当模型建立时候构建的表格实例。
         /// </summary>

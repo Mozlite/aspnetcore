@@ -72,7 +72,6 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.Value)
                 .Column(x => x.UserId)
                 .ForeignKey<TUser>(x => x.UserId, onDelete: ReferentialAction.Cascade));
-            CreateIndex(builder);
         }
 
         /// <summary>
