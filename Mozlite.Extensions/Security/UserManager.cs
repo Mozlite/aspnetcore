@@ -38,6 +38,11 @@ namespace Mozlite.Extensions.Security
         protected IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> Store { get; }
 
         /// <summary>
+        /// 错误实例。
+        /// </summary>
+        protected IdentityErrorDescriber ErrorDescriber => Store.ErrorDescriber;
+
+        /// <summary>
         /// 当前HTTP上下文。
         /// </summary>
         protected HttpContext HttpContext => _httpContextAccessor.HttpContext;
@@ -199,6 +204,30 @@ namespace Mozlite.Extensions.Security
         public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
         {
             return Store.UserContext.LoadAsync(query);
+        }
+
+        /// <summary>
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <returns>返回添加用户结果。</returns>
+        public virtual Task<IdentityResult> CreateAsync(TUser user)
+        {
+            return Manager.CreateAsync(user);
+        }
+
+        /// <summary>
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="userId">用户实例对象。</param>
+        /// <returns>返回添加用户结果。</returns>
+        public virtual async Task<IdentityResult> DeleteAsync(int userId)
+        {
+            var user = Activator.CreateInstance<TUser>();
+            if (user == null)
+                return IdentityResult.Failed(ErrorDescriber.UserNotFound());
+            user.UserId = userId;
+            return await Manager.DeleteAsync(user);
         }
 
         /// <summary>

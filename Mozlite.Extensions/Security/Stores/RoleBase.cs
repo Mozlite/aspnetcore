@@ -27,9 +27,9 @@ namespace Mozlite.Extensions.Security.Stores
         public string NormalizedName { get; set; }
 
         /// <summary>
-        /// 优先级。
+        /// 角色等级。
         /// </summary>
-        public int Priority { get; set; }
+        public int RoleLevel { get; set; }
 
         /// <summary>
         /// 返回角色名称。

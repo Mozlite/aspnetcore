@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 
@@ -18,18 +19,27 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
+
+        /// <summary>
+        /// 错误描述实例对象。
+        /// </summary>
+        IdentityErrorDescriber ErrorDescriber { get; }
+
         /// <summary>
         /// 用户数据库操作接口。
         /// </summary>
         IDbContext<TUser> UserContext { get; }
+
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
         IDbContext<TUserClaim> UserClaimContext { get; }
+
         /// <summary>
         /// 用户登陆数据库操作接口。
         /// </summary>
         IDbContext<TUserLogin> UserLoginContext { get; }
+
         /// <summary>
         /// 用户标识数据库操作接口。
         /// </summary>
@@ -70,6 +80,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回当前用户实例。</returns>
         Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
     }
+
     /// <summary>
     /// 用户存储接口。
     /// </summary>

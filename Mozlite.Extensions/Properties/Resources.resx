@@ -162,4 +162,85 @@
   <data name="Task_Searching_Name" xml:space="preserve">
     <value>搜索引擎服务</value>
   </data>
+  <data name="ErrorDescriptor_ConcurrencyFailure" xml:space="preserve">
+    <value>并发处理错误，对象已经被更改。</value>
+  </data>
+  <data name="ErrorDescriptor_DefaultError" xml:space="preserve">
+    <value>很抱歉，发生了未知额错误。</value>
+  </data>
+  <data name="ErrorDescriptor_DuplicateEmail" xml:space="preserve">
+    <value>电子邮件'{0}'已经存在。</value>
+  </data>
+  <data name="ErrorDescriptor_DuplicateRoleName" xml:space="preserve">
+    <value>角色名称'{0}'已经存在。</value>
+  </data>
+  <data name="ErrorDescriptor_DuplicateUserName" xml:space="preserve">
+    <value>用户名称'{0}'已经存在。</value>
+  </data>
+  <data name="ErrorDescriptor_InvalidEmail" xml:space="preserve">
+    <value>电子邮件'{0}'无效。</value>
+  </data>
+  <data name="ErrorDescriptor_InvalidRoleName" xml:space="preserve">
+    <value>角色名称'{0}'无效。</value>
+  </data>
+  <data name="ErrorDescriptor_InvalidToken" xml:space="preserve">
+    <value>用户标识无效。</value>
+  </data>
+  <data name="ErrorDescriptor_InvalidUserName" xml:space="preserve">
+    <value>用户名称'{0}'无效， 只能包含字母和数字。</value>
+  </data>
+  <data name="ErrorDescriptor_LoginAlreadyAssociated" xml:space="preserve">
+    <value>用户登陆已经存在。</value>
+  </data>
+  <data name="ErrorDescriptor_NullSecurityStamp" xml:space="preserve">
+    <value>用户安全戳不能为空。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordMismatch" xml:space="preserve">
+    <value>密码错误。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordRequiresDigit" xml:space="preserve">
+    <value>密码最少必须包含一个('0'-'9')字符。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordRequiresLower" xml:space="preserve">
+    <value>密码最少必须包含一个('a'-'z')小写字符。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>密码最少必须包含一个标点符号字符。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordRequiresUpper" xml:space="preserve">
+    <value>密码最少必须包含一个('A'-'Z')大写字符。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordTooShort" xml:space="preserve">
+    <value>密码最少必须{0}个字符。</value>
+  </data>
+  <data name="ErrorDescriptor_RoleNotFound" xml:space="preserve">
+    <value>角色{0}不存在。</value>
+  </data>
+  <data name="ErrorDescriptor_RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>兑换码赎回失败。</value>
+  </data>
+  <data name="ErrorDescriptor_UserAlreadyHasPassword" xml:space="preserve">
+    <value>用户密码已经存在。</value>
+  </data>
+  <data name="ErrorDescriptor_UserAlreadyInRole" xml:space="preserve">
+    <value>用户已经在角色'{0}'中。</value>
+  </data>
+  <data name="ErrorDescriptor_UserLockedOut" xml:space="preserve">
+    <value>用户已经被锁定。</value>
+  </data>
+  <data name="ErrorDescriptor_UserLockoutNotEnabled" xml:space="preserve">
+    <value>用户锁定状态未启用。</value>
+  </data>
+  <data name="ErrorDescriptor_UserNameNotFound" xml:space="preserve">
+    <value>用户{0}不存在。</value>
+  </data>
+  <data name="ErrorDescriptor_UserNotInRole" xml:space="preserve">
+    <value>用户不在角色'{0}'中。</value>
+  </data>
+  <data name="ErrorDescriptor_PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>密码最少必须包含{0}个不同的字符串。</value>
+  </data>
+  <data name="ErrorDescriptor_UserNotFound" xml:space="preserve">
+    <value>用户不存在。</value>
+  </data>
 </root>

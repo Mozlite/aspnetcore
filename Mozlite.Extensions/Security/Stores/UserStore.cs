@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
-using Mozlite.Data.Internal;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -136,32 +135,21 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (user is IUserExtendable<TUser> extendable)
+            if (user is IUserEventHandler<TUser> handler)
             {
-                await UserContext.BeginTransactionAsync(async db =>
-                {
-                    if (!await db.CreateAsync(user, cancellationToken))
-                        return false;
-                    if (!await extendable.OnCreateAsync(db))
-                        return false;
-                    if (!await OnCreateAsync(db))
-                        return false;
-                    return true;
-                }, cancellationToken: cancellationToken);
+                if (await UserContext.BeginTransactionAsync(async db =>
+                 {
+                     if (!await db.CreateAsync(user, cancellationToken))
+                         return false;
+                     if (!await handler.OnCreateAsync(db, cancellationToken))
+                         return false;
+                     return true;
+                 }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
             }
-            else
-                await UserContext.CreateAsync(user, cancellationToken);
-            return IdentityResult.Success;
-        }
-
-        /// <summary>
-        /// 当用户添加后触发得方法。
-        /// </summary>
-        /// <param name="context">数据库事务操作实例。</param>
-        /// <returns>返回操作结果，返回<c>true</c>表示操作成功，将自动提交事务，如果<c>false</c>或发生错误，则回滚事务。</returns>
-        protected virtual Task<bool> OnCreateAsync(IDbTransactionContext<TUser> context)
-        {
-            return Task.FromResult(true);
+            else if (await UserContext.CreateAsync(user, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -177,8 +165,9 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            await UserContext.UpdateAsync(user, cancellationToken);
-            return IdentityResult.Success;
+            if (await UserContext.UpdateAsync(user, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -194,8 +183,21 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            await UserContext.DeleteAsync(user.UserId, cancellationToken);
-            return IdentityResult.Success;
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                 {
+                     if (!await handler.OnDeleteAsync(db, cancellationToken))
+                         return false;
+                     if (!await db.DeleteAsync(user, cancellationToken))
+                         return false;
+                     return true;
+                 }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.DeleteAsync(user.UserId, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>

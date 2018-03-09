@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 错误描述实例对象。
         /// </summary>
-        public IdentityErrorDescriber ErrorDescriber { get; set; }
+        public IdentityErrorDescriber ErrorDescriber { get; }
 
         /// <summary>
         /// 实例化当前用户的声明实例。

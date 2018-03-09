@@ -160,6 +160,249 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 并发处理错误，对象已经被更改。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_ConcurrencyFailure {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_ConcurrencyFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，发生了未知额错误。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_DefaultError {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_DefaultError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 电子邮件&apos;{0}&apos;已经存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_DuplicateEmail {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_DuplicateEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 角色名称&apos;{0}&apos;已经存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_DuplicateRoleName {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_DuplicateRoleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户名称&apos;{0}&apos;已经存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_DuplicateUserName {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_DuplicateUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 电子邮件&apos;{0}&apos;无效。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_InvalidEmail {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 角色名称&apos;{0}&apos;无效。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_InvalidRoleName {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_InvalidRoleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户标识无效。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_InvalidToken {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户名称&apos;{0}&apos;无效， 只能包含字母和数字。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_InvalidUserName {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_InvalidUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户登陆已经存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_LoginAlreadyAssociated {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_LoginAlreadyAssociated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户安全戳不能为空。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_NullSecurityStamp {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_NullSecurityStamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码错误。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordMismatch {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码最少必须包含一个(&apos;0&apos;-&apos;9&apos;)字符。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordRequiresDigit {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordRequiresDigit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码最少必须包含一个(&apos;a&apos;-&apos;z&apos;)小写字符。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordRequiresLower {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordRequiresLower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码最少必须包含一个标点符号字符。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordRequiresNonAlphanumeric {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordRequiresNonAlphanumeric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码最少必须包含{0}个不同的字符串。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordRequiresUniqueChars {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordRequiresUniqueChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码最少必须包含一个(&apos;A&apos;-&apos;Z&apos;)大写字符。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordRequiresUpper {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordRequiresUpper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码最少必须{0}个字符。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_PasswordTooShort {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_PasswordTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 兑换码赎回失败。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_RecoveryCodeRedemptionFailed {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_RecoveryCodeRedemptionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 角色{0}不存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_RoleNotFound {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_RoleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户密码已经存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserAlreadyHasPassword {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserAlreadyHasPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户已经在角色&apos;{0}&apos;中。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserAlreadyInRole {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserAlreadyInRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户已经被锁定。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserLockedOut {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserLockedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户锁定状态未启用。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserLockoutNotEnabled {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserLockoutNotEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户{0}不存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserNameNotFound {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserNameNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户不存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserNotFound {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户不在角色&apos;{0}&apos;中。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_UserNotInRole {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_UserNotInRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 普通会员 的本地化字符串。
         /// </summary>
         internal static string Register {

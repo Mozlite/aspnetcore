@@ -140,6 +140,17 @@ namespace Mozlite.Extensions.Security.Stores
         public string Avatar { get; set; }
 
         /// <summary>
+        /// 显示角色等级。
+        /// </summary>
+        public int RoleLevel { get; set; }
+
+        /// <summary>
+        /// 显示角色名称。
+        /// </summary>
+        [Size(64)]
+        public string RoleName { get; set; }
+
+        /// <summary>
         /// 返回当前用户的用户名。
         /// </summary>
         public override string ToString()

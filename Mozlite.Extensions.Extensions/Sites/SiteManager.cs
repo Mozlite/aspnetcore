@@ -17,7 +17,7 @@ namespace Mozlite.Extensions.Sites
         private readonly IDbContext<SiteAdapter> _sdb;
         private readonly IDbContext<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
-        private readonly IEnumerable<ISitableHandler> _handlers;
+        private readonly IEnumerable<ISiteEventHandler> _handlers;
 
         /// <summary>
         /// <see cref="SiteManager"/>。
@@ -26,7 +26,7 @@ namespace Mozlite.Extensions.Sites
         /// <param name="sddb">域名数据库操作。</param>
         /// <param name="cache">缓存数据库操作。</param>
         /// <param name="handlers">处理方法列表。</param>
-        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache, IEnumerable<ISitableHandler> handlers)
+        public SiteManager(IDbContext<SiteAdapter> sdb, IDbContext<SiteDomain> sddb, IMemoryCache cache, IEnumerable<ISiteEventHandler> handlers)
         {
             _sdb = sdb;
             _sddb = sddb;
@@ -318,7 +318,7 @@ namespace Mozlite.Extensions.Sites
                 site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
-                    if (!handler.OnCreated(site))
+                    if (!handler.OnCreate(site))
                         return false;
                 }
                 return true;
@@ -383,7 +383,7 @@ namespace Mozlite.Extensions.Sites
                 site.SiteId = adapter.SiteId;
                 foreach (var handler in _handlers)
                 {
-                    if (!await handler.OnCreatedAsync(site))
+                    if (!await handler.OnCreateAsync(site))
                         return false;
                 }
                 return true;
@@ -519,7 +519,7 @@ namespace Mozlite.Extensions.Sites
             {
                 foreach (var handler in _handlers)
                 {
-                    if (!handler.OnDeleted(siteId))
+                    if (!handler.OnDelete(siteId))
                         return false;
                 }
                 if (!db.Delete(siteId))
@@ -539,7 +539,7 @@ namespace Mozlite.Extensions.Sites
             {
                 foreach (var handler in _handlers)
                 {
-                    if (!await handler.OnDeletedAsync(siteId))
+                    if (!await handler.OnDeleteAsync(siteId))
                         return false;
                 }
                 if (!await db.DeleteAsync(siteId))

@@ -70,7 +70,7 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.RoleId)
                 .Column(x => x.Name, nullable: false)
                 .Column(x => x.NormalizedName, nullable: false)
-                .Column(x => x.Priority));
+                .Column(x => x.RoleLevel));
             builder.CreateIndex<TRole>(x => x.NormalizedName, true);
 
             //判断TUserRole是否单独一个表格，也可以把这个表格合并到TUser中，每一个用户只是应对一个角色

@@ -39,6 +39,7 @@ namespace Mozlite.Extensions.Security
                 typeof(IRoleStore<>).MakeGenericType(builder.RoleType),
                 roleStoreType);
             builder.Services.TryAdd(services);
+            builder.AddErrorDescriber<SecurityErrorDescriptor>();
             return builder;
         }
     }

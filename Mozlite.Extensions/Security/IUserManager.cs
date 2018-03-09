@@ -147,6 +147,20 @@ namespace Mozlite.Extensions.Security
         /// <param name="query">查询实例。</param>
         /// <returns>返回查询分页实例。</returns>
         Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
+
+        /// <summary>
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <returns>返回添加用户结果。</returns>
+        Task<IdentityResult> CreateAsync(TUser user);
+
+        /// <summary>
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="userId">用户实例对象。</param>
+        /// <returns>返回添加用户结果。</returns>
+        Task<IdentityResult> DeleteAsync(int userId);
     }
 
     /// <summary>
