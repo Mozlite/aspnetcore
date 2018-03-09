@@ -51,9 +51,6 @@ namespace Mozlite.Extensions.Security.Stores
                     .Column(x => x.LastLoginDate);
                 Create(table);
             });
-            //索引。
-            builder.CreateIndex<TUser>(x => x.NormalizedUserName, true);
-            builder.CreateIndex<TUser>(x => x.NormalizedEmail);
 
             builder.CreateTable<TUserClaim>(table => table
                 .Column(x => x.Id)
@@ -75,6 +72,27 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.Value)
                 .Column(x => x.UserId)
                 .ForeignKey<TUser>(x => x.UserId, onDelete: ReferentialAction.Cascade));
+            CreateIndex(builder);
+        }
+
+        /// <summary>
+        /// 建索引。
+        /// </summary>
+        /// <param name="builder">构建实例。</param>
+        protected virtual void CreateIndex(MigrationBuilder builder)
+        {
+            //索引。
+            builder.CreateIndex<TUser>(x => x.NormalizedUserName, true);
+            builder.CreateIndex<TUser>(x => x.NormalizedEmail);
+        }
+
+        /// <summary>
+        /// 建立索引。
+        /// </summary>
+        /// <param name="builder">数据迁移构建实例。</param>
+        public void Up1(MigrationBuilder builder)
+        {
+            CreateIndex(builder);
         }
 
         /// <summary>
@@ -117,7 +135,6 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.Name, nullable: false)
                 .Column(x => x.NormalizedName, nullable: false)
                 .Column(x => x.RoleLevel));
-            builder.CreateIndex<TRole>(x => x.NormalizedName, true);
 
             //判断TUserRole是否单独一个表格，也可以把这个表格合并到TUser中，每一个用户只是应对一个角色
             if (typeof(UserRoleBase).IsAssignableFrom(typeof(TUserRole)))
@@ -136,21 +153,13 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 添加初始数据，如添加管理员和初始角色等等。
+        /// 建索引。
         /// </summary>
-        /// <param name="builder">数据迁移构建实例。</param>
-        public virtual void Up1(MigrationBuilder builder)
+        /// <param name="builder">构建实例。</param>
+        protected override void CreateIndex(MigrationBuilder builder)
         {
-            builder.SqlCreate(new TRole
-            {
-                Name = Resources.Administrator,
-                NormalizedName = "ADMINISTRATOR"
-            });
-            builder.SqlCreate(new TRole
-            {
-                Name = Resources.Register,
-                NormalizedName = "REGISTER"
-            });
+            base.CreateIndex(builder);
+            builder.CreateIndex<TRole>(x => x.NormalizedName, true);
         }
     }
 }

@@ -17,23 +17,23 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserToken : UserTokenBase, new()
     {
         /// <summary>
-        /// 创建操作。
-        /// </summary>
-        /// <param name="builder">迁移构建实例对象。</param>
-        public override void Create(MigrationBuilder builder)
-        {
-            base.Create(builder);
-            //索引。
-            builder.CreateIndex<TUser>(x => x.SiteId, true);
-        }
-
-        /// <summary>
         /// 添加用户定义列。
         /// </summary>
         /// <param name="builder">用户表格定义实例。</param>
         protected override void Create(CreateTableBuilder<TUser> builder)
         {
             builder.Column(x => x.SiteId);
+        }
+
+        /// <summary>
+        /// 建索引。
+        /// </summary>
+        /// <param name="builder">构建实例。</param>
+        protected override void CreateIndex(MigrationBuilder builder)
+        {
+            //索引。
+            builder.CreateIndex<TUser>(x => new { x.NormalizedUserName, x.SiteId }, true);
+            builder.CreateIndex<TUser>(x => new { x.NormalizedEmail, x.SiteId });
         }
     }
 
@@ -87,6 +87,17 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.ClaimValue)
                 .Column(x => x.RoleId)
                 .ForeignKey<TRole>(x => x.RoleId, onDelete: ReferentialAction.Cascade));
+        }
+
+        /// <summary>
+        /// 建索引。
+        /// </summary>
+        /// <param name="builder">构建实例。</param>
+        protected override void CreateIndex(MigrationBuilder builder)
+        {
+            //索引。
+            base.CreateIndex(builder);
+            builder.CreateIndex<TRole>(x => new { x.NormalizedName, x.SiteId });
         }
     }
 }
