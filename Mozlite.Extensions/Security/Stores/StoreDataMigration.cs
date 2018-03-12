@@ -82,6 +82,7 @@ namespace Mozlite.Extensions.Security.Stores
             //索引。
             builder.CreateIndex<TUser>(x => x.NormalizedUserName, true);
             builder.CreateIndex<TUser>(x => x.NormalizedEmail);
+            builder.CreateIndex<TUser>(x => x.RoleId);
         }
 
         /// <summary>
