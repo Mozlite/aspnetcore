@@ -87,7 +87,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">用户角色实例。</param>
         /// <returns>返回角色更新结果。</returns>
-        public Task<IdentityResult> UpdateAsync(TRole role)
+        public virtual Task<IdentityResult> UpdateAsync(TRole role)
         {
             return Manager.UpdateAsync(role);
         }
@@ -97,7 +97,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">角色实例。</param>
         /// <returns>返回角色保存结果。</returns>
-        public Task<IdentityResult> SaveAsync(TRole role)
+        public virtual Task<IdentityResult> SaveAsync(TRole role)
         {
             if (role.RoleId > 0)
                 return UpdateAsync(role);
@@ -116,7 +116,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="roleId">角色Id。</param>
         /// <returns>返回移动结果。</returns>
-        public bool MoveUp(int roleId)
+        public virtual bool MoveUp(int roleId)
         {
             return Store.MoveUp(roleId);
         }
@@ -126,9 +126,9 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="roleId">角色Id。</param>
         /// <returns>返回移动结果。</returns>
-        public bool MoveDown(int roleId)
+        public virtual bool MoveDown(int roleId)
         {
-            throw new System.NotImplementedException();
+            return Store.MoveDown(roleId);
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="roleId">角色Id。</param>
         /// <returns>返回移动结果。</returns>
-        public async Task<bool> MoveUpAsync(int roleId)
+        public virtual Task<bool> MoveUpAsync(int roleId)
         {
-            throw new System.NotImplementedException();
+            return Store.MoveUpAsync(roleId);
         }
 
         /// <summary>
@@ -146,9 +146,20 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="roleId">角色Id。</param>
         /// <returns>返回移动结果。</returns>
-        public async Task<bool> MoveDownAsync(int roleId)
+        public virtual Task<bool> MoveDownAsync(int roleId)
         {
-            throw new System.NotImplementedException();
+            return Store.MoveDownAsync(roleId);
+        }
+
+        /// <summary>
+        /// 删除角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<IdentityResult> DeleteAsync(int roleId)
+        {
+            var role = await FindByIdAsync(roleId);
+            return await Manager.DeleteAsync(role);
         }
     }
 }

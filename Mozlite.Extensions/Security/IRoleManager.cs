@@ -97,5 +97,12 @@ namespace Mozlite.Extensions.Security
         /// <param name="roleId">角色Id。</param>
         /// <returns>返回移动结果。</returns>
         Task<bool> MoveDownAsync(int roleId);
+
+        /// <summary>
+        /// 删除角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<IdentityResult> DeleteAsync(int roleId);
     }
 }
