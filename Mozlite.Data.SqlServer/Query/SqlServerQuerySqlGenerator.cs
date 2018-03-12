@@ -48,15 +48,15 @@ namespace Mozlite.Data.SqlServer.Query
 	UPDATE {table} SET {column} = @AffectOrder WHERE {primaryKey} = @Id;
 	IF(@@ERROR<>0) BEGIN
 		ROLLBACK TRANSACTION;
-		RETURN 0;
+		SELECT 0;
 	END
 	UPDATE {table} SET {column} = @CurrentOrder WHERE {primaryKey} = @AffectId;
 	IF(@@ERROR<>0) BEGIN
 		ROLLBACK TRANSACTION;
-		RETURN 0;
+		SELECT 0;
 	END
 	COMMIT TRANSACTION;
-	RETURN 1;
+	SELECT 1;
 END");
             return builder;
         }
