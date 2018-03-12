@@ -88,7 +88,7 @@ namespace Mozlite.Extensions.Security.Stores
                  {
                      if (!await db.CreateAsync(role, cancellationToken))
                          return false;
-                     if (!await handler.OnCreateAsync(db, cancellationToken))
+                     if (!await handler.OnCreatedAsync(db, cancellationToken))
                          return false;
                      return true;
                  }, cancellationToken: cancellationToken))
@@ -122,9 +122,9 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
                 {
-                    if (!await db.UpdateAsync(role, cancellationToken))
-                        return false;
                     if (!await handler.OnUpdateAsync(db, cancellationToken))
+                        return false;
+                    if (!await db.UpdateAsync(role, cancellationToken))
                         return false;
                     return true;
                 }, cancellationToken: cancellationToken))

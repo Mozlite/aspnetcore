@@ -141,7 +141,7 @@ namespace Mozlite.Extensions.Security.Stores
                  {
                      if (!await db.CreateAsync(user, cancellationToken))
                          return false;
-                     if (!await handler.OnCreateAsync(db, cancellationToken))
+                     if (!await handler.OnCreatedAsync(db, cancellationToken))
                          return false;
                      return true;
                  }, cancellationToken: cancellationToken))
@@ -165,7 +165,19 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (await UserContext.UpdateAsync(user, cancellationToken))
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await handler.OnUpdateAsync(db, cancellationToken))
+                        return false;
+                    if (!await db.UpdateAsync(user, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.UpdateAsync(user, cancellationToken))
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
