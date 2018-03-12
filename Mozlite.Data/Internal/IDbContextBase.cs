@@ -23,12 +23,12 @@ namespace Mozlite.Data.Internal
         /// SQL辅助接口。
         /// </summary>
         ISqlHelper SqlHelper { get; }
-        
+
         /// <summary>
         /// 当前实体类型。
         /// </summary>
         IEntityType EntityType { get; }
-        
+
         /// <summary>
         /// 新建实例对象。
         /// </summary>
@@ -58,7 +58,7 @@ namespace Mozlite.Data.Internal
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回是否更新成功。</returns>
         Task<bool> UpdateAsync(TModel model, CancellationToken cancellationToken = default);
-        
+
         /// <summary>
         /// 更新所有模型实例对象。
         /// </summary>
@@ -239,5 +239,66 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         Task<bool> AnyAsync(object key,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 通过条件表达式获取聚合实例对象。
+        /// </summary>
+        /// <param name="convertFunc">转换函数。</param>
+        /// <param name="column">当前列。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="scalarMethod">聚合方法。</param>
+        /// <returns>返回聚合结果。</returns>
+        TValue GetScalar<TValue>(string scalarMethod, Expression<Func<TModel, object>> column, Expression<Predicate<TModel>> expression, Func<object, TValue> convertFunc);
+
+        /// <summary>
+        /// 通过条件表达式获取聚合实例对象。
+        /// </summary>
+        /// <param name="convertFunc">转换函数。</param>
+        /// <param name="column">当前列。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="scalarMethod">聚合方法。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回聚合结果。</returns>
+        Task<TValue> GetScalarAsync<TValue>(string scalarMethod, Expression<Func<TModel, object>> column, Expression<Predicate<TModel>> expression, 
+            Func<object, TValue> convertFunc,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 上移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression);
+
+        /// <summary>
+        /// 下移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression);
+
+        /// <summary>
+        /// 上移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 下移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default);
     }
 }

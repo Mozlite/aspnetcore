@@ -70,6 +70,15 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
+        /// 获取当前最大角色等级。
+        /// </summary>
+        /// <returns>返回最大角色等级。</returns>
+        protected virtual Task<int> GetMaxRoleLevelAsync()
+        {
+            return RoleContext.MaxAsync(x => x.RoleLevel, x => x.RoleLevel < int.MaxValue);
+        }
+
+        /// <summary>
         /// 添加用户角色。
         /// </summary>
         /// <param name="role">用户角色实例。</param>
@@ -87,16 +96,17 @@ namespace Mozlite.Extensions.Security.Stores
                 return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
             if (roles.Any(x => x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
+            role.RoleLevel = await GetMaxRoleLevelAsync();//获取当前角色等级
             if (role is IRoleEventHandler<TRole> handler)
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
-                 {
-                     if (!await db.CreateAsync(role, cancellationToken))
-                         return false;
-                     if (!await handler.OnCreatedAsync(db, cancellationToken))
-                         return false;
-                     return true;
-                 }, cancellationToken: cancellationToken))
+                {
+                    if (!await db.CreateAsync(role, cancellationToken))
+                        return false;
+                    if (!await handler.OnCreatedAsync(db, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
                 {
                     Cache.Remove(CacheKey);
                     return IdentityResult.Success;

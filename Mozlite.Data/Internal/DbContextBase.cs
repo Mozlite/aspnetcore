@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
+using System.Data.Common;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Mozlite.Data.Query;
 using Mozlite.Extensions;
@@ -438,8 +438,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         public virtual bool Any(object key)
         {
-            var primaryKey = EntityType.PrimaryKey.Properties.Single();
-            return ExecuteScalar($"SELECT 1 FROM {SqlHelper.DelimitIdentifier(EntityType.Table)} WHERE {primaryKey.Name} = @Id;", new { Id = key }) != null;
+            return ExecuteScalar(SqlGenerator.Any(EntityType), new { Id = key }) != null;
         }
 
         /// <summary>
@@ -450,8 +449,101 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         public virtual async Task<bool> AnyAsync(object key, CancellationToken cancellationToken)
         {
-            var primaryKey = EntityType.PrimaryKey.Properties.Single();
-            return await ExecuteScalarAsync($"SELECT 1 FROM {SqlHelper.DelimitIdentifier(EntityType.Table)} WHERE {primaryKey.Name} = @Id;", new { Id = key }, cancellationToken: cancellationToken) != null;
+            return await ExecuteScalarAsync(SqlGenerator.Any(EntityType), new { Id = key }, cancellationToken: cancellationToken) != null;
+        }
+
+        /// <summary>
+        /// 通过条件表达式获取聚合实例对象。
+        /// </summary>
+        /// <param name="convertFunc">转换函数。</param>
+        /// <param name="column">当前列。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="scalarMethod">聚合方法。</param>
+        /// <returns>返回聚合结果。</returns>
+        public virtual TValue GetScalar<TValue>(string scalarMethod, Expression<Func<TModel, object>> column, Expression<Predicate<TModel>> expression, Func<object, TValue> convertFunc)
+        {
+            var sql = SqlGenerator.Scalar(EntityType, scalarMethod, column, expression);
+            var scalar = ExecuteScalar(sql);
+            if (convertFunc == null)
+                return (TValue)Convert.ChangeType(scalar, typeof(TValue));
+            return convertFunc(scalar);
+        }
+
+        /// <summary>
+        /// 通过条件表达式获取聚合实例对象。
+        /// </summary>
+        /// <param name="convertFunc">转换函数。</param>
+        /// <param name="column">当前列。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="scalarMethod">聚合方法。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回聚合结果。</returns>
+        public virtual async Task<TValue> GetScalarAsync<TValue>(string scalarMethod, Expression<Func<TModel, object>> column, Expression<Predicate<TModel>> expression, Func<object, TValue> convertFunc,
+            CancellationToken cancellationToken = default)
+        {
+            var sql = SqlGenerator.Scalar(EntityType, scalarMethod, column, expression);
+            var scalar = await ExecuteScalarAsync(sql, cancellationToken: cancellationToken);
+            if (convertFunc == null)
+                return (TValue)Convert.ChangeType(scalar, typeof(TValue));
+            return convertFunc(scalar);
+        }
+
+        /// <summary>
+        /// 上移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression)
+        {
+            var sql = SqlGenerator.Move(EntityType, ">", order, expression);
+            var scalar = ExecuteScalar(sql, new { Id = key });
+            return Convert.ToBoolean(scalar);
+        }
+
+        /// <summary>
+        /// 下移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression)
+        {
+            var sql = SqlGenerator.Move(EntityType, "<", order, expression);
+            var scalar = ExecuteScalar(sql, new { Id = key });
+            return Convert.ToBoolean(scalar);
+        }
+
+        /// <summary>
+        /// 上移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual async Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        {
+            var sql = SqlGenerator.Move(EntityType, ">", order, expression);
+            var scalar = await ExecuteScalarAsync(sql, new { Id = key }, cancellationToken: cancellationToken);
+            return Convert.ToBoolean(scalar);
+        }
+
+        /// <summary>
+        /// 下移一个位置。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        /// <param name="order">排序。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual async Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        {
+            var sql = SqlGenerator.Move(EntityType, "<", order, expression);
+            var scalar = await ExecuteScalarAsync(sql, new { Id = key }, cancellationToken: cancellationToken);
+            return Convert.ToBoolean(scalar);
         }
 
         #region helpers

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Extensions;
+using Mozlite.Extensions.Internal;
 
 namespace Mozlite.Data.Query
 {
@@ -155,6 +154,52 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <returns>自增长的SQL脚本字符串。</returns>
         protected abstract string SelectIdentity();
+
+        /// <summary>
+        /// 判断主键关联是否存在。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public virtual SqlIndentedStringBuilder Any(IEntityType entityType)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            var primaryKey = entityType.PrimaryKey.Properties.Single();
+            builder.Append(" WHERE ")
+                .Append(SqlHelper.DelimitIdentifier(primaryKey.Name))
+                .Append(" = ")
+                .Append(SqlHelper.Parameterized("Id"))
+                .Append(SqlHelper.StatementTerminator);
+            return builder;
+        }
+
+        /// <summary>
+        /// 移动排序。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="direction">方向。</param>
+        /// <param name="order">排序列。</param>
+        /// <param name="expression">分组条件表达式。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public abstract SqlIndentedStringBuilder Move(IEntityType entityType, string direction, LambdaExpression order,
+            Expression expression);
+
+        /// <summary>
+        /// 聚合函数。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="method">聚合函数。</param>
+        /// <param name="column">聚合列。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public SqlIndentedStringBuilder Scalar(IEntityType entityType, string method, LambdaExpression column, Expression expression)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append($"SELECT {method}({SqlHelper.DelimitIdentifier(column.GetPropertyAccess().Name)}) FROM {SqlHelper.DelimitIdentifier(entityType.Table)}");
+            builder.AppendEx(Visit(expression), " WHERE {0}")
+                .AppendLine(SqlHelper.StatementTerminator);
+            return builder;
+        }
 
         /// <summary>
         /// 解析表达式。

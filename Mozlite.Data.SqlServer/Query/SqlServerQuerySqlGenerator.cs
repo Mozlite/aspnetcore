@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data.Query;
+using Mozlite.Extensions;
 
 namespace Mozlite.Data.SqlServer.Query
 {
@@ -16,6 +19,46 @@ namespace Mozlite.Data.SqlServer.Query
         protected override string SelectIdentity()
         {
             return "SELECT SCOPE_IDENTITY();";
+        }
+
+        /// <summary>
+        /// 移动排序。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="direction">方向。</param>
+        /// <param name="order">排序列。</param>
+        /// <param name="expression">分组条件表达式。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public override SqlIndentedStringBuilder Move(IEntityType entityType, string direction, LambdaExpression order,
+            Expression expression)
+        {
+            var column = SqlHelper.DelimitIdentifier(order.GetPropertyAccess().Name);
+            var table = SqlHelper.DelimitIdentifier(entityType.Table);
+            var primaryKey = SqlHelper.DelimitIdentifier(entityType.PrimaryKey.Properties.Single().Name);
+            var where = Visit(expression);
+            var builder = new SqlIndentedStringBuilder();
+            builder.AppendLine("DECLARE @CurrentOrder int;");
+            builder.AppendLine($"SELECT @CurrentOrder = ISNULL({column}, 0) FROM {table} WHERE {primaryKey} = @Id;");
+            builder.AppendLine("DECLARE @AffectId int;");
+            builder.AppendLine("DECLARE @AffectOrder int;");
+            builder.Append($"SELECT TOP(1) @AffectId = {primaryKey}, @AffectOrder = ISNULL({column}, 0) FROM {table} WHERE {column} {direction} @CurrentOrder")
+                .AppendEx(where, " AND {0};").AppendLine();
+            builder.AppendLine($@"IF @AffectId IS NOT NULL AND @AffectId > 0 BEGIN
+	BEGIN TRANSACTION;
+	UPDATE {table} SET {column} = @AffectOrder WHERE {primaryKey} = @Id;
+	IF(@@ERROR<>0) BEGIN
+		ROLLBACK TRANSACTION;
+		RETURN 0;
+	END
+	UPDATE {table} SET {column} = @CurrentOrder WHERE {primaryKey} = @AffectId;
+	IF(@@ERROR<>0) BEGIN
+		ROLLBACK TRANSACTION;
+		RETURN 0;
+	END
+	COMMIT TRANSACTION;
+	RETURN 1;
+END");
+            return builder;
         }
 
         /// <summary>
@@ -81,7 +124,7 @@ namespace Mozlite.Data.SqlServer.Query
             builder.Append(sql.WhereSql).Append(" ");
             builder.Append(sql.OrderBySql).Append(SqlHelper.StatementTerminator);
         }
-        
+
         /// <summary>
         /// 初始化类<see cref="SqlServerQuerySqlGenerator"/>。
         /// </summary>
