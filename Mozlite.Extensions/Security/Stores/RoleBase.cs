@@ -30,6 +30,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 角色等级。
         /// </summary>
+        [NotUpdated]
         public int RoleLevel { get; set; }
 
         /// <summary>
