@@ -44,7 +44,7 @@ namespace Mozlite.Extensions.Security.Stores
                     .Column(x => x.CreatedDate)
                     .Column(x => x.UpdatedDate)
                     .Column(x => x.Avatar)
-                    .Column(x => x.RoleLevel, defaultValue: 0)
+                    .Column(x => x.RoleId, defaultValue: 0)
                     .Column(x => x.RoleName)
                     .Column(x => x.LoginIP)
                     .Column(x => x.LastLoginDate);

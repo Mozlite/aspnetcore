@@ -140,9 +140,9 @@ namespace Mozlite.Extensions.Security.Stores
         public string Avatar { get; set; }
 
         /// <summary>
-        /// 显示角色等级。
+        /// 显示角色Id。
         /// </summary>
-        public int RoleLevel { get; set; }
+        public int RoleId { get; set; }
 
         /// <summary>
         /// 显示角色名称。
