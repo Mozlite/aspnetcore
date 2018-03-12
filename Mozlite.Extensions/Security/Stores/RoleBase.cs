@@ -24,6 +24,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 用于比对的角色名称。
         /// </summary>
         [Size(64)]
+        [NotUpdated]
         public string NormalizedName { get; set; }
 
         /// <summary>

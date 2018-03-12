@@ -243,4 +243,7 @@
   <data name="ErrorDescriptor_UserNotFound" xml:space="preserve">
     <value>用户不存在。</value>
   </data>
+  <data name="ErrorDescriptor_DuplicateNormalizedRoleName" xml:space="preserve">
+    <value>角色唯一键'{0}'已经存在。</value>
+  </data>
 </root>

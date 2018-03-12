@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Mozlite.Extensions.Data;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -47,21 +47,21 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">用户组实例。</param>
         /// <returns>返回添加结果。</returns>
-        Task<DataResult> CreateAsync(TRole role);
+        Task<IdentityResult> CreateAsync(TRole role);
 
         /// <summary>
         /// 更新用户角色。
         /// </summary>
         /// <param name="role">用户角色实例。</param>
         /// <returns>返回角色更新结果。</returns>
-        Task<DataResult> UpdateAsync(TRole role);
+        Task<IdentityResult> UpdateAsync(TRole role);
 
         /// <summary>
         /// 保存角色。
         /// </summary>
         /// <param name="role">角色实例。</param>
         /// <returns>返回角色保存结果。</returns>
-        Task<DataResult> SaveAsync(TRole role);
+        Task<IdentityResult> SaveAsync(TRole role);
 
         /// <summary>
         /// 正常实例化键。

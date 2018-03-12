@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -93,6 +92,17 @@ namespace Mozlite.Extensions.Security
         public static IdentityError UserNotFound(this IdentityErrorDescriber describer)
         {
             return describer.SecurityError(ErrorDescriptor.UserNotFound);
+        }
+
+        /// <summary>
+        /// 角色唯一键已经存在。
+        /// </summary>
+        /// <param name="describer">错误描述实例。</param>
+        /// <param name="normalizedRoleName">角色唯一键。</param>
+        /// <returns>返回错误实例。</returns>
+        public static IdentityError DuplicateNormalizedRoleName(this IdentityErrorDescriber describer, string normalizedRoleName)
+        {
+            return describer.SecurityError(ErrorDescriptor.DuplicateNormalizedRoleName, normalizedRoleName);
         }
     }
 }

@@ -99,6 +99,13 @@ namespace Mozlite.Extensions.Security
         /// 用户名无效。
         /// </summary>
         InvalidUserName,
+        /// <summary>
+        /// 用户不存在。
+        /// </summary>
         UserNotFound,
+        /// <summary>
+        /// 角色唯一键已经存在。
+        /// </summary>
+        DuplicateNormalizedRoleName,
     }
 }

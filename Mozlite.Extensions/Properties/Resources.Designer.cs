@@ -187,6 +187,15 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 角色唯一键&apos;{0}&apos;已经存在。 的本地化字符串。
+        /// </summary>
+        internal static string ErrorDescriptor_DuplicateNormalizedRoleName {
+            get {
+                return ResourceManager.GetString("ErrorDescriptor_DuplicateNormalizedRoleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 角色名称&apos;{0}&apos;已经存在。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_DuplicateRoleName {

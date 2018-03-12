@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -52,7 +49,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <returns>返回角色列表。</returns>
         public virtual IEnumerable<TRole> LoadRoles() => Store.LoadRoles();
-        
+
         /// <summary>
         /// 通过ID获取角色实例。
         /// </summary>
@@ -78,17 +75,11 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">用户组实例。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual async Task<DataResult> CreateAsync(TRole role)
+        public virtual async Task<IdentityResult> CreateAsync(TRole role)
         {
             if (string.IsNullOrEmpty(role.NormalizedName))
                 role.NormalizedName = NormalizeKey(role.Name);
-            var roles = await LoadRolesAsync();
-            if (roles.Any(x => x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase) || x.NormalizedName == role.NormalizedName))
-                return DataAction.Duplicate;
-            var result = await Store.CreateAsync(role);
-            if (result.Succeeded)
-                return DataAction.Created;
-            return DataAction.CreatedFailured;
+            return await Manager.CreateAsync(role);
         }
 
         /// <summary>
@@ -96,12 +87,9 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">用户角色实例。</param>
         /// <returns>返回角色更新结果。</returns>
-        public async Task<DataResult> UpdateAsync(TRole role)
+        public async Task<IdentityResult> UpdateAsync(TRole role)
         {
-            var result = await Manager.UpdateAsync(role);
-            if (result.Succeeded)
-                return DataAction.Updated;
-            return DataAction.UpdatedFailured;
+            return await Manager.UpdateAsync(role);
         }
 
         /// <summary>
@@ -109,9 +97,11 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">角色实例。</param>
         /// <returns>返回角色保存结果。</returns>
-        public async Task<DataResult> SaveAsync(TRole role)
+        public Task<IdentityResult> SaveAsync(TRole role)
         {
-            throw new NotImplementedException();
+            if (role.RoleId > 0)
+                return UpdateAsync(role);
+            return CreateAsync(role);
         }
 
         /// <summary>

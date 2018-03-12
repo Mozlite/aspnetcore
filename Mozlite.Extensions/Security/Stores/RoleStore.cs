@@ -82,6 +82,11 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
+            var roles = await LoadRolesAsync();
+            if (roles.Any(x => x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
+            if (roles.Any(x => x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
             if (role is IRoleEventHandler<TRole> handler)
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
@@ -118,6 +123,11 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
+            var roles = await LoadRolesAsync();
+            if (roles.Any(x => x.RoleId != role.RoleId && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
+            if (roles.Any(x => x.RoleId != role.RoleId && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
             if (role is IRoleEventHandler<TRole> handler)
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
