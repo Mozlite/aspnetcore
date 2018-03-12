@@ -87,9 +87,9 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="role">用户角色实例。</param>
         /// <returns>返回角色更新结果。</returns>
-        public async Task<IdentityResult> UpdateAsync(TRole role)
+        public Task<IdentityResult> UpdateAsync(TRole role)
         {
-            return await Manager.UpdateAsync(role);
+            return Manager.UpdateAsync(role);
         }
 
         /// <summary>

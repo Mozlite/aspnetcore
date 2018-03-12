@@ -104,5 +104,16 @@ namespace Mozlite.Extensions.Security
         {
             return describer.SecurityError(ErrorDescriptor.DuplicateNormalizedRoleName, normalizedRoleName);
         }
+
+        /// <summary>
+        /// 获取错误信息。
+        /// </summary>
+        /// <param name="result">错误实例。</param>
+        /// <param name="seperator">分隔符。</param>
+        /// <returns>返回错误描述信息。</returns>
+        public static string ToErrorString(this IdentityResult result, string seperator = "<br/>")
+        {
+            return string.Join(seperator, result.Errors.Select(x => x.Description));
+        }
     }
 }
