@@ -92,12 +92,10 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            var roles = await LoadRolesAsync();
-            if (roles.Any(x => x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
-                return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
-            if (roles.Any(x => x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
-                return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
-            role.RoleLevel = await GetMaxRoleLevelAsync(role);//获取当前角色等级
+            var result = await IsDuplicatedAsync(role);
+            if (!result.Succeeded)
+                return result;
+            role.RoleLevel = await GetMaxRoleLevelAsync(role) + 1;//获取当前角色等级
             if (role is IRoleEventHandler<TRole> handler)
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
@@ -134,11 +132,9 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            var roles = await LoadRolesAsync();
-            if (roles.Any(x => x.RoleId != role.RoleId && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
-                return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
-            if (roles.Any(x => x.RoleId != role.RoleId && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
-                return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
+            var result = await IsDuplicatedAsync(role);
+            if (!result.Succeeded)
+                return result;
             if (role is IRoleEventHandler<TRole> handler)
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
@@ -258,6 +254,21 @@ namespace Mozlite.Extensions.Security.Stores
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// 判断角色名称或唯一键是否已经存在。
+        /// </summary>
+        /// <param name="role">当前角色实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual async Task<IdentityResult> IsDuplicatedAsync(TRole role)
+        {
+            var roles = await LoadRolesAsync();
+            if (roles.Any(x => x.RoleId != role.RoleId && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
+            if (roles.Any(x => x.RoleId != role.RoleId && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
+            return IdentityResult.Success;
         }
 
         /// <summary>

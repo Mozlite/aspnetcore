@@ -177,6 +177,20 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
+        /// 判断角色名称或唯一键是否已经存在。
+        /// </summary>
+        /// <param name="role">当前角色实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public override async Task<IdentityResult> IsDuplicatedAsync(TRole role)
+        {
+            if (await RoleContext.AnyAsync(x => x.RoleId != role.RoleId && x.Name == role.Name && x.SiteId == role.SiteId))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
+            if (await RoleContext.AnyAsync(x => x.RoleId != role.RoleId && x.NormalizedName == role.NormalizedName && x.SiteId == role.SiteId))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
         /// 初始化类<see cref="RoleStore{TRole,TUserRole,TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>

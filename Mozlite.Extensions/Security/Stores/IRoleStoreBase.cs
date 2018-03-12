@@ -124,5 +124,12 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回移动结果。</returns>
         Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 判断角色名称或唯一键是否已经存在。
+        /// </summary>
+        /// <param name="role">当前角色实例。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<IdentityResult> IsDuplicatedAsync(TRole role);
     }
 }
