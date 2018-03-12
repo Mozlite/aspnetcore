@@ -15,7 +15,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         /// <param name="context">数据库事务操作实例。</param>
         /// <returns>返回操作结果，返回<c>true</c>表示操作成功，将自动提交事务，如果<c>false</c>或发生错误，则回滚事务。</returns>
-        bool OnCreate(IDbTransactionContext<TUser> context);
+        bool OnCreated(IDbTransactionContext<TUser> context);
 
         /// <summary>
         /// 当用户添加后触发得方法。
