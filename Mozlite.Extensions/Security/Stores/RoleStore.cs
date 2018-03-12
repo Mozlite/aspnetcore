@@ -72,8 +72,9 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 获取当前最大角色等级。
         /// </summary>
+        /// <param name="role">当前角色实例。</param>
         /// <returns>返回最大角色等级。</returns>
-        protected virtual Task<int> GetMaxRoleLevelAsync()
+        protected virtual Task<int> GetMaxRoleLevelAsync(TRole role)
         {
             return RoleContext.MaxAsync(x => x.RoleLevel, x => x.RoleLevel < int.MaxValue);
         }
@@ -96,7 +97,7 @@ namespace Mozlite.Extensions.Security.Stores
                 return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
             if (roles.Any(x => x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
-            role.RoleLevel = await GetMaxRoleLevelAsync();//获取当前角色等级
+            role.RoleLevel = await GetMaxRoleLevelAsync(role);//获取当前角色等级
             if (role is IRoleEventHandler<TRole> handler)
             {
                 if (await RoleContext.BeginTransactionAsync(async db =>
@@ -195,6 +196,68 @@ namespace Mozlite.Extensions.Security.Stores
                 return IdentityResult.Success;
             }
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual bool MoveUp(int roleId)
+        {
+            if (RoleContext.MoveUp(roleId, x => x.RoleLevel))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual bool MoveDown(int roleId)
+        {
+            if (RoleContext.MoveDown(roleId, x => x.RoleLevel))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual async Task<bool> MoveUpAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (await RoleContext.MoveUpAsync(roleId, x => x.RoleLevel, cancellationToken: cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual async Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (await RoleContext.MoveDownAsync(roleId, x => x.RoleLevel, cancellationToken: cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

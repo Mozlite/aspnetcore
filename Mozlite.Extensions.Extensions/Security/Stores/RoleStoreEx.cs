@@ -3,6 +3,7 @@ using Mozlite.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Extensions.Sites;
@@ -46,6 +47,16 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
+        /// 获取当前最大角色等级。
+        /// </summary>
+        /// <param name="role">当前角色实例。</param>
+        /// <returns>返回最大角色等级。</returns>
+        protected override Task<int> GetMaxRoleLevelAsync(TRole role)
+        {
+            return RoleContext.MaxAsync(x => x.RoleLevel, x => x.SiteId == role.SiteId && x.RoleLevel < int.MaxValue);
+        }
+
+        /// <summary>
         /// 更新用户角色。
         /// </summary>
         /// <param name="role">用户角色实例。</param>
@@ -66,11 +77,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回角色删除结果。</returns>
         public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (role == null)
-            {
-                throw new ArgumentNullException(nameof(role));
-            }
             if (role.SiteId == 0)
                 role.SiteId = Site.SiteId;
             await RoleContext.DeleteAsync(x => x.RoleId == role.RoleId && x.SiteId == role.SiteId, cancellationToken);
@@ -103,7 +109,73 @@ namespace Mozlite.Extensions.Security.Stores
                 return RoleContext.Fetch(x => x.SiteId == Site.SiteId);
             });
         }
-        
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public override bool MoveUp(int roleId)
+        {
+            var site = RoleContext.Find(roleId);
+            if (RoleContext.MoveUp(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public override bool MoveDown(int roleId)
+        {
+            var site = RoleContext.Find(roleId);
+            if (RoleContext.MoveDown(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        public override async Task<bool> MoveUpAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var site = await RoleContext.FindAsync(roleId, cancellationToken);
+            if (await RoleContext.MoveUpAsync(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId, cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        public override async Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var site = await RoleContext.FindAsync(roleId, cancellationToken);
+            if (await RoleContext.MoveDownAsync(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId, cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// 初始化类<see cref="RoleStore{TRole,TUserRole,TRoleClaim}"/>。
         /// </summary>
@@ -113,7 +185,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
         /// <param name="cache">缓存接口。</param>
         /// <param name="siteContextAccessor">网站上下文访问器接口。</param>
-        public RoleStoreEx(IdentityErrorDescriber describer, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext, IMemoryCache cache, ISiteContextAccessorBase siteContextAccessor) 
+        public RoleStoreEx(IdentityErrorDescriber describer, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext, IMemoryCache cache, ISiteContextAccessorBase siteContextAccessor)
             : base(describer, roleContext, userRoleContext, roleClaimContext, cache)
         {
             _siteContextAccessor = siteContextAccessor;

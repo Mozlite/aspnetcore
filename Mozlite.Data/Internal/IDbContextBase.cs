@@ -270,7 +270,7 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression);
+        bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null);
 
         /// <summary>
         /// 下移一个位置。
@@ -279,7 +279,7 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression);
+        bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null);
 
         /// <summary>
         /// 上移一个位置。
@@ -289,7 +289,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default);
+        Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 下移一个位置。
@@ -299,6 +299,6 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default);
+        Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
     }
 }

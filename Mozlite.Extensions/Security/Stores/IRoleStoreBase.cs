@@ -94,5 +94,35 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回角色更新结果。</returns>
         Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
+        
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveUp(int roleId);
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveDown(int roleId);
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveUpAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

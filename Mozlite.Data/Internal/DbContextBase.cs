@@ -495,7 +495,7 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression)
+        public virtual bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Move(EntityType, ">", order, expression);
             var scalar = ExecuteScalar(sql, new { Id = key });
@@ -509,7 +509,7 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression)
+        public virtual bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Move(EntityType, "<", order, expression);
             var scalar = ExecuteScalar(sql, new { Id = key });
@@ -524,7 +524,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual async Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Move(EntityType, ">", order, expression);
             var scalar = await ExecuteScalarAsync(sql, new { Id = key }, cancellationToken: cancellationToken);
@@ -539,7 +539,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual async Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Move(EntityType, "<", order, expression);
             var scalar = await ExecuteScalarAsync(sql, new { Id = key }, cancellationToken: cancellationToken);

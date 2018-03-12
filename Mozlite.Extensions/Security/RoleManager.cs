@@ -110,5 +110,45 @@ namespace Mozlite.Extensions.Security
         /// <param name="key">原有键值。</param>
         /// <returns>返回正常化后的字符串。</returns>
         public virtual string NormalizeKey(string key) => Manager.NormalizeKey(key);
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public bool MoveUp(int roleId)
+        {
+            return Store.MoveUp(roleId);
+        }
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public bool MoveDown(int roleId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public async Task<bool> MoveUpAsync(int roleId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// 下移角色。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <returns>返回移动结果。</returns>
+        public async Task<bool> MoveDownAsync(int roleId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
