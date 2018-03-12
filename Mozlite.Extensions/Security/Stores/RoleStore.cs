@@ -205,7 +205,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回移动结果。</returns>
         public virtual bool MoveUp(int roleId)
         {
-            if (RoleContext.MoveUp(roleId, x => x.RoleLevel))
+            if (RoleContext.MoveUp(roleId, x => x.RoleLevel, x => x.RoleLevel > 0 && x.RoleLevel < int.MaxValue))
             {
                 Cache.Remove(CacheKey);
                 return true;
@@ -220,7 +220,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回移动结果。</returns>
         public virtual bool MoveDown(int roleId)
         {
-            if (RoleContext.MoveDown(roleId, x => x.RoleLevel))
+            if (RoleContext.MoveDown(roleId, x => x.RoleLevel, x => x.RoleLevel > 0 && x.RoleLevel < int.MaxValue))
             {
                 Cache.Remove(CacheKey);
                 return true;
@@ -236,7 +236,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回移动结果。</returns>
         public virtual async Task<bool> MoveUpAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (await RoleContext.MoveUpAsync(roleId, x => x.RoleLevel, cancellationToken: cancellationToken))
+            if (await RoleContext.MoveUpAsync(roleId, x => x.RoleLevel, x => x.RoleLevel > 0 && x.RoleLevel < int.MaxValue, cancellationToken))
             {
                 Cache.Remove(CacheKey);
                 return true;
@@ -252,7 +252,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回移动结果。</returns>
         public virtual async Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (await RoleContext.MoveDownAsync(roleId, x => x.RoleLevel, cancellationToken: cancellationToken))
+            if (await RoleContext.MoveDownAsync(roleId, x => x.RoleLevel, x => x.RoleLevel > 0 && x.RoleLevel < int.MaxValue, cancellationToken))
             {
                 Cache.Remove(CacheKey);
                 return true;

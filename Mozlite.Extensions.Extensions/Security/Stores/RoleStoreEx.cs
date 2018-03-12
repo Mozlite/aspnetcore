@@ -118,7 +118,7 @@ namespace Mozlite.Extensions.Security.Stores
         public override bool MoveUp(int roleId)
         {
             var site = RoleContext.Find(roleId);
-            if (RoleContext.MoveUp(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId))
+            if (RoleContext.MoveUp(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId && x.RoleLevel > 0 && x.RoleLevel < int.MaxValue))
             {
                 Cache.Remove(CacheKey);
                 return true;
@@ -134,7 +134,7 @@ namespace Mozlite.Extensions.Security.Stores
         public override bool MoveDown(int roleId)
         {
             var site = RoleContext.Find(roleId);
-            if (RoleContext.MoveDown(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId))
+            if (RoleContext.MoveDown(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId && x.RoleLevel > 0 && x.RoleLevel < int.MaxValue))
             {
                 Cache.Remove(CacheKey);
                 return true;
@@ -151,7 +151,7 @@ namespace Mozlite.Extensions.Security.Stores
         public override async Task<bool> MoveUpAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var site = await RoleContext.FindAsync(roleId, cancellationToken);
-            if (await RoleContext.MoveUpAsync(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId, cancellationToken))
+            if (await RoleContext.MoveUpAsync(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId && x.RoleLevel > 0 && x.RoleLevel < int.MaxValue, cancellationToken))
             {
                 Cache.Remove(CacheKey);
                 return true;
@@ -168,7 +168,7 @@ namespace Mozlite.Extensions.Security.Stores
         public override async Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var site = await RoleContext.FindAsync(roleId, cancellationToken);
-            if (await RoleContext.MoveDownAsync(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId, cancellationToken))
+            if (await RoleContext.MoveDownAsync(roleId, x => x.RoleLevel, x => x.SiteId == site.SiteId && x.RoleLevel > 0 && x.RoleLevel < int.MaxValue, cancellationToken))
             {
                 Cache.Remove(CacheKey);
                 return true;
