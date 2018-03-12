@@ -86,5 +86,13 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回角色更新结果。</returns>
         Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 更新用户角色。
+        /// </summary>
+        /// <param name="role">用户角色实例。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回角色更新结果。</returns>
+        Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

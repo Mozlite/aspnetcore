@@ -21,12 +21,12 @@ namespace Mozlite.Data.Internal
         /// <summary>
         /// 日志接口。
         /// </summary>  
-        protected ILogger Logger { get; }
+        public ILogger Logger { get; }
 
         /// <summary>
         /// SQL辅助接口。
         /// </summary>
-        protected ISqlHelper SqlHelper { get; }
+        public ISqlHelper SqlHelper { get; }
 
         /// <summary>
         /// 脚本生成接口。

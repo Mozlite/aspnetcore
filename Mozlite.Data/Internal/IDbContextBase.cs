@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Mozlite.Extensions;
 
 namespace Mozlite.Data.Internal
@@ -13,6 +14,16 @@ namespace Mozlite.Data.Internal
     /// <typeparam name="TModel">模型类型。</typeparam>
     public interface IDbContextBase<TModel> : IDbExecutor
     {
+        /// <summary>
+        /// 日志接口。
+        /// </summary>  
+        ILogger Logger { get; }
+
+        /// <summary>
+        /// SQL辅助接口。
+        /// </summary>
+        ISqlHelper SqlHelper { get; }
+        
         /// <summary>
         /// 当前实体类型。
         /// </summary>

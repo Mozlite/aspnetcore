@@ -57,6 +57,13 @@ namespace Mozlite.Extensions.Security
         Task<DataResult> UpdateAsync(TRole role);
 
         /// <summary>
+        /// 保存角色。
+        /// </summary>
+        /// <param name="role">角色实例。</param>
+        /// <returns>返回角色保存结果。</returns>
+        Task<DataResult> SaveAsync(TRole role);
+
+        /// <summary>
         /// 正常实例化键。
         /// </summary>
         /// <param name="key">原有键值。</param>

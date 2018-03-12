@@ -82,9 +82,27 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            await RoleContext.CreateAsync(role, cancellationToken);
-            Cache.Remove(CacheKey);
-            return IdentityResult.Success;
+            if (role is IRoleEventHandler<TRole> handler)
+            {
+                if (await RoleContext.BeginTransactionAsync(async db =>
+                 {
+                     if (!await db.CreateAsync(role, cancellationToken))
+                         return false;
+                     if (!await handler.OnCreateAsync(db, cancellationToken))
+                         return false;
+                     return true;
+                 }, cancellationToken: cancellationToken))
+                {
+                    Cache.Remove(CacheKey);
+                    return IdentityResult.Success;
+                }
+            }
+            else if (await RoleContext.CreateAsync(role, cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return IdentityResult.Success;
+            }
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -100,9 +118,27 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            await RoleContext.UpdateAsync(role, cancellationToken);
-            Cache.Remove(CacheKey);
-            return IdentityResult.Success;
+            if (role is IRoleEventHandler<TRole> handler)
+            {
+                if (await RoleContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await db.UpdateAsync(role, cancellationToken))
+                        return false;
+                    if (!await handler.OnUpdateAsync(db, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                {
+                    Cache.Remove(CacheKey);
+                    return IdentityResult.Success;
+                }
+            }
+            else if (await RoleContext.UpdateAsync(role, cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return IdentityResult.Success;
+            }
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -118,9 +154,27 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            await RoleContext.DeleteAsync(role.RoleId, cancellationToken);
-            Cache.Remove(CacheKey);
-            return IdentityResult.Success;
+            if (role is IRoleEventHandler<TRole> handler)
+            {
+                if (await RoleContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await handler.OnDeleteAsync(db, cancellationToken))
+                        return false;
+                    if (!await db.DeleteAsync(role.RoleId, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                {
+                    Cache.Remove(CacheKey);
+                    return IdentityResult.Success;
+                }
+            }
+            else if (await RoleContext.DeleteAsync(role.RoleId, cancellationToken))
+            {
+                Cache.Remove(CacheKey);
+                return IdentityResult.Success;
+            }
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
