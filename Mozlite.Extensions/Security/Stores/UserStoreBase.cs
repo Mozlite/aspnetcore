@@ -108,11 +108,6 @@ namespace Mozlite.Extensions.Security.Stores
         protected IDbContext<TRoleClaim> RoleClaimContext { get; }
 
         /// <summary>
-        /// 角色管理实例。
-        /// </summary>
-        protected IRoleManager<TRole, TUserRole, TRoleClaim> RoleManager { get; }
-
-        /// <summary>
         /// 初始化类<see cref="UserStoreBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
@@ -123,7 +118,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="roleContext">角色数据库操作接口。</param>
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
-        /// <param name="roleManager">角色管理接口。</param>
         protected UserStoreBase(IdentityErrorDescriber describer,
             IDbContext<TUser> userContext,
             IDbContext<TUserClaim> userClaimContext,
@@ -131,8 +125,7 @@ namespace Mozlite.Extensions.Security.Stores
             IDbContext<TUserToken> userTokenContext,
             IDbContext<TRole> roleContext,
             IDbContext<TUserRole> userRoleContext,
-            IDbContext<TRoleClaim> roleClaimContext,
-            IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) : base(describer)
+            IDbContext<TRoleClaim> roleClaimContext) : base(describer)
         {
             UserContext = userContext;
             UserClaimContext = userClaimContext;
@@ -141,7 +134,6 @@ namespace Mozlite.Extensions.Security.Stores
             RoleContext = roleContext;
             UserRoleContext = userRoleContext;
             RoleClaimContext = roleClaimContext;
-            RoleManager = roleManager;
         }
 
         /// <summary>
@@ -587,9 +579,12 @@ namespace Mozlite.Extensions.Security.Stores
         public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
-            if (role == null) return false;
-            return await UserRoleContext.AnyAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken);
+            return await UserRoleContext.AsQueryable()
+                .InnerJoin<TRole>((ur, r) => ur.RoleId == r.RoleId)
+                .Select(x => x.RoleId)
+                .Where(x => x.UserId == user.UserId)
+                .Where<TRole>(x => x.NormalizedName == normalizedRoleName)
+                .SingleOrDefaultAsync(x => x.GetInt32(0), cancellationToken) > 0;
         }
 
         /// <summary>
@@ -602,11 +597,10 @@ namespace Mozlite.Extensions.Security.Stores
         /// </returns>
         public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
-            if (role == null) return null;
             var users = await UserContext.AsQueryable()
                 .InnerJoin<TUserRole>((u, l) => u.UserId == l.UserId)
-                .Where<TUserRole>(x => x.RoleId == role.RoleId)
+                .InnerJoin<TUserRole, TRole>((ur, r) => ur.RoleId == r.RoleId)
+                .Where<TRole>(x => x.NormalizedName == normalizedRoleName)
                 .AsEnumerableAsync(cancellationToken);
             return users.ToList();
         }
@@ -619,7 +613,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
+            var role = await RoleContext.FindAsync(x => x.NormalizedName == normalizedRoleName, cancellationToken);
             if (role == null || await IsInRoleAsync(user, normalizedRoleName, cancellationToken))
                 return;
             var maxRole = (await GetRolesAsync(user.UserId, cancellationToken)).Concat(new[] { role })
@@ -647,7 +641,7 @@ namespace Mozlite.Extensions.Security.Stores
         public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
+            var role = await RoleContext.FindAsync(x => x.NormalizedName == normalizedRoleName, cancellationToken);
             if (role != null)
                 await UserRoleContext.DeleteAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken);
         }
