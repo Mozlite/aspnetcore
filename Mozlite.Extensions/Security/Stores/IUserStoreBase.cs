@@ -1,8 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -19,32 +16,6 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
-
-        /// <summary>
-        /// 错误描述实例对象。
-        /// </summary>
-        IdentityErrorDescriber ErrorDescriber { get; }
-
-        /// <summary>
-        /// 用户数据库操作接口。
-        /// </summary>
-        IDbContext<TUser> UserContext { get; }
-
-        /// <summary>
-        /// 用户声明数据库操作接口。
-        /// </summary>
-        IDbContext<TUserClaim> UserClaimContext { get; }
-
-        /// <summary>
-        /// 用户登陆数据库操作接口。
-        /// </summary>
-        IDbContext<TUserLogin> UserLoginContext { get; }
-
-        /// <summary>
-        /// 用户标识数据库操作接口。
-        /// </summary>
-        IDbContext<TUserToken> UserTokenContext { get; }
-
         /// <summary>
         /// 通过用户验证名称查询用户实例。
         /// </summary>
@@ -60,6 +31,23 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <returns>返回当前用户实例。</returns>
         TUser FindUser(int userId);
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        bool Update(int userId, object fields);
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回更新结果。</returns>
+        Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// 通过用户验证名称查询用户实例。
@@ -79,6 +67,24 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
         Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
+
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回查询分页实例。</returns>
+        Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>;
     }
 
     /// <summary>
@@ -101,24 +107,5 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
-        /// <summary>
-        /// 缓存实例。
-        /// </summary>
-        IMemoryCache Cache { get; }
-
-        /// <summary>
-        /// 角色数据库操作接口。
-        /// </summary>
-        IDbContext<TRole> RoleContext { get; }
-
-        /// <summary>
-        /// 用户角色数据库操作接口。
-        /// </summary>
-        IDbContext<TUserRole> UserRoleContext { get; }
-
-        /// <summary>
-        /// 用户声明数据库操作接口。
-        /// </summary>
-        IDbContext<TRoleClaim> RoleClaimContext { get; }
     }
 }

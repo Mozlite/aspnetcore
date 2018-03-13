@@ -157,9 +157,9 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 新建用户实例。
         /// </summary>
-        /// <param name="userId">用户实例对象。</param>
+        /// <param name="user">用户实例对象。</param>
         /// <returns>返回添加用户结果。</returns>
-        Task<IdentityResult> DeleteAsync(int userId);
+        Task<IdentityResult> DeleteAsync(TUser user);
     }
 
     /// <summary>

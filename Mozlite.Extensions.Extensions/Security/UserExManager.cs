@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Mozlite.Extensions.Security.Stores;
 using Mozlite.Extensions.Sites;
 
@@ -13,30 +16,35 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserExManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        : UserManager<TUser, TUserClaim, TUserLogin, TUserToken>, IUserExManager<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class UserExManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        : UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>, IUserExManager<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserExBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
         /// <summary>
-        /// 初始化类<see cref="UserExManager{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
-        /// </summary>
-        /// <param name="manager">系统管理实例。</param>
-        /// <param name="signInManager"> 登陆管理实例。</param>
-        /// <param name="store">用户存储实例。</param>
-        /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected UserExManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor) : base(manager, signInManager, store, httpContextAccessor)
-        {
-            Site = httpContextAccessor.HttpContext.RequestServices.GetRequiredService<ISiteContextAccessorBase>()
-                .SiteContext;
-        }
-
-        /// <summary>
         /// 当前网站实例。
         /// </summary>
         protected SiteContextBase Site { get; }
+
+        /// <summary>
+        /// 初始化类<see cref="UserExManagerBase{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
+        /// </summary>
+        /// <param name="store">用户存储接口。</param>
+        /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
+        /// <param name="passwordHasher">密码加密器接口。</param>
+        /// <param name="userValidators">用户验证接口。</param>
+        /// <param name="passwordValidators">密码验证接口。</param>
+        /// <param name="keyNormalizer">唯一键格式化字符串。</param>
+        /// <param name="errors">错误实例。</param>
+        /// <param name="services">服务提供者接口。</param>
+        /// <param name="logger">日志接口。</param>
+        protected UserExManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        {
+            Site = services.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
+        }
     }
 
     /// <summary>
@@ -49,8 +57,8 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public abstract class UserExManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
+    public abstract class UserExManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : UserManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
             IUserExManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserExBase
         where TRole : RoleExBase
@@ -61,21 +69,26 @@ namespace Mozlite.Extensions.Security
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
-        /// 初始化类<see cref="UserExManager{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
-        /// </summary>
-        /// <param name="manager">系统管理实例。</param>
-        /// <param name="signInManager"> 登陆管理实例。</param>
-        /// <param name="store">用户存储实例。</param>
-        /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected UserExManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor) : base(manager, signInManager, store, httpContextAccessor)
-        {
-            Site = httpContextAccessor.HttpContext.RequestServices.GetRequiredService<ISiteContextAccessorBase>()
-                .SiteContext;
-        }
-
-        /// <summary>
         /// 当前网站实例。
         /// </summary>
         protected SiteContextBase Site { get; }
+
+        /// <summary>
+        /// 初始化类<see cref="UserExManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
+        /// </summary>
+        /// <param name="store">用户存储接口。</param>
+        /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
+        /// <param name="passwordHasher">密码加密器接口。</param>
+        /// <param name="userValidators">用户验证接口。</param>
+        /// <param name="passwordValidators">密码验证接口。</param>
+        /// <param name="keyNormalizer">唯一键格式化字符串。</param>
+        /// <param name="errors">错误实例。</param>
+        /// <param name="services">服务提供者接口。</param>
+        /// <param name="logger">日志接口。</param>
+        protected UserExManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger) 
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        {
+            Site = services.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
+        }
     }
 }

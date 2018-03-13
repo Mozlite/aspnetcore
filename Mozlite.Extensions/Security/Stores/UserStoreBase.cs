@@ -5,932 +5,10 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Stores
 {
-    /// <summary>
-    /// 用户存储类型。
-    /// </summary>
-    /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
-    /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> :
-       IUserLoginStore<TUser>,
-       IUserClaimStore<TUser>,
-       IUserPasswordStore<TUser>,
-       IUserSecurityStampStore<TUser>,
-       IUserEmailStore<TUser>,
-       IUserLockoutStore<TUser>,
-       IUserPhoneNumberStore<TUser>,
-       IQueryableUserStore<TUser>,
-       IUserTwoFactorStore<TUser>,
-       IUserAuthenticationTokenStore<TUser>,
-       IUserAuthenticatorKeyStore<TUser>,
-       IUserTwoFactorRecoveryCodeStore<TUser>
-       where TUser : UserBase
-       where TUserClaim : UserClaimBase, new()
-       where TUserLogin : UserLoginBase, new()
-       where TUserToken : UserTokenBase, new()
-    {
-        /// <summary>
-        /// 初始化类<see cref="UserStoreBase{TUser,TRole, TUserLogin, TUserToken}"/>。
-        /// </summary>
-        /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
-        protected UserStoreBase(IdentityErrorDescriber describer)
-        {
-            ErrorDescriber = describer ?? throw new ArgumentNullException(nameof(describer));
-        }
-
-        /// <summary>
-        /// 错误描述实例对象。
-        /// </summary>
-        public IdentityErrorDescriber ErrorDescriber { get; }
-
-        /// <summary>
-        /// 实例化当前用户的声明实例。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="claim">声明实例。</param>
-        /// <returns>返回用户声明实例对象。</returns>
-        protected virtual TUserClaim CreateUserClaim(TUser user, Claim claim)
-        {
-            var userClaim = new TUserClaim { UserId = user.UserId };
-            userClaim.InitializeFromClaim(claim);
-            return userClaim;
-        }
-
-        /// <summary>
-        /// 实例化当前用户的登陆信息实例。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="login">登陆信息实例。</param>
-        /// <returns>返回用户登陆信息实例。</returns>
-        protected virtual TUserLogin CreateUserLogin(TUser user, UserLoginInfo login)
-        {
-            return new TUserLogin
-            {
-                UserId = user.UserId,
-                ProviderKey = login.ProviderKey,
-                LoginProvider = login.LoginProvider,
-                ProviderDisplayName = login.ProviderDisplayName
-            };
-        }
-
-        /// <summary>
-        /// 通过用户实例以及提供者实例化一个用户标识。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
-        /// <param name="name">用户标识名称。</param>
-        /// <param name="value">用户标识值。</param>
-        /// <returns>返回用户标识。</returns>
-        protected virtual TUserToken CreateUserToken(TUser user, string loginProvider, string name, string value)
-        {
-            return new TUserToken
-            {
-                UserId = user.UserId,
-                LoginProvider = loginProvider,
-                Name = name,
-                Value = value
-            };
-        }
-
-        /// <summary>
-        /// 从用户实例中获取用户Id。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户ID。</returns>
-        public virtual Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.UserId.ToString());
-        }
-
-        /// <summary>
-        /// 从用户实例中获取用户名称。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户名称。</returns>
-        public virtual Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.UserName);
-        }
-
-        /// <summary>
-        /// 设置用户名称。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="userName">用户名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.UserName = userName;
-            return Task.CompletedTask;
-        }
-
-
-        /// <summary>
-        /// 从用户实例中获取用户验证名称。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户验证名称。</returns>
-        public virtual Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.NormalizedUserName);
-        }
-
-        /// <summary>
-        /// 设置用户验证名称。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="normalizedName">用户验证名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetNormalizedUserNameAsync(TUser user, string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.NormalizedUserName = normalizedName;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 新建用户实例。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回添加用户结果。</returns>
-        public abstract Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 更新用户实例。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回更新结果。</returns>
-        public abstract Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 删除用户实例。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回删除结果。</returns>
-        public abstract Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 通过用户ID查询用户实例。
-        /// </summary>
-        /// <param name="userId">当前用户ID。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回当前用户实例对象。
-        /// </returns>
-        public abstract Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 通过用户验证名称查询用户实例。
-        /// </summary>
-        /// <param name="normalizedUserName">当前验证名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回当前用户实例对象。
-        /// </returns>
-        public abstract Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 当前用户查询实例。
-        /// </summary>
-        public virtual IQueryable<TUser> Users => throw new NotImplementedException();
-
-        /// <summary>
-        /// 设置当前用户实例的哈希密码。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="passwordHash">哈希密码。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.PasswordHash = passwordHash;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的哈希密码。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的哈希密码。</returns>
-        public virtual Task<string> GetPasswordHashAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.PasswordHash);
-        }
-
-        /// <summary>
-        /// 判断是否有密码。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回判断结果。</returns>
-        public virtual Task<bool> HasPasswordAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(user.PasswordHash != null);
-        }
-
-        /// <summary>
-        /// 通过Id获取用户实例。
-        /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户实例。</returns>
-        public abstract Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 获取用户登陆信息。
-        /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
-        protected abstract Task<TUserLogin> FindUserLoginAsync(int userId, string loginProvider, string providerKey, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// 获取用户登陆信息。
-        /// </summary>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
-        protected abstract Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// 释放资源。
-        /// </summary>
-        public virtual void Dispose() { }
-
-        /// <summary>
-        /// 获取当前用户实例的所有声明列表。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户实例的所有声明列表。</returns>
-        public abstract Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 添加用户声明。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="claims">声明列表。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 替换用户声明。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="claim">声明实例对象。</param>
-        /// <param name="newClaim">新的声明实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 移除用户声明。
-        /// </summary>
-        /// <param name="user">用户实例。</param>
-        /// <param name="claims">声明列表。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 添加用户登陆信息。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="login">用户登陆信息实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 移除用户登陆信息。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 获取当前用户的登陆信息列表。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回当前用户所有登陆信息。
-        /// </returns>
-        public abstract Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 通过登陆提供者和唯一键获取用户实例。
-        /// </summary>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回用户实例对象。
-        /// </returns>
-        public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var userLogin = await FindUserLoginAsync(loginProvider, providerKey, cancellationToken);
-            if (userLogin != null)
-            {
-                return await FindUserAsync(userLogin.UserId, cancellationToken);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的邮件确认状态。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的邮件确认状态。</returns>
-        public virtual Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.EmailConfirmed);
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的邮件确认状态。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="confirmed">邮件确认状态。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.EmailConfirmed = confirmed;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的邮件地址。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="email">邮件地址。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.Email = email;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的邮件地址。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的邮件地址。</returns>
-        public virtual Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.Email);
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的验证邮件地址。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的验证邮件地址。</returns>
-        public virtual Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.NormalizedEmail);
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的验证邮件地址。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="normalizedEmail">验证邮件地址。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.NormalizedEmail = normalizedEmail;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 通过电子邮件获取用户实例。
-        /// </summary>
-        /// <param name="normalizedEmail">验证邮件地址。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户实例。</returns>
-        public abstract Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 获取当前用户实体的锁定截至日期。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的锁定截至日期。</returns>
-        public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.LockoutEnd);
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的锁定截至日期。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="lockoutEnd">锁定截至日期。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.LockoutEnd = lockoutEnd;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 增加用户登陆失败次数。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户登陆失败次数。</returns>
-        public virtual Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.AccessFailedCount++;
-            return Task.FromResult(user.AccessFailedCount);
-        }
-
-        /// <summary>
-        /// 重置用户登陆失败次数。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task ResetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.AccessFailedCount = 0;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 获取用户登陆失败次数。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户登陆失败次数。</returns>
-        public virtual Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.AccessFailedCount);
-        }
-
-        /// <summary>
-        /// 获取用户登陆失败达到限定次数后是否锁定。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回判断结果。</returns>
-        public virtual Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.LockoutEnabled);
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的锁定启用状态。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="enabled">锁定启用状态。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.LockoutEnabled = enabled;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的电话号码。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="phoneNumber">电话号码。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.PhoneNumber = phoneNumber;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 获取用户电话号码。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回电话号码。</returns>
-        public virtual Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.PhoneNumber);
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的电话号码确认状态。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的电话号码确认状态。</returns>
-        public virtual Task<bool> GetPhoneNumberConfirmedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.PhoneNumberConfirmed);
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的电话号码确认状态。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="confirmed">电话号码确认状态。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.PhoneNumberConfirmed = confirmed;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的安全戳。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="stamp">安全戳。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            user.SecurityStamp = stamp ?? throw new ArgumentNullException(nameof(stamp));
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的安全戳。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的安全戳。</returns>
-        public virtual Task<string> GetSecurityStampAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.SecurityStamp);
-        }
-
-        /// <summary>
-        /// 设置当前用户实例的电话/电子邮件验证状态。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="enabled">电话/电子邮件验证状态。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            user.TwoFactorEnabled = enabled;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 获取当前用户实体的电话/电子邮件验证状态。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的电话/电子邮件验证状态。</returns>
-        public virtual Task<bool> GetTwoFactorEnabledAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            return Task.FromResult(user.TwoFactorEnabled);
-        }
-
-        /// <summary>
-        /// 获取当前声明的所有用户。
-        /// </summary>
-        /// <param name="claim">声明实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>
-        /// 返回用户列表。 
-        /// </returns>
-        public abstract Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// 获取用户标识。
-        /// </summary>
-        /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户标识实例。</returns>
-        protected abstract Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// 添加新的用户标识。
-        /// </summary>
-        /// <param name="token">用户标识实例对象。</param>
-        protected abstract Task AddUserTokenAsync(TUserToken token);
-
-        /// <summary>
-        /// 移除用户标识。
-        /// </summary>
-        /// <param name="token">用户标识实例对象。</param>
-        protected abstract Task RemoveUserTokenAsync(TUserToken token);
-
-        /// <summary>
-        /// 设置当前用户的登陆标识。
-        /// </summary>
-        /// <param name="user">用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="value">标识的值。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual async Task SetTokenAsync(TUser user, string loginProvider, string name, string value, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            var token = await FindTokenAsync(user, loginProvider, name, cancellationToken);
-            if (token == null)
-            {
-                await AddUserTokenAsync(CreateUserToken(user, loginProvider, name, value));
-            }
-            else
-            {
-                token.Value = value;
-            }
-        }
-
-        /// <summary>
-        /// 移除用户标识。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual async Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            var entry = await FindTokenAsync(user, loginProvider, name, cancellationToken);
-            if (entry != null)
-            {
-                await RemoveUserTokenAsync(entry);
-            }
-        }
-
-        /// <summary>
-        /// 获取用户标识。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
-        /// <param name="name">标识名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户标识值。</returns>
-        public virtual async Task<string> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            var entry = await FindTokenAsync(user, loginProvider, name, cancellationToken);
-            return entry?.Value;
-        }
-
-        private const string InternalLoginProvider = "[AspNetUserStore]";
-        private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
-        private const string RecoveryCodeTokenName = "RecoveryCodes";
-
-        /// <summary>
-        /// 设置用户验证键，主要用于邮件/电话号码验证。
-        /// </summary>
-        /// <param name="user">用户实例。</param>
-        /// <param name="key">验证键。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetAuthenticatorKeyAsync(TUser user, string key, CancellationToken cancellationToken)
-            => SetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
-
-        /// <summary>
-        /// 获取用户验证键。
-        /// </summary>
-        /// <param name="user">用户实例。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户标识的键值。</returns>
-        public virtual Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
-            => GetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
-
-        /// <summary>
-        /// 当前用户有的邀请码的个数。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户邀请码的个数。</returns>
-        public virtual async Task<int> CountCodesAsync(TUser user, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            var mergedCodes = await GetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
-            if (mergedCodes.Length > 0)
-            {
-                return mergedCodes.Split(';').Length;
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// 替换用户的邀请码。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="recoveryCodes">用户的所有邀请码。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task ReplaceCodesAsync(TUser user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
-        {
-            var mergedCodes = string.Join(";", recoveryCodes);
-            return SetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
-        }
-
-        /// <summary>
-        /// 兑换邀请码，邀请码只能使用一次。
-        /// </summary>
-        /// <param name="user">当前用户实例对象。</param>
-        /// <param name="code">邀请码。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>是否兑换成功，如果兑换成功将移除用户的邀请码。</returns>
-        public virtual async Task<bool> RedeemCodeAsync(TUser user, string code, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (code == null)
-            {
-                throw new ArgumentNullException(nameof(code));
-            }
-
-            var mergedCodes = await GetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
-            var splitCodes = mergedCodes.Split(';');
-            if (splitCodes.Contains(code))
-            {
-                var updatedCodes = new List<string>(splitCodes.Where(s => s != code));
-                await ReplaceCodesAsync(user, updatedCodes, cancellationToken);
-                return true;
-            }
-            return false;
-        }
-    }
-
     /// <summary>
     /// 用户存储基类，包含用户角色的相关操作。
     /// </summary>
@@ -941,9 +19,9 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public abstract class UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :
-        UserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>,
-        IUserRoleStore<TUser>
+    public abstract class UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : IdentityUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
+        IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserBase
         where TRole : RoleBase
         where TUserClaim : UserClaimBase, new()
@@ -953,59 +31,522 @@ namespace Mozlite.Extensions.Security.Stores
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
+        /// 用户数据库操作接口。
+        /// </summary>
+        protected IDbContext<TUser> UserContext { get; }
+        /// <summary>
+        /// 用户声明数据库操作接口。
+        /// </summary>
+        protected IDbContext<TUserClaim> UserClaimContext { get; }
+        /// <summary>
+        /// 用户登陆数据库操作接口。
+        /// </summary>
+        protected IDbContext<TUserLogin> UserLoginContext { get; }
+        /// <summary>
+        /// 用户标识数据库操作接口。
+        /// </summary>
+        protected IDbContext<TUserToken> UserTokenContext { get; }
+
+        /// <summary>
+        /// 通过用户验证名称查询用户实例。
+        /// </summary>
+        /// <param name="normalizedUserName">当前验证名称。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        public virtual TUser FindByName(string normalizedUserName)
+        {
+            return UserContext.Find(x => x.NormalizedUserName == normalizedUserName);
+        }
+
+        /// <summary>
+        /// 通过Id获取用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public virtual TUser FindUser(int userId)
+        {
+            return UserContext.Find(userId);
+        }
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual bool Update(int userId, object fields)
+        {
+            return UserContext.Update(x => x.UserId == userId, fields);
+        }
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return UserContext.UpdateAsync(x => x.UserId == userId, fields, cancellationToken);
+        }
+
+        /// <summary>
+        /// 角色数据库操作接口。
+        /// </summary>
+        protected IDbContext<TRole> RoleContext { get; }
+
+        /// <summary>
+        /// 用户角色数据库操作接口。
+        /// </summary>
+        protected IDbContext<TUserRole> UserRoleContext { get; }
+
+        /// <summary>
+        /// 用户声明数据库操作接口。
+        /// </summary>
+        protected IDbContext<TRoleClaim> RoleClaimContext { get; }
+
+        /// <summary>
+        /// 角色管理实例。
+        /// </summary>
+        protected IRoleManager<TRole, TUserRole, TRoleClaim> RoleManager { get; }
+
+        /// <summary>
         /// 初始化类<see cref="UserStoreBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
-        protected UserStoreBase(IdentityErrorDescriber describer) : base(describer) { }
+        /// <param name="userContext">用户数据库接口。</param>
+        /// <param name="userClaimContext">用户声明数据库接口。</param>
+        /// <param name="userLoginContext">用户登陆数据库接口。</param>
+        /// <param name="userTokenContext">用户标识数据库接口。</param>
+        /// <param name="roleContext">角色数据库操作接口。</param>
+        /// <param name="userRoleContext">用户角色数据库操作接口。</param>
+        /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
+        /// <param name="roleManager">角色管理接口。</param>
+        protected UserStoreBase(IdentityErrorDescriber describer,
+            IDbContext<TUser> userContext,
+            IDbContext<TUserClaim> userClaimContext,
+            IDbContext<TUserLogin> userLoginContext,
+            IDbContext<TUserToken> userTokenContext,
+            IDbContext<TRole> roleContext,
+            IDbContext<TUserRole> userRoleContext,
+            IDbContext<TRoleClaim> roleClaimContext,
+            IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) : base(describer)
+        {
+            UserContext = userContext;
+            UserClaimContext = userClaimContext;
+            UserLoginContext = userLoginContext;
+            UserTokenContext = userTokenContext;
+            RoleContext = roleContext;
+            UserRoleContext = userRoleContext;
+            RoleClaimContext = roleClaimContext;
+            RoleManager = roleManager;
+        }
 
         /// <summary>
-        /// 实例化一个用户角色实例。
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回添加用户结果。</returns>
+        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                 {
+                     if (!await db.CreateAsync(user, cancellationToken))
+                         return false;
+                     if (!await handler.OnCreatedAsync(db, cancellationToken))
+                         return false;
+                     return true;
+                 }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.CreateAsync(user, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
+        /// 更新用户实例。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="role">角色实例。</param>
-        /// <returns>返回用户角色实例。</returns>
-        protected virtual TUserRole CreateUserRole(TUser user, TRole role)
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回更新结果。</returns>
+        public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return new TUserRole
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
             {
-                UserId = user.UserId,
-                RoleId = role.RoleId
-            };
+                throw new ArgumentNullException(nameof(user));
+            }
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await handler.OnUpdateAsync(db, cancellationToken))
+                        return false;
+                    if (!await db.UpdateAsync(user, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.UpdateAsync(user, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
-        
+
         /// <summary>
-        /// 检索当前角色的所有用户列表。
+        /// 删除用户实例。
         /// </summary>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="user">当前用户实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回删除结果。</returns>
+        public override async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                 {
+                     if (!await handler.OnDeleteAsync(db, cancellationToken))
+                         return false;
+                     if (!await db.DeleteAsync(user, cancellationToken))
+                         return false;
+                     return true;
+                 }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.DeleteAsync(user.UserId, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
+        /// 通过用户ID查询用户实例。
+        /// </summary>
+        /// <param name="userId">当前用户ID。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        public override async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (int.TryParse(userId, out var id))
+                return await FindUserAsync(id, cancellationToken);
+            return null;
+        }
+
+        /// <summary>
+        /// 通过用户验证名称查询用户实例。
+        /// </summary>
+        /// <param name="normalizedUserName">当前验证名称。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>
+        /// 返回当前用户实例对象。
+        /// </returns>
+        public override Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return UserContext.FindAsync(x => x.NormalizedUserName == normalizedUserName, cancellationToken);
+        }
+
+        /// <summary>
+        /// 通过Id获取用户实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return UserContext.FindAsync(userId, cancellationToken);
+        }
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
+        {
+            return UserContext.Load(query);
+        }
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回查询分页实例。</returns>
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>
+        {
+            return UserContext.LoadAsync(query, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 获取用户登陆信息。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="loginProvider">登陆提供者名称。</param>
+        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户登陆信息。</returns>
+        protected override Task<TUserLogin> FindUserLoginAsync(int userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
+            return UserLoginContext.FindAsync(
+                x => x.UserId == userId && x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// 获取用户登陆信息。
+        /// </summary>
+        /// <param name="loginProvider">登陆提供者名称。</param>
+        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户登陆信息。</returns>
+        protected override Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
+            return UserLoginContext.FindAsync(
+                x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// 获取当前用户实例的所有声明列表。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户实例的所有声明列表。</returns>
+        public override async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var claims = await UserClaimContext.FetchAsync(x => x.UserId == user.UserId, cancellationToken);
+            return claims.Select(x => x.ToClaim()).ToList();
+        }
+
+        /// <summary>
+        /// 添加用户声明。
+        /// </summary>
+        /// <param name="user">当前用户实例对象。</param>
+        /// <param name="claims">声明列表。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        public override async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+            await UserClaimContext.BeginTransactionAsync(async db =>
+            {
+                foreach (var claim in claims)
+                {
+                    var dbClaim = CreateUserClaim(user, claim);
+                    await db.CreateAsync(dbClaim, cancellationToken);
+                }
+                return true;
+            }, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 替换用户声明。
+        /// </summary>
+        /// <param name="user">当前用户实例对象。</param>
+        /// <param name="claim">声明实例对象。</param>
+        /// <param name="newClaim">新的声明实例对象。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        public override async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (claim == null)
+            {
+                throw new ArgumentNullException(nameof(claim));
+            }
+            if (newClaim == null)
+            {
+                throw new ArgumentNullException(nameof(newClaim));
+            }
+            await UserClaimContext.UpdateAsync(
+                uc => uc.UserId == user.UserId && uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type,
+                new { ClaimType = newClaim.Type, ClaimValue = newClaim.Value }, cancellationToken);
+        }
+
+        /// <summary>
+        /// 移除用户声明。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="claims">声明列表。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        public override async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+            await UserClaimContext.BeginTransactionAsync(async db =>
+            {
+                foreach (var claim in claims)
+                {
+                    await db.DeleteAsync(
+                        uc => uc.UserId == user.UserId && uc.ClaimType == claim.Type && uc.ClaimValue == claim.Value, cancellationToken);
+                }
+                return true;
+            }, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 获取当前声明的所有用户。
+        /// </summary>
+        /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
         /// 返回用户列表。 
         /// </returns>
-        public abstract Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (claim == null)
+            {
+                throw new ArgumentNullException(nameof(claim));
+            }
+
+            var users = await UserContext.AsQueryable().InnerJoin<TUserClaim>((u, c) => u.UserId == c.UserId)
+                .Where<TUserClaim>(x => x.ClaimType == claim.Type && x.ClaimValue == claim.Value)
+                .AsEnumerableAsync(cancellationToken);
+
+            return users.ToList();
+        }
 
         /// <summary>
-        /// 添加用户角色。
+        /// 获取用户标识。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="name">名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>返回用户标识实例。</returns>
+        protected override Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        {
+            return UserTokenContext.FindAsync(
+                x => x.UserId == user.UserId && x.LoginProvider == loginProvider && x.Name == name, cancellationToken);
+        }
 
         /// <summary>
-        /// 移除用户角色。
+        /// 添加新的用户标识。
         /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
-        /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        /// <param name="token">用户标识实例对象。</param>
+        protected override async Task AddUserTokenAsync(TUserToken token)
+        {
+            await UserTokenContext.CreateAsync(token);
+        }
 
         /// <summary>
-        /// 获取用户的所有角色。
+        /// 移除用户标识。
         /// </summary>
-        /// <param name="user">用户实例对象。</param>
+        /// <param name="token">用户标识实例对象。</param>
+        protected override async Task RemoveUserTokenAsync(TUserToken token)
+        {
+            await UserTokenContext.DeleteAsync(x =>
+                x.UserId == token.UserId && x.LoginProvider == token.LoginProvider && x.Name == token.Name);
+        }
+
+        /// <summary>
+        /// 添加用户登陆信息。
+        /// </summary>
+        /// <param name="user">当前用户实例。</param>
+        /// <param name="login">用户登陆信息实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的所有角色列表。</returns>
-        public abstract Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (login == null)
+            {
+                throw new ArgumentNullException(nameof(login));
+            }
+            await UserLoginContext.CreateAsync(CreateUserLogin(user, login), cancellationToken);
+        }
+
+        /// <summary>
+        /// 移除用户登陆信息。
+        /// </summary>
+        /// <param name="user">当前用户实例。</param>
+        /// <param name="loginProvider">登陆提供者名称。</param>
+        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        public override async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            await UserLoginContext.DeleteAsync(
+                x => x.UserId == user.UserId && x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// 获取当前用户的登陆信息列表。
+        /// </summary>
+        /// <param name="user">当前用户实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>
+        /// 返回当前用户所有登陆信息。
+        /// </returns>
+        public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var loginInfos = await UserLoginContext.FetchAsync(x => x.UserId == user.UserId, cancellationToken);
+            return loginInfos.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName)).ToList();
+        }
+
+        /// <summary>
+        /// 通过电子邮件获取用户实例。
+        /// </summary>
+        /// <param name="normalizedEmail">验证邮件地址。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public override Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return UserContext.FindAsync(x => x.NormalizedEmail == normalizedEmail, cancellationToken);
+        }
 
         /// <summary>
         /// 判断用户是否包含当前角色。
@@ -1014,23 +555,100 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="normalizedRoleName">验证角色名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        public abstract Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
+            if (role == null) return false;
+            return await UserRoleContext.AnyAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken);
+        }
 
         /// <summary>
-        /// 通过验证角色名称获取角色实例。
+        /// 检索当前角色的所有用户列表。
         /// </summary>
         /// <param name="normalizedRoleName">验证角色名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>角色实例对象。</returns>
-        protected abstract Task<TRole> FindRoleAsync(string normalizedRoleName, CancellationToken cancellationToken);
+        /// <returns>
+        /// 返回用户列表。 
+        /// </returns>
+        public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
+            if (role == null) return null;
+            var users = await UserContext.AsQueryable()
+                .InnerJoin<TUserRole>((u, l) => u.UserId == l.UserId)
+                .Where<TUserRole>(x => x.RoleId == role.RoleId)
+                .AsEnumerableAsync(cancellationToken);
+            return users.ToList();
+        }
 
         /// <summary>
-        /// 获取用户角色。
+        /// 添加用户角色。
         /// </summary>
-        /// <param name="userId">用户ID。</param>
-        /// <param name="roleId">角色ID。</param>
+        /// <param name="user">当前用户实例。</param>
+        /// <param name="normalizedRoleName">验证角色名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>用户角色实例对象。</returns>
-        protected abstract Task<TUserRole> FindUserRoleAsync(int userId, int roleId, CancellationToken cancellationToken);
+        public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
+            if (role == null || await IsInRoleAsync(user, normalizedRoleName, cancellationToken))
+                return;
+            var maxRole = (await GetRolesAsync(user.UserId, cancellationToken)).Concat(new[] { role })
+                .OrderByDescending(x => x.RoleLevel).FirstOrDefault();
+            if (role.RoleId == maxRole.RoleId)
+                await UserRoleContext.CreateAsync(CreateUserRole(user, role), cancellationToken);
+            else//更新用户表显示角色Id和角色名称
+                await UserRoleContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await db.CreateAsync(CreateUserRole(user, role), cancellationToken))
+                        return false;
+                    if (!await db.As<TUser>().UpdateAsync(x => x.UserId == user.UserId,
+                        new { maxRole.RoleId, RoleName = maxRole.Name }, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 移除用户角色。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var role = await RoleManager.FindByNameAsync(normalizedRoleName);
+            if (role != null)
+                await UserRoleContext.DeleteAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken);
+        }
+
+        /// <summary>
+        /// 获取用户的所有角色。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回当前用户的所有角色列表。</returns>
+        public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var roles = await GetRolesAsync(user.UserId, cancellationToken);
+            return roles.Select(x => x.Name).ToList();
+        }
+
+        /// <summary>
+        /// 获取用户角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回角色列表。</returns>
+        protected virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return RoleContext.AsQueryable()
+                .Select()
+                .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<TUserRole>(x => x.UserId == userId)
+                .OrderByDescending(x => x.RoleLevel)
+                .AsEnumerableAsync(cancellationToken);
+        }
     }
 }

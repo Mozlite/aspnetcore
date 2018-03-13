@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
@@ -13,62 +17,57 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        : IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        : UserManager<TUser>, IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        /// <summary>
-        /// 系统管理实例。
-        /// </summary>
-        protected UserManager<TUser> Manager { get; }
-
+        private readonly IServiceProvider _services;
+        private SignInManager<TUser> _signInManager;
         /// <summary>
         /// 登陆管理实例。
         /// </summary>
-        protected SignInManager<TUser> SignInManager { get; }
+        protected SignInManager<TUser> SignInManager
+        {
+            get
+            {
+                if (_signInManager == null)
+                    _signInManager = _services.GetRequiredService<SignInManager<TUser>>();
+                return _signInManager;
+            }
+        }
 
+        private IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> _store;
         /// <summary>
         /// 用户存储实例。
         /// </summary>
-        protected IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> Store { get; }
+        protected new IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> Store
+        {
+            get
+            {
+                if (_store == null)
+                    _store = base.Store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
+                return _store;
+            }
+        }
 
-        /// <summary>
-        /// 错误实例。
-        /// </summary>
-        protected IdentityErrorDescriber ErrorDescriber => Store.ErrorDescriber;
+        private HttpContext _httpContext;
 
         /// <summary>
         /// 当前HTTP上下文。
         /// </summary>
-        protected HttpContext HttpContext => _httpContextAccessor.HttpContext;
-
-        /// <summary>
-        /// 初始化类<see cref="UserManager{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
-        /// </summary>
-        /// <param name="manager">系统管理实例。</param>
-        /// <param name="signInManager"> 登陆管理实例。</param>
-        /// <param name="store">用户存储实例。</param>
-        /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor)
+        protected HttpContext HttpContext
         {
-            _httpContextAccessor = httpContextAccessor;
-            Manager = manager;
-            SignInManager = signInManager;
-            Store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
+            get
+            {
+                if (_httpContext == null)
+                    _httpContext = _services.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                return _httpContext;
+            }
         }
-
-        /// <summary>
-        /// 正常实例化键。
-        /// </summary>
-        /// <param name="key">原有键值。</param>
-        /// <returns>返回正常化后的字符串。</returns>
-        public virtual string NormalizeKey(string key) => Manager.NormalizeKey(key);
-
+        
         private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>
         /// 获取当前用户。
@@ -78,7 +77,7 @@ namespace Mozlite.Extensions.Security
         {
             if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
                 return current;
-            if (int.TryParse(Manager.GetUserId(HttpContext.User), out var userId))
+            if (int.TryParse(GetUserId(HttpContext.User), out var userId))
                 current = Store.FindUser(userId);
             else
                 current = null;
@@ -94,7 +93,7 @@ namespace Mozlite.Extensions.Security
         {
             if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
                 return current;
-            if (int.TryParse(Manager.GetUserId(HttpContext.User), out var userId))
+            if (int.TryParse(GetUserId(HttpContext.User), out var userId))
                 current = await Store.FindUserAsync(userId);
             else
                 current = null;
@@ -155,11 +154,11 @@ namespace Mozlite.Extensions.Security
         /// <param name="password">原始密码。</param>
         /// <param name="newPassword">新密码。</param>
         /// <returns>返回修改结果。</returns>
-        public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string password, string newPassword)
+        public override async Task<IdentityResult> ChangePasswordAsync(TUser user, string password, string newPassword)
         {
             password = PasswordSalt(user.NormalizedUserName, password);
             newPassword = PasswordSalt(user.NormalizedUserName, newPassword);
-            return await Manager.ChangePasswordAsync(user, password, newPassword);
+            return await base.ChangePasswordAsync(user, password, newPassword);
         }
 
         /// <summary>
@@ -170,7 +169,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回更新结果。</returns>
         public virtual bool Update(int userId, object fields)
         {
-            return Store.UserContext.Update(x => x.UserId == userId, fields);
+            return Store.Update(userId, fields);
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回更新结果。</returns>
         public virtual Task<bool> UpdateAsync(int userId, object fields)
         {
-            return Store.UserContext.UpdateAsync(x => x.UserId == userId, fields);
+            return Store.UpdateAsync(userId, fields);
         }
 
         /// <summary>
@@ -192,7 +191,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回查询分页实例。</returns>
         public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
         {
-            return Store.UserContext.Load(query);
+            return Store.Load(query);
         }
 
         /// <summary>
@@ -203,33 +202,9 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回查询分页实例。</returns>
         public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
         {
-            return Store.UserContext.LoadAsync(query);
+            return Store.LoadAsync(query);
         }
-
-        /// <summary>
-        /// 新建用户实例。
-        /// </summary>
-        /// <param name="user">用户实例对象。</param>
-        /// <returns>返回添加用户结果。</returns>
-        public virtual Task<IdentityResult> CreateAsync(TUser user)
-        {
-            return Manager.CreateAsync(user);
-        }
-
-        /// <summary>
-        /// 新建用户实例。
-        /// </summary>
-        /// <param name="userId">用户实例对象。</param>
-        /// <returns>返回添加用户结果。</returns>
-        public virtual async Task<IdentityResult> DeleteAsync(int userId)
-        {
-            var user = Activator.CreateInstance<TUser>();
-            if (user == null)
-                return IdentityResult.Failed(ErrorDescriber.UserNotFound());
-            user.UserId = userId;
-            return await Manager.DeleteAsync(user);
-        }
-
+        
         /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
@@ -245,7 +220,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="userName">用户名称。</param>
         /// <returns>返回用户实例。</returns>
-        public virtual Task<TUser> FindByNameAsync(string userName)
+        public override Task<TUser> FindByNameAsync(string userName)
         {
             return Store.FindByNameAsync(userName);
         }
@@ -259,7 +234,7 @@ namespace Mozlite.Extensions.Security
         {
             var userName = user.NormalizedUserName ?? NormalizeKey(user.UserName);
             var password = PasswordSalt(userName, user.PasswordHash);
-            return Manager.PasswordHasher.HashPassword(user, password);
+            return PasswordHasher.HashPassword(user, password);
         }
 
         /// <summary>
@@ -269,7 +244,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回加密后得字符串。</returns>
         public virtual string HashPassword(string password)
         {
-            return Manager.PasswordHasher.HashPassword(null, password);
+            return PasswordHasher.HashPassword(null, password);
         }
 
         /// <summary>
@@ -280,7 +255,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>验证结果。</returns>
         public virtual bool VerifyHashedPassword(string hashedPassword, string providedPassword)
         {
-            return Manager.PasswordHasher.VerifyHashedPassword(null, hashedPassword, providedPassword) !=
+            return PasswordHasher.VerifyHashedPassword(null, hashedPassword, providedPassword) !=
                    PasswordVerificationResult.Failed;
         }
 
@@ -294,6 +269,24 @@ namespace Mozlite.Extensions.Security
         {
             return $"{NormalizeKey(userName)}2018{password}";
         }
+
+        /// <summary>
+        /// 初始化类<see cref="UserManagerBase{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
+        /// </summary>
+        /// <param name="store">用户存储接口。</param>
+        /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
+        /// <param name="passwordHasher">密码加密器接口。</param>
+        /// <param name="userValidators">用户验证接口。</param>
+        /// <param name="passwordValidators">密码验证接口。</param>
+        /// <param name="keyNormalizer">唯一键格式化字符串。</param>
+        /// <param name="errors">错误实例。</param>
+        /// <param name="services">服务提供者接口。</param>
+        /// <param name="logger">日志接口。</param>
+        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        {
+            _services = services;
+        }
     }
 
     /// <summary>
@@ -306,8 +299,8 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : UserManager<TUser, TUserClaim, TUserLogin, TUserToken>,
+    public abstract class UserManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>,
             IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserBase
         where TRole : RoleBase
@@ -337,14 +330,19 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 初始化类<see cref="UserManager{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
+        /// 初始化类<see cref="UserManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
-        /// <param name="manager">系统管理实例。</param>
-        /// <param name="signInManager"> 登陆管理实例。</param>
-        /// <param name="store">用户存储实例。</param>
-        /// <param name="httpContextAccessor">HTTP上下文访问接口。</param>
-        protected UserManager(UserManager<TUser> manager, SignInManager<TUser> signInManager, IUserStore<TUser> store, IHttpContextAccessor httpContextAccessor)
-            : base(manager, signInManager, store, httpContextAccessor)
+        /// <param name="store">用户存储接口。</param>
+        /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
+        /// <param name="passwordHasher">密码加密器接口。</param>
+        /// <param name="userValidators">用户验证接口。</param>
+        /// <param name="passwordValidators">密码验证接口。</param>
+        /// <param name="keyNormalizer">唯一键格式化字符串。</param>
+        /// <param name="errors">错误实例。</param>
+        /// <param name="services">服务提供者接口。</param>
+        /// <param name="logger">日志接口。</param>
+        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger) 
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
         }
     }

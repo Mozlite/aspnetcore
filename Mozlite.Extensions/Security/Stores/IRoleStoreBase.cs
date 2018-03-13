@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -19,41 +17,24 @@ namespace Mozlite.Extensions.Security.Stores
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
-        /// 缓存实例。
-        /// </summary>
-        IMemoryCache Cache { get; }
-
-        /// <summary>
-        /// 角色数据库操作接口。
-        /// </summary>
-        IDbContext<TRole> RoleContext { get; }
-
-        /// <summary>
-        /// 用户角色数据库操作接口。
-        /// </summary>
-        IDbContext<TUserRole> UserRoleContext { get; }
-
-        /// <summary>
-        /// 用户声明数据库操作接口。
-        /// </summary>
-        IDbContext<TRoleClaim> RoleClaimContext { get; }
-        
-        /// <summary>
-        /// 缓存键。
-        /// </summary>
-        object CacheKey { get; }
-
-        /// <summary>
-        /// 获取所有角色。
-        /// </summary>
-        /// <returns>返回角色列表。</returns>
-        Task<IEnumerable<TRole>> LoadRolesAsync();
-
-        /// <summary>
         /// 获取所有角色。
         /// </summary>
         /// <returns>返回角色列表。</returns>
         IEnumerable<TRole> LoadRoles();
+
+        /// <summary>
+        /// 获取所有角色。
+        /// </summary>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回角色列表。</returns>
+        Task<IEnumerable<TRole>> LoadRolesAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 通过ID获取角色实例。
+        /// </summary>
+        /// <param name="id">角色Id。</param>
+        /// <returns>返回当前角色实例对象。</returns>
+        TRole FindById(int id);
 
         /// <summary>
         /// 通过ID获取角色实例。
@@ -67,9 +48,23 @@ namespace Mozlite.Extensions.Security.Stores
         /// 通过角色名称获取角色实例。
         /// </summary>
         /// <param name="normalizedName">角色名称。</param>
+        /// <returns>返回当前角色实例对象。</returns>
+        TRole FindByName(string normalizedName);
+
+        /// <summary>
+        /// 通过角色名称获取角色实例。
+        /// </summary>
+        /// <param name="normalizedName">角色名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前角色实例对象。</returns>
         Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 添加用户组。
+        /// </summary>
+        /// <param name="role">用户组实例。</param>
+        /// <returns>返回添加结果。</returns>
+        IdentityResult Create(TRole role);
 
         /// <summary>
         /// 添加用户组。
@@ -83,6 +78,13 @@ namespace Mozlite.Extensions.Security.Stores
         /// 更新用户角色。
         /// </summary>
         /// <param name="role">用户角色实例。</param>
+        /// <returns>返回角色更新结果。</returns>
+        IdentityResult Update(TRole role);
+
+        /// <summary>
+        /// 更新用户角色。
+        /// </summary>
+        /// <param name="role">用户角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回角色更新结果。</returns>
         Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
@@ -91,45 +93,45 @@ namespace Mozlite.Extensions.Security.Stores
         /// 更新用户角色。
         /// </summary>
         /// <param name="role">用户角色实例。</param>
+        /// <returns>返回角色更新结果。</returns>
+        IdentityResult Delete(TRole role);
+
+        /// <summary>
+        /// 更新用户角色。
+        /// </summary>
+        /// <param name="role">用户角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回角色更新结果。</returns>
         Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
-        
-        /// <summary>
-        /// 上移角色。
-        /// </summary>
-        /// <param name="roleId">角色Id。</param>
-        /// <returns>返回移动结果。</returns>
-        bool MoveUp(int roleId);
-
-        /// <summary>
-        /// 下移角色。
-        /// </summary>
-        /// <param name="roleId">角色Id。</param>
-        /// <returns>返回移动结果。</returns>
-        bool MoveDown(int roleId);
 
         /// <summary>
         /// 上移角色。
         /// </summary>
-        /// <param name="roleId">角色Id。</param>
+        /// <param name="role">角色实例。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveUp(TRole role);
+
+        /// <summary>
+        /// 上移角色。
+        /// </summary>
+        /// <param name="role">角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回移动结果。</returns>
-        Task<bool> MoveUpAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> MoveUpAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// 下移角色。
         /// </summary>
-        /// <param name="roleId">角色Id。</param>
-        /// <param name="cancellationToken">取消标识。</param>
+        /// <param name="role">角色实例。</param>
         /// <returns>返回移动结果。</returns>
-        Task<bool> MoveDownAsync(int roleId, CancellationToken cancellationToken = default(CancellationToken));
+        bool MoveDown(TRole role);
 
         /// <summary>
-        /// 判断角色名称或唯一键是否已经存在。
+        /// 下移角色。
         /// </summary>
-        /// <param name="role">当前角色实例。</param>
-        /// <returns>返回判断结果。</returns>
-        Task<IdentityResult> IsDuplicatedAsync(TRole role);
+        /// <param name="role">角色实例。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveDownAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

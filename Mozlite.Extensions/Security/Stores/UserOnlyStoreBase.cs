@@ -16,8 +16,8 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserOnlyStore<TUser, TUserClaim, TUserLogin, TUserToken>
-        : UserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>,
+    public abstract class UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        : IdentityUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>,
         IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
@@ -27,19 +27,19 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 用户数据库操作接口。
         /// </summary>
-        public IDbContext<TUser> UserContext { get; }
+        protected IDbContext<TUser> UserContext { get; }
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        public IDbContext<TUserClaim> UserClaimContext { get; }
+        protected IDbContext<TUserClaim> UserClaimContext { get; }
         /// <summary>
         /// 用户登陆数据库操作接口。
         /// </summary>
-        public IDbContext<TUserLogin> UserLoginContext { get; }
+        protected IDbContext<TUserLogin> UserLoginContext { get; }
         /// <summary>
         /// 用户标识数据库操作接口。
         /// </summary>
-        public IDbContext<TUserToken> UserTokenContext { get; }
+        protected IDbContext<TUserToken> UserTokenContext { get; }
 
         /// <summary>
         /// 通过用户验证名称查询用户实例。
@@ -64,14 +64,37 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 初始化类<see cref="UserOnlyStore{TUser,TRole, TUserLogin, TUserToken}"/>。
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual bool Update(int userId, object fields)
+        {
+            return UserContext.Update(x => x.UserId == userId, fields);
+        }
+
+        /// <summary>
+        /// 通过用户ID更新用户列。
+        /// </summary>
+        /// <param name="userId">用户ID。</param>
+        /// <param name="fields">用户列。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return UserContext.UpdateAsync(x => x.UserId == userId, fields, cancellationToken);
+        }
+
+        /// <summary>
+        /// 初始化类<see cref="UserOnlyStoreBase{TUser,TRole, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="userContext">用户数据库接口。</param>
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
-        protected UserOnlyStore(IdentityErrorDescriber describer,
+        protected UserOnlyStoreBase(IdentityErrorDescriber describer,
             IDbContext<TUser> userContext,
             IDbContext<TUserClaim> userClaimContext,
             IDbContext<TUserLogin> userLoginContext,
@@ -172,6 +195,29 @@ namespace Mozlite.Extensions.Security.Stores
         public override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return UserContext.FindAsync(userId, cancellationToken);
+        }
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回查询分页实例。</returns>
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
+        {
+            return UserContext.Load(query);
+        }
+
+        /// <summary>
+        /// 分页加载用户。
+        /// </summary>
+        /// <typeparam name="TQuery">查询类型。</typeparam>
+        /// <param name="query">查询实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回查询分页实例。</returns>
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>
+        {
+            return UserContext.LoadAsync(query, cancellationToken: cancellationToken);
         }
 
         /// <summary>

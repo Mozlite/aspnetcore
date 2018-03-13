@@ -14,7 +14,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public class UserOnlyStoreEx<TUser, TUserClaim, TUserLogin, TUserToken> : UserOnlyStore<TUser, TUserClaim, TUserLogin, TUserToken>
+    public class UserOnlyStoreEx<TUser, TUserClaim, TUserLogin, TUserToken> : UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserExBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -128,7 +128,7 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 初始化类<see cref="UserOnlyStore{TUser,TRole, TUserLogin, TUserToken}"/>。
+        /// 初始化类<see cref="UserOnlyStoreBase{TUser,TRole, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="userContext">用户数据库接口。</param>
