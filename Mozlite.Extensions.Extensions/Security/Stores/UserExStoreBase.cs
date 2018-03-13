@@ -15,7 +15,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public class UserExStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+    public abstract class UserExStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserExBase
         where TRole : RoleExBase
@@ -37,7 +37,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
         /// <param name="roleManager">角色管理接口。</param>
-        public UserExStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext, IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) 
+        protected UserExStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext, IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) 
             : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext, roleContext, userRoleContext, roleClaimContext, roleManager)
         {
         }

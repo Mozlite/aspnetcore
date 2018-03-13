@@ -12,7 +12,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public class UserExOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> : UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class UserExOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> : UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserExBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -26,7 +26,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
-        public UserExOnlyStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext)
+        protected UserExOnlyStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext)
             : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext)
         {
         }

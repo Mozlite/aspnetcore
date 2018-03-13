@@ -14,7 +14,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserRole">用户角色类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public class RoleExStoreBase<TRole, TUserRole, TRoleClaim>
+    public abstract class RoleExStoreBase<TRole, TUserRole, TRoleClaim>
         : RoleStoreBase<TRole, TUserRole, TRoleClaim>,
         IRoleExStoreBase<TRole, TUserRole, TRoleClaim>
         where TRole : RoleExBase
