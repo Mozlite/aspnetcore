@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -85,6 +86,21 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回查询分页实例。</returns>
         Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>;
+        
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        IdentityResult IsDuplicated(TUser user);
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
     }
 
     /// <summary>

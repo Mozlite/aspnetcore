@@ -301,6 +301,35 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual IdentityResult IsDuplicated(TUser user)
+        {
+            if (user.UserName != null && UserContext.Any(x => x.UserId != user.UserId && x.UserName == user.UserName))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
+            if (user.UserName != null && UserContext.Any(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="cancellationToken">取消标志。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual async Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (user.UserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.UserName == user.UserName, cancellationToken))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
+            if (user.UserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName, cancellationToken))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
         /// 获取用户登陆信息。
         /// </summary>
         /// <param name="userId">用户Id。</param>

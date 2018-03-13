@@ -160,6 +160,20 @@ namespace Mozlite.Extensions.Security
         /// <param name="user">用户实例对象。</param>
         /// <returns>返回添加用户结果。</returns>
         Task<IdentityResult> DeleteAsync(TUser user);
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        IdentityResult IsDuplicated(TUser user);
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<IdentityResult> IsDuplicatedAsync(TUser user);
     }
 
     /// <summary>

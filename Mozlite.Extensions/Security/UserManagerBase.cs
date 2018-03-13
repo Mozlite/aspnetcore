@@ -67,7 +67,7 @@ namespace Mozlite.Extensions.Security
                 return _httpContext;
             }
         }
-        
+
         private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>
         /// 获取当前用户。
@@ -204,7 +204,27 @@ namespace Mozlite.Extensions.Security
         {
             return Store.LoadAsync(query);
         }
-        
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual IdentityResult IsDuplicated(TUser user)
+        {
+            return Store.IsDuplicated(user);
+        }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual Task<IdentityResult> IsDuplicatedAsync(TUser user)
+        {
+            return Store.IsDuplicatedAsync(user, CancellationToken);
+        }
+
         /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
@@ -341,7 +361,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="errors">错误实例。</param>
         /// <param name="services">服务提供者接口。</param>
         /// <param name="logger">日志接口。</param>
-        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger) 
+        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
         }

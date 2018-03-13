@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -45,6 +46,30 @@ namespace Mozlite.Extensions.Security
         {
             Site = services.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
         }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public override Task<IdentityResult> IsDuplicatedAsync(TUser user)
+        {
+            if (user.SiteId == 0)
+                user.SiteId = Site.SiteId;
+            return base.IsDuplicatedAsync(user);
+        }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public override IdentityResult IsDuplicated(TUser user)
+        {
+            if (user.SiteId == 0)
+                user.SiteId = Site.SiteId;
+            return base.IsDuplicated(user);
+        }
     }
 
     /// <summary>
@@ -89,6 +114,30 @@ namespace Mozlite.Extensions.Security
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             Site = services.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
+        }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public override Task<IdentityResult> IsDuplicatedAsync(TUser user)
+        {
+            if (user.SiteId == 0)
+                user.SiteId = Site.SiteId;
+            return base.IsDuplicatedAsync(user);
+        }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public override IdentityResult IsDuplicated(TUser user)
+        {
+            if (user.SiteId == 0)
+                user.SiteId = Site.SiteId;
+            return base.IsDuplicated(user);
         }
     }
 }
