@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Security
                 .AddUserStore<TUserStore>()
                 .AddRoleStore<TRoleStore>()
                 .AddUserManager<TUserManager>()
-                .AddRoleStore<TRoleManager>()
+                .AddRoleManager<TRoleManager>()
                 .AddErrorDescriber<SecurityErrorDescriptor>()
                 .AddDefaultTokenProviders();
             ConfigureSecurityServices(services);
