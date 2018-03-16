@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -93,15 +95,32 @@ namespace Mozlite.Mvc.TagHelpers
         /// <param name="classNames">样式列表。</param>
         public static void AddCssClass(this TagHelperOutput output, params string[] classNames)
         {
-            var @class = output.GetAttribute("class")?.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (@class == null) @class = new List<string>();
+            if (!output.Attributes.TryGetAttribute("class", out var attribute))
+            {
+                output.Attributes.Add("class", string.Join(" ", classNames));
+                return;
+            }
+            var classes = ExtractClassValue(attribute);
             foreach (var className in classNames)
             {
-                if (@class.Contains(className))
+                if (classes.Contains(className))
                     continue;
-                @class.Add(className);
+                classes.Add(className);
             }
-            output.SetAttribute("class", string.Join(" ", @class));
+            output.SetAttribute("class", string.Join(" ", classes));
+        }
+
+        /// <summary>
+        /// 移除样式。
+        /// </summary>
+        /// <param name="output">输出实例对象。</param>
+        /// <param name="className">样式表。</param>
+        public static void RemoveClass(this TagHelperOutput output, string className)
+        {
+            if (!output.Attributes.TryGetAttribute("class", out var attribute))
+                return;
+            var classes = ExtractClassValue(attribute).Where(x => x != className);
+            output.SetAttribute("class", string.Join(" ", classes));
         }
 
         /// <summary>
@@ -113,6 +132,32 @@ namespace Mozlite.Mvc.TagHelpers
         public static void SetAttribute(this TagHelperOutput output, string name, string value)
         {
             output.Attributes.SetAttribute(new TagHelperAttribute(name, value));
+        }
+
+        private static List<string> ExtractClassValue(TagHelperAttribute classAttribute)
+        {
+            string extractedClassValue;
+            switch (classAttribute.Value)
+            {
+                case string valueAsString:
+                    extractedClassValue = HtmlEncoder.Default.Encode(valueAsString);
+                    break;
+                case HtmlString valueAsHtmlString:
+                    extractedClassValue = valueAsHtmlString.Value;
+                    break;
+                case IHtmlContent htmlContent:
+                    using (var stringWriter = new StringWriter())
+                    {
+                        htmlContent.WriteTo(stringWriter, HtmlEncoder.Default);
+                        extractedClassValue = stringWriter.ToString();
+                    }
+                    break;
+                default:
+                    extractedClassValue = HtmlEncoder.Default.Encode(classAttribute.Value?.ToString());
+                    break;
+            }
+            var currentClassValue = extractedClassValue ?? string.Empty;
+            return currentClassValue.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
     }
 }
