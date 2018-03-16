@@ -28,6 +28,9 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         [HtmlAttributeName(".false-text")]
         public string FalseText { get; set; }
 
+        [HtmlAttributeName(".text")]
+        public string Text { get; set; }
+
         [HtmlAttributeName(".true-class")]
         public string TrueClass { get; set; } = "text-success";
 
@@ -44,9 +47,10 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             output.TagName = "div";
             if (Status)
             {
+                var text = TrueText ?? Text;
                 output.AddCssClass(TrueClass);
                 output.AppendHtml("i", i => i.AddCssClass(TrueIcon));
-                if (!string.IsNullOrEmpty(TrueText))
+                if (text != null)
                     output.AppendHtml("span", span =>
                     {
                         span.AddCssClass("ml-1");
@@ -55,9 +59,10 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             }
             else
             {
+                var text = FalseText ?? Text;
                 output.AddCssClass(FalseClass);
                 output.AppendHtml("i", i => i.AddCssClass(FalseIcon));
-                if (!string.IsNullOrEmpty(FalseText))
+                if (text != null)
                     output.AppendHtml("span", span =>
                     {
                         span.AddCssClass("ml-1");
