@@ -191,8 +191,7 @@ namespace Mozlite.Data.Query
         /// <returns>返回表达式。</returns>
         protected virtual Expression VisitNot(UnaryExpression unaryExpression)
         {
-            var memberExpression = unaryExpression.Operand as MemberExpression;
-            if (memberExpression != null)
+            if (unaryExpression.Operand is MemberExpression memberExpression)
             {
                 var expr = memberExpression.Expression;
                 if (expr.NodeType == ExpressionType.Convert)
@@ -211,17 +210,14 @@ namespace Mozlite.Data.Query
             }
 
             var expression = unaryExpression.Operand;
-            var methodCallExpression = expression as MethodCallExpression;
-            if (methodCallExpression != null)
-            {
+            if (expression is MethodCallExpression methodCallExpression)
                 expression = _methodCallTranslator.Translate(methodCallExpression);
-            }
 
-            var isNullExpression = expression as IsNullExpression;
-            if (isNullExpression != null)
-            {
+            if (expression is InExpression inExpression)
+                return VisitIn(inExpression);
+
+            if (expression is IsNullExpression isNullExpression)
                 return VisitIsNotNull(isNullExpression);
-            }
 
             return unaryExpression;
         }
@@ -254,9 +250,7 @@ namespace Mozlite.Data.Query
 
                 _builder.Append("THEN ");
 
-                var constantIfTrue = expression.IfTrue as ConstantExpression;
-
-                if (constantIfTrue != null
+                if (expression.IfTrue is ConstantExpression constantIfTrue
                     && constantIfTrue.Type == typeof(bool))
                 {
                     _builder.Append((bool)constantIfTrue.Value ? "1" : "0");
@@ -268,9 +262,7 @@ namespace Mozlite.Data.Query
 
                 _builder.Append(" ELSE ");
 
-                var constantIfFalse = expression.IfFalse as ConstantExpression;
-
-                if (constantIfFalse != null
+                if (expression.IfFalse is ConstantExpression constantIfFalse
                     && constantIfFalse.Type == typeof(bool))
                 {
                     _builder.Append((bool)constantIfFalse.Value ? "1" : "0");
@@ -386,7 +378,7 @@ namespace Mozlite.Data.Query
         /// <param name="op">当前表达式类型。</param>
         /// <param name="result">返回操作符号。</param>
         /// <returns>返回是否有结果。</returns>
-        protected virtual bool TryGenerateBinaryOperator(ExpressionType op,  out string result)
+        protected virtual bool TryGenerateBinaryOperator(ExpressionType op, out string result)
         {
             return _binaryOperatorMap.TryGetValue(op, out result);
         }
@@ -434,7 +426,7 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <param name="isNotNullExpression">表达式实例。</param>
         /// <returns>返回访问后的表达式实例对象。</returns>
-        public virtual Expression VisitIsNotNull( IsNullExpression isNotNullExpression)
+        public virtual Expression VisitIsNotNull(IsNullExpression isNotNullExpression)
         {
             Check.NotNull(isNotNullExpression, nameof(isNotNullExpression));
 
@@ -531,7 +523,7 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <param name="inExpression">IN表达式。</param>
         /// <returns>返回不存在表达式。</returns>
-        public virtual Expression VisitNotIn( InExpression inExpression)
+        public virtual Expression VisitNotIn(InExpression inExpression)
         {
             Visit(inExpression.Operand);
 
@@ -569,7 +561,7 @@ namespace Mozlite.Data.Query
             _builder.Append(")");
             return explicitCastExpression;
         }
-        
+
         private static IReadOnlyList<Expression> ProcessInValues(Expression inValues)
         {
             var expressions = new List<Expression>();
