@@ -228,5 +228,19 @@ namespace Mozlite.Extensions.Sites
         /// <param name="siteId">网站ID。</param>
         /// <returns>返回删除结果。</returns>
         Task<DataResult> DeleteAsync(int siteId);
+
+        /// <summary>
+        /// 获取默认网站域名。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回默认网站域名。</returns>
+        SiteDomain GetDomain(int siteId);
+
+        /// <summary>
+        /// 获取默认网站域名。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回默认网站域名。</returns>
+        Task<SiteDomain> GetDomainAsync(int siteId);
     }
 }

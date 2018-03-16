@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 using Mozlite.Extensions.Data;
-using Newtonsoft.Json;
 
 namespace Mozlite.Extensions.Sites
 {
@@ -308,7 +307,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回数据结果。</returns>
         public virtual DataResult Save(SiteBase site)
         {
-            var adapter = CreateInstance(site);
+            var adapter = site.ToStore();
             if (adapter.SiteId > 0)
                 return DataResult.FromResult(_sdb.Update(adapter), DataAction.Updated);
             if (IsDuplicated(site))
@@ -336,7 +335,7 @@ namespace Mozlite.Extensions.Sites
         public virtual TSite GetSiteByKey<TSite>(string key) where TSite : SiteBase, new()
         {
             var settings = _sdb.Find(x => x.SiteKey == key);
-            return CreateInstance<TSite>(settings);
+            return settings.ToSite<TSite>();
         }
 
         /// <summary>
@@ -363,7 +362,7 @@ namespace Mozlite.Extensions.Sites
         public virtual TSite GetSite<TSite>(int siteId) where TSite : SiteBase, new()
         {
             var settings = _sdb.Find(siteId);
-            return CreateInstance<TSite>(settings);
+            return settings.ToSite<TSite>();
         }
 
         /// <summary>
@@ -373,7 +372,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回数据结果。</returns>
         public virtual async Task<DataResult> SaveAsync(SiteBase site)
         {
-            var adapter = CreateInstance(site);
+            var adapter = site.ToStore();
             if (adapter.SiteId > 0)
                 return DataResult.FromResult(await _sdb.UpdateAsync(adapter), DataAction.Updated);
             if (await IsDuplicatedAsync(site))
@@ -401,7 +400,7 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<TSite> GetSiteByKeyAsync<TSite>(string key) where TSite : SiteBase, new()
         {
             var settings = await _sdb.FindAsync(x => x.SiteKey == key);
-            return CreateInstance<TSite>(settings);
+            return settings.ToSite<TSite>();
         }
 
         /// <summary>
@@ -429,44 +428,7 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<TSite> GetSiteAsync<TSite>(int siteId) where TSite : SiteBase, new()
         {
             var settings = await _sdb.FindAsync(siteId);
-            return CreateInstance<TSite>(settings);
-        }
-
-        /// <summary>
-        /// 实例化网站。
-        /// </summary>
-        /// <typeparam name="TSite">网站类型。</typeparam>
-        /// <param name="site">网站实例。</param>
-        /// <returns>返回网站实例。</returns>
-        protected SiteAdapter CreateInstance<TSite>(TSite site) where TSite : SiteBase, new()
-        {
-            var adapter = new SiteAdapter();
-            adapter.SettingValue = JsonConvert.SerializeObject(site);
-            adapter.SiteKey = site.SiteKey;
-            adapter.SiteId = site.SiteId;
-            adapter.SiteName = site.SiteName;
-            return adapter;
-        }
-
-        /// <summary>
-        /// 实例化网站。
-        /// </summary>
-        /// <typeparam name="TSite">网站类型。</typeparam>
-        /// <param name="adapter">网站适配实例。</param>
-        /// <returns>返回网站实例。</returns>
-        protected TSite CreateInstance<TSite>(SiteAdapter adapter) where TSite : SiteBase, new()
-        {
-            if (adapter == null) return null;
-            TSite site;
-            if (string.IsNullOrWhiteSpace(adapter.SettingValue))
-                site = new TSite();
-            else
-                site = JsonConvert.DeserializeObject<TSite>(adapter.SettingValue);
-            site.SiteName = adapter.SiteName;
-            site.SiteKey = adapter.SiteKey;
-            site.UpdatedDate = adapter.UpdatedDate;
-            site.SiteId = adapter.SiteId;
-            return site;
+            return settings.ToSite<TSite>();
         }
 
         /// <summary>
@@ -496,7 +458,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回所有网站。</returns>
         public virtual IEnumerable<TSite> LoadSites<TSite>() where TSite : SiteBase, new()
         {
-            return _sdb.Fetch().Select(CreateInstance<TSite>);
+            return _sdb.Fetch().Select(x => x.ToSite<TSite>());
         }
 
         /// <summary>
@@ -507,7 +469,7 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<IEnumerable<TSite>> LoadSitesAsync<TSite>() where TSite : SiteBase, new()
         {
             var sites = await _sdb.FetchAsync();
-            return sites.Select(CreateInstance<TSite>);
+            return sites.Select(x => x.ToSite<TSite>());
         }
 
         /// <summary>
@@ -548,6 +510,27 @@ namespace Mozlite.Extensions.Sites
                     return false;
                 return true;
             }), DataAction.Deleted);
+        }
+
+        /// <summary>
+        /// 获取默认网站域名。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回默认网站域名。</returns>
+        public virtual SiteDomain GetDomain(int siteId)
+        {
+            return LoadCacheDomains().Values.SingleOrDefault(x => x.SiteId == siteId && x.IsDefault);
+        }
+
+        /// <summary>
+        /// 获取默认网站域名。
+        /// </summary>
+        /// <param name="siteId">网站ID。</param>
+        /// <returns>返回默认网站域名。</returns>
+        public virtual async Task<SiteDomain> GetDomainAsync(int siteId)
+        {
+            var domains = await LoadCacheDomainsAsync();
+            return domains.Values.SingleOrDefault(x => x.SiteId == siteId && x.IsDefault);
         }
     }
 }

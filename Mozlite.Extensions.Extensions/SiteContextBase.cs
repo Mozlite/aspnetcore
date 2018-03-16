@@ -3,44 +3,34 @@
 namespace Mozlite.Extensions
 {
     /// <summary>
-    /// 当前网站上下文基类。
+    /// 当前网站上下文接口。
     /// </summary>
     public abstract class SiteContextBase
     {
         /// <summary>
         /// 网站Id。
         /// </summary>
-        public virtual int SiteId => Site?.SiteId ?? 0;
+        public virtual int SiteId => Site.SiteId;
 
         /// <summary>
         /// 网站唯一键。
         /// </summary>
-        public virtual string SiteKey => Site?.SiteKey;
+        public virtual string SiteKey => Site.SiteKey;
 
         /// <summary>
         /// 网站名称。
         /// </summary>
-        public virtual string SiteName => Site?.SiteName;
+        public virtual string SiteName => Site.SiteName;
 
         /// <summary>
         /// 当前域名。
         /// </summary>
-        public virtual string Domain { get; internal set; }
-
-        /// <summary>
-        /// 是否为默认域名。
-        /// </summary>
-        public virtual bool IsDefault { get; internal set; }
-
-        /// <summary>
-        /// 是否禁用。
-        /// </summary>
-        public virtual bool Disabled { get; internal set; }
+        public SiteDomain Domain { get; internal set; }
 
         /// <summary>
         /// 当前网站实例。
         /// </summary>
-        public virtual SiteBase Site { get; internal set; }
+        public SiteBase Site { get; internal set; }
     }
 
     /// <summary>
@@ -53,7 +43,7 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 当前网站实例。
         /// </summary>
-        public new virtual TSite Site
+        public new TSite Site
         {
             get => (TSite)base.Site;
             internal set => base.Site = value;

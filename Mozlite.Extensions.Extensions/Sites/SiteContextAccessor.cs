@@ -1,6 +1,5 @@
 using System;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Mozlite.Extensions.Installers;
 using Mozlite.Extensions.Properties;
 
@@ -40,43 +39,26 @@ namespace Mozlite.Extensions.Sites
         /// <summary>
         /// 设置当前上下文实例。
         /// </summary>
-        /// <param name="domain">域名地址，如果为空则从HTTP上下文中得到。</param>
+        /// <param name="siteKey">网站唯一键。</param>
         /// <returns>返回当前网站上下文实例。</returns>
-        SiteContextBase ISiteContextAccessorBase.CreateSiteContext(string domain) => CreateSiteContext(domain);
+        SiteContextBase ISiteContextAccessorBase.CreateSiteContext(string siteKey) => CreateSiteContext(siteKey);
 
         /// <summary>
         /// 通过域名获取当前上下文实例。
         /// </summary>
-        /// <param name="domain">域名地址，如果为空则从HTTP上下文中得到。</param>
+        /// <param name="siteKey">网站唯一键。</param>
         /// <returns>返回当前网站上下文实例。</returns>
-        public TSiteContext CreateSiteContext(string domain = null)
+        public TSiteContext CreateSiteContext(string siteKey = null)
         {
             if (_context != null)
                 throw new Exception(Resources.SiteContextIsInitialized);
+            if (_contextAccessor.HttpContext?.Items[typeof(SiteContextBase)] is TSiteContext siteContext)
+                return siteContext;
             _context = new TSiteContext();
-            if (domain == null)
-                domain = GetCurrentDomain();
-            _context.Domain = domain;
             if (Installer.Current != InstallerStatus.Success) return _context;
-            var siteDomain = _siteManager.GetDomain(domain);
-            if (siteDomain != null)
-            {
-                _context.IsDefault = siteDomain.IsDefault;
-                _context.Disabled = siteDomain.Disabled;
-                _context.Site = _siteManager.GetSite<TSite>(siteDomain.SiteId);
-            }
+            _context.Site = _siteManager.GetSiteByKey<TSite>(siteKey);
+            _context.Domain = _siteManager.GetDomain(_context.SiteId);
             return _context;
-        }
-
-        private string GetCurrentDomain()
-        {
-            if (_contextAccessor.HttpContext == null)
-                throw new Exception(Resources.HttpContextNotInitialized);
-            var uri = new Uri(_contextAccessor.HttpContext.Request.GetDisplayUrl());
-            var domain = uri.DnsSafeHost;
-            if (!uri.IsDefaultPort)
-                domain += ":" + uri.Port;
-            return domain;
         }
 
         /// <summary>

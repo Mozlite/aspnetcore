@@ -36,5 +36,19 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset UpdatedDate { get; set; } = DateTimeOffset.Now;
+        
+        /// <summary>
+        /// 转换为存储实例。
+        /// </summary>
+        /// <returns>返回存储实例对象。</returns>
+        public SiteAdapter ToStore()
+        {
+            var adapter = new SiteAdapter();
+            adapter.SettingValue = JsonConvert.SerializeObject(this);
+            adapter.SiteKey = SiteKey;
+            adapter.SiteId = SiteId;
+            adapter.SiteName = SiteName;
+            return adapter;
+        }
     }
 }

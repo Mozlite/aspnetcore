@@ -1,6 +1,5 @@
 ﻿using Mozlite.Extensions.Sites;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions
 {
@@ -9,15 +8,18 @@ namespace Mozlite.Extensions
     /// </summary>
     public static class ServiceExtensions
     {
-        public static IApplicationBuilder UseSitable(this IApplicationBuilder app)
+        /// <summary>
+        /// 检测并配置当前网站实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <typeparam name="TSiteContext">网站上下文。</typeparam>
+        /// <param name="app">应用程序构建实例。</param>
+        /// <returns>返回应用程序构建实例。</returns>
+        public static IApplicationBuilder UseSitable<TSiteContext, TSite>(this IApplicationBuilder app)
+            where TSite : SiteBase, new()
+            where TSiteContext : SiteContextBase<TSite>, new()
         {
-            return app.Use((context, next) =>
-            {
-                var siteContextAccessor = context.RequestServices.GetRequiredService<ISiteContextAccessorBase>();
-                if (siteContextAccessor.SiteContext != null)
-                    return next();
-                return null;
-            });
+            return app.UseMiddleware<SiteMiddleware<TSiteContext, TSite>>();
         }
     }
 }

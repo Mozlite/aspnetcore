@@ -13,8 +13,8 @@ namespace Mozlite.Extensions.Sites
         /// <summary>
         /// 设置当前上下文实例。
         /// </summary>
-        /// <param name="domain">域名地址，如果为空则从HTTP上下文中得到。</param>
+        /// <param name="siteKey">网站唯一键。</param>
         /// <returns>返回当前网站上下文实例。</returns>
-        SiteContextBase CreateSiteContext(string domain = null);
+        SiteContextBase CreateSiteContext(string siteKey = null);
     }
 }
