@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
@@ -75,5 +76,19 @@ namespace Mozlite.Extensions.Security.Permissions
         /// </summary>
         /// <returns>返回更新结果。</returns>
         void RefreshAdministrators();
+
+        /// <summary>
+        /// 加载权限列表。
+        /// </summary>
+        /// <param name="category">权限分类。</param>
+        /// <returns>返回权限列表。</returns>
+        IEnumerable<Permission> LoadPermissions(string category = null);
+
+        /// <summary>
+        /// 加载权限列表。
+        /// </summary>
+        /// <param name="category">权限分类。</param>
+        /// <returns>返回权限列表。</returns>
+        Task<IEnumerable<Permission>> LoadPermissionsAsync(string category = null);
     }
 }

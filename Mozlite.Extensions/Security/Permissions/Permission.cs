@@ -13,7 +13,13 @@ namespace Mozlite.Extensions.Security.Permissions
         /// </summary>
         [Identity]
         public int Id { get; set; }
-        
+
+        /// <summary>
+        /// 分类。
+        /// </summary>
+        [Size(64)]
+        public string Category { get; set; } = "core";
+
         /// <summary>
         /// 名称。
         /// </summary>

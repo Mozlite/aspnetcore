@@ -21,12 +21,12 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 数据库操作实例。
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        protected readonly IDbContext<Permission> _db;
+        protected IDbContext<Permission> DbContext { get; }
         private readonly IDbContext<PermissionInRole> _prdb;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
         private readonly IDbContext<TRole> _rdb;
+        private readonly Type _cacheKey = typeof(Permission);
 
         /// <summary>
         /// 初始化类<see cref="PermissionManager{TUserRole, TRole}"/>。
@@ -38,7 +38,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="rdb">角色数据库操作接口。</param>
         protected PermissionManager(IDbContext<Permission> db, IDbContext<PermissionInRole> prdb, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IDbContext<TRole> rdb)
         {
-            _db = db;
+            DbContext = db;
             _prdb = prdb;
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
@@ -139,10 +139,10 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <returns>返回当前名称的权限实例。</returns>
         public Permission GetOrCreate(string permissionName)
         {
-            if (!LoadPermissions().TryGetValue(permissionName, out var permission))
+            if (!LoadCachePermissions().TryGetValue(permissionName, out var permission))
             {
                 permission = new Permission { Name = permissionName };
-                _db.Create(permission);
+                DbContext.Create(permission);
             }
             return permission;
         }
@@ -154,11 +154,11 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <returns>返回当前名称的权限实例。</returns>
         public async Task<Permission> GetOrCreateAsync(string permissionName)
         {
-            var permissions = await LoadPermissionsAsync();
+            var permissions = await LoadCachePermissionsAsync();
             if (!permissions.TryGetValue(permissionName, out var permission))
             {
                 permission = new Permission { Name = permissionName };
-                await _db.CreateAsync(permission);
+                await DbContext.CreateAsync(permission);
             }
             return permission;
         }
@@ -171,11 +171,11 @@ namespace Mozlite.Extensions.Security.Permissions
         public async Task<bool> SaveAsync(Permission permission)
         {
             bool result;
-            if ((await LoadPermissionsAsync()).ContainsKey(permission.Name))
-                result = await _db.UpdateAsync(x => x.Name == permission.Name, new { permission.Description });
+            if ((await LoadCachePermissionsAsync()).ContainsKey(permission.Name))
+                result = await DbContext.UpdateAsync(x => x.Name == permission.Name, new { permission.Description });
             else
-                result = await _db.CreateAsync(permission);
-            if (result) _cache.Remove(typeof(Permission));
+                result = await DbContext.CreateAsync(permission);
+            if (result) _cache.Remove(_cacheKey);
             return result;
         }
 
@@ -187,11 +187,11 @@ namespace Mozlite.Extensions.Security.Permissions
         public bool Save(Permission permission)
         {
             bool result;
-            if (LoadPermissions().ContainsKey(permission.Name))
-                result = _db.Update(x => x.Name == permission.Name, new { permission.Description });
+            if (LoadCachePermissions().ContainsKey(permission.Name))
+                result = DbContext.Update(x => x.Name == permission.Name, new { permission.Description });
             else
-                result = _db.Create(permission);
-            if (result) _cache.Remove(typeof(Permission));
+                result = DbContext.Create(permission);
+            if (result) _cache.Remove(_cacheKey);
             return result;
         }
 
@@ -202,7 +202,7 @@ namespace Mozlite.Extensions.Security.Permissions
         public async Task RefreshAdministratorsAsync()
         {
             var role = await _rdb.FindAsync(x => x.NormalizedName == Administrator);
-            var permissions = await LoadPermissionsAsync();
+            var permissions = await LoadCachePermissionsAsync();
             foreach (var permission in permissions.Values)
             {
                 if (await _prdb.AnyAsync(x => x.PermissionId == permission.Id && x.RoleId == role.RoleId))
@@ -217,7 +217,7 @@ namespace Mozlite.Extensions.Security.Permissions
         public void RefreshAdministrators()
         {
             var role = _rdb.Find(x => x.NormalizedName == Administrator);
-            var permissions = LoadPermissions().Values;
+            var permissions = LoadCachePermissions().Values;
             foreach (var permission in permissions)
             {
                 if (_prdb.Any(x => x.PermissionId == permission.Id && x.RoleId == role.RoleId))
@@ -226,23 +226,51 @@ namespace Mozlite.Extensions.Security.Permissions
             }
         }
 
-        private IDictionary<string, Permission> LoadPermissions()
+        /// <summary>
+        /// 加载权限列表。
+        /// </summary>
+        /// <param name="category">权限分类。</param>
+        /// <returns>返回权限列表。</returns>
+        public virtual IEnumerable<Permission> LoadPermissions(string category = null)
+        {
+            var permissions = LoadCachePermissions();
+            if (category != null)
+                return permissions.Values.Where(x => x.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            return permissions.Values;
+        }
+
+        /// <summary>
+        /// 加载权限列表。
+        /// </summary>
+        /// <param name="category">权限分类。</param>
+        /// <returns>返回权限列表。</returns>
+        public virtual async Task<IEnumerable<Permission>> LoadPermissionsAsync(string category = null)
+        {
+            var permissions = await LoadCachePermissionsAsync();
+            if (category != null)
+                return permissions.Values.Where(x => x.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            return permissions.Values;
+        }
+
+        private IDictionary<string, Permission> LoadCachePermissions()
         {
             return _cache.GetOrCreate(typeof(Permission), ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var permissions = _db.Fetch();
-                return permissions.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+                var permissions = DbContext.Fetch();
+                return permissions.ToDictionary(x => $"{x.Category}.{x.Name}", StringComparer.OrdinalIgnoreCase);
             });
         }
 
-        private async Task<IDictionary<string, Permission>> LoadPermissionsAsync()
+        private async Task<IDictionary<string, Permission>> LoadCachePermissionsAsync()
         {
             return await _cache.GetOrCreateAsync(typeof(Permission), async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var permissions = await _db.FetchAsync();
-                return permissions.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+                var permissions = await DbContext.FetchAsync();
+                return permissions.ToDictionary(x => $"{x.Category}.{x.Name}", StringComparer.OrdinalIgnoreCase);
             });
         }
     }

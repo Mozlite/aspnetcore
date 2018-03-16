@@ -34,8 +34,7 @@ namespace Mozlite.Extensions
             {
                 if (!name.StartsWith("ex:"))
                     name = "ex:" + name;
-                string value;
-                _extendProperties.TryGetValue(name, out value);
+                _extendProperties.TryGetValue(name, out var value);
                 return value;
             }
             set
