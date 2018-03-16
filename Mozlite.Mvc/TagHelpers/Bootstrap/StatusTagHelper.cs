@@ -44,7 +44,6 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "div";
             if (Status)
             {
                 var text = TrueText ?? Text;
