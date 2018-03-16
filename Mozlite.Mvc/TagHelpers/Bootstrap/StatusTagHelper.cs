@@ -54,7 +54,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
                     output.AppendHtml("span", span =>
                     {
                         span.AddCssClass("ml-1");
-                        span.InnerHtml.AppendHtml(TrueText);
+                        span.InnerHtml.AppendHtml(text);
                     });
             }
             else
@@ -66,7 +66,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
                     output.AppendHtml("span", span =>
                     {
                         span.AddCssClass("ml-1");
-                        span.InnerHtml.AppendHtml(FalseText);
+                        span.InnerHtml.AppendHtml(text);
                     });
             }
         }
