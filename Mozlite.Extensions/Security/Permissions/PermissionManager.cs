@@ -72,9 +72,9 @@ namespace Mozlite.Extensions.Security.Permissions
             {
                 var dbPermission = DbContext.Find(x => x.Category == permission.Category && x.Name == permission.Name);
                 if (dbPermission == null)
-                    DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
-                else
                     DbContext.Create(permission);
+                else
+                    DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
             }
         }
 
