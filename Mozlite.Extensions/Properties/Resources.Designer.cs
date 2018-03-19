@@ -412,6 +412,33 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 允许 的本地化字符串。
+        /// </summary>
+        internal static string PermissionValue_Allow {
+            get {
+                return ResourceManager.GetString("PermissionValue_Allow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 禁止 的本地化字符串。
+        /// </summary>
+        internal static string PermissionValue_Deny {
+            get {
+                return ResourceManager.GetString("PermissionValue_Deny", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 未设置 的本地化字符串。
+        /// </summary>
+        internal static string PermissionValue_NotSet {
+            get {
+                return ResourceManager.GetString("PermissionValue_NotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 普通会员 的本地化字符串。
         /// </summary>
         internal static string Register {

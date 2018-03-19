@@ -76,6 +76,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 else
                     DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
             }
+            RefreshAdministrators();
         }
 
         /// <summary>

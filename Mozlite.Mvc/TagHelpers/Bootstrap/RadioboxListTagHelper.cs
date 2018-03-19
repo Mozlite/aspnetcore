@@ -45,7 +45,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             Init(items);
             foreach (var item in items)
             {
-                output.Content.AppendHtml(Create(item.Key, item.Value, string.Equals(item.Value, (string)Value)));
+                output.Content.AppendHtml(Create(item.Key, item.Value, string.Equals(item.Value, Value)));
             }
             var builder = new TagBuilder("div");
             builder.AddCssClass("moz-radioboxlist");

@@ -246,4 +246,13 @@
   <data name="ErrorDescriptor_DuplicateNormalizedRoleName" xml:space="preserve">
     <value>角色唯一键'{0}'已经存在。</value>
   </data>
+  <data name="PermissionValue_Allow" xml:space="preserve">
+    <value>允许</value>
+  </data>
+  <data name="PermissionValue_Deny" xml:space="preserve">
+    <value>禁止</value>
+  </data>
+  <data name="PermissionValue_NotSet" xml:space="preserve">
+    <value>未设置</value>
+  </data>
 </root>
