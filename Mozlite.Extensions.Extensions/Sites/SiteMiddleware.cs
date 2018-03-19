@@ -71,15 +71,16 @@ namespace Mozlite.Extensions.Sites
             }
             else if (await IsInstalling(context))
             {
-                context.Response.Redirect("/installer");
+                context.Response.Redirect(InstallerPath);
                 return;
             }
             await _next.Invoke(context);
         }
 
+        private const string InstallerPath = "/installer";
         private async Task<bool> IsInstalling(HttpContext context)
         {
-            if (context.Request.Path.StartsWithSegments("/installer"))
+            if (context.Request.Path.StartsWithSegments(InstallerPath))
                 return false;
             return await _installerManager.IsNewAsync();
         }
