@@ -101,5 +101,42 @@ namespace Mozlite.Mvc
             });
             return resourceManager.GetString(key);
         }
+
+        private class NullLocalizer
+        {
+            public static readonly Type InstanceType = typeof(NullLocalizer);
+        }
+
+        /// <summary>
+        /// 获取当前键的本地化字符串实例（网站程序集）。
+        /// </summary>
+        /// <param name="key">资源键。</param>
+        /// <returns>返回当前本地化字符串。</returns>
+        public virtual string GetString(string key)
+        {
+            var resourceManager = _localizers.GetOrAdd(NullLocalizer.InstanceType, x =>
+            {
+                var assembly = Assembly.GetEntryAssembly();
+                var baseName = assembly.GetManifestResourceNames()
+                    .SingleOrDefault();
+                baseName = baseName.Substring(0, baseName.Length - 10);
+                return new ResourceManager(baseName, assembly);
+            });
+            return resourceManager.GetString(key);
+        }
+
+        /// <summary>
+        /// 获取当前键的本地化字符串实例（网站程序集）。
+        /// </summary>
+        /// <param name="key">资源键。</param>
+        /// <param name="args">格式化参数。</param>
+        /// <returns>返回当前本地化字符串。</returns>
+        public virtual string GetString(string key, params object[] args)
+        {
+            var resource = GetString(key);
+            if (resource == null)
+                return null;
+            return string.Format(resource, args);
+        }
     }
 }
