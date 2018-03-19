@@ -18,7 +18,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// 分类。
         /// </summary>
         [Size(64)]
-        public string Category { get; set; } = "core";
+        public string Category { get; set; }
 
         /// <summary>
         /// 名称。
