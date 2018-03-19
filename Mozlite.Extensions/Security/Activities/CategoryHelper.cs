@@ -8,14 +8,14 @@ namespace Mozlite.Extensions.Security.Activities
     public class CategoryHelper
     {
         /// <summary>
+        /// 事件名称。
+        /// </summary>
+        public const string EventName = "{:user<->activity:}";
+
+        /// <summary>
         /// 用户活动日志默认事件实例。
         /// </summary>
         public static readonly EventId EventId = Create(0);
-
-        /// <summary>
-        /// 事件名称。
-        /// </summary>
-        public static readonly string EventName = "{:user<->activity:}";
 
         /// <summary>
         /// 实例化一个事件实例。
