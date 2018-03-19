@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using Mozlite.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
+using System.Collections.Generic;
 using Mozlite.Extensions.Security.Stores;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
@@ -43,6 +44,38 @@ namespace Mozlite.Extensions.Security.Permissions
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
             _rdb = rdb;
+            Init();
+        }
+
+        private IEnumerable<Permission> LoadProviderPermissions()
+        {
+            var providers = _httpContextAccessor.HttpContext.RequestServices.GetServices<IPermissionProvider>();
+            providers = providers.OrderBy(x => x.Order);
+            var permissions = new Dictionary<string, Permission>(StringComparer.OrdinalIgnoreCase);
+            foreach (var provider in providers)
+            {
+                var providerPermissions = provider.LoadPermissions();
+                foreach (var permission in providerPermissions)
+                {
+                    if (string.IsNullOrEmpty(permission.Category))
+                        permission.Category = provider.Category;
+                    permissions[$"{permission.Category}.{permission.Name}"] = permission;
+                }
+            }
+            return permissions.Values;
+        }
+
+        private void Init()
+        {
+            var permissions = LoadProviderPermissions();
+            foreach (var permission in permissions)
+            {
+                var dbPermission = DbContext.Find(x => x.Category == permission.Category && x.Name == permission.Name);
+                if (dbPermission == null)
+                    DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
+                else
+                    DbContext.Create(permission);
+            }
         }
 
         /// <summary>
@@ -145,7 +178,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 var parts = permissionName.Split('.');
                 if (parts.Length == 1)
                 {
-                    permission.Category = Core;
+                    permission.Category = PermissionProvider.Core;
                     permission.Name = permissionName;
                 }
                 else
@@ -157,8 +190,6 @@ namespace Mozlite.Extensions.Security.Permissions
             }
             return permission;
         }
-
-        private const string Core = "core";
 
         /// <summary>
         /// 获取或添加权限。
@@ -174,7 +205,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 var parts = permissionName.Split('.');
                 if (parts.Length == 1)
                 {
-                    permission.Category = Core;
+                    permission.Category = PermissionProvider.Core;
                     permission.Name = permissionName;
                 }
                 else

@@ -54,5 +54,13 @@ namespace Mozlite.Mvc
         /// <param name="args">格式化参数。</param>
         /// <returns>返回当前本地化字符串。</returns>
         string GetString<TResource>(string key, params object[] args);
+
+        /// <summary>
+        /// 获取当前键的本地化字符串实例。
+        /// </summary>
+        /// <param name="type">资源所在程序集的类型。</param>
+        /// <param name="key">资源键。</param>
+        /// <returns>返回当前本地化字符串。</returns>
+        string GetString(Type type, string key);
     }
 }

@@ -27,6 +27,12 @@ namespace Mozlite.Extensions.Security.Permissions
         public string Name { get; set; }
 
         /// <summary>
+        /// 显示字符串。
+        /// </summary>
+        [Size(64)]
+        public string Text { get; set; }
+
+        /// <summary>
         /// 描述。
         /// </summary>
         [Size(256)]

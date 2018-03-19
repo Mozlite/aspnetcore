@@ -89,7 +89,7 @@ namespace Mozlite.Mvc
         /// <param name="type">资源所在程序集的类型。</param>
         /// <param name="key">资源键。</param>
         /// <returns>返回当前本地化字符串。</returns>
-        protected virtual string GetString(Type type, string key)
+        public virtual string GetString(Type type, string key)
         {
             var resourceManager = _localizers.GetOrAdd(type, x =>
             {

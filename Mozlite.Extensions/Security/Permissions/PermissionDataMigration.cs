@@ -17,6 +17,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 .Column(x => x.Id)
                 .Column(x => x.Category)
                 .Column(x => x.Name)
+                .Column(x => x.Text)
                 .Column(x => x.Description)
                 .UniqueConstraint(x => new { x.Category, x.Name }));
 
