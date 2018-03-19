@@ -141,11 +141,24 @@ namespace Mozlite.Extensions.Security.Permissions
         {
             if (!LoadCachePermissions().TryGetValue(permissionName, out var permission))
             {
-                permission = new Permission { Name = permissionName };
+                permission = new Permission();
+                var parts = permissionName.Split('.');
+                if (parts.Length == 1)
+                {
+                    permission.Category = Core;
+                    permission.Name = permissionName;
+                }
+                else
+                {
+                    permission.Category = parts[0];
+                    permission.Name = parts[1];
+                }
                 DbContext.Create(permission);
             }
             return permission;
         }
+
+        private const string Core = "core";
 
         /// <summary>
         /// 获取或添加权限。
@@ -157,7 +170,18 @@ namespace Mozlite.Extensions.Security.Permissions
             var permissions = await LoadCachePermissionsAsync();
             if (!permissions.TryGetValue(permissionName, out var permission))
             {
-                permission = new Permission { Name = permissionName };
+                permission = new Permission();
+                var parts = permissionName.Split('.');
+                if (parts.Length == 1)
+                {
+                    permission.Category = Core;
+                    permission.Name = permissionName;
+                }
+                else
+                {
+                    permission.Category = parts[0];
+                    permission.Name = parts[1];
+                }
                 await DbContext.CreateAsync(permission);
             }
             return permission;
@@ -249,7 +273,8 @@ namespace Mozlite.Extensions.Security.Permissions
         {
             var permissions = await LoadCachePermissionsAsync();
             if (category != null)
-                return permissions.Values.Where(x => x.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                return permissions.Values
+                    .Where(x => x.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             return permissions.Values;
         }

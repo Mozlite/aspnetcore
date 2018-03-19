@@ -18,7 +18,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 .Column(x => x.Category)
                 .Column(x => x.Name)
                 .Column(x => x.Description)
-                .UniqueConstraint(x => x.Name));
+                .UniqueConstraint(x => new { x.Category, x.Name }));
 
             builder.CreateTable<PermissionInRole>(table => table
                 .Column(x => x.PermissionId)
