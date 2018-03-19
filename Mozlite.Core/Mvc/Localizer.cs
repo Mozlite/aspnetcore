@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq;
-using System.Reflection;
 using System.Resources;
+using System.Reflection;
 using Microsoft.AspNetCore.Html;
+using System.Collections.Concurrent;
 
 namespace Mozlite.Mvc
 {
@@ -138,5 +138,20 @@ namespace Mozlite.Mvc
                 return null;
             return string.Format(resource, args);
         }
+
+        /// <summary>
+        /// 获取当前键的本地化HTML字符串实例。
+        /// </summary>
+        /// <param name="key">枚举实例。</param>
+        /// <returns>返回当前本地化HTML字符串。</returns>
+        IHtmlContent ILocalizer.this[string key] => new HtmlString(GetString(key));
+
+        /// <summary>
+        /// 获取当前键的本地化HTML字符串实例。
+        /// </summary>
+        /// <param name="key">枚举实例。</param>
+        /// <param name="args">格式化参数。</param>
+        /// <returns>返回当前本地化HTML字符串。</returns>
+        IHtmlContent ILocalizer.this[string key, params object[] args] => new HtmlString(GetString(key, args));
     }
 }
