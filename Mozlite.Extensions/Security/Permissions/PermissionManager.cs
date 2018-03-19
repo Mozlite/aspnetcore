@@ -94,8 +94,9 @@ namespace Mozlite.Extensions.Security.Permissions
         public virtual PermissionValue GetPermissionValue(int roleId, int permissionId)
         {
             var permissions = LoadCachePermissionValues();
-            permissions.TryGetValue(GetCacheKey(roleId, permissionId), out var value);
-            return value;
+            if (permissions.TryGetValue(GetCacheKey(roleId, permissionId), out var value))
+                return value;
+            return PermissionValue.NotSet;
         }
 
         /// <summary>
@@ -107,8 +108,9 @@ namespace Mozlite.Extensions.Security.Permissions
         public virtual async Task<PermissionValue> GetPermissionValueAsync(int roleId, int permissionId)
         {
             var permissions = await LoadCachePermissionValuesAsync();
-            permissions.TryGetValue(GetCacheKey(roleId, permissionId), out var value);
-            return value;
+            if (permissions.TryGetValue(GetCacheKey(roleId, permissionId), out var value))
+                return value;
+            return PermissionValue.NotSet;
         }
 
         /// <summary>
