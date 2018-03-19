@@ -19,7 +19,6 @@ namespace Mozlite.Extensions.Sites
         private readonly RequestDelegate _next;
         private readonly ILogger<TSite> _logger;
         private readonly ISiteManager _siteManager;
-        private readonly IInstallerManager _installerManager;
 
         /// <summary>
         /// 初始化类<see cref="SiteMiddleware{TSiteContext, TSite}"/>。
@@ -27,13 +26,11 @@ namespace Mozlite.Extensions.Sites
         /// <param name="next">下一个请求代理。</param>
         /// <param name="logger">日志接口。</param>
         /// <param name="siteManager">网站管理接口。</param>
-        /// <param name="installerManager">安装管理接口。</param>
-        public SiteMiddleware(RequestDelegate next, ILogger<TSite> logger, ISiteManager siteManager, IInstallerManager installerManager)
+        public SiteMiddleware(RequestDelegate next, ILogger<TSite> logger, ISiteManager siteManager)
         {
             _next = next;
             _logger = logger;
             _siteManager = siteManager;
-            _installerManager = installerManager;
         }
 
         /// <summary>
