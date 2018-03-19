@@ -26,6 +26,8 @@ namespace Mozlite.Extensions.Sites
                     .Column(x => x.SiteKey)
                     .Column(x => x.SiteName)
                     .Column(x => x.UpdatedDate)
+                    .Column(x => x.IsAdministrator)
+                    .Column(x => x.IsInitialized)
                     .Column(x => x.SettingValue);
                 Create(table);
             });

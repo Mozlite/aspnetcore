@@ -1,6 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mozlite.Extensions.Sites
 {
@@ -36,6 +36,18 @@ namespace Mozlite.Extensions.Sites
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset UpdatedDate { get; set; } = DateTimeOffset.Now;
+
+        /// <summary>
+        /// 是否为管理网站。
+        /// </summary>
+        [JsonIgnore]
+        public bool IsAdministrator { get; set; }
+
+        /// <summary>
+        /// 是否已经安装完成并初始化。
+        /// </summary>
+        [JsonIgnore]
+        public bool IsInitialized { get; set; }
         
         /// <summary>
         /// 转换为存储实例。
@@ -48,6 +60,9 @@ namespace Mozlite.Extensions.Sites
             adapter.SiteKey = SiteKey;
             adapter.SiteId = SiteId;
             adapter.SiteName = SiteName;
+            adapter.UpdatedDate = UpdatedDate;
+            adapter.IsAdministrator = IsAdministrator;
+            adapter.IsInitialized = IsInitialized;
             return adapter;
         }
     }

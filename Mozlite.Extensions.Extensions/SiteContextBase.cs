@@ -23,6 +23,16 @@ namespace Mozlite.Extensions
         public virtual string SiteName => Site.SiteName;
 
         /// <summary>
+        /// 是否为管理网站。
+        /// </summary>
+        public virtual bool IsAdministrator => Site.IsAdministrator;
+
+        /// <summary>
+        /// 是否已经安装完成并初始化。
+        /// </summary>
+        public virtual bool IsInitialized => Site.IsInitialized;
+
+        /// <summary>
         /// 当前域名。
         /// </summary>
         public SiteDomain Domain { get; internal set; }

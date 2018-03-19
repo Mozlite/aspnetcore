@@ -27,6 +27,8 @@ namespace Mozlite.Extensions.Sites
             site.SiteKey = SiteKey;
             site.UpdatedDate = UpdatedDate;
             site.SiteId = SiteId;
+            site.IsAdministrator = IsAdministrator;
+            site.IsInitialized = IsInitialized;
             return site;
         }
     }
