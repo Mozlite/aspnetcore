@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Data
         /// <param name="action">数据操作结果。</param>
         public static implicit operator DataResult(DataAction action)
         {
-            return new DataResult((int)action, Resources.ResourceManager.GetString($"DataAction_{action}"));
+            return (int)action;
         }
 
         /// <summary>
@@ -41,11 +41,22 @@ namespace Mozlite.Extensions.Data
         /// <param name="action">数据操作结果。</param>
         public static implicit operator DataResult(int action)
         {
-            var dataAction = (DataAction)action;
-            return new DataResult(action, Resources.ResourceManager.GetString($"DataAction_{dataAction}"));
+            return new DataResult(action, Resources.ResourceManager.GetString($"DataAction_{(DataAction)action}"));
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 隐士转换操作结果。
+        /// </summary>
+        /// <param name="msg">数据操作描述结果。</param>
+        public static implicit operator DataResult(string msg)
+        {
+            return new DataResult((int)DataAction.UnknownError, msg);
+        }
+
+        /// <summary>
+        /// 返回错误消息。
+        /// </summary>
+        /// <returns>错误消息。</returns>
         public override string ToString() => _desc;
 
         /// <summary>

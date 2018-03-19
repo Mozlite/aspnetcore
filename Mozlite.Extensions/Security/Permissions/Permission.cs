@@ -37,5 +37,10 @@ namespace Mozlite.Extensions.Security.Permissions
         /// </summary>
         [Size(256)]
         public string Description { get; set; }
+
+        /// <summary>
+        /// 唯一键。
+        /// </summary>
+        public string Key => $"{Category}.{Name}".ToLower();
     }
 }

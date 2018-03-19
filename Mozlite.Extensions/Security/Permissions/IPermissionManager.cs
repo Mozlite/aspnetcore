@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
@@ -8,6 +10,22 @@ namespace Mozlite.Extensions.Security.Permissions
     /// </summary>
     public interface IPermissionManager : ISingletonService
     {
+        /// <summary>
+        /// 获取权限值。
+        /// </summary>
+        /// <param name="roleId">当前角色。</param>
+        /// <param name="permissionId">权限Id。</param>
+        /// <returns>返回权限值。</returns>
+        PermissionValue GetPermissionValue(int roleId, int permissionId);
+
+        /// <summary>
+        /// 获取权限值。
+        /// </summary>
+        /// <param name="roleId">当前角色。</param>
+        /// <param name="permissionId">权限Id。</param>
+        /// <returns>返回权限值。</returns>
+        Task<PermissionValue> GetPermissionValueAsync(int roleId, int permissionId);
+
         /// <summary>
         /// 获取当前用户的权限。
         /// </summary>
@@ -90,5 +108,21 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="category">权限分类。</param>
         /// <returns>返回权限列表。</returns>
         Task<IEnumerable<Permission>> LoadPermissionsAsync(string category = null);
+
+        /// <summary>
+        /// 保存当前配置角色权限。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="request">当前请求。</param>
+        /// <returns>返回保存结果。</returns>
+        Task<DataResult> SaveAsync(int roleId, HttpRequest request);
+
+        /// <summary>
+        /// 保存当前配置角色权限。
+        /// </summary>
+        /// <param name="roleId">角色Id。</param>
+        /// <param name="request">当前请求。</param>
+        /// <returns>返回保存结果。</returns>
+        DataResult Save(int roleId, HttpRequest request);
     }
 }

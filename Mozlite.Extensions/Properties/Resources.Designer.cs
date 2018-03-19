@@ -412,6 +412,15 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 管理员角色权限不能被设置！ 的本地化字符串。
+        /// </summary>
+        internal static string PermissionSetCannotBeAdministrator {
+            get {
+                return ResourceManager.GetString("PermissionSetCannotBeAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 允许 的本地化字符串。
         /// </summary>
         internal static string PermissionValue_Allow {

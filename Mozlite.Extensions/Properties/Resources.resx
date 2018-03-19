@@ -255,4 +255,7 @@
   <data name="PermissionValue_NotSet" xml:space="preserve">
     <value>未设置</value>
   </data>
+  <data name="PermissionSetCannotBeAdministrator" xml:space="preserve">
+    <value>管理员角色权限不能被设置！</value>
+  </data>
 </root>
