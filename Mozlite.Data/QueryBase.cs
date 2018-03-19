@@ -22,7 +22,7 @@ namespace Mozlite.Data
         /// <summary>
         /// 页码。
         /// </summary>
-        public int Page
+        public int PI
         {
             get
             {
@@ -30,13 +30,13 @@ namespace Mozlite.Data
                     _page = 1;
                 return _page;
             }
-            set { _page = Math.Max(1, value); }
+            set => _page = Math.Max(1, value);
         }
 
         /// <summary>
         /// 每页显示记录数。
         /// </summary>
-        public int PageSize { get; set; } = 20;
+        public int PS { get; set; } = 20;
 
         /// <summary>
         /// 总记录数。

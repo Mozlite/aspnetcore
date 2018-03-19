@@ -1,7 +1,7 @@
 ﻿using System;
+using Mozlite.Extensions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Mozlite.Extensions;
 
 namespace Mozlite.Mvc.TagHelpers.Common
 {
@@ -31,9 +31,9 @@ namespace Mozlite.Mvc.TagHelpers.Common
                 output.SuppressOutput();
                 return;
             }
-            if (!ViewContext.RouteData.Values.TryGetValue("page", out var pageValue))
+            if (!ViewContext.RouteData.Values.TryGetValue("pi", out var pageValue))
             {
-                string qs = ViewContext.HttpContext.Request.Query["page"];
+                string qs = ViewContext.HttpContext.Request.Query["pi"];
                 pageValue = qs;
             }
             var page = Convert.ToInt32(pageValue);

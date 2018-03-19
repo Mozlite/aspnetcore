@@ -110,7 +110,7 @@ namespace Mozlite.Extensions.Searching
         /// <returns>返回搜索实例对象。</returns>
         public virtual async Task<SearchQuery> LoadAsync(SearchQuery query)
         {
-            if (query.Page <= 1)
+            if (query.PI <= 1)
                 await _indexes.UpdateAsync(x => x.Name == query.Q, x => new { Priority = x.Priority + 1 });
             return await _searches.LoadAsync(query);
         }

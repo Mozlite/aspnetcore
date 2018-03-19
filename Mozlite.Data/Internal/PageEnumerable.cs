@@ -30,12 +30,12 @@ namespace Mozlite.Data.Internal
         /// <summary>
         /// 页码。
         /// </summary>
-        public int Page { get; set; }
+        public int PI { get; set; }
 
         /// <summary>
         /// 每页显示记录数。
         /// </summary>
-        public int PageSize { get; set; }
+        public int PS { get; set; }
 
         /// <summary>
         /// 总记录数。
@@ -52,7 +52,7 @@ namespace Mozlite.Data.Internal
             {
                 if (_page == -1)
                 {
-                    _page = (int)Math.Ceiling(Size * 1.0 / PageSize);
+                    _page = (int)Math.Ceiling(Size * 1.0 / PS);
                 }
                 return _page;
             }

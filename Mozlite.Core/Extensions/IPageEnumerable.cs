@@ -11,12 +11,12 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 页码。
         /// </summary>
-        int Page { get; }
+        int PI { get; }
 
         /// <summary>
         /// 每页显示记录数。
         /// </summary>
-        int PageSize { get; }
+        int PS { get; }
 
         /// <summary>
         /// 总记录数。

@@ -72,7 +72,7 @@ namespace Mozlite.Data.Internal
         {
             var context = AsQueryable();
             query.Init(context);
-            query.Models = context.AsEnumerable(query.Page, query.PageSize, countExpression);
+            query.Models = context.AsEnumerable(query.PI, query.PS, countExpression);
             return query;
         }
 
@@ -88,7 +88,7 @@ namespace Mozlite.Data.Internal
         {
             var context = AsQueryable();
             query.Init(context);
-            query.Models = await context.AsEnumerableAsync(query.Page, query.PageSize, countExpression, cancellationToken);
+            query.Models = await context.AsEnumerableAsync(query.PI, query.PS, countExpression, cancellationToken);
             return query;
         }
 

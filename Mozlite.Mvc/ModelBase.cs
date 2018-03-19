@@ -45,10 +45,10 @@ namespace Mozlite.Mvc
                 if (_pageIndex == -1)
                 {
                     string page;
-                    if (RouteData.Values.TryGetValue("page", out var pobject))
+                    if (RouteData.Values.TryGetValue("pi", out var pobject))
                         page = pobject.ToString();
                     else
-                        page = Request.Query["page"];
+                        page = Request.Query["pi"];
                     if (!int.TryParse(page, out _pageIndex))
                         _pageIndex = 1;
                     if (_pageIndex < 1)

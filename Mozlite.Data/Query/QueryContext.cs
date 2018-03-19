@@ -788,8 +788,8 @@ namespace Mozlite.Data.Query
         protected IPageEnumerable<TModel> LoadPage()
         {
             var models = new PageEnumerable<TModel>();
-            models.Page = PageIndex ?? 1;
-            models.PageSize = Size ?? 20;
+            models.PI = PageIndex ?? 1;
+            models.PS = Size ?? 20;
             using (var reader = _db.ExecuteReader(_sqlGenerator.Query(this).ToString()))
             {
                 while (reader.Read())
@@ -808,8 +808,8 @@ namespace Mozlite.Data.Query
         protected async Task<IPageEnumerable<TModel>> LoadPageAsync(CancellationToken cancellationToken = default)
         {
             var models = new PageEnumerable<TModel>();
-            models.Page = PageIndex ?? 1;
-            models.PageSize = Size ?? 20;
+            models.PI = PageIndex ?? 1;
+            models.PS = Size ?? 20;
             using (var reader = await _db.ExecuteReaderAsync(_sqlGenerator.Query(this).ToString(), cancellationToken: cancellationToken))
             {
                 while (await reader.ReadAsync(cancellationToken))
