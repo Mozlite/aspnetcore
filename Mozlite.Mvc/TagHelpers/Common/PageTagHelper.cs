@@ -28,7 +28,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
         private const string HrefAttributeName = "href";
         private const string DataAttributeName = "data";
         private const string FactorAttributeName = "factor";
-        private const string BorderAttributeName = "border";
         private IDictionary<string, string> _routeValues;
 
         /// <summary>
@@ -91,12 +90,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
         /// </summary>
         [HtmlAttributeName(RouteAttributeName)]
         public string Route { get; set; }
-
-        /// <summary>
-        /// 是否有边框。
-        /// </summary>
-        [HtmlAttributeName(BorderAttributeName)]
-        public bool Border { get; set; }
 
         /// <summary>
         /// 路由对象列表。
@@ -163,7 +156,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
         }
 
         private Func<int, TagBuilder> _createAnchor;
-
         private Func<int, TagBuilder> GenerateActionLink()
         {
             var routeValues = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -179,7 +171,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
                 routeValues["area"] = Area;
 
             if (Page != null)
-            {
                 return page =>
                 {
                     routeValues["pi"] = page;
@@ -191,12 +182,10 @@ namespace Mozlite.Mvc.TagHelpers.Common
                         Protocol,
                         Host,
                         Fragment, routeValues, null
-                        );
+                    );
                 };
-            }
 
             if (Route == null)
-            {
                 return page =>
                 {
                     routeValues["pi"] = page;
@@ -211,7 +200,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
                         routeValues,
                         null);
                 };
-            }
             return page =>
             {
                 routeValues["pi"] = page;
@@ -256,21 +244,19 @@ namespace Mozlite.Mvc.TagHelpers.Common
 
             var builder = new TagBuilder("ul");
             builder.AddCssClass("pagination");
-            if (!Border)
-                builder.AddCssClass("borderless");
             var startIndex = Cores.GetRange(Data.PI, Data.Pages, Factor, out var endIndex);
             if (Data.PI > 1)
                 builder.InnerHtml.AppendHtml(CreateLink(Data.PI - 1, Resources.LastPage, Resources.LastPage));
             if (startIndex > 1)
                 builder.InnerHtml.AppendHtml(CreateLink(1, "1"));
             if (startIndex > 2)
-                builder.InnerHtml.AppendHtml("<li><span>…</span></li>");
+                builder.InnerHtml.AppendHtml("<li class=\"page-item\"><span>…</span></li>");
             for (int i = startIndex; i < endIndex; i++)
             {
                 builder.InnerHtml.AppendHtml(CreateLink(i, i.ToString()));
             }
             if (endIndex < Data.Pages)
-                builder.InnerHtml.AppendHtml("<li><span>…</span></li>");
+                builder.InnerHtml.AppendHtml("<li class=\"page-item\"><span>…</span></li>");
             if (endIndex <= Data.Pages)
                 builder.InnerHtml.AppendHtml(CreateLink(Data.Pages, Data.Pages.ToString()));
             if (Data.PI < Data.Pages)
@@ -283,7 +269,9 @@ namespace Mozlite.Mvc.TagHelpers.Common
         private TagBuilder CreateLink(int pageIndex, string innerHtml, string title = null)
         {
             var li = new TagBuilder("li");
+            li.AddCssClass("page-item");
             var anchor = _createAnchor(pageIndex);
+            anchor.AddCssClass("page-link");
             anchor.MergeAttribute("title", title ?? string.Format(Resources.NumberPage, pageIndex));
             if (Data.PI == pageIndex)
             {
