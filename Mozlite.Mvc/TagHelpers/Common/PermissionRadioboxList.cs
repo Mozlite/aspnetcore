@@ -12,13 +12,40 @@ namespace Mozlite.Mvc.TagHelpers.Common
     public class PermissionRadioboxList : RadioboxListTagHelper
     {
         private readonly ILocalizer _localizer;
+        private readonly IPermissionManager _permissionManager;
+
+        /// <summary>
+        /// 角色Id。
+        /// </summary>
+        [HtmlAttributeName("roleid")]
+        public int RoleId { get; set; }
+
+        /// <summary>
+        /// 权限Id。
+        /// </summary>
+        [HtmlAttributeName("permissionid")]
+        public int PermissionId { get; set; }
+
         /// <summary>
         /// 初始化类<see cref="PermissionRadioboxList"/>。
         /// </summary>
         /// <param name="localizer">本地化实例。</param>
-        public PermissionRadioboxList(ILocalizer localizer)
+        /// <param name="permissionManager">权限管理接口。</param>
+        public PermissionRadioboxList(ILocalizer localizer, IPermissionManager permissionManager)
         {
             _localizer = localizer;
+            _permissionManager = permissionManager;
+        }
+
+        /// <summary>
+        /// 初始化当前标签上下文。
+        /// </summary>
+        /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
+        public override void Init(TagHelperContext context)
+        {
+            base.Init(context);
+            Name = $"p-{RoleId}-{PermissionId}";
+            Value = ((int)_permissionManager.GetPermissionValue(RoleId, PermissionId)).ToString();
         }
 
         /// <summary>
