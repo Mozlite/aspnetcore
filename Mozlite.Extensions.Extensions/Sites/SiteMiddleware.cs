@@ -69,12 +69,19 @@ namespace Mozlite.Extensions.Sites
                     Domain = siteDomain
                 };
             }
-            else if (await _installerManager.IsNewAsync())
+            else if (await IsInstalling(context))
             {
                 context.Response.Redirect("/installer");
                 return;
             }
             await _next.Invoke(context);
+        }
+
+        private async Task<bool> IsInstalling(HttpContext context)
+        {
+            if (context.Request.Path.StartsWithSegments("/installer"))
+                return false;
+            return await _installerManager.IsNewAsync();
         }
     }
 }
