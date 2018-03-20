@@ -78,7 +78,7 @@ namespace Mozlite.Extensions.Sites
             await _next.Invoke(context);
         }
 
-        private static readonly string[] _filters = new[]
+        private static readonly string[] _filters =
         {
             "/installer",
             "/dist/",
@@ -89,15 +89,13 @@ namespace Mozlite.Extensions.Sites
         private const string InstallerPath = "/installer";
         private async Task<bool> IsInstalling(HttpContext context)
         {
-            var path = context.Request.Path;
+            var path = context.Request.Path.ToString().ToLower();
             foreach (var filter in _filters)
             {
-                if (path.StartsWithSegments(filter, StringComparison.OrdinalIgnoreCase))
+                if (path.StartsWith(filter))
                     return false;
             }
             return await _installerManager.IsNewAsync();
         }
-
-
     }
 }
