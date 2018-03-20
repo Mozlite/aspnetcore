@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -77,12 +78,26 @@ namespace Mozlite.Extensions.Sites
             await _next.Invoke(context);
         }
 
+        private static readonly string[] _filters = new[]
+        {
+            "/installer",
+            "/dist/",
+            "/images/",
+            "/js/",
+            "/css/"
+        };
         private const string InstallerPath = "/installer";
         private async Task<bool> IsInstalling(HttpContext context)
         {
-            if (context.Request.Path.StartsWithSegments(InstallerPath))
-                return false;
+            var path = context.Request.Path;
+            foreach (var filter in _filters)
+            {
+                if (path.StartsWithSegments(filter, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
             return await _installerManager.IsNewAsync();
         }
+
+
     }
 }
