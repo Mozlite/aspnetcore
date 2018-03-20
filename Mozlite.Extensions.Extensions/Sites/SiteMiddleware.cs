@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Installers;
+using Mozlite.Mvc;
 
 namespace Mozlite.Extensions.Sites
 {
@@ -44,38 +45,40 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回当前任务。</returns>
         public async Task Invoke(HttpContext context)
         {
-            if (Installer.Current == InstallerStatus.Success)
-            {
-                var uri = new Uri(context.Request.GetDisplayUrl());
-                var domain = uri.DnsSafeHost;
-                if (!uri.IsDefaultPort)
-                    domain += ":" + uri.Port;
-                var siteDomain = await _siteManager.GetDomainAsync(domain);
-                if (siteDomain == null || siteDomain.Disabled)
-                {
-                    _logger.LogInformation("域名不存在或被禁用！");
-                    context.Response.StatusCode = 400;//Bad Request
-                    return;
-                }
-                var site = await _siteManager.GetSiteAsync<TSite>(domain);
-                if (site == null)
-                {
-                    _logger.LogInformation("网站配置不存在！");
-                    context.Response.StatusCode = 400;//Bad Request
-                    return;
-                }
-                context.Items[typeof(SiteContextBase)] = new TSiteContext
-                {
-                    Site = site,
-                    Domain = siteDomain
-                };
-            }
-            else if (await IsInstalling(context))
+            //安装请求
+            if (await IsInstalling(context))
             {
                 context.Response.Redirect(InstallerPath);
                 return;
             }
-            await _next.Invoke(context);
+
+            if (await ValidRequest(context))
+                await _next.Invoke(context);
+        }
+
+        private async Task<bool> ValidRequest(HttpContext context)
+        {
+            var domain = context.Request.GetDomain();
+            var siteDomain = await _siteManager.GetDomainAsync(domain);
+            if (siteDomain == null || siteDomain.Disabled)
+            {
+                _logger.LogInformation("域名不存在或被禁用！");
+                context.Response.StatusCode = 400;//Bad Request
+                return false;
+            }
+            var site = await _siteManager.GetSiteAsync<TSite>(domain);
+            if (site == null)
+            {
+                _logger.LogInformation("网站配置不存在！");
+                context.Response.StatusCode = 400;//Bad Request
+                return false;
+            }
+            context.Items[typeof(SiteContextBase)] = new TSiteContext
+            {
+                Site = site,
+                Domain = siteDomain
+            };
+            return true;
         }
 
         private static readonly string[] _filters =

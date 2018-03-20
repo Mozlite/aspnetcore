@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 using Mozlite.Extensions.Data;
+using Mozlite.Mvc;
 
 namespace Mozlite.Extensions.Sites
 {
@@ -164,7 +165,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回判断结果。</returns>
         public virtual bool IsValid(string domain)
         {
-            if (domain.Equals("localhost", StringComparison.OrdinalIgnoreCase) || domain.Equals("127.0.0.1"))
+            if (domain.IsLocal())
                 return true;
             return LoadCacheDomains().ContainsKey(domain);
         }
@@ -261,7 +262,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回判断结果。</returns>
         public virtual async Task<bool> IsValidAsync(string domain)
         {
-            if (domain.Equals("localhost", StringComparison.OrdinalIgnoreCase) || domain.Equals("127.0.0.1"))
+            if (domain.IsLocal())
                 return true;
             var domains = await LoadCacheDomainsAsync();
             return domains.ContainsKey(domain);
