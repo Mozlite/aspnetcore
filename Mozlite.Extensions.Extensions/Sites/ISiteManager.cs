@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mozlite.Data.Internal;
 using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Sites
@@ -242,5 +244,27 @@ namespace Mozlite.Extensions.Sites
         /// <param name="siteId">网站ID。</param>
         /// <returns>返回默认网站域名。</returns>
         Task<SiteDomain> GetDomainAsync(int siteId);
+
+        /// <summary>
+        /// 初始化整个站的方法。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="executor">数据库事务操作执行方法。</param>
+        /// <param name="site">网站实例。</param>
+        /// <param name="domain">域名实例。</param>
+        /// <returns>返回安装结果。</returns>
+        bool Install<TSite>(Func<IDbTransactionContext<SiteDomain>, bool> executor, TSite site, SiteDomain domain)
+            where TSite : SiteBase;
+
+        /// <summary>
+        /// 初始化整个站的方法。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="executor">数据库事务操作执行方法。</param>
+        /// <param name="site">网站实例。</param>
+        /// <param name="domain">域名实例。</param>
+        /// <returns>返回安装结果。</returns>
+        Task<bool> InstallAsync<TSite>(Func<IDbTransactionContext<SiteDomain>, Task<bool>> executor, TSite site, SiteDomain domain)
+            where TSite : SiteBase;
     }
 }

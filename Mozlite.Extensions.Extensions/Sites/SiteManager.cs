@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
-using Mozlite.Extensions.Data;
 using Mozlite.Mvc;
+using Mozlite.Data;
+using System.Threading.Tasks;
+using Mozlite.Extensions.Data;
+using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data.Internal;
+using Mozlite.Extensions.Installers;
+using Newtonsoft.Json;
 
 namespace Mozlite.Extensions.Sites
 {
@@ -18,6 +21,7 @@ namespace Mozlite.Extensions.Sites
         private readonly IDbContext<SiteDomain> _sddb;
         private readonly IMemoryCache _cache;
         private readonly IEnumerable<ISiteEventHandler> _handlers;
+        private readonly Type _cacheKey = typeof(SiteDomain);
 
         /// <summary>
         /// <see cref="SiteManager"/>。
@@ -36,7 +40,7 @@ namespace Mozlite.Extensions.Sites
 
         private IDictionary<string, SiteDomain> LoadCacheDomains()
         {
-            return _cache.GetOrCreate(typeof(SiteDomain), ctx =>
+            return _cache.GetOrCreate(_cacheKey, ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
                 return _sddb.Fetch()
@@ -47,7 +51,7 @@ namespace Mozlite.Extensions.Sites
 
         private async Task<IDictionary<string, SiteDomain>> LoadCacheDomainsAsync()
         {
-            return await _cache.GetOrCreateAsync(typeof(SiteDomain), async ctx =>
+            return await _cache.GetOrCreateAsync(_cacheKey, async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
                 var domains = await _sddb.FetchAsync();
@@ -71,7 +75,7 @@ namespace Mozlite.Extensions.Sites
                 return true;
             }))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return true;
             }
             return false;
@@ -92,7 +96,7 @@ namespace Mozlite.Extensions.Sites
                 return true;
             }))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return true;
             }
             return false;
@@ -109,7 +113,7 @@ namespace Mozlite.Extensions.Sites
         {
             if (_sddb.Update(x => x.SiteId == siteId && x.Domain == domain, new { Disabled = disabled }))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return true;
             }
             return false;
@@ -126,7 +130,7 @@ namespace Mozlite.Extensions.Sites
         {
             if (await _sddb.UpdateAsync(x => x.SiteId == siteId && x.Domain == domain, new { Disabled = disabled }))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return true;
             }
             return false;
@@ -181,7 +185,7 @@ namespace Mozlite.Extensions.Sites
                 return DataAction.Created;
             if (_sddb.Create(domain))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return DataAction.Created;
             }
             return DataAction.CreatedFailured;
@@ -197,7 +201,7 @@ namespace Mozlite.Extensions.Sites
         {
             if (_sddb.Delete(x => x.SiteId == siteId && x.Domain == domain))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return DataAction.Deleted;
             }
             return DataAction.DeletedFailured;
@@ -279,7 +283,7 @@ namespace Mozlite.Extensions.Sites
                 return DataAction.Created;
             if (await _sddb.CreateAsync(domain))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return DataAction.Created;
             }
             return DataAction.CreatedFailured;
@@ -295,7 +299,7 @@ namespace Mozlite.Extensions.Sites
         {
             if (await _sddb.DeleteAsync(x => x.SiteId == siteId && x.Domain == domain))
             {
-                _cache.Remove(typeof(SiteDomain));
+                _cache.Remove(_cacheKey);
                 return DataAction.Deleted;
             }
             return DataAction.DeletedFailured;
@@ -532,6 +536,76 @@ namespace Mozlite.Extensions.Sites
         {
             var domains = await LoadCacheDomainsAsync();
             return domains.Values.SingleOrDefault(x => x.SiteId == siteId && x.IsDefault);
+        }
+
+        /// <summary>
+        /// 初始化整个站的方法。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="executor">数据库事务操作执行方法。</param>
+        /// <param name="site">网站实例。</param>
+        /// <param name="domain">域名实例。</param>
+        /// <returns>返回安装结果。</returns>
+        public virtual bool Install<TSite>(Func<IDbTransactionContext<SiteDomain>, bool> executor, TSite site, SiteDomain domain) where TSite : SiteBase
+        {
+            if (domain.SiteId == 0)
+                domain.SiteId = site.SiteId;
+            domain.IsDefault = true;
+            if (_sddb.BeginTransaction(db =>
+            {
+                if (!executor(db))
+                    return false;
+                if (!db.As<TSite>().Update(x => x.SiteId == site.SiteId, new
+                {
+                    site.IsInitialized,
+                    site.SiteName,
+                    UpdatedDate = DateTimeOffset.Now,
+                    SettingValue = JsonConvert.SerializeObject(site)
+                }))
+                    return false;
+                return db.As<SiteDomain>().Create(domain);
+            }))
+            {
+                Installer.Current = InstallerStatus.Success;
+                _cache.Remove(_cacheKey);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 初始化整个站的方法。
+        /// </summary>
+        /// <typeparam name="TSite">网站类型。</typeparam>
+        /// <param name="executor">数据库事务操作执行方法。</param>
+        /// <param name="site">网站实例。</param>
+        /// <param name="domain">域名实例。</param>
+        /// <returns>返回安装结果。</returns>
+        public virtual async Task<bool> InstallAsync<TSite>(Func<IDbTransactionContext<SiteDomain>, Task<bool>> executor, TSite site, SiteDomain domain) where TSite : SiteBase
+        {
+            if (domain.SiteId == 0)
+                domain.SiteId = site.SiteId;
+            domain.IsDefault = true;
+            if (await _sddb.BeginTransactionAsync(async db =>
+            {
+                if (!await executor(db))
+                    return false;
+                if (!await db.As<TSite>().UpdateAsync(x => x.SiteId == site.SiteId, new
+                {
+                    site.IsInitialized,
+                    site.SiteName,
+                    UpdatedDate = DateTimeOffset.Now,
+                    SettingValue = JsonConvert.SerializeObject(site)
+                }))
+                    return false;
+                return await db.As<SiteDomain>().CreateAsync(domain);
+            }))
+            {
+                Installer.Current = InstallerStatus.Success;
+                _cache.Remove(_cacheKey);
+                return true;
+            }
+            return false;
         }
     }
 }

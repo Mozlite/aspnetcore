@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Installers;
+using Mozlite.Extensions.Tasks;
 using Mozlite.Mvc;
 
 namespace Mozlite.Extensions.Sites
@@ -43,6 +44,7 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回当前任务。</returns>
         public async Task Invoke(HttpContext context)
         {
+            await TaskHelper.WaitInitializingAsync();
             var path = context.Request.Path.Value.ToLower();
             if (IsIgnoredFilter(path))
             {
@@ -94,7 +96,7 @@ namespace Mozlite.Extensions.Sites
         };
 
         private const string InstallerPath = "/installer";
-        private bool IsIgnoredFilter(string path)
+        private static bool IsIgnoredFilter(string path)
         {
             path += '/';
             foreach (var filter in _filters)

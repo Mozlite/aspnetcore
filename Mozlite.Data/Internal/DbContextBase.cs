@@ -464,6 +464,8 @@ namespace Mozlite.Data.Internal
         {
             var sql = SqlGenerator.Scalar(EntityType, scalarMethod, column, expression);
             var scalar = ExecuteScalar(sql);
+            if (scalar == null || scalar == DBNull.Value)
+                return default;
             if (convertFunc == null)
                 return (TValue)Convert.ChangeType(scalar, typeof(TValue));
             return convertFunc(scalar);
@@ -483,6 +485,8 @@ namespace Mozlite.Data.Internal
         {
             var sql = SqlGenerator.Scalar(EntityType, scalarMethod, column, expression);
             var scalar = await ExecuteScalarAsync(sql, cancellationToken: cancellationToken);
+            if (scalar == null || scalar == DBNull.Value)
+                return default;
             if (convertFunc == null)
                 return (TValue)Convert.ChangeType(scalar, typeof(TValue));
             return convertFunc(scalar);

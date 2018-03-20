@@ -96,8 +96,9 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 当前网站实例。
         /// </summary>
-        protected SiteContextBase Site { get; }
+        protected SiteContextBase Site => _lazy.Value;
 
+        private readonly Lazy<SiteContextBase> _lazy;
         /// <summary>
         /// 初始化类<see cref="UserExManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
@@ -110,10 +111,10 @@ namespace Mozlite.Extensions.Security
         /// <param name="errors">错误实例。</param>
         /// <param name="services">服务提供者接口。</param>
         /// <param name="logger">日志接口。</param>
-        protected UserExManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger) 
+        protected UserExManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
-            Site = services.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
+            _lazy = new Lazy<SiteContextBase>(() => services.GetRequiredService<ISiteContextAccessorBase>().SiteContext);
         }
 
         /// <summary>
