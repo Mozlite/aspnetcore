@@ -117,8 +117,7 @@ namespace Mozlite.Data.Query
                     _builder.Append(_sqlHelper.EscapeLiteral(true));
                 }
 
-                string op;
-                if (!TryGenerateBinaryOperator(binaryExpression.NodeType, out op))
+                if (!TryGenerateBinaryOperator(binaryExpression.NodeType, out var op))
                     throw new ArgumentOutOfRangeException();
 
                 if ((binaryExpression.NodeType == ExpressionType.NotEqual ||
@@ -391,6 +390,20 @@ namespace Mozlite.Data.Query
         protected virtual string GenerateBinaryOperator(ExpressionType op)
         {
             return _binaryOperatorMap[op];
+        }
+
+        /// <summary>
+        /// 解析Lambda表达式。
+        /// </summary>
+        /// <typeparam name="T">表达式类型。</typeparam>
+        /// <param name="node">当前表达式实例对象。</param>
+        /// <returns>返回解析的表达式。</returns>
+        protected override Expression VisitLambda<T>(Expression<T> node)
+        {
+            var expression = node.Body;
+            if (expression.NodeType == ExpressionType.MemberAccess && expression.Type == typeof(bool))
+                return Visit(Expression.Equal(expression, Expression.Constant(true)));
+            return base.VisitLambda(node);
         }
 
         /// <summary>
