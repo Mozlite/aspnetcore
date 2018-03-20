@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
@@ -45,60 +43,66 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回当前任务。</returns>
         public async Task Invoke(HttpContext context)
         {
-            //安装请求
-            if (await IsInstalling(context))
+            var path = context.Request.Path.Value.ToLower();
+            if (IsIgnoredFilter(path))
             {
-                context.Response.Redirect(InstallerPath);
+                await _next(context);
                 return;
             }
-
-            if (await ValidRequest(context))
-                await _next.Invoke(context);
+            var site = await GetSiteContextAsync(context);
+            if (site == null)
+            {
+                //新站安装请求
+                if (await _installerManager.IsNewAsync())
+                {
+                    context.Response.Redirect(InstallerPath);
+                    return;
+                }
+                _logger.LogWarning("非法请求:{0}", context.Request.GetDisplayUrl());
+                context.Response.StatusCode = 400;//BadRequest
+                return;
+            }
+            await _next(context);
         }
 
-        private async Task<bool> ValidRequest(HttpContext context)
+        private async Task<TSiteContext> GetSiteContextAsync(HttpContext context)
         {
             var domain = context.Request.GetDomain();
             var siteDomain = await _siteManager.GetDomainAsync(domain);
             if (siteDomain == null || siteDomain.Disabled)
-            {
-                _logger.LogInformation("域名不存在或被禁用！");
-                context.Response.StatusCode = 400;//Bad Request
-                return false;
-            }
+                return null;
             var site = await _siteManager.GetSiteAsync<TSite>(domain);
             if (site == null)
-            {
-                _logger.LogInformation("网站配置不存在！");
-                context.Response.StatusCode = 400;//Bad Request
-                return false;
-            }
-            context.Items[typeof(SiteContextBase)] = new TSiteContext
+                return null;
+            var siteContext = new TSiteContext
             {
                 Site = site,
                 Domain = siteDomain
             };
-            return true;
+            context.Items[typeof(SiteContextBase)] = siteContext;
+            return siteContext;
         }
 
         private static readonly string[] _filters =
         {
-            "/installer",
+            "/installer/",
             "/dist/",
             "/images/",
             "/js/",
-            "/css/"
+            "/css/",
+            "/favicon.ico/"
         };
+
         private const string InstallerPath = "/installer";
-        private async Task<bool> IsInstalling(HttpContext context)
+        private bool IsIgnoredFilter(string path)
         {
-            var path = context.Request.Path.ToString().ToLower();
+            path += '/';
             foreach (var filter in _filters)
             {
                 if (path.StartsWith(filter))
-                    return false;
+                    return true;
             }
-            return await _installerManager.IsNewAsync();
+            return false;
         }
     }
 }
