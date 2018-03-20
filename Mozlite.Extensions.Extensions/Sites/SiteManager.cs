@@ -335,7 +335,7 @@ namespace Mozlite.Extensions.Sites
         public virtual TSite GetSiteByKey<TSite>(string key) where TSite : SiteBase, new()
         {
             var settings = _sdb.Find(x => x.SiteKey == key);
-            return settings.ToSite<TSite>();
+            return settings?.ToSite<TSite>();
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Mozlite.Extensions.Sites
         public virtual TSite GetSite<TSite>(int siteId) where TSite : SiteBase, new()
         {
             var settings = _sdb.Find(siteId);
-            return settings.ToSite<TSite>();
+            return settings?.ToSite<TSite>();
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<TSite> GetSiteByKeyAsync<TSite>(string key) where TSite : SiteBase, new()
         {
             var settings = await _sdb.FindAsync(x => x.SiteKey == key);
-            return settings.ToSite<TSite>();
+            return settings?.ToSite<TSite>();
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace Mozlite.Extensions.Sites
         public virtual async Task<TSite> GetSiteAsync<TSite>(int siteId) where TSite : SiteBase, new()
         {
             var settings = await _sdb.FindAsync(siteId);
-            return settings.ToSite<TSite>();
+            return settings?.ToSite<TSite>();
         }
 
         /// <summary>
