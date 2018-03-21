@@ -100,6 +100,26 @@ namespace Mozlite.Mvc
             code = Verifiers.Verifiers.Hashed(code);
             return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
         }
+
+        /// <summary>
+        /// 获取注册的服务对象。
+        /// </summary>
+        /// <typeparam name="TService">服务类型或者接口。</typeparam>
+        /// <returns>返回当前服务的实例对象。</returns>
+        protected TService GetService<TService>()
+        {
+            return HttpContext.RequestServices.GetService<TService>();
+        }
+
+        /// <summary>
+        /// 获取已经注册的服务对象。
+        /// </summary>
+        /// <typeparam name="TService">服务类型或者接口。</typeparam>
+        /// <returns>返回当前服务的实例对象。</returns>
+        protected TService GetRequiredService<TService>()
+        {
+            return HttpContext.RequestServices.GetRequiredService<TService>();
+        }
         #endregion
 
         #region views

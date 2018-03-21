@@ -2,13 +2,13 @@
 using System.Data;
 using System.Linq;
 using System.Threading;
+using Mozlite.Extensions;
 using System.Data.Common;
+using Mozlite.Data.Query;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Mozlite.Data.Query;
-using Mozlite.Extensions;
 
 namespace Mozlite.Data.Internal
 {
@@ -27,12 +27,19 @@ namespace Mozlite.Data.Internal
         /// SQL辅助接口。
         /// </summary>
         public ISqlHelper SqlHelper { get; }
+        
+        /// <summary>
+        /// 实例化一个查询实例，这个实例相当于实例化一个查询类，不能当作属性直接调用。
+        /// </summary>
+        /// <returns>返回模型的一个查询实例。</returns>
+        public IQueryable<TModel> AsQueryable() => new QueryContext<TModel>(SqlHelper, _visitorFactory, SqlGenerator, _executor);
 
         /// <summary>
         /// 脚本生成接口。
         /// </summary>
         protected IQuerySqlGenerator SqlGenerator { get; }
         private readonly IDbExecutor _executor;
+        private readonly IExpressionVisitorFactory _visitorFactory;
 
         /// <summary>
         /// 初始化类<see cref="DbContextBase{TModel}"/>。
@@ -41,12 +48,14 @@ namespace Mozlite.Data.Internal
         /// <param name="logger">日志接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">脚本生成器。</param>
-        protected DbContextBase(IDbExecutor executor, ILogger logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator)
+        /// <param name="visitorFactory">条件表达式解析器工厂实例。</param>
+        protected DbContextBase(IDbExecutor executor, ILogger logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator, IExpressionVisitorFactory visitorFactory)
         {
             Logger = logger;
             SqlHelper = sqlHelper;
             SqlGenerator = sqlGenerator;
             _executor = executor;
+            _visitorFactory = visitorFactory;
             EntityType = typeof(TModel).GetEntityType();
         }
 
@@ -406,6 +415,36 @@ namespace Mozlite.Data.Internal
         public virtual async Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             return await LoadSqlAsync(SqlGenerator.Fetch(EntityType, expression), cancellationToken);
+        }
+
+        /// <summary>
+        /// 分页获取实例列表。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <param name="countExpression">返回总记录数的表达式,用于多表拼接过滤重复记录数。</param>
+        /// <returns>返回分页实例列表。</returns>
+        public TQuery Load<TQuery>(TQuery query, Expression<Func<TModel, object>> countExpression = null) where TQuery : QueryBase<TModel>
+        {
+            var context = AsQueryable();
+            query.Init(context);
+            query.Models = context.AsEnumerable(query.PI, query.PS, countExpression);
+            return query;
+        }
+
+        /// <summary>
+        /// 分页获取实例列表。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <param name="countExpression">返回总记录数的表达式,用于多表拼接过滤重复记录数。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回分页实例列表。</returns>
+        public async Task<TQuery> LoadAsync<TQuery>(TQuery query, Expression<Func<TModel, object>> countExpression = null,
+            CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>
+        {
+            var context = AsQueryable();
+            query.Init(context);
+            query.Models = await context.AsEnumerableAsync(query.PI, query.PS, countExpression, cancellationToken);
+            return query;
         }
 
         /// <summary>

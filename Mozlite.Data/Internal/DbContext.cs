@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -25,7 +24,7 @@ namespace Mozlite.Data.Internal
         /// <param name="sqlGenerator">脚本生成器。</param>
         /// <param name="visitorFactory">条件表达式解析器工厂实例。</param>
         public DbContext(IDatabase executor, ILogger<IDatabase> logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator, IExpressionVisitorFactory visitorFactory)
-            : base(executor, logger, sqlHelper, sqlGenerator)
+            : base(executor, logger, sqlHelper, sqlGenerator, visitorFactory)
         {
             _db = executor;
             _visitorFactory = visitorFactory;
@@ -45,7 +44,7 @@ namespace Mozlite.Data.Internal
                     _db.BeginTransactionAsync(
                         async transaction =>
                             await
-                                executor(new DbTransactionContext<TModel>(transaction, Logger, SqlHelper, SqlGenerator)), timeout, cancellationToken);
+                                executor(new DbTransactionContext<TModel>(transaction, Logger, SqlHelper, SqlGenerator, _visitorFactory)), timeout, cancellationToken);
         }
 
         /// <summary>
@@ -59,43 +58,7 @@ namespace Mozlite.Data.Internal
             return
                 _db.BeginTransaction(
                     transaction =>
-                        executor(new DbTransactionContext<TModel>(transaction, Logger, SqlHelper, SqlGenerator)), timeout);
+                        executor(new DbTransactionContext<TModel>(transaction, Logger, SqlHelper, SqlGenerator, _visitorFactory)), timeout);
         }
-
-        /// <summary>
-        /// 分页获取实例列表。
-        /// </summary>
-        /// <param name="query">查询实例。</param>
-        /// <param name="countExpression">返回总记录数的表达式,用于多表拼接过滤重复记录数。</param>
-        /// <returns>返回分页实例列表。</returns>
-        public TQuery Load<TQuery>(TQuery query, Expression<Func<TModel, object>> countExpression = null) where TQuery : QueryBase<TModel>
-        {
-            var context = AsQueryable();
-            query.Init(context);
-            query.Models = context.AsEnumerable(query.PI, query.PS, countExpression);
-            return query;
-        }
-
-        /// <summary>
-        /// 分页获取实例列表。
-        /// </summary>
-        /// <param name="query">查询实例。</param>
-        /// <param name="countExpression">返回总记录数的表达式,用于多表拼接过滤重复记录数。</param>
-        /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回分页实例列表。</returns>
-        public async Task<TQuery> LoadAsync<TQuery>(TQuery query, Expression<Func<TModel, object>> countExpression = null,
-            CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>
-        {
-            var context = AsQueryable();
-            query.Init(context);
-            query.Models = await context.AsEnumerableAsync(query.PI, query.PS, countExpression, cancellationToken);
-            return query;
-        }
-
-        /// <summary>
-        /// 实例化一个查询实例，这个实例相当于实例化一个查询类，不能当作属性直接调用。
-        /// </summary>
-        /// <returns>返回模型的一个查询实例。</returns>
-        public IQueryable<TModel> AsQueryable() => new QueryContext<TModel>(SqlHelper, _visitorFactory, SqlGenerator, _db);
     }
 }

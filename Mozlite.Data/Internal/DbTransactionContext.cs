@@ -9,6 +9,7 @@ namespace Mozlite.Data.Internal
     /// <typeparam name="TModel">模型类型。</typeparam>
     public class DbTransactionContext<TModel> : DbContextBase<TModel>, IDbTransactionContext<TModel>
     {
+        private readonly IExpressionVisitorFactory _visitorFactory;
         private readonly IDbExecutor _executor;
 
         /// <summary>
@@ -18,7 +19,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回当前事务的模型数据库操作实例。</returns>
         public IDbTransactionContext<TOther> As<TOther>()
         {
-            return new DbTransactionContext<TOther>(_executor, Logger, SqlHelper, SqlGenerator);
+            return new DbTransactionContext<TOther>(_executor, Logger, SqlHelper, SqlGenerator, _visitorFactory);
         }
 
         /// <summary>
@@ -28,10 +29,12 @@ namespace Mozlite.Data.Internal
         /// <param name="logger">日志接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">脚本生成器。</param>
-        public DbTransactionContext(IDbExecutor executor, ILogger logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator)
-            : base(executor, logger, sqlHelper, sqlGenerator)
+        /// <param name="visitorFactory">条件表达式解析器工厂实例。</param>
+        public DbTransactionContext(IDbExecutor executor, ILogger logger, ISqlHelper sqlHelper, IQuerySqlGenerator sqlGenerator, IExpressionVisitorFactory visitorFactory)
+            : base(executor, logger, sqlHelper, sqlGenerator, visitorFactory)
         {
             _executor = executor;
+            _visitorFactory = visitorFactory;
         }
     }
 }

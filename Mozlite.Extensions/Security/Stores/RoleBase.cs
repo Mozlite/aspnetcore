@@ -34,6 +34,50 @@ namespace Mozlite.Extensions.Security.Stores
         public int RoleLevel { get; set; }
 
         /// <summary>
+        /// 判断角色大小。
+        /// </summary>
+        /// <param name="role1">角色1。</param>
+        /// <param name="role2">角色2。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool operator >=(RoleBase role1, RoleBase role2)
+        {
+            return role1?.RoleLevel >= role2?.RoleLevel;
+        }
+
+        /// <summary>
+        /// 判断角色大小。
+        /// </summary>
+        /// <param name="role1">角色1。</param>
+        /// <param name="role2">角色2。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool operator <=(RoleBase role1, RoleBase role2)
+        {
+            return role1?.RoleLevel <= role2?.RoleLevel;
+        }
+
+        /// <summary>
+        /// 判断角色大小。
+        /// </summary>
+        /// <param name="role1">角色1。</param>
+        /// <param name="role2">角色2。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool operator >(RoleBase role1, RoleBase role2)
+        {
+            return role1?.RoleLevel > role2?.RoleLevel;
+        }
+
+        /// <summary>
+        /// 判断角色大小。
+        /// </summary>
+        /// <param name="role1">角色1。</param>
+        /// <param name="role2">角色2。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool operator <(RoleBase role1, RoleBase role2)
+        {
+            return role1?.RoleLevel < role2?.RoleLevel;
+        }
+
+        /// <summary>
         /// 返回角色名称。
         /// </summary>
         public override string ToString()

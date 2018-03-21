@@ -130,7 +130,7 @@ namespace Mozlite.Extensions.Storages
                 .Where<MediaFile>(x => x.Id == id)
                 .Select<MediaFile>(x => x.Name)
                 .Select(x => new { x.FileId, x.ContentType })
-                .SingleOrDefaultAsync(reader => new StoredPhysicalFile(reader));
+                .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
             file.PhysicalPath = Path.Combine(_media, file.PhysicalPath);
             return file;
         }

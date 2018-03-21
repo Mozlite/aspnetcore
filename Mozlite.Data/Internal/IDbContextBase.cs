@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Mozlite.Extensions;
+using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Data.Internal
 {
@@ -28,6 +28,12 @@ namespace Mozlite.Data.Internal
         /// 当前实体类型。
         /// </summary>
         IEntityType EntityType { get; }
+        
+        /// <summary>
+        /// 实例化一个查询实例，这个实例相当于实例化一个查询类，不能当作属性直接调用。
+        /// </summary>
+        /// <returns>返回模型的一个查询实例。</returns>
+        IQueryable<TModel> AsQueryable();
 
         /// <summary>
         /// 新建实例对象。
@@ -207,6 +213,23 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null,
             CancellationToken cancellationToken = default);
+        
+        /// <summary>
+        /// 分页获取实例列表。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <param name="countExpression">返回总记录数的表达式,用于多表拼接过滤重复记录数。</param>
+        /// <returns>返回分页实例列表。</returns>
+        TQuery Load<TQuery>(TQuery query, Expression<Func<TModel, object>> countExpression = null) where TQuery : QueryBase<TModel>;
+
+        /// <summary>
+        /// 分页获取实例列表。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <param name="countExpression">返回总记录数的表达式,用于多表拼接过滤重复记录数。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回分页实例列表。</returns>
+        Task<TQuery> LoadAsync<TQuery>(TQuery query, Expression<Func<TModel, object>> countExpression = null, CancellationToken cancellationToken = default) where TQuery : QueryBase<TModel>;
 
         /// <summary>
         /// 通过条件表达式判断是否存在实例对象。

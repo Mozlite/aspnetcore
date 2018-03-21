@@ -266,5 +266,19 @@ namespace Mozlite.Extensions.Sites
         /// <returns>返回安装结果。</returns>
         Task<bool> InstallAsync<TSite>(Func<IDbTransactionContext<SiteDomain>, Task<bool>> executor, TSite site, SiteDomain domain)
             where TSite : SiteBase;
+
+        /// <summary>
+        /// 获取管理网站实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站实例。</typeparam>
+        /// <returns>返回网站实例对象。</returns>
+        Task<TSite> GetAdministratorAsync<TSite>() where TSite : SiteBase, new();
+
+        /// <summary>
+        /// 获取管理网站实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站实例。</typeparam>
+        /// <returns>返回网站实例对象。</returns>
+        TSite GetAdministrator<TSite>() where TSite : SiteBase, new();
     }
 }

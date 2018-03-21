@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -364,6 +365,48 @@ namespace Mozlite.Extensions.Security
         protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
+        }
+
+        /// <summary>
+        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        public virtual string GetRoleIds(int userId)
+        {
+            var roles = Store.GetRoles(userId);
+            return string.Join(",", roles.Select(x => x.RoleId));
+        }
+
+        /// <summary>
+        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        public virtual async Task<string> GetRoleIdsAsync(int userId)
+        {
+            var roles = await Store.GetRolesAsync(userId);
+            return string.Join(",", roles.Select(x => x.RoleId));
+        }
+
+        /// <summary>
+        /// 获取最高级角色实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例对象。</returns>
+        public virtual TRole GetMaxRole(int userId)
+        {
+            return Store.GetMaxRole(userId);
+        }
+
+        /// <summary>
+        /// 获取最高级角色实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例对象。</returns>
+        public virtual Task<TRole> GetMaxRoleAsync(int userId)
+        {
+            return Store.GetMaxRoleAsync(userId);
         }
     }
 }

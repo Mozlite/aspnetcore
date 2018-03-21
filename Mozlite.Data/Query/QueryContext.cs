@@ -21,7 +21,7 @@ namespace Mozlite.Data.Query
         #region init
         private readonly IExpressionVisitorFactory _visitorFactory;
         private readonly IQuerySqlGenerator _sqlGenerator;
-        private readonly IDatabase _db;
+        private readonly IDbExecutor _db;
 
         /// <summary>
         /// 初始化类<see cref="QueryContext{TModel}"/>。
@@ -30,7 +30,7 @@ namespace Mozlite.Data.Query
         /// <param name="visitorFactory">表达式解析工厂接口。</param>
         /// <param name="sqlGenerator">SQL脚本生成接口。</param>
         /// <param name="db">数据库接口。</param>
-        public QueryContext(ISqlHelper sqlHelper, IExpressionVisitorFactory visitorFactory, IQuerySqlGenerator sqlGenerator, IDatabase db)
+        public QueryContext(ISqlHelper sqlHelper, IExpressionVisitorFactory visitorFactory, IQuerySqlGenerator sqlGenerator, IDbExecutor db)
         {
             _visitorFactory = visitorFactory;
             _sqlGenerator = sqlGenerator;
@@ -100,8 +100,7 @@ namespace Mozlite.Data.Query
         /// <returns>返回表格前缀。</returns>
         protected string GetAlias(Type type)
         {
-            string alias;
-            if (!_alias.TryGetValue(type, out alias))
+            if (!_alias.TryGetValue(type, out var alias))
             {
                 _current++;
                 alias = ((char)_current).ToString();
@@ -555,7 +554,7 @@ namespace Mozlite.Data.Query
         /// 查询数据库返回结果。
         /// </summary>
         /// <returns>返回数据列表。</returns>
-        public TModel SingleOrDefault()
+        public TModel FirstOrDefault()
         {
             Size = 1;
             if (_fields.Count == 0)
@@ -568,7 +567,7 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回数据列表。</returns>
-        public Task<TModel> SingleOrDefaultAsync(CancellationToken cancellationToken = default)
+        public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
         {
             Size = 1;
             if (_fields.Count == 0)
@@ -581,7 +580,7 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <param name="converter">对象转换器。</param>
         /// <returns>返回数据列表。</returns>
-        public TValue SingleOrDefault<TValue>(Func<DbDataReader, TValue> converter)
+        public TValue FirstOrDefault<TValue>(Func<DbDataReader, TValue> converter)
         {
             Size = 1;
             if (_fields.Count == 0)
@@ -600,7 +599,7 @@ namespace Mozlite.Data.Query
         /// <param name="converter">对象转换器。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回数据列表。</returns>
-        public async Task<TValue> SingleOrDefaultAsync<TValue>(Func<DbDataReader, TValue> converter, CancellationToken cancellationToken = default)
+        public async Task<TValue> FirstOrDefaultAsync<TValue>(Func<DbDataReader, TValue> converter, CancellationToken cancellationToken = default)
         {
             Size = 1;
             if (_fields.Count == 0)

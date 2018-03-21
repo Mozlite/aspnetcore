@@ -30,7 +30,7 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public interface IUserExManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : IUserExManager<TUser, TUserClaim, TUserLogin, TUserToken>
+        : IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserExBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()

@@ -193,6 +193,32 @@ namespace Mozlite.Extensions.Security
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
+        /// <summary>
+        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        string GetRoleIds(int userId);
 
+        /// <summary>
+        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        Task<string> GetRoleIdsAsync(int userId);
+
+        /// <summary>
+        /// 获取最高级角色实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例对象。</returns>
+        TRole GetMaxRole(int userId);
+
+        /// <summary>
+        /// 获取最高级角色实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例对象。</returns>
+        Task<TRole> GetMaxRoleAsync(int userId);
     }
 }

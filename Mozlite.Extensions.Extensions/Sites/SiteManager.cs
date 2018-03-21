@@ -607,5 +607,26 @@ namespace Mozlite.Extensions.Sites
             }
             return false;
         }
+
+        /// <summary>
+        /// 获取管理网站实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站实例。</typeparam>
+        /// <returns>返回网站实例对象。</returns>
+        public virtual async Task<TSite> GetAdministratorAsync<TSite>() where TSite : SiteBase, new()
+        {
+            var adapter = await _sdb.FindAsync(x => x.IsAdministrator);
+            return adapter?.ToSite<TSite>();
+        }
+
+        /// <summary>
+        /// 获取管理网站实例。
+        /// </summary>
+        /// <typeparam name="TSite">网站实例。</typeparam>
+        /// <returns>返回网站实例对象。</returns>
+        public virtual TSite GetAdministrator<TSite>() where TSite : SiteBase, new()
+        {
+            return _sdb.Find(x => x.IsAdministrator)?.ToSite<TSite>();
+        }
     }
 }

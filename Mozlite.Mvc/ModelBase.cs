@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using Mozlite.Mvc.Messages;
+using Mozlite.Extensions.Data;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Mozlite.Extensions.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Data;
-using Mozlite.Extensions.Security;
-using Mozlite.Mvc.Messages;
 
 namespace Mozlite.Mvc
 {
@@ -27,7 +27,7 @@ namespace Mozlite.Mvc
             {
                 if (_logger == null)
                 {
-                    _logger = HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                    _logger = GetRequiredService<ILoggerFactory>()
                         .CreateLogger(GetType());
                 }
                 return _logger;
@@ -71,19 +71,39 @@ namespace Mozlite.Mvc
             code = Verifiers.Verifiers.Hashed(code);
             return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
         }
+
+        /// <summary>
+        /// 获取注册的服务对象。
+        /// </summary>
+        /// <typeparam name="TService">服务类型或者接口。</typeparam>
+        /// <returns>返回当前服务的实例对象。</returns>
+        protected TService GetService<TService>()
+        {
+            return HttpContext.RequestServices.GetService<TService>();
+        }
+
+        /// <summary>
+        /// 获取已经注册的服务对象。
+        /// </summary>
+        /// <typeparam name="TService">服务类型或者接口。</typeparam>
+        /// <returns>返回当前服务的实例对象。</returns>
+        protected TService GetRequiredService<TService>()
+        {
+            return HttpContext.RequestServices.GetRequiredService<TService>();
+        }
         #endregion
 
         #region users
         /// <summary>
         /// 是否已经登入。
         /// </summary>
-        protected bool IsAuthenticated => User.Identity.IsAuthenticated;
+        public bool IsAuthenticated => User.Identity.IsAuthenticated;
 
         private int _userId = -1;
         /// <summary>
         /// 当前用户ID。
         /// </summary>
-        protected int UserId
+        public int UserId
         {
             get
             {
@@ -100,7 +120,7 @@ namespace Mozlite.Mvc
         /// <summary>
         /// 当前用户名称。
         /// </summary>
-        protected string UserName => _userName ?? (_userName = User.GetUserName());
+        public string UserName => _userName ?? (_userName = User.GetUserName());
         #endregion
 
         #region jsons

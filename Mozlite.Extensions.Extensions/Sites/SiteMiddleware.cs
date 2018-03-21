@@ -55,7 +55,8 @@ namespace Mozlite.Extensions.Sites
             if (site == null)
             {
                 //新站安装请求
-                if (await _installerManager.IsNewAsync())
+                var administrator = await _siteManager.GetAdministratorAsync<TSite>();
+                if (!administrator.IsInitialized)
                 {
                     context.Response.Redirect(InstallerPath);
                     return;
@@ -76,11 +77,15 @@ namespace Mozlite.Extensions.Sites
             var site = await _siteManager.GetSiteAsync<TSite>(domain);
             if (site == null)
                 return null;
-            var siteContext = new TSiteContext
+            return Cache(context, new TSiteContext
             {
                 Site = site,
                 Domain = siteDomain
-            };
+            });
+        }
+
+        private TSiteContext Cache(HttpContext context, TSiteContext siteContext)
+        {
             context.Items[typeof(SiteContextBase)] = siteContext;
             return siteContext;
         }

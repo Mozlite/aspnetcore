@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
@@ -86,7 +87,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回查询分页实例。</returns>
         Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>;
-        
+
         /// <summary>
         /// 判断当前用户名称是否存在。
         /// </summary>
@@ -123,5 +124,34 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
+        /// <summary>
+        /// 获取用户角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色列表。</returns>
+        IEnumerable<TRole> GetRoles(int userId);
+
+        /// <summary>
+        /// 获取用户角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回角色列表。</returns>
+        Task<IEnumerable<TRole>> GetRolesAsync(int userId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 获取最高级角色实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例对象。</returns>
+        TRole GetMaxRole(int userId);
+
+        /// <summary>
+        /// 获取最高级角色实例。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回用户实例对象。</returns>
+        Task<TRole> GetMaxRoleAsync(int userId);
     }
 }
