@@ -307,7 +307,7 @@ namespace Mozlite.Extensions.Data
         public virtual DataResult Delete(string ids)
         {
             var intIds = ids.SplitToInt32();
-            return Delete(x => x.Id.Included(intIds) && x.SiteId == Site.SiteId);
+            return Delete(x => x.Id.IsIncluded(intIds) && x.SiteId == Site.SiteId);
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Mozlite.Extensions.Data
         public Task<DataResult> DeleteAsync(string ids, CancellationToken cancellationToken = default)
         {
             var intIds = ids.SplitToInt32();
-            return DeleteAsync(x => x.Id.Included(intIds) && x.SiteId == Site.SiteId, cancellationToken);
+            return DeleteAsync(x => x.Id.IsIncluded(intIds) && x.SiteId == Site.SiteId, cancellationToken);
         }
 
         /// <summary>

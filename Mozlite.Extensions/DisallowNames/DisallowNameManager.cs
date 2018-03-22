@@ -53,7 +53,7 @@ namespace Mozlite.Extensions.DisallowNames
         public DataResult Delete(string ids)
         {
             var wids = ids.SplitToInt32();
-            return DataResult.FromResult(_db.Delete(x => x.Id.Included(wids)), DataAction.Deleted);
+            return DataResult.FromResult(_db.Delete(x => x.Id.IsIncluded(wids)), DataAction.Deleted);
         }
 
         /// <summary>

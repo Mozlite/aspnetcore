@@ -368,25 +368,45 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// 获取角色Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回角色Id集合。</returns>
-        public virtual string GetRoleIds(int userId)
+        public virtual int[] GetRoleIds(int userId)
         {
-            var roles = Store.GetRoles(userId);
-            return string.Join(",", roles.Select(x => x.RoleId));
+            var roles = GetRoles(userId);
+            return roles.Select(x => x.RoleId).ToArray();
         }
 
         /// <summary>
-        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// 获取角色Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回角色Id集合。</returns>
-        public virtual async Task<string> GetRoleIdsAsync(int userId)
+        public virtual async Task<int[]> GetRoleIdsAsync(int userId)
         {
-            var roles = await Store.GetRolesAsync(userId);
-            return string.Join(",", roles.Select(x => x.RoleId));
+            var roles = await GetRolesAsync(userId);
+            return roles.Select(x => x.RoleId).ToArray();
+        }
+
+        /// <summary>
+        /// 获取角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        public virtual IEnumerable<TRole> GetRoles(int userId)
+        {
+            return Store.GetRoles(userId);
+        }
+
+        /// <summary>
+        /// 获取角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId)
+        {
+            return Store.GetRolesAsync(userId);
         }
 
         /// <summary>
@@ -396,7 +416,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户实例对象。</returns>
         public virtual TRole GetMaxRole(int userId)
         {
-            return Store.GetMaxRole(userId);
+            return GetRoles(userId).OrderByDescending(x => x.RoleLevel).FirstOrDefault();
         }
 
         /// <summary>
@@ -404,9 +424,54 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回用户实例对象。</returns>
-        public virtual Task<TRole> GetMaxRoleAsync(int userId)
+        public virtual async Task<TRole> GetMaxRoleAsync(int userId)
         {
-            return Store.GetMaxRoleAsync(userId);
+            var roles = await GetRolesAsync(userId);
+            return roles.OrderByDescending(x => x.RoleLevel).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 将用户添加到角色中。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual bool AddUserToRoles(int userId, int[] roleIds)
+        {
+            return Store.AddUserToRoles(userId, roleIds);
+        }
+
+        /// <summary>
+        /// 将用户添加到角色中。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds)
+        {
+            return Store.AddUserToRolesAsync(userId, roleIds);
+        }
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual bool SetUserToRoles(int userId, int[] roleIds)
+        {
+            return Store.SetUserToRoles(userId, roleIds);
+        }
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回设置结果。</returns>
+        public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds)
+        {
+            return Store.SetUserToRolesAsync(userId, roleIds);
         }
     }
 }

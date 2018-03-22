@@ -141,17 +141,39 @@ namespace Mozlite.Extensions.Security.Stores
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 获取最高级角色实例。
+        /// 将用户添加到角色中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户实例对象。</returns>
-        TRole GetMaxRole(int userId);
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        bool AddUserToRoles(int userId, int[] roleIds);
 
         /// <summary>
-        /// 获取最高级角色实例。
+        /// 将用户添加到角色中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户实例对象。</returns>
-        Task<TRole> GetMaxRoleAsync(int userId);
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回添加结果。</returns>
+        Task<bool> AddUserToRolesAsync(int userId, int[] roleIds,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        bool SetUserToRoles(int userId, int[] roleIds);
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SetUserToRolesAsync(int userId, int[] roleIds,
+            CancellationToken cancellationToken = default(CancellationToken));
     }
 }

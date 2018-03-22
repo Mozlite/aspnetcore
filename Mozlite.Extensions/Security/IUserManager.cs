@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
@@ -194,18 +195,39 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
     {
         /// <summary>
-        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// 获取用户的所有角色。
         /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色Id集合。</returns>
-        string GetRoleIds(int userId);
+        /// <param name="user">用户实例对象。</param>
+        /// <returns>返回当前用户的所有角色列表。</returns>
+        Task<IList<string>> GetRolesAsync(TUser user);
 
         /// <summary>
-        /// 获取角色Id，以“,”分隔多个角色Id。
+        /// 获取角色Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回角色Id集合。</returns>
-        Task<string> GetRoleIdsAsync(int userId);
+        int[] GetRoleIds(int userId);
+
+        /// <summary>
+        /// 获取角色Id。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        Task<int[]> GetRoleIdsAsync(int userId);
+
+        /// <summary>
+        /// 获取角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        IEnumerable<TRole> GetRoles(int userId);
+
+        /// <summary>
+        /// 获取角色列表。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回角色Id集合。</returns>
+        Task<IEnumerable<TRole>> GetRolesAsync(int userId);
 
         /// <summary>
         /// 获取最高级角色实例。
@@ -220,5 +242,37 @@ namespace Mozlite.Extensions.Security
         /// <param name="userId">用户Id。</param>
         /// <returns>返回用户实例对象。</returns>
         Task<TRole> GetMaxRoleAsync(int userId);
+
+        /// <summary>
+        /// 将用户添加到角色中。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        bool AddUserToRoles(int userId, int[] roleIds);
+
+        /// <summary>
+        /// 将用户添加到角色中。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        Task<bool> AddUserToRolesAsync(int userId, int[] roleIds);
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        bool SetUserToRoles(int userId, int[] roleIds);
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SetUserToRolesAsync(int userId, int[] roleIds);
     }
 }

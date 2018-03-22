@@ -177,22 +177,22 @@ namespace Mozlite.Data
             return Expression.Lambda(expression).Compile().DynamicInvoke();
         }
 
-        /// <summary>
-        /// 判断当前<paramref name="item"/>是否包含在<paramref name="items"/>中。
-        /// </summary>
-        /// <param name="item">当前项。</param>
-        /// <param name="items">列表实例。</param>
-        /// <returns>返回判断结果。</returns>
-        public static bool Included(this object item, IEnumerable items)
-        {
-            var enumerator = items.GetEnumerator();
-            do
-            {
-                if (ReferenceEquals(enumerator.Current, item))
-                    return true;
-            } while (enumerator.MoveNext());
-            return false;
-        }
+        ///// <summary>
+        ///// 判断当前<paramref name="item"/>是否包含在<paramref name="items"/>中。
+        ///// </summary>
+        ///// <param name="item">当前项。</param>
+        ///// <param name="items">列表实例。</param>
+        ///// <returns>返回判断结果。</returns>
+        //public static bool Included(this object item, IEnumerable items)
+        //{
+        //    var enumerator = items.GetEnumerator();
+        //    do
+        //    {
+        //        if (ReferenceEquals(enumerator.Current, item))
+        //            return true;
+        //    } while (enumerator.MoveNext());
+        //    return false;
+        //}
 
         /// <summary>
         /// 添加并且条件。

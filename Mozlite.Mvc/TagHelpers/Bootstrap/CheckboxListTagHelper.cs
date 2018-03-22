@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Mozlite.Mvc.TagHelpers.Bootstrap
@@ -32,6 +35,33 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         /// </summary>
         [HtmlAttributeName("istyle")]
         public CheckedStyle CheckedStyle { get; set; }
+
+        /// <summary>
+        /// 设置属性模型。
+        /// </summary>
+        [HtmlAttributeName("for")]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// 初始化当前标签上下文。
+        /// </summary>
+        /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
+        public override void Init(TagHelperContext context)
+        {
+            if (string.IsNullOrEmpty(Name) && For != null)
+            {
+                Name = ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(For.Name);
+                if (Value == null)
+                {
+                    if (For.Model is string str)
+                        Value = str;
+                    else if (For.Model is IEnumerable array)
+                        Value = array.Join();
+                    else
+                        Value = For.Model?.ToString();
+                }
+            }
+        }
 
         /// <summary>
         /// 访问并呈现当前标签实例。
@@ -78,7 +108,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             if (isChecked)
                 wrapper.AddCssClass("checked");
             wrapper.AddCssClass("checked-style-" + CheckedStyle.ToString().ToLower());
-            
+
             var input = new TagBuilder("input");
             input.MergeAttribute("type", "checkbox");
             input.MergeAttribute("name", Name);

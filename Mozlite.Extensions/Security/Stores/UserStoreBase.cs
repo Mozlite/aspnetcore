@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Mozlite.Data;
+using Mozlite.Data.Internal;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -30,6 +31,11 @@ namespace Mozlite.Extensions.Security.Stores
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
+        /// <summary>
+        /// 角色数据库操作接口。
+        /// </summary>
+        protected IDbContext<TRole> RoleContext { get; }
+
         /// <summary>
         /// 角色管理接口。
         /// </summary>
@@ -110,6 +116,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
+        /// <param name="roleContext">角色上下文。</param>
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleManager">角色管理接口。</param>
         protected UserStoreBase(IdentityErrorDescriber describer,
@@ -117,9 +124,11 @@ namespace Mozlite.Extensions.Security.Stores
             IDbContext<TUserClaim> userClaimContext,
             IDbContext<TUserLogin> userLoginContext,
             IDbContext<TUserToken> userTokenContext,
+            IDbContext<TRole> roleContext,
             IDbContext<TUserRole> userRoleContext,
             IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) : base(describer)
         {
+            RoleContext = roleContext;
             RoleManager = roleManager;
             UserContext = userContext;
             UserClaimContext = userClaimContext;
@@ -597,6 +606,7 @@ namespace Mozlite.Extensions.Security.Stores
             return users.ToList();
         }
 
+        #region roles
         /// <summary>
         /// 添加用户角色。
         /// </summary>
@@ -608,22 +618,13 @@ namespace Mozlite.Extensions.Security.Stores
             var role = await RoleManager.FindByNameAsync(normalizedRoleName);
             if (role == null || await UserRoleContext.AnyAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken))
                 return;
-            var roles = await GetRolesAsync(user.UserId, cancellationToken);
-            var maxRole = roles.Concat(new[] { role })
-                .OrderByDescending(x => x.RoleLevel)
-                .FirstOrDefault();
-            if (role.RoleId == maxRole.RoleId)
-                await UserRoleContext.CreateAsync(CreateUserRole(user, role), cancellationToken);
-            else//更新用户表显示角色Id和角色名称
-                await UserRoleContext.BeginTransactionAsync(async db =>
-                {
-                    if (!await db.CreateAsync(CreateUserRole(user, role), cancellationToken))
-                        return false;
-                    if (!await db.As<TUser>().UpdateAsync(x => x.UserId == user.UserId,
-                        new { maxRole.RoleId, RoleName = maxRole.Name }, cancellationToken))
-                        return false;
-                    return true;
-                }, cancellationToken: cancellationToken);
+            //更新用户表显示角色Id和角色名称
+            await UserRoleContext.BeginTransactionAsync(async db =>
+            {
+                if (!await db.CreateAsync(CreateUserRole(user, role), cancellationToken))
+                    return false;
+                return await SetMaxRoleAsync(db.As<TRole>(), user.UserId, cancellationToken);
+            }, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -642,18 +643,7 @@ namespace Mozlite.Extensions.Security.Stores
                 {
                     if (await db.DeleteAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId,
                         cancellationToken))
-                    {
-                        var maxRole = await db.As<TRole>().AsQueryable()
-                            .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
-                            .Select()
-                            .OrderByDescending(x => x.RoleLevel)
-                            .FirstOrDefaultAsync(cancellationToken);
-                        var dbRoleId = (await db.FindAsync(user.UserId, cancellationToken)).RoleId;
-                        if (maxRole.RoleId != dbRoleId)
-                            return await db.UpdateAsync(x => x.UserId == user.UserId, new { maxRole.RoleId, RoleName = maxRole.Name },
-                                cancellationToken);
-                        return true;
-                    }
+                        return await SetMaxRoleAsync(db.As<TRole>(), user.UserId, cancellationToken);
                     return false;
                 }, cancellationToken: cancellationToken);
             }
@@ -667,8 +657,12 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回当前用户的所有角色列表。</returns>
         public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var roles = await GetRolesAsync(user.UserId, cancellationToken);
-            return roles.Select(x => x.Name).ToList();
+            var roles = await RoleContext.AsQueryable()
+                .Select(x => x.Name)
+                .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<TUserRole>(x => x.UserId == user.UserId)
+                .AsEnumerableAsync(reader => reader.GetString(0), cancellationToken);
+            return roles.ToList();
         }
 
         /// <summary>
@@ -678,8 +672,11 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回角色列表。</returns>
         public virtual IEnumerable<TRole> GetRoles(int userId)
         {
-            var ids = UserRoleContext.Fetch(x => x.UserId == userId).Select(x => x.RoleId).ToList();
-            return RoleManager.Load().Where(x => ids.Contains(x.RoleId)).ToList();
+            return RoleContext.AsQueryable()
+                .Select()
+                .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<TUserRole>(x => x.UserId == userId)
+                .AsEnumerable();
         }
 
         /// <summary>
@@ -688,43 +685,137 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回角色列表。</returns>
-        public virtual async Task<IEnumerable<TRole>> GetRolesAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var userRoles = await UserRoleContext.FetchAsync(x => x.UserId == userId, cancellationToken);
-            var ids = userRoles.Select(x => x.RoleId).ToList();
-            var roles = await RoleManager.LoadAsync();
-            return roles.Where(x => ids.Contains(x.RoleId)).ToList();
+            return RoleContext.AsQueryable()
+                .Select()
+                .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<TUserRole>(x => x.UserId == userId)
+                .AsEnumerableAsync(cancellationToken);
         }
 
         /// <summary>
-        /// 获取最高级角色实例。
+        /// 将用户添加到角色中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户实例对象。</returns>
-        public virtual TRole GetMaxRole(int userId)
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual bool AddUserToRoles(int userId, int[] roleIds)
         {
-            var ids = UserRoleContext.Fetch(x => x.UserId == userId).Select(x => x.RoleId).ToList();
-            var roles = RoleManager.Load();
-            return roles
-                .Where(x => ids.Contains(x.RoleId))
-                .OrderByDescending(x => x.RoleLevel)
-                .FirstOrDefault();
+            return UserRoleContext.BeginTransaction(db =>
+            {
+                foreach (var roleId in roleIds)
+                {
+                    if (db.Any(x => x.UserId == userId && x.RoleId == roleId))
+                        continue;
+                    if (!db.Create(new TUserRole { RoleId = roleId, UserId = userId }))
+                        return false;
+                }
+                return SetMaxRole(db.As<TRole>(), userId);
+            });
         }
 
         /// <summary>
-        /// 获取最高级角色实例。
+        /// 设置用户最高级的角色。
+        /// </summary>
+        /// <param name="db">事务实例。</param>
+        /// <param name="userId">用户Id。</param>
+        /// <returns>返回设置结果。</returns>
+        protected virtual bool SetMaxRole(IDbTransactionContext<TRole> db, int userId)
+        {
+            var role = db.AsQueryable()
+                .Select()
+                .OrderByDescending(x => x.RoleLevel)
+                .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<TUserRole>(x => x.UserId == userId)
+                .FirstOrDefault();
+            return db.As<TUser>().Update(x => x.UserId == userId, new { role.RoleId, RoleName = role.Name });
+        }
+
+        /// <summary>
+        /// 设置用户最高级的角色。
+        /// </summary>
+        /// <param name="db">事务实例。</param>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回设置结果。</returns>
+        protected virtual async Task<bool> SetMaxRoleAsync(IDbTransactionContext<TRole> db, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var role = await db.AsQueryable()
+                .Select()
+                .OrderByDescending(x => x.RoleLevel)
+                .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<TUserRole>(x => x.UserId == userId)
+                .FirstOrDefaultAsync(cancellationToken);
+            return await db.As<TUser>().UpdateAsync(x => x.UserId == userId, new { role.RoleId, RoleName = role.Name }, cancellationToken);
+        }
+
+        /// <summary>
+        /// 将用户添加到角色中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户实例对象。</returns>
-        public virtual async Task<TRole> GetMaxRoleAsync(int userId)
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var userRoles = await UserRoleContext.FetchAsync(x => x.UserId == userId);
-            var ids = userRoles.Select(x => x.RoleId).ToList();
-            var roles = await RoleManager.LoadAsync();
-            return roles
-                .Where(x => ids.Contains(x.RoleId))
-                .OrderByDescending(x => x.RoleLevel)
-                .FirstOrDefault();
+            return UserRoleContext.BeginTransactionAsync(async db =>
+            {
+                foreach (var roleId in roleIds)
+                {
+                    if (await db.AnyAsync(x => x.UserId == userId && x.RoleId == roleId, cancellationToken))
+                        continue;
+                    if (!await db.CreateAsync(new TUserRole { RoleId = roleId, UserId = userId }, cancellationToken))
+                        return false;
+                }
+                return await SetMaxRoleAsync(db.As<TRole>(), userId, cancellationToken);
+            }, cancellationToken: cancellationToken);
         }
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual bool SetUserToRoles(int userId, int[] roleIds)
+        {
+            return UserRoleContext.BeginTransaction(db =>
+            {
+                db.Delete(x => x.UserId == userId);
+                foreach (var roleId in roleIds)
+                {
+                    if (db.Any(x => x.UserId == userId && x.RoleId == roleId))
+                        continue;
+                    if (!db.Create(new TUserRole { RoleId = roleId, UserId = userId }))
+                        return false;
+                }
+                return SetMaxRole(db.As<TRole>(), userId);
+            });
+        }
+
+        /// <summary>
+        /// 设置用户角色。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回设置结果。</returns>
+        public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return UserRoleContext.BeginTransactionAsync(async db =>
+            {
+                await db.DeleteAsync(x => x.UserId == userId, cancellationToken);
+                foreach (var roleId in roleIds)
+                {
+                    if (await db.AnyAsync(x => x.UserId == userId && x.RoleId == roleId, cancellationToken))
+                        continue;
+                    if (!await db.CreateAsync(new TUserRole { RoleId = roleId, UserId = userId }, cancellationToken))
+                        return false;
+                }
+                return await SetMaxRoleAsync(db.As<TRole>(), userId, cancellationToken);
+            }, cancellationToken: cancellationToken);
+        }
+        #endregion
     }
 }

@@ -213,7 +213,7 @@ namespace Mozlite.Data.Query
                 expression = _methodCallTranslator.Translate(methodCallExpression);
 
             if (expression is InExpression inExpression)
-                return VisitIn(inExpression);
+                return VisitNotIn(inExpression);
 
             if (expression is IsNullExpression isNullExpression)
                 return VisitIsNotNull(isNullExpression);

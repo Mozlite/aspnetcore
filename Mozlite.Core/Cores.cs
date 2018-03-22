@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Mozlite.Properties;
 using System.Globalization;
@@ -314,6 +315,39 @@ namespace Mozlite
                 using (var sr = new StreamReader(cs, Encoding.UTF8))
                     return sr.ReadToEnd();
             }
+        }
+
+        /// <summary>
+        /// 判断当前<paramref name="current"/>是否包含在<paramref name="items"/>中。
+        /// </summary>
+        /// <param name="current">当前项。</param>
+        /// <param name="items">列表实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool IsIncluded(this object current, IEnumerable items)
+        {
+            foreach (var item in items)
+            {
+                if (item.Equals(current))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 将列表格式化为字符串。
+        /// </summary>
+        /// <param name="items">当前实例列表。</param>
+        /// <param name="separator">分隔符。</param>
+        /// <returns>返回格式化后的字符串。</returns>
+        public static string Join(this IEnumerable items, string separator = ",")
+        {
+            var list = new List<object>();
+            var enumerator = items.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                list.Add(enumerator.Current);
+            }
+            return string.Join(separator, list);
         }
     }
 }

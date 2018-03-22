@@ -79,9 +79,7 @@ namespace Mozlite.Data.Query.Expressions
         {
             Check.NotNull(visitor, nameof(visitor));
 
-            var specificVisitor = visitor as ISqlExpressionVisitor;
-
-            return specificVisitor != null
+            return visitor is ISqlExpressionVisitor specificVisitor
                 ? specificVisitor.VisitSqlFunction(this)
                 : base.Accept(visitor);
         }

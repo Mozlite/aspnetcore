@@ -18,5 +18,6 @@ namespace Mozlite.Extensions
         {
             return cache.SetAbsoluteExpiration(_defaultCacheExpiration);
         }
+
     }
 }
