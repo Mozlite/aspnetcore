@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -222,13 +223,29 @@ namespace Mozlite.Mvc.TagHelpers.Common
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            Data = Data ?? ViewContext.ViewData.Model as IPageEnumerable;
+            if (Data == null)
+            {
+                if (ViewContext.ViewData.Model is IPageEnumerable data)
+                    Data = data;
+                else if (ViewContext.ViewData.Model is IModelable model && model.Model is IPageEnumerable pdata)
+                    Data = pdata;
+            }
             if (Data == null || Data.Pages == 0)
             {
                 output.SuppressOutput();
                 return;
             }
-            if (context.AllAttributes.ContainsName(HrefAttributeName))
+            if (Href == null && Action == null && Page == null && Route == null)
+            {
+                var query = new Dictionary<string, string>();
+                foreach (var current in HttpContext.Request.Query)
+                {
+                    query[current.Key] = current.Value;
+                }
+                query["pi"] = "$page;";
+                Href = $"?{string.Join("&", query.Select(x => $"{x.Key}={x.Value}"))}";
+            }
+            if (Href != null)
             {
                 _createAnchor = page =>
                 {
@@ -282,5 +299,10 @@ namespace Mozlite.Mvc.TagHelpers.Common
             li.InnerHtml.AppendHtml(anchor);
             return li;
         }
+    }
+
+    internal interface IModelable
+    {
+        object Model { get; }
     }
 }

@@ -135,6 +135,9 @@
   <data name="MigrationError" xml:space="preserve">
     <value>数据迁移出错：{0}。</value>
   </data>
+  <data name="PrimaryKeyIsNotSingleField" xml:space="preserve">
+    <value>实体“{0}”的主键{1}包含的不值一个属性！</value>
+  </data>
   <data name="UnknownOperation" xml:space="preserve">
     <value>在“{1}”找不到“{0}”的操作符。</value>
   </data>

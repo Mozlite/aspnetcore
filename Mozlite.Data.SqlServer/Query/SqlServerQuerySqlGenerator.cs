@@ -25,7 +25,7 @@ namespace Mozlite.Data.SqlServer.Query
         /// 移动排序。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
-        /// <param name="direction">方向。</param>
+        /// <param name="direction">方向："&lt;"下移，"&gt;"上移。</param>
         /// <param name="order">排序列。</param>
         /// <param name="expression">分组条件表达式。</param>
         /// <returns>返回SQL构建实例。</returns>
@@ -38,14 +38,14 @@ namespace Mozlite.Data.SqlServer.Query
             var where = Visit(expression);
             var builder = new SqlIndentedStringBuilder();
             builder.AppendLine("DECLARE @CurrentOrder int;");
-            builder.AppendLine($"SELECT @CurrentOrder = ISNULL({column}, 0) FROM {table} WHERE {primaryKey} = @Id;");
+            builder.AppendLine($"SELECT @CurrentOrder = ISNULL({column}, 0) FROM {table} WHERE {primaryKey} = {PrimaryKeyParameter};");
             builder.AppendLine("DECLARE @AffectId int;");
             builder.AppendLine("DECLARE @AffectOrder int;");
             builder.Append($"SELECT TOP(1) @AffectId = {primaryKey}, @AffectOrder = ISNULL({column}, 0) FROM {table} WHERE {column} {direction} @CurrentOrder")
-                .AppendEx(where, " AND {0};").AppendLine();
+                .AppendEx(where, " AND {0}").Append($" ORDER BY {column}").AppendLine(direction == "<" ? " DESC;" : ";");
             builder.AppendLine($@"IF @AffectId IS NOT NULL AND @AffectId > 0 BEGIN
 	BEGIN TRANSACTION;
-	UPDATE {table} SET {column} = @AffectOrder WHERE {primaryKey} = @Id;
+	UPDATE {table} SET {column} = @AffectOrder WHERE {primaryKey} = {PrimaryKeyParameter};
 	IF(@@ERROR<>0) BEGIN
 		ROLLBACK TRANSACTION;
 		SELECT 0;

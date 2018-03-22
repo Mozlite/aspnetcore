@@ -27,7 +27,7 @@ namespace Mozlite.Data.Internal
         /// SQL辅助接口。
         /// </summary>
         public ISqlHelper SqlHelper { get; }
-        
+
         /// <summary>
         /// 实例化一个查询实例，这个实例相当于实例化一个查询类，不能当作属性直接调用。
         /// </summary>
@@ -208,6 +208,18 @@ namespace Mozlite.Data.Internal
         }
 
         /// <summary>
+        /// 更新所有模型实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <param name="statement">更新选项实例。</param>
+        /// <returns>返回是否更新成功。</returns>
+        public virtual bool Update(object key, object statement)
+        {
+            var sql = SqlGenerator.Update(EntityType, statement);
+            return ExecuteNonQuery(sql, sql.Parameters.AddPrimaryKey(key));
+        }
+
+        /// <summary>
         /// 根据条件更新相应的模型实例对象。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
@@ -281,6 +293,19 @@ namespace Mozlite.Data.Internal
         {
             var sql = SqlGenerator.Update(EntityType, expression, statement);
             return await ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 更新所有的模型实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <param name="statement">更新选项实例。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回是否更新成功。</returns>
+        public virtual async Task<bool> UpdateAsync(object key, object statement, CancellationToken cancellationToken = default)
+        {
+            var sql = SqlGenerator.Update(EntityType, statement);
+            return await ExecuteNonQueryAsync(sql, sql.Parameters.AddPrimaryKey(key), cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -477,7 +502,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         public virtual bool Any(object key)
         {
-            return ExecuteScalar(SqlGenerator.Any(EntityType), new { Id = key }) != null;
+            return ExecuteScalar(SqlGenerator.Any(EntityType), key.AsPrimaryKeyParameter()) != null;
         }
 
         /// <summary>
@@ -488,7 +513,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         public virtual async Task<bool> AnyAsync(object key, CancellationToken cancellationToken)
         {
-            return await ExecuteScalarAsync(SqlGenerator.Any(EntityType), new { Id = key }, cancellationToken: cancellationToken) != null;
+            return await ExecuteScalarAsync(SqlGenerator.Any(EntityType), key.AsPrimaryKeyParameter(), cancellationToken: cancellationToken) != null;
         }
 
         /// <summary>
@@ -538,10 +563,10 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null)
+        public virtual bool MoveUp(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Move(EntityType, ">", order, expression);
-            var scalar = ExecuteScalar(sql, new { Id = key });
+            var scalar = ExecuteScalar(sql, key.AsPrimaryKeyParameter());
             return Convert.ToBoolean(scalar);
         }
 
@@ -552,10 +577,10 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null)
+        public virtual bool MoveDown(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Move(EntityType, "<", order, expression);
-            var scalar = ExecuteScalar(sql, new { Id = key });
+            var scalar = ExecuteScalar(sql, key.AsPrimaryKeyParameter());
             return Convert.ToBoolean(scalar);
         }
 
@@ -567,10 +592,10 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual async Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> MoveUpAsync(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Move(EntityType, ">", order, expression);
-            var scalar = await ExecuteScalarAsync(sql, new { Id = key }, cancellationToken: cancellationToken);
+            var scalar = await ExecuteScalarAsync(sql, key.AsPrimaryKeyParameter(), cancellationToken: cancellationToken);
             return Convert.ToBoolean(scalar);
         }
 
@@ -582,10 +607,10 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual async Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> MoveDownAsync(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Move(EntityType, "<", order, expression);
-            var scalar = await ExecuteScalarAsync(sql, new { Id = key }, cancellationToken: cancellationToken);
+            var scalar = await ExecuteScalarAsync(sql, key.AsPrimaryKeyParameter(), cancellationToken: cancellationToken);
             return Convert.ToBoolean(scalar);
         }
 

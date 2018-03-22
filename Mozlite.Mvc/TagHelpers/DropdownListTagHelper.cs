@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Mvc.Properties;
 
 namespace Mozlite.Mvc.TagHelpers
 {
@@ -18,6 +19,12 @@ namespace Mozlite.Mvc.TagHelpers
         /// </summary>
         [HtmlAttributeName("for")]
         public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// 默认显示字符串：如“请选择”。
+        /// </summary>
+        [HtmlAttributeName("default-text")]
+        public string Text { get; set; } = Resources.SelectDefaultText;
 
         /// <summary>
         /// 值。

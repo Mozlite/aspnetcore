@@ -115,6 +115,15 @@ namespace Mozlite.Data.Properties {
         }
         
         /// <summary>
+        ///   查找类似 实体“{0}”的主键{1}包含的不值一个属性！ 的本地化字符串。
+        /// </summary>
+        internal static string PrimaryKeyIsNotSingleField {
+            get {
+                return ResourceManager.GetString("PrimaryKeyIsNotSingleField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 在“{1}”找不到“{0}”的操作符。 的本地化字符串。
         /// </summary>
         internal static string UnknownOperation {

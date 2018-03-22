@@ -104,5 +104,13 @@ namespace Mozlite.Data.Query
         /// <param name="sql">SQL查询实例。</param>
         /// <returns>返回SQL脚本。</returns>
         SqlIndentedStringBuilder Query(IQuerySql sql);
+
+        /// <summary>
+        /// 通过唯一主键更新实例。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="parameters">匿名对象。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        SqlIndentedStringBuilder Update(IEntityType entityType, object parameters);
     }
 }

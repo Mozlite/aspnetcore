@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using Mozlite.Data.Properties;
 using Mozlite.Extensions;
 
 namespace Mozlite.Data
@@ -93,6 +94,19 @@ namespace Mozlite.Data
             return ids?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                  .Select(x => Convert.ToInt32(x.Trim()))
                  .ToArray();
+        }
+
+        /// <summary>
+        /// 获取唯一的主键属性值，如果主键不值一个属性，则会抛出错误。
+        /// </summary>
+        /// <param name="entityType">实体类型。</param>
+        /// <returns>返回属性实例。</returns>
+        public static IProperty SingleKey(this IEntityType entityType)
+        {
+            var key = entityType.PrimaryKey.Properties;
+            if(key.Count>1)
+                throw new IndexOutOfRangeException(string.Format(Resources.PrimaryKeyIsNotSingleField, entityType.ClrType, string.Join(", ", key)));
+            return key.Single();
         }
     }
 }

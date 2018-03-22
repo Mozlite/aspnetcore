@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Security.Activities
         /// <summary>
         /// 分类Id。
         /// </summary>
-        public int Cid { get; set; }
+        public int? Cid { get; set; }
 
         /// <summary>
         /// 用户Id。
@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.Security.Activities
             context.InnerJoin<TUser>((a, u) => a.UserId == u.UserId)
                 .Select()
                 .Select<TUser>(x => new { x.UserName, x.NormalizedUserName });
-            if (Cid > 0)
+            if (Cid != null)
                 context.Where(x => x.CategoryId == Cid);
             if (UserId > 0)
                 context.Where(x => x.UserId == UserId);

@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Mozlite.Data;
+using System.Threading;
 using Mozlite.Data.Internal;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -88,7 +88,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回更新结果。</returns>
         public virtual bool Update(int userId, object fields)
         {
-            return UserContext.Update(x => x.UserId == userId, fields);
+            return UserContext.Update(userId, fields);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回更新结果。</returns>
         public virtual Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return UserContext.UpdateAsync(x => x.UserId == userId, fields, cancellationToken);
+            return UserContext.UpdateAsync(userId, fields, cancellationToken);
         }
 
         /// <summary>

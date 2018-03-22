@@ -133,6 +133,15 @@ namespace Mozlite.Mvc.Properties {
         }
         
         /// <summary>
+        ///   查找类似 请选择 的本地化字符串。
+        /// </summary>
+        internal static string SelectDefaultText {
+            get {
+                return ResourceManager.GetString("SelectDefaultText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 yyyy年MM月dd日 的本地化字符串。
         /// </summary>
         internal static string YearDateFormat {

@@ -8,6 +8,7 @@ using Mozlite.Extensions.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Mvc.TagHelpers.Common;
 
 namespace Mozlite.Mvc
 {
@@ -270,12 +271,14 @@ namespace Mozlite.Mvc
     /// 页面模型基类。
     /// </summary>
     /// <typeparam name="TModel">模型实例类型。</typeparam>
-    public abstract class ModelBase<TModel> : ModelBase
+    public abstract class ModelBase<TModel> : ModelBase, IModelable
     {
         /// <summary>
         /// 当前模型实例。
         /// </summary>
         [BindProperty]
         public TModel Model { get; set; }
+
+        object IModelable.Model => Model;
     }
 }

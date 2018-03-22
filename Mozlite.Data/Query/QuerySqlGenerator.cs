@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Extensions;
-using Mozlite.Extensions.Internal;
 
 namespace Mozlite.Data.Query
 {
@@ -19,6 +18,10 @@ namespace Mozlite.Data.Query
         protected ISqlHelper SqlHelper { get; }
         private readonly IMemoryCache _cache;
         private readonly IExpressionVisitorFactory _visitorFactory;
+        /// <summary>
+        /// 唯一主键参数实例。
+        /// </summary>
+        protected string PrimaryKeyParameter => SqlHelper.PrimaryKeyParameter();
 
         /// <summary>
         /// 初始化类<see cref="QuerySqlGenerator"/>。
@@ -102,6 +105,23 @@ namespace Mozlite.Data.Query
           });
 
         /// <summary>
+        /// 通过唯一主键更新实例。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="parameters">匿名对象。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public virtual SqlIndentedStringBuilder Update(IEntityType entityType, object parameters)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("UPDATE ").Append(SqlHelper.DelimitIdentifier(entityType.Table)).Append(" SET ");
+            builder.CreateObjectParameters(parameters);
+            builder.JoinAppend(builder.Parameters.Keys.Select(
+                name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}"));
+            builder.AppendLine(SqlHelper.WherePrimaryKey(entityType));
+            return builder;
+        }
+
+        /// <summary>
         /// 更新实例。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
@@ -156,7 +176,7 @@ namespace Mozlite.Data.Query
         protected abstract string SelectIdentity();
 
         /// <summary>
-        /// 判断主键关联是否存在。
+        /// 判断唯一主键关联是否存在。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
         /// <returns>返回SQL构建实例。</returns>
@@ -164,12 +184,7 @@ namespace Mozlite.Data.Query
         {
             var builder = new SqlIndentedStringBuilder();
             builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
-            var primaryKey = entityType.PrimaryKey.Properties.Single();
-            builder.Append(" WHERE ")
-                .Append(SqlHelper.DelimitIdentifier(primaryKey.Name))
-                .Append(" = ")
-                .Append(SqlHelper.Parameterized("Id"))
-                .Append(SqlHelper.StatementTerminator);
+            builder.AppendLine(SqlHelper.WherePrimaryKey(entityType));
             return builder;
         }
 
@@ -177,7 +192,7 @@ namespace Mozlite.Data.Query
         /// 移动排序。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
-        /// <param name="direction">方向。</param>
+        /// <param name="direction">方向："&lt;"下移，"&gt;"上移。</param>
         /// <param name="order">排序列。</param>
         /// <param name="expression">分组条件表达式。</param>
         /// <returns>返回SQL构建实例。</returns>

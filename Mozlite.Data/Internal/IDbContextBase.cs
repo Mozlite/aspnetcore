@@ -68,6 +68,14 @@ namespace Mozlite.Data.Internal
         /// <summary>
         /// 更新所有模型实例对象。
         /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <param name="statement">更新选项实例。</param>
+        /// <returns>返回是否更新成功。</returns>
+        bool Update(object key, object statement);
+
+        /// <summary>
+        /// 更新所有模型实例对象。
+        /// </summary>
         /// <param name="statement">更新选项实例。</param>
         /// <returns>返回是否更新成功。</returns>
         bool Update(object statement);
@@ -125,6 +133,15 @@ namespace Mozlite.Data.Internal
         /// <returns>返回是否更新成功。</returns>
         Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, object statement,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 更新所有的模型实例对象。
+        /// </summary>
+        /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
+        /// <param name="statement">更新选项实例。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回是否更新成功。</returns>
+        Task<bool> UpdateAsync(object key, object statement, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 更新所有的模型实例对象。
@@ -293,7 +310,7 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        bool MoveUp(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null);
+        bool MoveUp(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null);
 
         /// <summary>
         /// 下移一个位置。
@@ -302,7 +319,7 @@ namespace Mozlite.Data.Internal
         /// <param name="order">排序。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回移动结果。</returns>
-        bool MoveDown(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null);
+        bool MoveDown(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null);
 
         /// <summary>
         /// 上移一个位置。
@@ -312,7 +329,7 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        Task<bool> MoveUpAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
+        Task<bool> MoveUpAsync(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 下移一个位置。
@@ -322,6 +339,6 @@ namespace Mozlite.Data.Internal
         /// <param name="expression">条件表达式。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回移动结果。</returns>
-        Task<bool> MoveDownAsync(object key, Expression<Func<TModel, int>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
+        Task<bool> MoveDownAsync(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default);
     }
 }

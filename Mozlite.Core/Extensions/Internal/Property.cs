@@ -12,7 +12,6 @@ namespace Mozlite.Extensions.Internal
     {
         private IClrPropertyGetter _getter;
         private IClrPropertySetter _setter;
-        private readonly ConcurrentBag<Type> _defineds = new ConcurrentBag<Type>();
         /// <summary>
         /// 初始化类<see cref="Property"/>。
         /// </summary>
@@ -91,7 +90,7 @@ namespace Mozlite.Extensions.Internal
         {
             Setter.SetClrValue(instance, value);
         }
-        
+
         /// <summary>
         /// 是否为自增长属性。
         /// </summary>
@@ -118,5 +117,14 @@ namespace Mozlite.Extensions.Internal
         /// </summary>
         protected virtual IClrPropertySetter Setter
             => NonCapturingLazyInitializer.EnsureInitialized(ref _setter, this, p => new ClrPropertySetterFactory().Create(p));
+
+        /// <summary>
+        /// 返回属性名。
+        /// </summary>
+        /// <returns>返回属性名。</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
