@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data.Query;
@@ -34,7 +33,7 @@ namespace Mozlite.Data.SqlServer.Query
         {
             var column = SqlHelper.DelimitIdentifier(order.GetPropertyAccess().Name);
             var table = SqlHelper.DelimitIdentifier(entityType.Table);
-            var primaryKey = SqlHelper.DelimitIdentifier(entityType.PrimaryKey.Properties.Single().Name);
+            var primaryKey = SqlHelper.DelimitIdentifier(entityType.SingleKey().Name);
             var where = Visit(expression);
             var builder = new SqlIndentedStringBuilder();
             builder.AppendLine("DECLARE @CurrentOrder int;");

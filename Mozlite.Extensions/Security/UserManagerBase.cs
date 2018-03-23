@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions.Security
 {
@@ -68,7 +68,7 @@ namespace Mozlite.Extensions.Security
                 return _httpContext;
             }
         }
-
+        
         private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>
         /// 获取当前用户。
@@ -163,6 +163,34 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 重置密码。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="newPassword">新密码。</param>
+        /// <returns>返回修改结果。</returns>
+        public virtual Task<IdentityResult> ResetPasswordAsync(TUser user, string newPassword)
+        {
+            return ResetPasswordAsync(user, null, newPassword);
+        }
+
+        /// <summary>
+        /// 重置密码。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="token">修改密码标识。</param>
+        /// <param name="newPassword">新密码。</param>
+        /// <returns>返回修改结果。</returns>
+        public override async Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword)
+        {
+            if (user.PasswordHash == null || user.NormalizedUserName == null)
+                user = await FindByIdAsync(user.UserId);
+            if (token == null)
+                token = await GeneratePasswordResetTokenAsync(user);
+            newPassword = PasswordSalt(user.NormalizedUserName, newPassword);
+            return await base.ResetPasswordAsync(user, token, newPassword);
+        }
+
+        /// <summary>
         /// 通过用户ID更新用户列。
         /// </summary>
         /// <param name="userId">用户ID。</param>
@@ -227,6 +255,28 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 锁定或者解锁用户。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="lockoutEnd">锁定截至日期。</param>
+        /// <returns>返回执行结果。</returns>
+        public virtual bool Lockout(int userId, DateTimeOffset? lockoutEnd = null)
+        {
+            return Store.Update(userId, new { LockoutEnd = lockoutEnd, LockoutEnabled = lockoutEnd != null });
+        }
+
+        /// <summary>
+        /// 锁定或者解锁用户。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="lockoutEnd">锁定截至日期。</param>
+        /// <returns>返回执行结果。</returns>
+        public virtual Task<bool> LockoutAsync(int userId, DateTimeOffset? lockoutEnd = null)
+        {
+            return Store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd, LockoutEnabled = lockoutEnd != null });
+        }
+
+        /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
@@ -288,7 +338,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回拼接后得字符串。</returns>
         public virtual string PasswordSalt(string userName, string password)
         {
-            return $"{NormalizeKey(userName)}2018{password}";
+            return $"{NormalizeKey(userName)}2O.l8{password}";
         }
 
         /// <summary>
@@ -473,5 +523,6 @@ namespace Mozlite.Extensions.Security
         {
             return Store.SetUserToRolesAsync(userId, roleIds);
         }
+
     }
 }

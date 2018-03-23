@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
 
@@ -34,6 +34,31 @@ namespace Mozlite.Extensions.Security
         Task<TUser> FindByNameAsync(string userName);
 
         /// <summary>
+        /// 正常实例化键。
+        /// </summary>
+        /// <param name="key">原有键值。</param>
+        /// <returns>返回正常化后的字符串。</returns>
+        string NormalizeKey(string key);
+
+        /// <summary>
+        /// 获取当前用户。
+        /// </summary>
+        /// <returns>返回当前用户实例。</returns>
+        TUser GetUser();
+
+        /// <summary>
+        /// 获取当前用户。
+        /// </summary>
+        /// <returns>返回当前用户实例。</returns>
+        Task<TUser> GetUserAsync();
+
+        /// <summary>
+        /// 判断当前用户是否已经登陆。
+        /// </summary>
+        /// <returns>返回判断结果。</returns>
+        bool IsSignedIn();
+
+        /// <summary>
         /// 加密字符串。
         /// </summary>
         /// <param name="user">用户实例。</param>
@@ -64,31 +89,6 @@ namespace Mozlite.Extensions.Security
         string PasswordSalt(string userName, string password);
 
         /// <summary>
-        /// 正常实例化键。
-        /// </summary>
-        /// <param name="key">原有键值。</param>
-        /// <returns>返回正常化后的字符串。</returns>
-        string NormalizeKey(string key);
-
-        /// <summary>
-        /// 获取当前用户。
-        /// </summary>
-        /// <returns>返回当前用户实例。</returns>
-        TUser GetUser();
-
-        /// <summary>
-        /// 获取当前用户。
-        /// </summary>
-        /// <returns>返回当前用户实例。</returns>
-        Task<TUser> GetUserAsync();
-
-        /// <summary>
-        /// 判断当前用户是否已经登陆。
-        /// </summary>
-        /// <returns>返回判断结果。</returns>
-        bool IsSignedIn();
-
-        /// <summary>
         /// 密码登陆。
         /// </summary>
         /// <param name="userName">用户名。</param>
@@ -115,6 +115,38 @@ namespace Mozlite.Extensions.Security
         /// <param name="newPassword">新密码。</param>
         /// <returns>返回修改结果。</returns>
         Task<IdentityResult> ChangePasswordAsync(TUser user, string password, string newPassword);
+
+        /// <summary>
+        /// 添加密码。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="password">密码。</param>
+        /// <returns>返回添加结果。</returns>
+        Task<IdentityResult> AddPasswordAsync(TUser user, string password);
+
+        /// <summary>
+        /// 重置密码。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="newPassword">新密码。</param>
+        /// <returns>返回修改结果。</returns>
+        Task<IdentityResult> ResetPasswordAsync(TUser user, string newPassword);
+
+        /// <summary>
+        /// 重置密码。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="token">修改密码标识。</param>
+        /// <param name="newPassword">新密码。</param>
+        /// <returns>返回修改结果。</returns>
+        Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword);
+
+        /// <summary>
+        /// 生成一个密码重置的标识。
+        /// </summary>
+        /// <param name="user">用户是对象。</param>
+        /// <returns>返回密码重置的标识。</returns>
+        Task<string> GeneratePasswordResetTokenAsync(TUser user);
 
         /// <summary>
         /// 通过用户ID更新用户列。
@@ -149,11 +181,19 @@ namespace Mozlite.Extensions.Security
         Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
 
         /// <summary>
-        /// 新建用户实例。
+        /// 新建用户实例（不会对密码进行加密）。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <returns>返回添加用户结果。</returns>
         Task<IdentityResult> CreateAsync(TUser user);
+
+        /// <summary>
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="password">未加密时的密码。</param>
+        /// <returns>返回添加用户结果。</returns>
+        Task<IdentityResult> CreateAsync(TUser user, string password);
 
         /// <summary>
         /// 新建用户实例。
@@ -175,6 +215,22 @@ namespace Mozlite.Extensions.Security
         /// <param name="user">用户实例。</param>
         /// <returns>返回判断结果。</returns>
         Task<IdentityResult> IsDuplicatedAsync(TUser user);
+
+        /// <summary>
+        /// 锁定或者解锁用户。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="lockoutEnd">锁定截至日期。</param>
+        /// <returns>返回执行结果。</returns>
+        bool Lockout(int userId, DateTimeOffset? lockoutEnd = null);
+
+        /// <summary>
+        /// 锁定或者解锁用户。
+        /// </summary>
+        /// <param name="userId">用户Id。</param>
+        /// <param name="lockoutEnd">锁定截至日期。</param>
+        /// <returns>返回执行结果。</returns>
+        Task<bool> LockoutAsync(int userId, DateTimeOffset? lockoutEnd = null);
     }
 
     /// <summary>

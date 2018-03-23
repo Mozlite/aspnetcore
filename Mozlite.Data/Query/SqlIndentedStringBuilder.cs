@@ -79,7 +79,7 @@ namespace Mozlite.Data.Query
         /// <summary>
         /// 生成参数对象。
         /// </summary>
-        public IDictionary<string, object> CreateObjectParameters(object instance)
+        public void CreateObjectParameters(object instance)
         {
             if (Parameters == null)
             {
@@ -95,7 +95,17 @@ namespace Mozlite.Data.Query
                     }
                 }
             }
-            return Parameters;
+        }
+
+        /// <summary>
+        /// 添加主键参数。
+        /// </summary>
+        /// <param name="key">主键值。</param>
+        public void AddPrimaryKey(object key)
+        {
+            if (Parameters == null)
+                Parameters = new Dictionary<string, object>();
+            Parameters[QuerySqlGenerator.PrimaryKeyParameterName] = key;
         }
 
         /// <summary>

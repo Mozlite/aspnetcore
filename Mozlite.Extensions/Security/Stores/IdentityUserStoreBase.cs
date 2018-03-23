@@ -174,7 +174,7 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            user.NormalizedUserName = normalizedName;
+            user.NormalizedUserName = user.NormalizedUserName ?? normalizedName;//使用此列为登录名
             return Task.CompletedTask;
         }
 
@@ -221,7 +221,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 返回当前用户实例对象。
         /// </returns>
         public abstract Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken));
-        
+
         /// <summary>
         /// 设置当前用户实例的哈希密码。
         /// </summary>
@@ -966,7 +966,7 @@ namespace Mozlite.Extensions.Security.Stores
                 RoleId = role.RoleId
             };
         }
-        
+
         /// <summary>
         /// 检索当前角色的所有用户列表。
         /// </summary>

@@ -19,7 +19,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取或设置用户名称。
         /// </summary>
         [Size(64)]
-        [NotUpdated]
         public string UserName { get; set; }
 
         /// <summary>
@@ -50,14 +49,12 @@ namespace Mozlite.Extensions.Security.Stores
         /// 加密后的密码。
         /// </summary>
         [Size(128)]
-        [NotUpdated]
         public string PasswordHash { get; set; }
 
         /// <summary>
         /// 密码重置或修改生成的安全戳。
         /// </summary>
         [Size(36)]
-        [NotUpdated]
         public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
@@ -75,31 +72,26 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 是否已经验证电话号码。
         /// </summary>
-        [NotUpdated]
         public bool PhoneNumberConfirmed { get; set; }
 
         /// <summary>
         /// 是否激活电话号码或邮件验证。
         /// </summary>
-        [NotUpdated]
         public bool TwoFactorEnabled { get; set; }
 
         /// <summary>
         /// 锁定截止UTC时间。
         /// </summary>
-        [NotUpdated]
         public DateTimeOffset? LockoutEnd { get; set; }
 
         /// <summary>
         /// 登陆错误达到失败次数，是否锁定账户。
         /// </summary>
-        [NotUpdated]
         public bool LockoutEnabled { get; set; }
 
         /// <summary>
         /// 登入失败次数。
         /// </summary>
-        [NotUpdated]
         public int AccessFailedCount { get; set; }
         
         /// <summary>

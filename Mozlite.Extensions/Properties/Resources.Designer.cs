@@ -169,7 +169,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 很抱歉，发生了未知额错误。 的本地化字符串。
+        ///   查找类似 很抱歉，发生了未知错误，操作失败，请重试。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_DefaultError {
             get {

@@ -219,7 +219,7 @@ namespace Mozlite.Extensions.Security.Stores
                  {
                      if (!await handler.OnDeleteAsync(db, cancellationToken))
                          return false;
-                     if (!await db.DeleteAsync(user, cancellationToken))
+                     if (!await db.DeleteAsync(user.UserId, cancellationToken))
                          return false;
                      return true;
                  }, cancellationToken: cancellationToken))

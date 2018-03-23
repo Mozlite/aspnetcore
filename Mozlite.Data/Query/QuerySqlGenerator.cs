@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Extensions;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Data.Query
 {
@@ -13,6 +13,10 @@ namespace Mozlite.Data.Query
     public abstract class QuerySqlGenerator : IQuerySqlGenerator
     {
         /// <summary>
+        /// 唯一主键参数名称。
+        /// </summary>
+        internal const string PrimaryKeyParameterName = "__primarykey__";
+        /// <summary>
         /// SQL辅助接口。
         /// </summary>
         protected ISqlHelper SqlHelper { get; }
@@ -21,7 +25,7 @@ namespace Mozlite.Data.Query
         /// <summary>
         /// 唯一主键参数实例。
         /// </summary>
-        protected string PrimaryKeyParameter => SqlHelper.PrimaryKeyParameter();
+        protected string PrimaryKeyParameter => SqlHelper.Parameterized(PrimaryKeyParameterName);
 
         /// <summary>
         /// 初始化类<see cref="QuerySqlGenerator"/>。
@@ -156,6 +160,23 @@ namespace Mozlite.Data.Query
         }
 
         /// <summary>
+        /// 快速构建唯一主键SQL语句。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="sqlHeader">SQL语句头，如：DELETE FROM等。</param>
+        /// <param name="key">主键值。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public virtual SqlIndentedStringBuilder PrimaryKeySql(IEntityType entityType, string sqlHeader, object key)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append(sqlHeader).Append(" ")
+                .Append(SqlHelper.DelimitIdentifier(entityType.Table))
+                .AppendLine(SqlHelper.WherePrimaryKey(entityType));
+            builder.AddPrimaryKey(key);
+            return builder;
+        }
+
+        /// <summary>
         /// 删除实例。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
@@ -236,7 +257,7 @@ namespace Mozlite.Data.Query
         /// <param name="entityType">模型实例。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回SQL构建实例。</returns>
-        public virtual SqlIndentedStringBuilder Fetch(IEntityType entityType, Expression expression)
+        public virtual SqlIndentedStringBuilder Select(IEntityType entityType, Expression expression)
         {
             var builder = new SqlIndentedStringBuilder();
             builder.Append("SELECT * FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));

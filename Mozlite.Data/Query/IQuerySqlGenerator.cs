@@ -54,7 +54,7 @@ namespace Mozlite.Data.Query
         /// <param name="entityType">模型实例。</param>
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回SQL构建实例。</returns>
-        SqlIndentedStringBuilder Fetch(IEntityType entityType, Expression expression);
+        SqlIndentedStringBuilder Select(IEntityType entityType, Expression expression);
 
         /// <summary>
         /// 判断是否存在。
@@ -112,5 +112,14 @@ namespace Mozlite.Data.Query
         /// <param name="parameters">匿名对象。</param>
         /// <returns>返回SQL构建实例。</returns>
         SqlIndentedStringBuilder Update(IEntityType entityType, object parameters);
+
+        /// <summary>
+        /// 快速构建唯一主键SQL语句。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="sqlHeader">SQL语句头，如：DELETE FROM等。</param>
+        /// <param name="key">主键值。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        SqlIndentedStringBuilder PrimaryKeySql(IEntityType entityType, string sqlHeader, object key);
     }
 }

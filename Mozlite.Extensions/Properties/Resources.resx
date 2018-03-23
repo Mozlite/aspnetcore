@@ -166,7 +166,7 @@
     <value>并发处理错误，对象已经被更改。</value>
   </data>
   <data name="ErrorDescriptor_DefaultError" xml:space="preserve">
-    <value>很抱歉，发生了未知额错误。</value>
+    <value>很抱歉，发生了未知错误，操作失败，请重试。</value>
   </data>
   <data name="ErrorDescriptor_DuplicateEmail" xml:space="preserve">
     <value>电子邮件'{0}'已经存在。</value>

@@ -216,7 +216,8 @@ namespace Mozlite.Data.Internal
         public virtual bool Update(object key, object statement)
         {
             var sql = SqlGenerator.Update(EntityType, statement);
-            return ExecuteNonQuery(sql, sql.Parameters.AddPrimaryKey(key));
+            sql.AddPrimaryKey(key);
+            return ExecuteSql(sql);
         }
 
         /// <summary>
@@ -228,7 +229,7 @@ namespace Mozlite.Data.Internal
         public virtual bool Update(Expression<Predicate<TModel>> expression, object statement)
         {
             var sql = SqlGenerator.Update(EntityType, expression, statement);
-            return ExecuteNonQuery(sql, sql.Parameters);
+            return ExecuteSql(sql);
         }
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace Mozlite.Data.Internal
         public virtual bool Update(Expression<Predicate<TModel>> expression, Expression<Func<TModel, object>> statement)
         {
             var sql = SqlGenerator.Update(EntityType, expression, statement);
-            return ExecuteNonQuery(sql, sql.Parameters);
+            return ExecuteSql(sql);
         }
 
         /// <summary>
@@ -271,7 +272,7 @@ namespace Mozlite.Data.Internal
         public virtual Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, Expression<Func<TModel, object>> statement, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Update(EntityType, expression, statement);
-            return ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
+            return ExecuteSqlAsync(sql, cancellationToken);
         }
 
         /// <summary>
@@ -292,7 +293,7 @@ namespace Mozlite.Data.Internal
         public virtual async Task<bool> UpdateAsync(Expression<Predicate<TModel>> expression, object statement, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Update(EntityType, expression, statement);
-            return await ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
+            return await ExecuteSqlAsync(sql, cancellationToken);
         }
 
         /// <summary>
@@ -302,10 +303,11 @@ namespace Mozlite.Data.Internal
         /// <param name="statement">更新选项实例。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回是否更新成功。</returns>
-        public virtual async Task<bool> UpdateAsync(object key, object statement, CancellationToken cancellationToken = default)
+        public virtual Task<bool> UpdateAsync(object key, object statement, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Update(EntityType, statement);
-            return await ExecuteNonQueryAsync(sql, sql.Parameters.AddPrimaryKey(key), cancellationToken: cancellationToken);
+            sql.AddPrimaryKey(key);
+            return ExecuteSqlAsync(sql, cancellationToken);
         }
 
         /// <summary>
@@ -342,7 +344,7 @@ namespace Mozlite.Data.Internal
         public virtual TModel Find(Expression<Predicate<TModel>> expression)
         {
             Check.NotNull(expression, nameof(expression));
-            return ReadSql(SqlGenerator.Fetch(EntityType, expression));
+            return ReadSql(SqlGenerator.Select(EntityType, expression));
         }
 
         /// <summary>
@@ -354,7 +356,18 @@ namespace Mozlite.Data.Internal
         public virtual async Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
         {
             Check.NotNull(expression, nameof(expression));
-            return await ReadSqlAsync(SqlGenerator.Fetch(EntityType, expression), cancellationToken);
+            return await ReadSqlAsync(SqlGenerator.Select(EntityType, expression), cancellationToken);
+        }
+
+        /// <summary>
+        /// 快速构建唯一主键SQL语句。
+        /// </summary>
+        /// <param name="header">SQL语句头，如：DELETE FROM等。</param>
+        /// <param name="key">主键值。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        protected SqlIndentedStringBuilder PrimaryKeySql(string header, object key)
+        {
+            return SqlGenerator.PrimaryKeySql(EntityType, header, key);
         }
 
         /// <summary>
@@ -364,10 +377,7 @@ namespace Mozlite.Data.Internal
         /// <returns>判断是否删除成功。</returns>
         public virtual bool Delete(object key)
         {
-            var primaryKey = EntityType.PrimaryKey.Properties.Single();
-            return ExecuteNonQuery(
-                $"DELETE FROM {EntityType.Table} WHERE {SqlHelper.DelimitIdentifier(primaryKey.Name)} = @Key;",
-                new { Key = key });
+            return ExecuteSql(PrimaryKeySql("DELETE FROM", key));
         }
 
         /// <summary>
@@ -378,10 +388,7 @@ namespace Mozlite.Data.Internal
         /// <returns>判断是否删除成功。</returns>
         public virtual Task<bool> DeleteAsync(object key, CancellationToken cancellationToken = default)
         {
-            var primaryKey = EntityType.PrimaryKey.Properties.Single();
-            return ExecuteNonQueryAsync(
-                $"DELETE FROM {EntityType.Table} WHERE {SqlHelper.DelimitIdentifier(primaryKey.Name)} = @Key;",
-                new { Key = key }, cancellationToken: cancellationToken);
+            return ExecuteSqlAsync(PrimaryKeySql("DELETE FROM", key), cancellationToken);
         }
 
         /// <summary>
@@ -391,15 +398,8 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         public virtual TModel Find(object key)
         {
-            var primaryKey = EntityType.PrimaryKey.Properties.Single();
-
-            using (var reader = ExecuteReader($"SELECT * FROM {EntityType.Table} WHERE {SqlHelper.DelimitIdentifier(primaryKey.Name)} = @Key;",
-                new { Key = key }))
-            {
-                if (reader.Read())
-                    return EntityType.Read<TModel>(reader);
-            }
-            return default;
+            var sql = PrimaryKeySql("SELECT * FROM", key);
+            return ReadSql(sql);
         }
 
         /// <summary>
@@ -408,17 +408,10 @@ namespace Mozlite.Data.Internal
         /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回模型实例对象。</returns>
-        public virtual async Task<TModel> FindAsync(object key, CancellationToken cancellationToken = default)
+        public virtual Task<TModel> FindAsync(object key, CancellationToken cancellationToken = default)
         {
-            var primaryKey = EntityType.PrimaryKey.Properties.Single();
-
-            using (var reader = await ExecuteReaderAsync($"SELECT * FROM {EntityType.Table} WHERE {SqlHelper.DelimitIdentifier(primaryKey.Name)} = @Key;",
-                new { Key = key }, cancellationToken: cancellationToken))
-            {
-                if (await reader.ReadAsync(cancellationToken))
-                    return EntityType.Read<TModel>(reader);
-            }
-            return default;
+            var sql = PrimaryKeySql("SELECT * FROM", key);
+            return ReadSqlAsync(sql, cancellationToken);
         }
 
         /// <summary>
@@ -428,7 +421,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         public virtual IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null)
         {
-            return LoadSql(SqlGenerator.Fetch(EntityType, expression));
+            return LoadSql(SqlGenerator.Select(EntityType, expression));
         }
 
         /// <summary>
@@ -439,7 +432,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         public virtual async Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
-            return await LoadSqlAsync(SqlGenerator.Fetch(EntityType, expression), cancellationToken);
+            return await LoadSqlAsync(SqlGenerator.Select(EntityType, expression), cancellationToken);
         }
 
         /// <summary>
@@ -502,7 +495,9 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         public virtual bool Any(object key)
         {
-            return ExecuteScalar(SqlGenerator.Any(EntityType), key.AsPrimaryKeyParameter()) != null;
+            var sql = SqlGenerator.Any(EntityType);
+            sql.AddPrimaryKey(key);
+            return ScalarSql(sql) != null;
         }
 
         /// <summary>
@@ -513,7 +508,9 @@ namespace Mozlite.Data.Internal
         /// <returns>返回判断结果。</returns>
         public virtual async Task<bool> AnyAsync(object key, CancellationToken cancellationToken)
         {
-            return await ExecuteScalarAsync(SqlGenerator.Any(EntityType), key.AsPrimaryKeyParameter(), cancellationToken: cancellationToken) != null;
+            var sql = SqlGenerator.Any(EntityType);
+            sql.AddPrimaryKey(key);
+            return await ScalarSqlAsync(sql, cancellationToken) != null;
         }
 
         /// <summary>
@@ -566,7 +563,8 @@ namespace Mozlite.Data.Internal
         public virtual bool MoveUp(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Move(EntityType, ">", order, expression);
-            var scalar = ExecuteScalar(sql, key.AsPrimaryKeyParameter());
+            sql.AddPrimaryKey(key);
+            var scalar = ScalarSql(sql);
             return Convert.ToBoolean(scalar);
         }
 
@@ -580,7 +578,8 @@ namespace Mozlite.Data.Internal
         public virtual bool MoveDown(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null)
         {
             var sql = SqlGenerator.Move(EntityType, "<", order, expression);
-            var scalar = ExecuteScalar(sql, key.AsPrimaryKeyParameter());
+            sql.AddPrimaryKey(key);
+            var scalar = ScalarSql(sql);
             return Convert.ToBoolean(scalar);
         }
 
@@ -595,7 +594,8 @@ namespace Mozlite.Data.Internal
         public virtual async Task<bool> MoveUpAsync(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Move(EntityType, ">", order, expression);
-            var scalar = await ExecuteScalarAsync(sql, key.AsPrimaryKeyParameter(), cancellationToken: cancellationToken);
+            sql.AddPrimaryKey(key);
+            var scalar = await ScalarSqlAsync(sql, cancellationToken);
             return Convert.ToBoolean(scalar);
         }
 
@@ -610,11 +610,54 @@ namespace Mozlite.Data.Internal
         public virtual async Task<bool> MoveDownAsync(object key, Expression<Func<TModel, object>> order, Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Move(EntityType, "<", order, expression);
-            var scalar = await ExecuteScalarAsync(sql, key.AsPrimaryKeyParameter(), cancellationToken: cancellationToken);
+            sql.AddPrimaryKey(key);
+            var scalar = await ScalarSqlAsync(sql, cancellationToken);
             return Convert.ToBoolean(scalar);
         }
 
         #region helpers
+        /// <summary>
+        /// 查询数据库聚合值。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <returns>返回执行结果。</returns>
+        protected object ScalarSql(SqlIndentedStringBuilder sql)
+        {
+            return ExecuteScalar(sql.ToString(), sql.Parameters);
+        }
+
+        /// <summary>
+        /// 查询数据库聚合值。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回执行结果。</returns>
+        protected Task<object> ScalarSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
+        {
+            return ExecuteScalarAsync(sql.ToString(), sql.Parameters, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 执行没有返回值的查询实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <returns>返回执行结果。</returns>
+        protected bool ExecuteSql(SqlIndentedStringBuilder sql)
+        {
+            return ExecuteNonQuery(sql.ToString(), sql.Parameters);
+        }
+
+        /// <summary>
+        /// 执行没有返回值的查询实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回执行结果。</returns>
+        protected Task<bool> ExecuteSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
+        {
+            return ExecuteNonQueryAsync(sql.ToString(), sql.Parameters, cancellationToken: cancellationToken);
+        }
+
         /// <summary>
         /// 读取模型实例列表。
         /// </summary>
