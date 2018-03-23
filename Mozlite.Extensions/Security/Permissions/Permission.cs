@@ -33,6 +33,12 @@ namespace Mozlite.Extensions.Security.Permissions
         public string Text { get; set; }
 
         /// <summary>
+        /// 排序。
+        /// </summary>
+        [NotUpdated]
+        public int Order { get; set; }
+
+        /// <summary>
         /// 描述。
         /// </summary>
         [Size(256)]

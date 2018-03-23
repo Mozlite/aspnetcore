@@ -78,7 +78,10 @@ namespace Mozlite.Extensions.Security.Permissions
             {
                 var dbPermission = DbContext.Find(x => x.Category == permission.Category && x.Name == permission.Name);
                 if (dbPermission == null)
+                {
+                    permission.Order = DbContext.Max(x => x.Order, x => x.Category == permission.Category) + 1;
                     DbContext.Create(permission);
+                }
                 else
                     DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
             }
@@ -119,7 +122,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="userId">用户Id。</param>
         /// <param name="permissioName">权限名称。</param>
         /// <returns>返回权限结果。</returns>
-        public PermissionValue GetPermission(int userId, string permissioName)
+        public PermissionValue GetUserPermissionValue(int userId, string permissioName)
         {
             var permission = GetOrCreate(permissioName);
             var values = _urdb.Fetch(x => x.UserId == userId)
@@ -134,7 +137,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="userId">用户Id。</param>
         /// <param name="permissioName">权限名称。</param>
         /// <returns>返回权限结果。</returns>
-        public async Task<PermissionValue> GetPermissionAsync(int userId, string permissioName)
+        public async Task<PermissionValue> GetUserPermissionValueAsync(int userId, string permissioName)
         {
             var permission = await GetOrCreateAsync(permissioName);
             var roles = await _urdb.FetchAsync(x => x.UserId == userId);
@@ -166,7 +169,7 @@ namespace Mozlite.Extensions.Security.Permissions
             var id = _httpContextAccessor.HttpContext.User.GetUserId();
             if (id > 0)
             {
-                var permission = await GetPermissionAsync(id, permissionName);
+                var permission = await GetUserPermissionValueAsync(id, permissionName);
                 isAuthorized = permission == PermissionValue.Allow;
             }
             _httpContextAccessor.HttpContext.Items[typeof(Permission) + ":" + permissionName] = isAuthorized;
@@ -187,11 +190,33 @@ namespace Mozlite.Extensions.Security.Permissions
             var id = _httpContextAccessor.HttpContext.User.GetUserId();
             if (id > 0)
             {
-                var permission = GetPermission(id, permissionName);
+                var permission = GetUserPermissionValue(id, permissionName);
                 isAuthorized = permission == PermissionValue.Allow;
             }
             _httpContextAccessor.HttpContext.Items[typeof(Permission) + ":" + permissionName] = isAuthorized;
             return isAuthorized.Value;
+        }
+
+        /// <summary>
+        /// 获取或添加权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <returns>返回当前名称的权限实例。</returns>
+        public virtual Permission GetPermission(int id)
+        {
+            var permissions = LoadCachePermissions().Values;
+            return permissions.SingleOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// 获取或添加权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <returns>返回当前名称的权限实例。</returns>
+        public virtual async Task<Permission> GetPermissionAsync(int id)
+        {
+            var permissions = await LoadCachePermissionsAsync();
+            return permissions.Values.SingleOrDefault(x => x.Id == id);
         }
 
         /// <summary>
@@ -215,6 +240,7 @@ namespace Mozlite.Extensions.Security.Permissions
                     permission.Category = parts[0];
                     permission.Name = parts[1];
                 }
+                permission.Order = DbContext.Max(x => x.Order, x => x.Category == permission.Category) + 1;
                 DbContext.Create(permission);
             }
             return permission;
@@ -242,6 +268,7 @@ namespace Mozlite.Extensions.Security.Permissions
                     permission.Category = parts[0];
                     permission.Name = parts[1];
                 }
+                permission.Order = await DbContext.MaxAsync(x => x.Order, x => x.Category == permission.Category) + 1;
                 await DbContext.CreateAsync(permission);
             }
             return permission;
@@ -259,9 +286,11 @@ namespace Mozlite.Extensions.Security.Permissions
             if (permissions.Any(x => x.Key == permission.Key))
                 result = await DbContext.UpdateAsync(x => x.Name == permission.Name, new { permission.Description });
             else
+            {
+                permission.Order = await DbContext.MaxAsync(x => x.Order, x => x.Category == permission.Category) + 1;
                 result = await DbContext.CreateAsync(permission);
-            if (result) RemoveCache();
-            return result;
+            }
+            return RemoveCache(result);
         }
 
         /// <summary>
@@ -276,9 +305,11 @@ namespace Mozlite.Extensions.Security.Permissions
             if (permissions.Any(x => x.Key == permission.Key))
                 result = DbContext.Update(x => x.Name == permission.Name, new { permission.Description });
             else
+            {
+                permission.Order = DbContext.Max(x => x.Order, x => x.Category == permission.Category) + 1;
                 result = DbContext.Create(permission);
-            if (result) RemoveCache();
-            return result;
+            }
+            return RemoveCache(result);
         }
 
         private const string Administrator = "ADMINISTRATOR";
@@ -407,12 +438,60 @@ namespace Mozlite.Extensions.Security.Permissions
             return DataAction.UpdatedFailured;
         }
 
+        /// <summary>
+        /// 上移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual bool MoveUp(int id, string category)
+        {
+            return RemoveCache(DbContext.MoveUp(id, x => x.Order, x => x.Category == category));
+        }
+
+        /// <summary>
+        /// 上移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual async Task<bool> MoveUpAsync(int id, string category)
+        {
+            return RemoveCache(await DbContext.MoveUpAsync(id, x => x.Order, x => x.Category == category));
+        }
+
+        /// <summary>
+        /// 下移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual bool MoveDown(int id, string category)
+        {
+            return RemoveCache(DbContext.MoveDown(id, x => x.Order, x => x.Category == category));
+        }
+
+        /// <summary>
+        /// 下移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        public virtual async Task<bool> MoveDownAsync(int id, string category)
+        {
+            return RemoveCache(await DbContext.MoveDownAsync(id, x => x.Order, x => x.Category == category));
+        }
+
         private string GetCacheKey(int roleId, int permissionId) => $"{roleId}-{permissionId}";
 
-        private void RemoveCache()
+        private bool RemoveCache(bool result = true)
         {
-            _cache.Remove(_valueKey);
-            _cache.Remove(_cacheKey);
+            if (result)
+            {
+                _cache.Remove(_valueKey);
+                _cache.Remove(_cacheKey);
+            }
+            return result;
         }
 
         private IDictionary<string, PermissionValue> LoadCachePermissionValues()
@@ -441,6 +520,7 @@ namespace Mozlite.Extensions.Security.Permissions
             {
                 ctx.SetDefaultAbsoluteExpiration();
                 var permissions = DbContext.Fetch();
+                permissions = permissions.OrderByDescending(x => x.Order);
                 return permissions.ToDictionary(x => x.Key, StringComparer.OrdinalIgnoreCase);
             });
         }
@@ -451,6 +531,7 @@ namespace Mozlite.Extensions.Security.Permissions
             {
                 ctx.SetDefaultAbsoluteExpiration();
                 var permissions = await DbContext.FetchAsync();
+                permissions = permissions.OrderByDescending(x => x.Order);
                 return permissions.ToDictionary(x => x.Key, StringComparer.OrdinalIgnoreCase);
             });
         }

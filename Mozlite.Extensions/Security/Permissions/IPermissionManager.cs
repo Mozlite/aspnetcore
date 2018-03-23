@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="userId">用户Id。</param>
         /// <param name="permissioName">权限名称。</param>
         /// <returns>返回权限结果。</returns>
-        PermissionValue GetPermission(int userId, string permissioName);
+        PermissionValue GetUserPermissionValue(int userId, string permissioName);
 
         /// <summary>
         /// 获取当前用户的权限。
@@ -40,7 +40,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="userId">用户Id。</param>
         /// <param name="permissioName">权限名称。</param>
         /// <returns>返回权限结果。</returns>
-        Task<PermissionValue> GetPermissionAsync(int userId, string permissioName);
+        Task<PermissionValue> GetUserPermissionValueAsync(int userId, string permissioName);
 
         /// <summary>
         /// 判断当前用户是否拥有<paramref name="permissionName"/>权限。
@@ -55,6 +55,20 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="permissionName">权限名称。</param>
         /// <returns>返回判断结果。</returns>
         bool IsAuthorized(string permissionName);
+
+        /// <summary>
+        /// 获取或添加权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <returns>返回当前名称的权限实例。</returns>
+        Permission GetPermission(int id);
+
+        /// <summary>
+        /// 获取或添加权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <returns>返回当前名称的权限实例。</returns>
+        Task<Permission> GetPermissionAsync(int id);
 
         /// <summary>
         /// 获取或添加权限。
@@ -124,5 +138,37 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="request">当前请求。</param>
         /// <returns>返回保存结果。</returns>
         DataResult Save(int roleId, HttpRequest request);
+
+        /// <summary>
+        /// 上移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveUp(int id, string category);
+
+        /// <summary>
+        /// 上移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveUpAsync(int id, string category);
+
+        /// <summary>
+        /// 下移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        bool MoveDown(int id, string category);
+
+        /// <summary>
+        /// 下移权限。
+        /// </summary>
+        /// <param name="id">权限Id。</param>
+        /// <param name="category">分类。</param>
+        /// <returns>返回移动结果。</returns>
+        Task<bool> MoveDownAsync(int id, string category);
     }
 }

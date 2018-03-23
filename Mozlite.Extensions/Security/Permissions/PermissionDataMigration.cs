@@ -19,6 +19,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 .Column(x => x.Name)
                 .Column(x => x.Text)
                 .Column(x => x.Description)
+                .Column(x => x.Order)
                 .UniqueConstraint(x => new { x.Category, x.Name }));
 
             builder.CreateTable<PermissionInRole>(table => table

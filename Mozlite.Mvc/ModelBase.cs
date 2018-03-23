@@ -4,10 +4,12 @@ using Mozlite.Mvc.Messages;
 using Mozlite.Extensions.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mozlite.Extensions.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.TagHelpers.Common;
 
 namespace Mozlite.Mvc
@@ -95,6 +97,26 @@ namespace Mozlite.Mvc
         #endregion
 
         #region users
+        /// <summary>
+        /// 判断当前用户是否有权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public bool IsAuthorized(string permissionName)
+        {
+            return GetRequiredService<IPermissionManager>().IsAuthorized(permissionName);
+        }
+
+        /// <summary>
+        /// 判断当前用户是否有权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public Task<bool> IsAuthorizedAsync(string permissionName)
+        {
+            return GetRequiredService<IPermissionManager>().IsAuthorizedAsync(permissionName);
+        }
+
         /// <summary>
         /// 是否已经登入。
         /// </summary>

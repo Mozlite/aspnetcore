@@ -260,3 +260,9 @@ paket-files/
 __pycache__/
 *.pyc
 /storages/media
+/.svn
+/ApcNet
+/ApcNet.Core
+/ApcNet.Extensions
+/apcnet.sln
+/.gitignore
