@@ -3,27 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Core", "Mozlite.Core\Mozlite.Core.csproj", "{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Core", "Mozlite.Core\Mozlite.Core.csproj", "{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Data", "Mozlite.Data\Mozlite.Data.csproj", "{4D86A978-E398-4D6E-BF6B-F5ED00DE69D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Data", "Mozlite.Data\Mozlite.Data.csproj", "{4D86A978-E398-4D6E-BF6B-F5ED00DE69D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Data.SqlServer", "Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj", "{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Data.SqlServer", "Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj", "{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite", "Mozlite\Mozlite.csproj", "{27303AD8-9469-42FD-8CA9-2555830C90BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Mvc", "Mozlite.Mvc\Mozlite.Mvc.csproj", "{843F6068-43F2-4B54-B3E9-6EC7246EA2C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Mvc", "Mozlite.Mvc\Mozlite.Mvc.csproj", "{843F6068-43F2-4B54-B3E9-6EC7246EA2C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Storages", "Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj", "{D5772072-8292-488C-B7B0-1ABE087A8830}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Storages", "Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj", "{D5772072-8292-488C-B7B0-1ABE087A8830}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Messages", "Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj", "{F92153B2-5385-4028-AF3A-15A40CB3D0F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozlitePages", "MozlitePages\MozlitePages.csproj", "{FE5BA0BB-C55D-494E-939A-9179235AC8E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions", "Mozlite.Extensions\Mozlite.Extensions.csproj", "{4A6F63B8-A097-4A7F-8F50-AE2476924643}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Security", "Mozlite.Extensions.Security\Mozlite.Extensions.Security.csproj", "{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Extensions", "Mozlite.Extensions.Extensions\Mozlite.Extensions.Extensions.csproj", "{FCECE631-9F53-4983-9817-5E5C2BB9A779}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Messages", "Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj", "{F92153B2-5385-4028-AF3A-15A40CB3D0F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Data.MySql", "Mozlite.Data.MySql\Mozlite.Data.MySql.csproj", "{2BE728C8-2CAA-439F-A4A1-E558D337DAC9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions", "Mozlite.Extensions\Mozlite.Extensions.csproj", "{4A6F63B8-A097-4A7F-8F50-AE2476924643}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Extensions", "Mozlite.Extensions.Extensions\Mozlite.Extensions.Extensions.csproj", "{FCECE631-9F53-4983-9817-5E5C2BB9A779}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.CoreTests", "Mozlite.CoreTests\Mozlite.CoreTests.csproj", "{B24E63FD-1803-40B3-9F11-520321C96B5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +41,6 @@ Global
 		{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0AC05BC-93D3-4731-BDC8-EAD899AA3260}.Release|Any CPU.Build.0 = Release|Any CPU
-		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27303AD8-9469-42FD-8CA9-2555830C90BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{843F6068-43F2-4B54-B3E9-6EC7246EA2C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{843F6068-43F2-4B54-B3E9-6EC7246EA2C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{843F6068-43F2-4B54-B3E9-6EC7246EA2C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,14 +49,6 @@ Global
 		{D5772072-8292-488C-B7B0-1ABE087A8830}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5772072-8292-488C-B7B0-1ABE087A8830}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5772072-8292-488C-B7B0-1ABE087A8830}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE5BA0BB-C55D-494E-939A-9179235AC8E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F67B53AA-B30B-456F-BFC1-3575FCE2CE54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F92153B2-5385-4028-AF3A-15A40CB3D0F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F92153B2-5385-4028-AF3A-15A40CB3D0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F92153B2-5385-4028-AF3A-15A40CB3D0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,6 +61,14 @@ Global
 		{FCECE631-9F53-4983-9817-5E5C2BB9A779}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCECE631-9F53-4983-9817-5E5C2BB9A779}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCECE631-9F53-4983-9817-5E5C2BB9A779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BE728C8-2CAA-439F-A4A1-E558D337DAC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BE728C8-2CAA-439F-A4A1-E558D337DAC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BE728C8-2CAA-439F-A4A1-E558D337DAC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BE728C8-2CAA-439F-A4A1-E558D337DAC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B24E63FD-1803-40B3-9F11-520321C96B5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B24E63FD-1803-40B3-9F11-520321C96B5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B24E63FD-1803-40B3-9F11-520321C96B5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B24E63FD-1803-40B3-9F11-520321C96B5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
