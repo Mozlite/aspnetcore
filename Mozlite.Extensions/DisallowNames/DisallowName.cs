@@ -18,7 +18,6 @@ namespace Mozlite.Extensions.DisallowNames
         /// <summary>
         /// 非法用户名。
         /// </summary>
-        [Key]
         [Size(20)]
         public string Name { get; set; }
     }

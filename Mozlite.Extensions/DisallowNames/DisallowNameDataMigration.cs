@@ -13,7 +13,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <param name="builder">迁移实例对象。</param>
         public override void Create(MigrationBuilder builder)
         {
-            builder.CreateTable<DisallowName>(table => table.Column(x => x.Id).Column(x => x.Name));
+            builder.CreateTable<DisallowName>(table => table.Column(x => x.Id).Column(x => x.Name).UniqueConstraint(x => x.Name));
         }
     }
 }
