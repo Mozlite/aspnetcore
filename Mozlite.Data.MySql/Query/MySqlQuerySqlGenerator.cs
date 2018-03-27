@@ -21,14 +21,42 @@ namespace Mozlite.Data.MySql.Query
         }
 
         /// <summary>
-        /// 移动排序。
+        /// 判断唯一主键关联是否存在。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
-        /// <param name="direction">方向："&lt;"下移，"&gt;"上移。</param>
-        /// <param name="order">排序列。</param>
-        /// <param name="expression">分组条件表达式。</param>
         /// <returns>返回SQL构建实例。</returns>
-        public override SqlIndentedStringBuilder Move(IEntityType entityType, string direction, LambdaExpression order,
+        public override SqlIndentedStringBuilder Any(IEntityType entityType)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("SELECT 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            AppendWherePrimaryKey(builder, entityType, false);
+            builder.AppendLine(" LIMIT 1;");
+            return builder;
+        }
+
+        /// <summary>
+        /// 判断是否存在。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public override SqlIndentedStringBuilder Any(IEntityType entityType, Expression expression)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("SELECT 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.AppendEx(Visit(expression), " WHERE {0}").Append(" LIMIT 1").Append(SqlHelper.StatementTerminator);
+            return builder;
+        }
+
+		/// <summary>
+		/// 移动排序。
+		/// </summary>
+		/// <param name="entityType">模型实例。</param>
+		/// <param name="direction">方向："&lt;"下移，"&gt;"上移。</param>
+		/// <param name="order">排序列。</param>
+		/// <param name="expression">分组条件表达式。</param>
+		/// <returns>返回SQL构建实例。</returns>
+		public override SqlIndentedStringBuilder Move(IEntityType entityType, string direction, LambdaExpression order,
             Expression expression)
         {
             var column = SqlHelper.DelimitIdentifier(order.GetPropertyAccess().Name);

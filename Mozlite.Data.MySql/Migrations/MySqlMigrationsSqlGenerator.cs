@@ -18,7 +18,7 @@ namespace Mozlite.Data.MySql.Migrations
         private readonly IExpressionVisitorFactory _visitorFactory;
 
         /// <summary>
-        /// 初始化类<see cref="MigrationsSqlGenerator"/>。
+        /// 初始化类<see cref="MySqlMigrationsSqlGenerator"/>。
         /// </summary>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="typeMapper">类型匹配接口。</param>
@@ -30,35 +30,21 @@ namespace Mozlite.Data.MySql.Migrations
         }
 
         /// <summary>
-        /// 新建索引。
+        /// 添加主键的相关定义。
         /// </summary>
         /// <param name="operation">操作实例。</param>
-        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例对象。</param>
-        /// <param name="terminate">是否结束语句。</param>
-        protected override void Generate(
-            CreateIndexOperation operation,
-            MigrationCommandListBuilder builder,
-            bool terminate)
+        /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例。</param>
+        protected override void PrimaryKeyConstraint(
+             AddPrimaryKeyOperation operation,
+             MigrationCommandListBuilder builder)
         {
             Check.NotNull(operation, nameof(operation));
             Check.NotNull(builder, nameof(builder));
 
-            base.Generate(operation, builder, false);
-
-            if (operation.IsUnique
-                && !operation.IsClustered)
-            {
-                builder.Append(" WHERE ");
-                builder.Append(string.Join(" AND ",
-                    operation.Columns.Select(c => string.Format("{0} IS NOT NULL", SqlHelper.DelimitIdentifier(c)))));
-            }
-
-            if (terminate)
-            {
-                builder
-                    .AppendLine(SqlHelper.StatementTerminator)
-                    .EndCommand();
-            }
+            builder.Append("PRIMARY KEY ");
+            builder.Append("(")
+                .Append(ColumnList(operation.Columns))
+                .Append(")");
         }
 
         /// <summary>
@@ -195,7 +181,7 @@ namespace Mozlite.Data.MySql.Migrations
         /// <param name="builder"><see cref="MigrationCommandListBuilder"/>实例。</param>
         protected override void IndexTraits(bool clustered, MigrationCommandListBuilder builder)
         {
-            builder.Append(clustered ? "CLUSTERED " : "NONCLUSTERED ");
+            
         }
 
         /// <summary>
@@ -273,7 +259,7 @@ namespace Mozlite.Data.MySql.Migrations
 
             if (identity)
             {
-                builder.Append(" IDENTITY");
+                builder.Append(" AUTO_INCREMENT ");
             }
         }
 

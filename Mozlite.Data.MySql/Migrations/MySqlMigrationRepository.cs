@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Models;
 
@@ -16,20 +19,32 @@ namespace Mozlite.Data.MySql.Migrations
         {
             get
             {
-                var builder = new StringBuilder();
-
-                builder.Append("SELECT OBJECT_ID(N'")
-                    .Append(SqlHelper.EscapeIdentifier(Table))
-                    .Append("');");
-
-                return builder.ToString();
+                throw new NotSupportedException();
             }
         }
 
         /// <summary>
-        /// 创建表格语句。
+        /// 判断是否已经存在迁移表。
         /// </summary>
-        protected override string CreateSql
+        /// <returns>返回判断结果。</returns>
+		public override bool EnsureMigrationTableExists()
+		{
+            return Context.ExecuteNonQuery(CreateSql);
+		}
+
+        /// <summary>
+        /// 确保已经存在迁移表。
+        /// </summary>
+        /// <param name="cancellationToken">异步取消标识。</param>
+        public override Task EnsureMigrationTableExistsAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Context.ExecuteNonQueryAsync(CreateSql, cancellationToken: cancellationToken);
+        }
+
+		/// <summary>
+		/// 创建表格语句。
+		/// </summary>
+		protected override string CreateSql
         {
             get
             {
