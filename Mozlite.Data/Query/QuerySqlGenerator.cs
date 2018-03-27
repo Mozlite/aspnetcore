@@ -26,6 +26,19 @@ namespace Mozlite.Data.Query
         /// 唯一主键参数实例。
         /// </summary>
         protected string PrimaryKeyParameter => SqlHelper.Parameterized(PrimaryKeyParameterName);
+        /// <summary>
+        /// 将唯一主键附加到当前语句构建实例中。
+        /// </summary>
+        /// <param name="builder">SQL语句构建实例。</param>
+        /// <param name="entityType">当前实体类。</param>
+        /// <param name="terminated">是否结束语句。</param>
+        protected void AppendWherePrimaryKey(SqlIndentedStringBuilder builder, IEntityType entityType, bool terminated = true)
+        {
+            var primaryKey = SqlHelper.DelimitIdentifier(entityType.SingleKey().Name);
+            builder.Append($" WHERE {primaryKey} = {PrimaryKeyParameter}");
+            if (terminated)
+                builder.AppendLine(SqlHelper.StatementTerminator);
+        }
 
         /// <summary>
         /// 初始化类<see cref="QuerySqlGenerator"/>。
@@ -121,7 +134,7 @@ namespace Mozlite.Data.Query
             builder.CreateObjectParameters(parameters);
             builder.JoinAppend(builder.Parameters.Keys.Select(
                 name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}"));
-            builder.AppendLine(SqlHelper.WherePrimaryKey(entityType));
+            AppendWherePrimaryKey(builder, entityType);
             return builder;
         }
 
@@ -170,8 +183,8 @@ namespace Mozlite.Data.Query
         {
             var builder = new SqlIndentedStringBuilder();
             builder.Append(sqlHeader).Append(" ")
-                .Append(SqlHelper.DelimitIdentifier(entityType.Table))
-                .AppendLine(SqlHelper.WherePrimaryKey(entityType));
+                .Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            AppendWherePrimaryKey(builder, entityType);
             builder.AddPrimaryKey(key);
             return builder;
         }
@@ -205,7 +218,7 @@ namespace Mozlite.Data.Query
         {
             var builder = new SqlIndentedStringBuilder();
             builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
-            builder.AppendLine(SqlHelper.WherePrimaryKey(entityType));
+            AppendWherePrimaryKey(builder, entityType);
             return builder;
         }
 

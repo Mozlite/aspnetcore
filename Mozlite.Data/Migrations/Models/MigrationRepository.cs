@@ -17,8 +17,10 @@ namespace Mozlite.Data.Migrations.Models
         /// SQL辅助接口。
         /// </summary>
         protected ISqlHelper SqlHelper { get; }
-        
-        private readonly IDbContext<Migration> _db;
+        /// <summary>
+        /// 数据库操作上下文。
+        /// </summary>
+        protected IDbContext<Migration> Context{get;}
         /// <summary>
         /// SQL脚本生成接口。
         /// </summary>
@@ -27,14 +29,14 @@ namespace Mozlite.Data.Migrations.Models
         /// <summary>
         /// 初始化类<see cref="MigrationRepository"/>。
         /// </summary>
-        /// <param name="db">数据库操作实例。</param>
+        /// <param name="context">数据库操作实例。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="sqlGenerator">SQL迁移脚本生成接口。</param>
-        protected MigrationRepository(IDbContext<Migration> db, ISqlHelper sqlHelper, IMigrationsSqlGenerator sqlGenerator)
+        protected MigrationRepository(IDbContext<Migration> context, ISqlHelper sqlHelper, IMigrationsSqlGenerator sqlGenerator)
         {
             SqlHelper = sqlHelper;
             Table = typeof(Migration).GetTableName();
-            _db = db;
+            Context = context;
             SqlGenerator = sqlGenerator;
         }
 
@@ -59,9 +61,9 @@ namespace Mozlite.Data.Migrations.Models
         /// <returns>返回判断结果。</returns>
         public virtual bool EnsureMigrationTableExists()
         {
-            if (_db.ExecuteScalar(ExistsSql) == DBNull.Value)
+            if (Context.ExecuteScalar(ExistsSql) == DBNull.Value)
             {
-                return _db.ExecuteNonQuery(CreateSql);
+                return Context.ExecuteNonQuery(CreateSql);
             }
             return true;
         }
@@ -77,9 +79,9 @@ namespace Mozlite.Data.Migrations.Models
         /// <param name="cancellationToken">异步取消标识。</param>
         public virtual async Task EnsureMigrationTableExistsAsync(CancellationToken cancellationToken = default)
         {
-            if (await _db.ExecuteScalarAsync(ExistsSql, cancellationToken: cancellationToken) == DBNull.Value)
+            if (await Context.ExecuteScalarAsync(ExistsSql, cancellationToken: cancellationToken) == DBNull.Value)
             {
-                await _db.ExecuteNonQueryAsync(CreateSql, cancellationToken: cancellationToken);
+                await Context.ExecuteNonQueryAsync(CreateSql, cancellationToken: cancellationToken);
             }
         }
 
@@ -90,7 +92,7 @@ namespace Mozlite.Data.Migrations.Models
         /// <returns>返回实例列表。</returns>
         public Migration FindMigration(string migrationId)
         {
-            return _db.Find(m => m.Id == migrationId);
+            return Context.Find(m => m.Id == migrationId);
         }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace Mozlite.Data.Migrations.Models
         /// <returns>返回实例列表。</returns>
         public Task<Migration> FindMigrationAsync(string migrationId, CancellationToken cancellationToken = default)
         {
-            return _db.FindAsync(m => m.Id == migrationId, cancellationToken);
+            return Context.FindAsync(m => m.Id == migrationId, cancellationToken);
         }
 
         /// <summary>
@@ -113,7 +115,7 @@ namespace Mozlite.Data.Migrations.Models
         public bool Execute(Migration migration, IReadOnlyList<MigrationOperation> operations)
         {
             var commandTexts = SqlGenerator.Generate(operations);
-            return _db.BeginTransaction(db =>
+            return Context.BeginTransaction(db =>
             {
                 foreach (var commandText in commandTexts)
                 {
@@ -139,7 +141,7 @@ namespace Mozlite.Data.Migrations.Models
             CancellationToken cancellationToken = default)
         {
             var commandTexts = SqlGenerator.Generate(operations);
-            return await _db.BeginTransactionAsync(async db =>
+            return await Context.BeginTransactionAsync(async db =>
             {
                 foreach (var commandText in commandTexts)
                 {
