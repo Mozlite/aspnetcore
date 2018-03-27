@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions
+﻿namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 支持多站存储。

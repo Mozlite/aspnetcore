@@ -238,6 +238,13 @@ namespace Mozlite
         /// </summary>
         public static long UnixNow => (long)(DateTime.Now - _unixDate).TotalMilliseconds;
 
+        /// <summary>
+        /// 将UNIX时间的毫秒数转换为日期。
+        /// </summary>
+        /// <param name="milliseconds">毫秒数。</param>
+        /// <returns>返回当前日期值。</returns>
+        public static DateTime FromUnix(long milliseconds) => _unixDate.AddMilliseconds(milliseconds);
+
         private const string HtmlCaseRegexReplacement = "-$1$2";
         private static readonly Regex _htmlCaseRegex =
             new Regex(
@@ -349,5 +356,10 @@ namespace Mozlite
             }
             return string.Join(separator, list);
         }
+
+        /// <summary>
+        /// 默认缓存时长。
+        /// </summary>
+        public static readonly TimeSpan DefaultCacheExpiration = TimeSpan.FromMinutes(3);
     }
 }

@@ -16,16 +16,14 @@ namespace Mozlite.Extensions.Groups
     /// <typeparam name="TGroup">分组类型。</typeparam>
     public abstract class GroupManager<TGroup> : CachableCategoryManager<TGroup>, IGroupManager<TGroup> where TGroup : GroupBase<TGroup>
     {
-        private readonly IMemoryCache _cache;
         /// <summary>
         /// 初始化类<see cref="GroupManager{TCategory}"/>。
         /// </summary>
-        /// <param name="db">数据库操作接口实例。</param>
+        /// <param name="context">数据库操作接口实例。</param>
         /// <param name="cache">缓存接口。</param>
-        protected GroupManager(IDbContext<TGroup> db, IMemoryCache cache)
-            : base(db, cache)
+        protected GroupManager(IDbContext<TGroup> context, IMemoryCache cache)
+            : base(context, cache)
         {
-            _cache = cache;
         }
 
         /// <summary>
@@ -57,9 +55,9 @@ namespace Mozlite.Extensions.Groups
         /// <returns>返回分类列表。</returns>
         public override IEnumerable<TGroup> Fetch(Expression<Predicate<TGroup>> expression = null)
         {
-            return _cache.GetOrCreate(typeof(TGroup), ctx =>
+            var models = Cache.GetOrCreate(CacheKey, ctx =>
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                ctx.SetDefaultAbsoluteExpiration();
                 var categories = Fetch();
                 var dic = categories.ToDictionary(c => c.Id);
                 dic[0] = Activator.CreateInstance<TGroup>();
@@ -70,6 +68,7 @@ namespace Mozlite.Extensions.Groups
                 }
                 return dic.Values;
             });
+            return models.Filter(expression);
         }
 
         /// <summary>
@@ -80,10 +79,10 @@ namespace Mozlite.Extensions.Groups
         /// <returns>返回分类列表。</returns>
         public override async Task<IEnumerable<TGroup>> FetchAsync(Expression<Predicate<TGroup>> expression = null, CancellationToken cancellationToken = default)
         {
-            return await _cache.GetOrCreateAsync(typeof(TGroup), async ctx =>
+            var models = await Cache.GetOrCreateAsync(CacheKey, async ctx =>
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-                var categories = await FetchAsync();
+                ctx.SetDefaultAbsoluteExpiration();
+                var categories = await FetchAsync(cancellationToken: cancellationToken);
                 var dic = categories.ToDictionary(c => c.Id);
                 dic[0] = Activator.CreateInstance<TGroup>();
                 foreach (var category in categories)
@@ -93,6 +92,7 @@ namespace Mozlite.Extensions.Groups
                 }
                 return dic.Values;
             });
+            return models.Filter(expression);
         }
     }
 }

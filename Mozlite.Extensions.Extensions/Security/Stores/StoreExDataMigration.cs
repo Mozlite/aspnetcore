@@ -1,7 +1,8 @@
 ﻿using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
+using Mozlite.Extensions.Security.Stores;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
     /// 数据库迁移。

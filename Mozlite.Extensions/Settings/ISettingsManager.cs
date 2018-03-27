@@ -60,6 +60,29 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
         /// <param name="settings">网站配置实例。</param>
+        Task<bool> SaveSettingsAsync<TSiteSettings>(TSiteSettings settings)
+            where TSiteSettings : class, new();
+
+        /// <summary>
+        /// 保存网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        /// <param name="key">配置唯一键。</param>
+        /// <param name="settings">网站配置实例。</param>
+        Task<bool> SaveSettingsAsync<TSiteSettings>(string key, TSiteSettings settings);
+
+        /// <summary>
+        /// 保存网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        /// <param name="settings">网站配置实例。</param>
+        Task<bool> SaveSettingsAsync(string key, string settings);
+
+        /// <summary>
+        /// 保存网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        /// <param name="settings">网站配置实例。</param>
         bool SaveSettings<TSiteSettings>(TSiteSettings settings)
             where TSiteSettings : class, new();
 

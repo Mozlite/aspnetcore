@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Mozlite.Extensions.Security.Stores;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
     /// 数据库存接口。

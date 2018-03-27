@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Mozlite.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Mozlite.Data;
+using Mozlite.Extensions.Security.Stores;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
     /// 数据库存储类。

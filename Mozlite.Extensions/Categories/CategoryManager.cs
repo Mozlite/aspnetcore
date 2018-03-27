@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Mozlite.Data;
 using Mozlite.Extensions.Data;
 
@@ -12,6 +14,27 @@ namespace Mozlite.Extensions.Categories
         where TCategory : CategoryBase
     {
         /// <summary>
+        /// 判断是否已经存在。
+        /// </summary>
+        /// <param name="category">分类实例。</param>
+        /// <returns>返回判断结果。</returns>
+        public override bool IsDuplicated(TCategory category)
+        {
+            return Context.Any(x => x.Id != category.Id && x.Name == category.Name);
+        }
+
+        /// <summary>
+        /// 判断是否已经存在。
+        /// </summary>
+        /// <param name="category">分类实例。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回判断结果。</returns>
+        public override Task<bool> IsDuplicatedAsync(TCategory category, CancellationToken cancellationToken = default)
+        {
+            return Context.AnyAsync(x => x.Id != category.Id && x.Name == category.Name, cancellationToken);
+        }
+
+        /// <summary>
         /// 初始化类<see cref="CategoryManager{TCategory}"/>。
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
@@ -22,6 +45,6 @@ namespace Mozlite.Extensions.Categories
         /// <summary>
         /// 当前分类实例。
         /// </summary>
-        public virtual IEnumerable<TCategory> Categories => Context.Fetch();
+        public virtual IEnumerable<TCategory> Categories => Fetch();
     }
 }

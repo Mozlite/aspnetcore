@@ -1,6 +1,4 @@
-using Mozlite.Extensions.Sites;
-
-namespace Mozlite.Extensions
+namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 当前网站上下文访问器。

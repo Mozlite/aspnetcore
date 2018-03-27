@@ -51,7 +51,7 @@ namespace Mozlite.Data.Query
         {
             return _cache.GetOrCreate(new Tuple<Type, string>(entityType.ClrType, key), ctx =>
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                ctx.SetAbsoluteExpiration(Cores.DefaultCacheExpiration);
                 var builder = new SqlIndentedStringBuilder();
                 action(builder);
                 return builder;

@@ -1,4 +1,6 @@
-﻿namespace Mozlite.Extensions.Security.Stores
+﻿using Mozlite.Extensions.Security.Stores;
+
+namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
     /// 角色基类。

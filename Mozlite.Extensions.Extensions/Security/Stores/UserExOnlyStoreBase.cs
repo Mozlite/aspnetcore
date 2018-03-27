@@ -1,9 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Mozlite.Data;
 using Microsoft.AspNetCore.Identity;
+using Mozlite.Data;
+using Mozlite.Extensions.Security.Stores;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
     /// 用户存储类型。

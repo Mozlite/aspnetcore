@@ -68,7 +68,7 @@ namespace Mozlite.Extensions.Storages.Caching
             var hashedKey = GetCacheKey(key);
             var cache = _cache.GetOrCreate(hashedKey, ctx =>
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                ctx.SetAbsoluteExpiration(Cores.DefaultCacheExpiration);
                 return _db.Find(hashedKey);
             });
             if (cache == null) return null;
@@ -92,7 +92,7 @@ namespace Mozlite.Extensions.Storages.Caching
             var hashedKey = GetCacheKey(key);
             var cache = await _cache.GetOrCreateAsync(hashedKey, async ctx =>
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                ctx.SetAbsoluteExpiration(Cores.DefaultCacheExpiration);
                 return await _db.FindAsync(hashedKey);
             });
             if (cache == null) return null;

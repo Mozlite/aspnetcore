@@ -24,10 +24,10 @@ namespace Mozlite.Extensions.Data
         /// <summary>
         /// 初始化类<see cref="ObjectManager{TModel,TKey}"/>。
         /// </summary>
-        /// <param name="db">数据库操作实例。</param>
-        protected ObjectManager(IDbContext<TModel> db)
+        /// <param name="context">数据库操作实例。</param>
+        protected ObjectManager(IDbContext<TModel> context)
         {
-            Context = db;
+            Context = context;
         }
 
         /// <summary>
@@ -154,6 +154,27 @@ namespace Mozlite.Extensions.Data
         }
 
         /// <summary>
+        /// 通过唯一Id删除对象实例。
+        /// </summary>
+        /// <param name="ids">唯一Id集合。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual DataResult Delete(IEnumerable<TKey> ids)
+        {
+            return DataResult.FromResult(Context.Delete(x => x.Id.IsIncluded(ids)), DataAction.Deleted);
+        }
+
+        /// <summary>
+        /// 通过唯一Id删除对象实例。
+        /// </summary>
+        /// <param name="ids">唯一Id集合。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<DataResult> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default)
+        {
+            return DataResult.FromResult(await Context.DeleteAsync(x => x.Id.IsIncluded(ids), cancellationToken), DataAction.Deleted);
+        }
+
+        /// <summary>
         /// 根据条件删除实例。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
@@ -249,32 +270,9 @@ namespace Mozlite.Extensions.Data
         /// <summary>
         /// 初始化类<see cref="ObjectManager{TModel}"/>。
         /// </summary>
-        /// <param name="db">数据库操作实例。</param>
-        protected ObjectManager(IDbContext<TModel> db) : base(db)
+        /// <param name="context">数据库操作实例。</param>
+        protected ObjectManager(IDbContext<TModel> context) : base(context)
         {
-        }
-
-        /// <summary>
-        /// 通过唯一Id删除对象实例。
-        /// </summary>
-        /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
-        /// <returns>返回删除结果。</returns>
-        public virtual DataResult Delete(string ids)
-        {
-            var intIds = ids.SplitToInt32();
-            return Delete(x => x.Id.IsIncluded(intIds));
-        }
-
-        /// <summary>
-        /// 通过唯一Id删除对象实例。
-        /// </summary>
-        /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
-        /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回删除结果。</returns>
-        public Task<DataResult> DeleteAsync(string ids, CancellationToken cancellationToken = default)
-        {
-            var intIds = ids.SplitToInt32();
-            return DeleteAsync(x => x.Id.IsIncluded(intIds), cancellationToken);
         }
     }
 }

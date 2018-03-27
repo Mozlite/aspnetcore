@@ -27,7 +27,7 @@ namespace Mozlite.Extensions.Data
         public int Code { get; }
 
         /// <summary>
-        /// 隐士转换操作结果。
+        /// 隐式转换操作结果。
         /// </summary>
         /// <param name="action">数据操作结果。</param>
         public static implicit operator DataResult(DataAction action)
@@ -36,7 +36,16 @@ namespace Mozlite.Extensions.Data
         }
 
         /// <summary>
-        /// 隐士转换操作结果。
+        /// 隐式转换为布尔型。
+        /// </summary>
+        /// <param name="result">数据操作结果。</param>
+        public static implicit operator bool(DataResult result)
+        {
+            return result.Succeed();
+        }
+
+        /// <summary>
+        /// 隐式转换操作结果。
         /// </summary>
         /// <param name="action">数据操作结果。</param>
         public static implicit operator DataResult(int action)
@@ -45,7 +54,7 @@ namespace Mozlite.Extensions.Data
         }
 
         /// <summary>
-        /// 隐士转换操作结果。
+        /// 隐式转换操作结果。
         /// </summary>
         /// <param name="msg">数据操作描述结果。</param>
         public static implicit operator DataResult(string msg)

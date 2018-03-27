@@ -1,7 +1,6 @@
-﻿using Mozlite.Extensions.Sites;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 
-namespace Mozlite.Extensions
+namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 服务扩展类。

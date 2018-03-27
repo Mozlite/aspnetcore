@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Extensions;
 
 namespace Mozlite.Mvc.Themes.Menus
 {
@@ -38,7 +39,7 @@ namespace Mozlite.Mvc.Themes.Menus
         {
             return _cache.GetOrCreate($"memus[{provider}]", ctx =>
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
+                ctx.SetDefaultAbsoluteExpiration();
                 var dic = new Dictionary<string, MenuItem>(StringComparer.OrdinalIgnoreCase);
                 var providers =
                     _providers.Where(p => string.Compare(p.Name, provider, StringComparison.OrdinalIgnoreCase) == 0);

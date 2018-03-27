@@ -98,6 +98,21 @@ namespace Mozlite.Extensions.Data
         Task<DataResult> UpdateAsync(Expression<Predicate<TModel>> expression, object satement, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 通过唯一Id删除对象实例。
+        /// </summary>
+        /// <param name="ids">唯一Id集合。</param>
+        /// <returns>返回删除结果。</returns>
+        DataResult Delete(IEnumerable<TKey> ids);
+
+        /// <summary>
+        /// 通过唯一Id删除对象实例。
+        /// </summary>
+        /// <param name="ids">唯一Id集合。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<DataResult> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default);
+        
+        /// <summary>
         /// 根据条件删除实例。
         /// </summary>
         /// <param name="expression">条件表达式。</param>
@@ -166,19 +181,5 @@ namespace Mozlite.Extensions.Data
     public interface IObjectManager<TModel> : IObjectManager<TModel, int>
         where TModel : IIdObject
     {
-        /// <summary>
-        /// 通过唯一Id删除对象实例。
-        /// </summary>
-        /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
-        /// <returns>返回删除结果。</returns>
-        DataResult Delete(string ids);
-
-        /// <summary>
-        /// 通过唯一Id删除对象实例。
-        /// </summary>
-        /// <param name="ids">唯一Id集合，多个使用“,”分割。</param>
-        /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回删除结果。</returns>
-        Task<DataResult> DeleteAsync(string ids, CancellationToken cancellationToken = default);
     }
 }

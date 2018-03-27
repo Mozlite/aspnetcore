@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions
 {
@@ -8,7 +7,6 @@ namespace Mozlite.Extensions
     /// </summary>
     public static class CoreExtensions
     {
-        private static readonly TimeSpan _defaultCacheExpiration = TimeSpan.FromMinutes(3);
         /// <summary>
         /// 设置默认缓存时间，3分钟。
         /// </summary>
@@ -16,7 +14,7 @@ namespace Mozlite.Extensions
         /// <returns>返回缓存实体接口。</returns>
         public static ICacheEntry SetDefaultAbsoluteExpiration(this ICacheEntry cache)
         {
-            return cache.SetAbsoluteExpiration(_defaultCacheExpiration);
+            return cache.SetAbsoluteExpiration(Cores.DefaultCacheExpiration);
         }
 
     }

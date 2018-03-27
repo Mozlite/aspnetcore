@@ -27,8 +27,10 @@ namespace Mozlite.Data
         /// 获取或设置数据库选项配置。
         /// </summary>
         /// <param name="key">配置名称。</param>
-        public string this[string key]{
-            get{
+        public string this[string key]
+        {
+            get
+            {
                 _configs.TryGetValue(key, out var value);
                 return value;
             }

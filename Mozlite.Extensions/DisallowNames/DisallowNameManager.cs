@@ -11,10 +11,14 @@ namespace Mozlite.Extensions.DisallowNames
     /// </summary>
     public class DisallowNameManager : IDisallowNameManager
     {
-        private readonly IDbContext<DisallowName> _db;
-        public DisallowNameManager(IDbContext<DisallowName> db)
+        private readonly IDbContext<DisallowName> _context;
+        /// <summary>
+        /// 初始化类<see cref="DisallowNameManager"/>。
+        /// </summary>
+        /// <param name="context">数据库上下文接口。</param>
+        public DisallowNameManager(IDbContext<DisallowName> context)
         {
-            _db = db;
+            _context = context;
         }
 
         /// <summary>
@@ -30,7 +34,7 @@ namespace Mozlite.Extensions.DisallowNames
             {
                 if (IsDisallowed(word))
                     continue;
-                _db.Create(new DisallowName { Name = word });
+                _context.Create(new DisallowName { Name = word });
             }
             return DataAction.Created;
         }
@@ -42,7 +46,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回删除结果。</returns>
         public DataResult Delete(int id)
         {
-            return DataResult.FromResult(_db.Delete(x=>x.Id == id), DataAction.Deleted);
+            return DataResult.FromResult(_context.Delete(x=>x.Id == id), DataAction.Deleted);
         }
 
         /// <summary>
@@ -53,7 +57,7 @@ namespace Mozlite.Extensions.DisallowNames
         public DataResult Delete(string ids)
         {
             var wids = ids.SplitToInt32();
-            return DataResult.FromResult(_db.Delete(x => x.Id.IsIncluded(wids)), DataAction.Deleted);
+            return DataResult.FromResult(_context.Delete(x => x.Id.IsIncluded(wids)), DataAction.Deleted);
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回判断结果。</returns>
         public bool IsDisallowed(string name)
         {
-            return _db.Any(x => x.Name == name);
+            return _context.Any(x => x.Name == name);
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回判断结果。</returns>
         public async Task<bool> IsDisallowedAsync(string name)
         {
-            return await _db.AnyAsync(x => x.Name == name);
+            return await _context.AnyAsync(x => x.Name == name);
         }
 
         /// <summary>
@@ -83,7 +87,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// <returns>返回非法名称列表。</returns>
         public DisallowNameQuery Load(DisallowNameQuery query)
         {
-            return _db.Load(query);
+            return _context.Load(query);
         }
     }
 }
