@@ -5,14 +5,8 @@
     <LangVersion>latest</LangVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
-    <RootNamespace>Mozlite.Extensions.Extensions</RootNamespace>
+    <RootNamespace>Mozlite.Extensions</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Tasks\**" />
-    <EmbeddedResource Remove="Tasks\**" />
-    <None Remove="Tasks\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
@@ -37,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="Security\Permissions\" />
+    <Folder Include="Tasks\" />
   </ItemGroup>
 
 </Project>
