@@ -18,7 +18,7 @@ namespace Mozlite.Data.SqlServer.Migrations
         private readonly IExpressionVisitorFactory _visitorFactory;
 
         /// <summary>
-        /// 初始化类<see cref="MigrationsSqlGenerator"/>。
+        /// 初始化类<see cref="SqlServerMigrationsSqlGenerator"/>。
         /// </summary>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="typeMapper">类型匹配接口。</param>
