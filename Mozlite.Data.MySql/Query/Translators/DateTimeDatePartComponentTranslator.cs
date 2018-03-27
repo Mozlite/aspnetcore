@@ -34,21 +34,23 @@ namespace Mozlite.Data.MySql.Query.Translators
             switch (memberName)
             {
                 case nameof(DateTime.Year):
-                    return "year";
+                    return "%Y";
                 case nameof(DateTime.Month):
-                    return "month";
+                    return "%m";
                 case nameof(DateTime.DayOfYear):
-                    return "dayofyear";
+                    return "%j";
                 case nameof(DateTime.Day):
-                    return "day";
+                    return "%d";
                 case nameof(DateTime.Hour):
-                    return "hour";
+                    return "%H";
                 case nameof(DateTime.Minute):
-                    return "minute";
+                    return "%i";
                 case nameof(DateTime.Second):
-                    return "second";
-                case nameof(DateTime.Millisecond):
-                    return "millisecond";
+                    return "%s";
+                case nameof(DateTime.Date):
+                    return "%Y-%m-%d";
+                case nameof(DateTime.TimeOfDay):
+                    return "%H:%i:%s";
                 default:
                     return null;
             }

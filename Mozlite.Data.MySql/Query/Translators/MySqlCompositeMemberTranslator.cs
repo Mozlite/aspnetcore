@@ -17,7 +17,6 @@ namespace Mozlite.Data.MySql.Query.Translators
             {
                 new StringLengthTranslator(),
                 new DateTimeNowTranslator(),
-                new DateTimeDateComponentTranslator(),
                 new DateTimeDatePartComponentTranslator(),
             };
 

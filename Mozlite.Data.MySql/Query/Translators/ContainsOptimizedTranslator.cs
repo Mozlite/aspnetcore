@@ -26,7 +26,7 @@ namespace Mozlite.Data.MySql.Query.Translators
                 var patternConstantExpression = patternExpression as ConstantExpression;
 
                 var charIndexExpression = Expression.GreaterThan(
-                    new SqlFunctionExpression("CHARINDEX", typeof(int), new[] { patternExpression, methodCallExpression.Object }),
+                    new SqlFunctionExpression("INSTR", typeof(int), new[] { patternExpression, methodCallExpression.Object }),
                     Expression.Constant(0));
 
                 return

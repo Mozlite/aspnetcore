@@ -29,7 +29,7 @@ namespace Mozlite.Data.MySql.Query.Translators
                         methodCallExpression.Object,
                         Expression.Add(methodCallExpression.Arguments[0], Expression.Constant("%", typeof(string)), _concat)),
                     Expression.Equal(
-                        new SqlFunctionExpression("CHARINDEX", typeof(int), new[] { patternExpression, methodCallExpression.Object }),
+                        new SqlFunctionExpression("INSTR", typeof(int), new[] { patternExpression, methodCallExpression.Object }),
                         Expression.Constant(1)));
 
                 return patternConstantExpression != null

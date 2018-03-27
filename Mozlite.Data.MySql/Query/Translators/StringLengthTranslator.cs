@@ -20,7 +20,7 @@ namespace Mozlite.Data.MySql.Query.Translators
                 && memberExpression.Expression.Type == typeof(string)
                 && memberExpression.Member.Name == nameof(string.Length))
             {
-                return new SqlFunctionExpression("LEN", memberExpression.Type, new[] { memberExpression.Expression });
+                return new SqlFunctionExpression("LENGTH", memberExpression.Type, new[] { memberExpression.Expression });
             }
 
             return null;

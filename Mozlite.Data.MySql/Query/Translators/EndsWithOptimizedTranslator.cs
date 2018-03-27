@@ -28,7 +28,7 @@ namespace Mozlite.Data.MySql.Query.Translators
                         new[]
                         {
                             methodCallExpression.Object,
-                            new SqlFunctionExpression("LEN", typeof(int), new[] { patternExpression })
+                            new SqlFunctionExpression("LENGTH", typeof(int), new[] { patternExpression })
                         }),
                     patternExpression);
 

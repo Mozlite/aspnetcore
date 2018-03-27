@@ -22,7 +22,7 @@ namespace Mozlite.Data.MySql.Query.Translators
                 && memberExpression.Member.DeclaringType == typeof(DateTime)
                 && memberExpression.Member.Name == nameof(DateTime.Now))
             {
-                return new SqlFunctionExpression("GETDATE", memberExpression.Type, Enumerable.Empty<Expression>());
+                return new SqlFunctionExpression("NOW", memberExpression.Type, Enumerable.Empty<Expression>());
             }
 
             return null;

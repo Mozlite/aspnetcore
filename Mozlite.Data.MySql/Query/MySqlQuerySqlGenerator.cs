@@ -17,7 +17,7 @@ namespace Mozlite.Data.MySql.Query
         /// <returns>返回自增长获取的SQL字符串。</returns>
         protected override string SelectIdentity()
         {
-            return "SELECT SCOPE_IDENTITY();";
+            return "SELECT @@IDENTITY;";
         }
 
         /// <summary>
@@ -37,24 +37,25 @@ namespace Mozlite.Data.MySql.Query
             var where = Visit(expression);
             var builder = new SqlIndentedStringBuilder();
             builder.AppendLine("DECLARE @CurrentOrder int;");
-            builder.AppendLine($"SELECT @CurrentOrder = ISNULL({column}, 0) FROM {table} WHERE {primaryKey} = {PrimaryKeyParameter};");
+            builder.AppendLine($"SELECT @CurrentOrder := IFNULL({column}, 0) FROM {table} WHERE {primaryKey} = {PrimaryKeyParameter};");
             builder.AppendLine("DECLARE @AffectId int;");
             builder.AppendLine("DECLARE @AffectOrder int;");
-            builder.Append($"SELECT TOP(1) @AffectId = {primaryKey}, @AffectOrder = ISNULL({column}, 0) FROM {table} WHERE {column} {direction} @CurrentOrder")
-                .AppendEx(where, " AND {0}").Append($" ORDER BY {column}").AppendLine(direction == "<" ? " DESC;" : ";");
+            builder.Append($"SELECT @AffectId := {primaryKey}, @AffectOrder := IFNULL({column}, 0) FROM {table} WHERE {column} {direction} @CurrentOrder")
+                .AppendEx(where, " AND {0}").Append($" ORDER BY {column}").Append(direction == "<" ? " DESC" : "")
+                   .AppendLine(" LIMIT 1;");
             builder.AppendLine($@"IF @AffectId IS NOT NULL AND @AffectId > 0 BEGIN
 	BEGIN TRANSACTION;
 	UPDATE {table} SET {column} = @AffectOrder WHERE {primaryKey} = {PrimaryKeyParameter};
 	IF(@@ERROR<>0) BEGIN
-		ROLLBACK TRANSACTION;
+		ROLLBACK;
 		SELECT 0;
 	END
 	UPDATE {table} SET {column} = @CurrentOrder WHERE {primaryKey} = @AffectId;
 	IF(@@ERROR<>0) BEGIN
-		ROLLBACK TRANSACTION;
+		ROLLBACK;
 		SELECT 0;
 	END
-	COMMIT TRANSACTION;
+	COMMIT;
 	SELECT 1;
 END");
             return builder;
@@ -92,11 +93,11 @@ END");
             builder.Append(sql.OrderBySql).Append(" ");
 
             var size = sql.Size ?? 20;
-            builder.Append("OFFSET ")
+            builder.Append("LIMIT ")
                 .Append(Math.Max((sql.PageIndex.Value - 1) * size, 0))
-                .Append(" ROWS FETCH NEXT ")
+                .Append(", ")
                 .Append(size)
-                .AppendLine(" ROWS ONLY;");
+                .AppendLine(";");
 
             builder.Append("SELECT COUNT(");
             if (sql.IsDistinct && sql.Aggregation != "1")
@@ -117,11 +118,11 @@ END");
             builder.Append("SELECT ");
             if (sql.IsDistinct)
                 builder.Append("DISTINCT ");
-            builder.Append("TOP(").Append(sql.Size).Append(") ");
             builder.Append(sql.FieldSql).Append(" ");
             builder.Append(sql.FromSql).Append(" ");
             builder.Append(sql.WhereSql).Append(" ");
-            builder.Append(sql.OrderBySql).Append(SqlHelper.StatementTerminator);
+            builder.Append(sql.OrderBySql);
+            builder.Append(" LIMIT ").Append(sql.Size).Append(SqlHelper.StatementTerminator);
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Mozlite.Data.MySql.Query
         {
             Check.NotNull(datePartExpression, nameof(datePartExpression));
 
-            Sql.Append("DATEPART(")
+            Sql.Append("DATE_FORMAT(")
                 .Append(datePartExpression.DatePart)
                 .Append(", ");
             Visit(datePartExpression.Argument);

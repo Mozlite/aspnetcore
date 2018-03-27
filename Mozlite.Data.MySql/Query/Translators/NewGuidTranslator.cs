@@ -12,7 +12,7 @@ namespace Mozlite.Data.MySql.Query.Translators
         /// 初始化类<see cref="NewGuidTranslator"/>。
         /// </summary>
         public NewGuidTranslator()
-            : base(typeof(Guid), nameof(Guid.NewGuid), "NEWID")
+            : base(typeof(Guid), nameof(Guid.NewGuid), "UUID")
         {
         }
     }
