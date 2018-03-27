@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite;
+using Mozlite.Data.MySql;
+using Mozlite.Mvc;
 
 namespace XReader
 {
@@ -21,7 +24,14 @@ namespace XReader
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMozlite()
+                    .AddMySql(Configuration);
+            services.AddMozliteMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.RootDirectory = "/";
+                    options.Conventions.AuthorizeFolder("/admin");
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,12 +48,7 @@ namespace XReader
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
+            app.UseMozliteMvc(Configuration);
         }
     }
 }

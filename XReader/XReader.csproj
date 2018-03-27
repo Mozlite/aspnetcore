@@ -8,4 +8,18 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
+    <ProjectReference Include="..\Mozlite.Data.MySql\Mozlite.Data.MySql.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Documents\Mozlite.Extensions.Documents.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
+    <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Messages\Mozlite.Extensions.Messages.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Error.cshtml" />
+    <Content Remove="Index.cshtml" />
+  </ItemGroup>
 </Project>
