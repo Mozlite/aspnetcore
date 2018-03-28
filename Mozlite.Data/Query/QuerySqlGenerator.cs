@@ -114,7 +114,7 @@ namespace Mozlite.Data.Query
                   builder.Append("WHERE ")
                       .JoinAppend(
                           primaryKeys.Select(
-                              name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}"))
+                              name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}"), " AND ")
                       .Append(SqlHelper.StatementTerminator);
                   names.AddRange(primaryKeys);
               }

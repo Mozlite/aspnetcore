@@ -4,20 +4,24 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Mozlite.Extensions.Settings;
 using Microsoft.Extensions.Caching.Memory;
-using BaseSettingsManager = Mozlite.Extensions.Settings.SettingsManager;
 
 namespace Mozlite.Extensions.Extensions.Settings
 {
     /// <summary>
     /// 网站配置管理类。
     /// </summary>
-    [Target(typeof(BaseSettingsManager))]
+    [Suppress(typeof(Mozlite.Extensions.Settings.SettingsManager))]
     public class SettingsManager : ISettingsManager
     {
         private readonly IMemoryCache _cache;
         private readonly IDbContext<SettingsAdapter> _db;
         private readonly ISiteContextAccessorBase _siteContextAccessor;
-
+        /// <summary>
+        /// 初始化类<see cref="SettingsManager"/>。
+        /// </summary>
+        /// <param name="context">数据库操作上下文。</param>
+        /// <param name="siteContextAccessor">网站访问器接口。</param>
+        /// <param name="cache">缓存实例。</param>
         public SettingsManager(IDbContext<SettingsAdapter> context, ISiteContextAccessorBase siteContextAccessor, IMemoryCache cache)
         {
             _db = context;

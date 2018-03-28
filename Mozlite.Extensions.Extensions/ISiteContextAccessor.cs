@@ -15,10 +15,10 @@ namespace Mozlite.Extensions.Extensions
         new TSiteContext SiteContext { get; }
 
         /// <summary>
-        /// 设置当前上下文实例。
+        /// 设置当前上下文实例，后台现场中使用。
         /// </summary>
         /// <param name="siteKey">网站唯一键。</param>
         /// <returns>返回当前网站上下文实例。</returns>
-        new TSiteContext CreateSiteContext(string siteKey = null);
+        new TSiteContext GetThreadSiteContext(string siteKey = null);
     }
 }

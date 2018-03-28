@@ -5,7 +5,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
-    <RootNamespace>Mozlite.Extensions</RootNamespace>
+    <RootNamespace>Mozlite.Extensions.Extensions</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

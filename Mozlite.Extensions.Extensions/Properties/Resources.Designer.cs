@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace Mozlite.Extensions.Extensions.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   一个强类型的资源类，用于查找本地化的字符串等。
     /// </summary>
@@ -36,7 +39,7 @@ namespace Mozlite.Extensions.Extensions.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mozlite.Extensions.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mozlite.Extensions.Extensions.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -144,15 +147,6 @@ namespace Mozlite.Extensions.Extensions.Properties {
         internal static string DataAction_UpdatedFailured {
             get {
                 return ResourceManager.GetString("DataAction_UpdatedFailured", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 当前不是在HTTP上下文中，不能实例化当前站点。 的本地化字符串。
-        /// </summary>
-        internal static string HttpContextNotInitialized {
-            get {
-                return ResourceManager.GetString("HttpContextNotInitialized", resourceCulture);
             }
         }
         

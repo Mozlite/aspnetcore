@@ -20,21 +20,17 @@ namespace Mozlite.Extensions.Extensions
         private readonly RequestDelegate _next;
         private readonly ILogger<TSite> _logger;
         private readonly ISiteManager _siteManager;
-        private readonly IInstallerManager _installerManager;
-
         /// <summary>
         /// 初始化类<see cref="SiteMiddleware{TSiteContext, TSite}"/>。
         /// </summary>
         /// <param name="next">下一个请求代理。</param>
         /// <param name="logger">日志接口。</param>
         /// <param name="siteManager">网站管理接口。</param>
-        /// <param name="installerManager">安装管理接口。</param>
-        public SiteMiddleware(RequestDelegate next, ILogger<TSite> logger, ISiteManager siteManager, IInstallerManager installerManager)
+        public SiteMiddleware(RequestDelegate next, ILogger<TSite> logger, ISiteManager siteManager)
         {
             _next = next;
             _logger = logger;
             _siteManager = siteManager;
-            _installerManager = installerManager;
         }
 
         /// <summary>
@@ -74,20 +70,17 @@ namespace Mozlite.Extensions.Extensions
             var siteDomain = await _siteManager.GetDomainAsync(domain);
             if (siteDomain == null || siteDomain.Disabled)
                 return null;
-            var site = await _siteManager.GetSiteAsync<TSite>(domain);
+            var site = await _siteManager.GetSiteAsync<TSite>(siteDomain.SiteId);
             if (site == null)
                 return null;
-            return Cache(context, new TSiteContext
-            {
-                Site = site,
-                Domain = siteDomain
-            });
+            return Cache(context, site, siteDomain);
         }
 
-        private TSiteContext Cache(HttpContext context, TSiteContext siteContext)
+        private TSiteContext Cache(HttpContext context, TSite site, SiteDomain domain)
         {
-            context.Items[typeof(SiteContextBase)] = siteContext;
-            return siteContext;
+            var current = new TSiteContext { Domain = domain, Site = site };
+            context.Items[typeof(SiteContextBase)] = current;
+            return current;
         }
 
         private static readonly string[] _filters =

@@ -1,13 +1,12 @@
 ﻿using Mozlite.Data.Migrations;
-using BaseSettingsDataMigration = Mozlite.Extensions.Settings.SettingsDataMigration;
 
 namespace Mozlite.Extensions.Extensions.Settings
 {
     /// <summary>
     /// 数据库迁移。
     /// </summary>
-    [Suppress(typeof(BaseSettingsDataMigration))]
-    public class SettingsDataMigration : BaseSettingsDataMigration
+    [Suppress(typeof(Mozlite.Extensions.Settings.SettingsDataMigration))]
+    public class SettingsDataMigration : Mozlite.Extensions.Settings.SettingsDataMigration
     {
         /// <summary>
         /// 当模型建立时候构建的表格实例。

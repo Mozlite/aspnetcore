@@ -147,9 +147,6 @@
   <data name="DataAction_UpdatedFailured" xml:space="preserve">
     <value>很抱歉，更新“{0}”失败了。</value>
   </data>
-  <data name="HttpContextNotInitialized" xml:space="preserve">
-    <value>当前不是在HTTP上下文中，不能实例化当前站点。</value>
-  </data>
   <data name="SiteContextIsInitialized" xml:space="preserve">
     <value>当前网站上下文已经初始化过一次了，不能再进行初始化！</value>
   </data>
