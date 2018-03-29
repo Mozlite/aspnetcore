@@ -236,7 +236,7 @@ namespace Mozlite
         /// <summary>
         /// 获取当前时间对应的UNIX时间的毫秒数。
         /// </summary>
-        public static long UnixNow => (long)(DateTime.Now - _unixDate).TotalMilliseconds;
+        public static long UnixNow => DateTime.Now.ToUnix();
 
         /// <summary>
         /// 将UNIX时间的毫秒数转换为日期。
@@ -244,6 +244,13 @@ namespace Mozlite
         /// <param name="milliseconds">毫秒数。</param>
         /// <returns>返回当前日期值。</returns>
         public static DateTime FromUnix(long milliseconds) => _unixDate.AddMilliseconds(milliseconds);
+
+        /// <summary>
+        /// 获取当前时间对应的UNIX时间的毫秒数。
+        /// </summary>
+        /// <param name="date">当前时间。</param>
+        /// <returns>返回当前时间对应的UNIX时间的毫秒数。</returns>
+        public static long ToUnix(this DateTime date) => (long)(date - _unixDate).TotalMilliseconds;
 
         private const string HtmlCaseRegexReplacement = "-$1$2";
         private static readonly Regex _htmlCaseRegex =
