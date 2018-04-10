@@ -18,7 +18,11 @@ namespace Mozlite.Extensions
         public string ExtendProperties
         {
             get => JsonConvert.SerializeObject(_extendProperties);
-            set => _extendProperties = JsonConvert.DeserializeObject<Dictionary<string, string>>(value);
+            set
+            {
+                if (value != null)
+                    _extendProperties = JsonConvert.DeserializeObject<Dictionary<string, string>>(value);
+            }
         }
 
         /// <summary>

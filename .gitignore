@@ -266,3 +266,4 @@ __pycache__/
 /ApcNet.Extensions
 /apcnet.sln
 /.gitignore
+/package-lock.json
