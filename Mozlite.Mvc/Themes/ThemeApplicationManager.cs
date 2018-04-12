@@ -28,7 +28,7 @@ namespace Mozlite.Mvc.Themes
             {
                 permissionManager.Save(new Permission { Name = $"app.{application.PermissionName}", Description = application.Description });
             }
-            permissionManager.RefreshAdministrators();
+            permissionManager.RefreshOwners();
             _applications = new ReadOnlyCollection<IThemeApplication>(applications.ToList());
         }
 

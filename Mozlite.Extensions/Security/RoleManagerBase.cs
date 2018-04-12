@@ -41,7 +41,7 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 初始化类<see cref="RoleManagerBase{TRole}"/>
+        /// 初始化类<see cref="RoleManagerBase{TRole, TUserRole, TRoleClaim}"/>
         /// </summary>
         /// <param name="store">存储接口。</param>
         /// <param name="roleValidators">角色验证集合。</param>

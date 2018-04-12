@@ -61,15 +61,6 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 管理员 的本地化字符串。
-        /// </summary>
-        internal static string Administrator {
-            get {
-                return ResourceManager.GetString("Administrator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 恭喜你，你已经成功添加了“{0}”。 的本地化字符串。
         /// </summary>
         internal static string DataAction_Created {
@@ -412,11 +403,29 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 普通会员 的本地化字符串。
+        /// </summary>
+        internal static string Member {
+            get {
+                return ResourceManager.GetString("Member", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 所有者 的本地化字符串。
+        /// </summary>
+        internal static string Owner {
+            get {
+                return ResourceManager.GetString("Owner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 管理员角色权限不能被设置！ 的本地化字符串。
         /// </summary>
-        internal static string PermissionSetCannotBeAdministrator {
+        internal static string PermissionSetCannotBeOwner {
             get {
-                return ResourceManager.GetString("PermissionSetCannotBeAdministrator", resourceCulture);
+                return ResourceManager.GetString("PermissionSetCannotBeOwner", resourceCulture);
             }
         }
         
@@ -444,15 +453,6 @@ namespace Mozlite.Extensions.Properties {
         internal static string PermissionValue_NotSet {
             get {
                 return ResourceManager.GetString("PermissionValue_NotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 普通会员 的本地化字符串。
-        /// </summary>
-        internal static string Register {
-            get {
-                return ResourceManager.GetString("Register", resourceCulture);
             }
         }
         

@@ -78,6 +78,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
+        /// 是否为系统角色。
+        /// </summary>
+        public bool IsSystem => RoleLevel == 0 || RoleLevel == int.MaxValue;
+
+        /// <summary>
         /// 返回角色名称。
         /// </summary>
         public override string ToString()

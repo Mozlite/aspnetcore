@@ -101,13 +101,13 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 更新管理员权限配置。
         /// </summary>
-        Task RefreshAdministratorsAsync();
+        Task RefreshOwnersAsync();
 
         /// <summary>
         /// 更新管理员权限配置。
         /// </summary>
         /// <returns>返回更新结果。</returns>
-        void RefreshAdministrators();
+        void RefreshOwners();
 
         /// <summary>
         /// 加载权限列表。

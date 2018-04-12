@@ -85,7 +85,7 @@ namespace Mozlite.Extensions.Security.Permissions
                 else
                     DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
             }
-            RefreshAdministrators();
+            RefreshOwners();
         }
 
         /// <summary>
@@ -311,14 +311,13 @@ namespace Mozlite.Extensions.Security.Permissions
             }
             return RemoveCache(result);
         }
-
-        private const string Administrator = "ADMINISTRATOR";
+        
         /// <summary>
         /// 更新管理员权限配置。
         /// </summary>
-        public async Task RefreshAdministratorsAsync()
+        public async Task RefreshOwnersAsync()
         {
-            var role = await _rdb.FindAsync(x => x.NormalizedName == Administrator);
+            var role = await _rdb.FindAsync(x => x.NormalizedName == DefaultRole.Owner.NormalizedName);
             var permissions = await LoadCachePermissionsAsync();
             foreach (var permission in permissions.Values)
             {
@@ -332,9 +331,9 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 更新管理员权限配置。
         /// </summary>
-        public void RefreshAdministrators()
+        public void RefreshOwners()
         {
-            var role = _rdb.Find(x => x.NormalizedName == Administrator);
+            var role = _rdb.Find(x => x.NormalizedName == DefaultRole.Owner.NormalizedName);
             var permissions = LoadCachePermissions().Values;
             foreach (var permission in permissions)
             {
@@ -383,8 +382,8 @@ namespace Mozlite.Extensions.Security.Permissions
         public virtual async Task<DataResult> SaveAsync(int roleId, HttpRequest request)
         {
             var role = await _rdb.FindAsync(roleId);
-            if (role.NormalizedName == Administrator)
-                return Resources.PermissionSetCannotBeAdministrator;
+            if (role.NormalizedName == DefaultRole.Owner.NormalizedName)
+                return Resources.PermissionSetCannotBeOwner;
             if (await _prdb.BeginTransactionAsync(async db =>
             {
                 foreach (var permission in LoadCachePermissions().Values)
@@ -415,8 +414,8 @@ namespace Mozlite.Extensions.Security.Permissions
         public virtual DataResult Save(int roleId, HttpRequest request)
         {
             var role = _rdb.Find(roleId);
-            if (role.NormalizedName == Administrator)
-                return Resources.PermissionSetCannotBeAdministrator;
+            if (role.NormalizedName == DefaultRole.Owner.NormalizedName)
+                return Resources.PermissionSetCannotBeOwner;
             if (_prdb.BeginTransaction(db =>
             {
                 foreach (var permission in LoadCachePermissions().Values)
