@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -239,7 +240,12 @@ namespace Mozlite.Data.Query
                 if (_fieldSql == null)
                 {
                     if (_fields.Count == 0)
-                        _fields.AddRange(Entity.GetProperties().Select(p => Delimit(p.Name)));
+                    {
+                        var fields = Entity.GetProperties()
+                            .Where(x => !x.PropertyInfo.IsDefined(typeof(NotMappedAttribute)))
+                            .Select(p => Delimit(p.Name));
+                        _fields.AddRange(fields);
+                    }
                     _fieldSql = string.Join(",", _fields.Distinct(StringComparer.OrdinalIgnoreCase));
                 }
                 return _fieldSql;
@@ -715,7 +721,7 @@ namespace Mozlite.Data.Query
             }
             return models;
         }
-        
+
         /// <summary>
         /// 读取模型实例。
         /// </summary>
