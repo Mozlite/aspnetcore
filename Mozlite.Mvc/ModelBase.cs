@@ -287,6 +287,65 @@ namespace Mozlite.Mvc
             return Json(BsType.Danger, result.ToString(args));
         }
         #endregion
+
+        private Browser? _browser;
+        /// <summary>
+        /// 浏览器类型。
+        /// </summary>
+        public Browser Browser
+        {
+            get
+            {
+                if (_browser == null)
+                {
+                    string browser = Request.Headers["User-Agent"];
+                    if (browser.IndexOf("Edge") != -1)
+                        _browser = Browser.Edge;
+                    else if (browser.IndexOf("MSIE") != -1 || browser.IndexOf("rv:") != -1)
+                        _browser = Browser.IE;
+                    else if (browser.IndexOf("Firefox") != -1)
+                        _browser = Browser.Firefox;
+                    else if (browser.IndexOf("Chrome") != -1)
+                        _browser = Browser.Chrome;
+                    else if (browser.IndexOf("Safari") != -1)
+                        _browser = Browser.Safari;
+                    else
+                        _browser = Browser.Unknown;
+                }
+                return _browser.Value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 浏览器。
+    /// </summary>
+    public enum Browser
+    {
+        /// <summary>
+        /// IE。
+        /// </summary>
+        IE,
+        /// <summary>
+        /// Edge。
+        /// </summary>
+        Edge,
+        /// <summary>
+        /// 谷歌。
+        /// </summary>
+        Chrome,
+        /// <summary>
+        /// 火狐。
+        /// </summary>
+        Firefox,
+        /// <summary>
+        /// Safari。
+        /// </summary>
+        Safari,
+        /// <summary>
+        /// 未知。
+        /// </summary>
+        Unknown
     }
 
     /// <summary>
