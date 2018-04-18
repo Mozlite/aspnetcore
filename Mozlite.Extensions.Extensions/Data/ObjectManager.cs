@@ -89,6 +89,22 @@ namespace Mozlite.Extensions.Extensions.Data
         }
 
         /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public virtual void Clear()
+        {
+            Context.Delete(x => x.SiteId == Site.SiteId);
+        }
+
+        /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public virtual Task ClearAsync(CancellationToken cancellationToken = default)
+        {
+            return Context.DeleteAsync(x => x.SiteId == Site.SiteId, cancellationToken);
+        }
+
+        /// <summary>
         /// 根据条件删除实例。
         /// </summary>
         /// <param name="expression">条件表达式。</param>

@@ -154,6 +154,22 @@ namespace Mozlite.Extensions.Data
         }
 
         /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public virtual void Clear()
+        {
+            Context.Delete();
+        }
+
+        /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public virtual Task ClearAsync(CancellationToken cancellationToken = default)
+        {
+            return Context.DeleteAsync(cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
         /// <param name="ids">唯一Id集合。</param>

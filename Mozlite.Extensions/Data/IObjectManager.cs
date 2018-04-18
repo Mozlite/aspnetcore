@@ -98,6 +98,16 @@ namespace Mozlite.Extensions.Data
         Task<DataResult> UpdateAsync(Expression<Predicate<TModel>> expression, object satement, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        Task ClearAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
         /// <param name="ids">唯一Id集合。</param>

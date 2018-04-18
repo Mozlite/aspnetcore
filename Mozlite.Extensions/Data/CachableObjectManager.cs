@@ -45,6 +45,24 @@ namespace Mozlite.Extensions.Data
         }
 
         /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public override void Clear()
+        {
+            Context.Delete();
+            Refresh();
+        }
+
+        /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public override async Task ClearAsync(CancellationToken cancellationToken = default)
+        {
+            await Context.DeleteAsync(cancellationToken: cancellationToken);
+            Refresh();
+        }
+
+        /// <summary>
         /// 如果操作结果成功刷新缓存并返回结果。
         /// </summary>
         /// <param name="result">数据库操作结果。</param>
@@ -54,7 +72,7 @@ namespace Mozlite.Extensions.Data
             if (result) Refresh();
             return result;
         }
-
+        
         /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
