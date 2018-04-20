@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,12 @@ namespace Mozlite.Mvc
     public abstract class ControllerBase : Controller
     {
         #region commons
+        private Version _version;
+        /// <summary>
+        /// 当前程序的版本。
+        /// </summary>
+        public Version Version => _version ?? (_version = Assembly.GetEntryAssembly().GetName().Version);
+
         private ILogger _logger;
         /// <summary>
         /// 日志接口。

@@ -267,3 +267,6 @@ __pycache__/
 /apcnet.sln
 /.gitignore
 /package-lock.json
+/publisher
+/publisher.cmd
+*.rar

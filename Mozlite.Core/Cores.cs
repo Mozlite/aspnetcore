@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Collections;
 using Mozlite.Properties;
 using System.Globalization;
-using System.IO;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -234,23 +234,27 @@ namespace Mozlite
 
         private static readonly DateTime _unixDate = new DateTime(1970, 1, 1);
         /// <summary>
-        /// 获取当前时间对应的UNIX时间的毫秒数。
+        /// 获取当前时间对应的UNIX时间的秒数。
         /// </summary>
         public static long UnixNow => DateTime.Now.ToUnix();
 
         /// <summary>
-        /// 将UNIX时间的毫秒数转换为日期。
+        /// 将UNIX时间的秒数转换为日期。
         /// </summary>
-        /// <param name="milliseconds">毫秒数。</param>
+        /// <param name="seconds">秒数。</param>
         /// <returns>返回当前日期值。</returns>
-        public static DateTime FromUnix(long milliseconds) => _unixDate.AddMilliseconds(milliseconds);
+        public static DateTime FromUnix(long seconds)
+        {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
+            return _unixDate.AddSeconds(seconds);
+        }
 
         /// <summary>
-        /// 获取当前时间对应的UNIX时间的毫秒数。
+        /// 获取当前时间对应的UNIX时间的秒数。
         /// </summary>
         /// <param name="date">当前时间。</param>
-        /// <returns>返回当前时间对应的UNIX时间的毫秒数。</returns>
-        public static long ToUnix(this DateTime date) => (long)(date - _unixDate).TotalMilliseconds;
+        /// <returns>返回当前时间对应的UNIX时间的秒数。</returns>
+        public static long ToUnix(this DateTime date) => (date.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
 
         private const string HtmlCaseRegexReplacement = "-$1$2";
         private static readonly Regex _htmlCaseRegex =
