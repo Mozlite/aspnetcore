@@ -79,7 +79,7 @@ namespace Mozlite.Mvc
         {
             var resource = GetString(typeof(TResource), key);
             if (resource == null)
-                return null;
+                return key;
             return string.Format(resource, args);
         }
 
@@ -135,7 +135,7 @@ namespace Mozlite.Mvc
         {
             var resource = GetString(key);
             if (resource == null)
-                return null;
+                return key;
             return string.Format(resource, args);
         }
 
