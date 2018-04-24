@@ -226,23 +226,13 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <returns>返回当前名称的权限实例。</returns>
         public Permission GetOrCreate(string permissionName)
         {
-            if (!LoadCachePermissions().TryGetValue(permissionName, out var permission))
-            {
-                permission = new Permission();
-                var parts = permissionName.Split('.');
-                if (parts.Length == 1)
-                {
-                    permission.Category = PermissionProvider.Core;
-                    permission.Name = permissionName;
-                }
-                else
-                {
-                    permission.Category = parts[0];
-                    permission.Name = parts[1];
-                }
-                permission.Order = DbContext.Max(x => x.Order, x => x.Category == permission.Category) + 1;
-                DbContext.Create(permission);
-            }
+            var permission = new Permission(permissionName);
+            var permissions = LoadCachePermissions();
+            if (permissions.TryGetValue(permission.Key, out var value))
+                return value;
+
+            permission.Order = DbContext.Max(x => x.Order, x => x.Category == permission.Category) + 1;
+            RemoveCache(DbContext.Create(permission));
             return permission;
         }
 
@@ -253,24 +243,13 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <returns>返回当前名称的权限实例。</returns>
         public async Task<Permission> GetOrCreateAsync(string permissionName)
         {
+            var permission = new Permission(permissionName);
             var permissions = await LoadCachePermissionsAsync();
-            if (!permissions.TryGetValue(permissionName, out var permission))
-            {
-                permission = new Permission();
-                var parts = permissionName.Split('.');
-                if (parts.Length == 1)
-                {
-                    permission.Category = PermissionProvider.Core;
-                    permission.Name = permissionName;
-                }
-                else
-                {
-                    permission.Category = parts[0];
-                    permission.Name = parts[1];
-                }
-                permission.Order = await DbContext.MaxAsync(x => x.Order, x => x.Category == permission.Category) + 1;
-                await DbContext.CreateAsync(permission);
-            }
+            if (permissions.TryGetValue(permissionName, out var value))
+                return value;
+
+            permission.Order = await DbContext.MaxAsync(x => x.Order, x => x.Category == permission.Category) + 1;
+            RemoveCache(await DbContext.CreateAsync(permission));
             return permission;
         }
 
@@ -311,7 +290,7 @@ namespace Mozlite.Extensions.Security.Permissions
             }
             return RemoveCache(result);
         }
-        
+
         /// <summary>
         /// 更新管理员权限配置。
         /// </summary>

@@ -9,6 +9,30 @@ namespace Mozlite.Extensions.Security.Permissions
     public class Permission
     {
         /// <summary>
+        /// 初始化类<see cref="Permission"/>。
+        /// </summary>
+        public Permission() { }
+
+        /// <summary>
+        /// 初始化类<see cref="Permission"/>。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        public Permission(string permissionName)
+        {
+            var parts = permissionName.Split('.');
+            if (parts.Length == 2)
+            {
+                Category = parts[0];
+                Name = parts[1];
+            }
+            else
+            {
+                Category = PermissionProvider.Core;
+                Name = permissionName;
+            }
+        }
+
+        /// <summary>
         /// 唯一Id。
         /// </summary>
         [Identity]
