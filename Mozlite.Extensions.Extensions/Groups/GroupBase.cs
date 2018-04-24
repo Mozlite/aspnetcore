@@ -27,7 +27,6 @@ namespace Mozlite.Extensions.Extensions.Groups
         /// <summary>
         /// 层次等级。
         /// </summary>
-        [NotUpdated]
         public int Level
         {
             get
@@ -43,7 +42,6 @@ namespace Mozlite.Extensions.Extensions.Groups
                 }
                 return _level;
             }
-            set => _level = value;
         }
 
         /// <summary>
