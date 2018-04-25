@@ -16,7 +16,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
         {
             _localizer = localizer;
         }
-
+        
         /// <summary>
         /// 初始化选项列表。
         /// </summary>

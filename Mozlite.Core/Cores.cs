@@ -243,10 +243,21 @@ namespace Mozlite
         /// </summary>
         /// <param name="seconds">秒数。</param>
         /// <returns>返回当前日期值。</returns>
-        public static DateTime FromUnix(long seconds)
+        public static DateTime FromUnix(int seconds)
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return _unixDate.AddSeconds(seconds);
+        }
+
+        /// <summary>
+        /// 将UNIX时间的毫秒数转换为日期。
+        /// </summary>
+        /// <param name="milliseconds">毫秒数。</param>
+        /// <returns>返回当前日期值。</returns>
+        public static DateTime FromUnix(long milliseconds)
+        {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
+            return _unixDate.AddMilliseconds(milliseconds);
         }
 
         /// <summary>
