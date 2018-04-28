@@ -109,6 +109,26 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="permissionName">权限名称。</param>
         /// <returns>返回判断结果。</returns>
+        public bool HasPermission(string permissionName)
+        {
+            return GetRequiredService<IPermissionManager>().Exist(permissionName);
+        }
+
+        /// <summary>
+        /// 判断当前用户是否有权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public Task<bool> HasPermissionAsync(string permissionName)
+        {
+            return GetRequiredService<IPermissionManager>().ExistAsync(permissionName);
+        }
+
+        /// <summary>
+        /// 判断当前用户是否有权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
         public bool IsAuthorized(string permissionName)
         {
             return GetRequiredService<IPermissionManager>().IsAuthorized(permissionName);
@@ -292,6 +312,33 @@ namespace Mozlite.Mvc
             if (result.Succeed())
                 return Json(BsType.Success, result.ToString(args));
             return Json(BsType.Danger, result.ToString(args));
+        }
+
+        /// <summary>
+        /// 模型错误。
+        /// </summary>
+        /// <param name="message">错误消息。</param>
+        /// <param name="args">参数。</param>
+        /// <returns>返回错误实例。</returns>
+        protected IActionResult ModelError(string message, params object[] args)
+        {
+            ModelState.AddModelError("", string.Format(message, args));
+            return Error();
+        }
+
+        /// <summary>
+        /// 模型错误。
+        /// </summary>
+        /// <param name="key">属性名称。</param>
+        /// <param name="message">错误消息。</param>
+        /// <param name="args">参数。</param>
+        /// <returns>返回错误实例。</returns>
+        protected IActionResult ModelError(string key, string message, params object[] args)
+        {
+            if (!key.StartsWith("Model."))
+                key = $"Model.{key}";
+            ModelState.AddModelError(key, string.Format(message, args));
+            return Error();
         }
         #endregion
 

@@ -432,6 +432,26 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="permissionName">权限名称。</param>
         /// <returns>返回判断结果。</returns>
+        public bool HasPermission(string permissionName)
+        {
+            return GetRequiredService<IPermissionManager>().Exist(permissionName);
+        }
+
+        /// <summary>
+        /// 判断当前用户是否有权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public Task<bool> HasPermissionAsync(string permissionName)
+        {
+            return GetRequiredService<IPermissionManager>().ExistAsync(permissionName);
+        }
+
+        /// <summary>
+        /// 判断当前用户是否有权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
         protected bool IsAuthorized(string permissionName)
         {
             return GetRequiredService<IPermissionManager>().IsAuthorized(permissionName);

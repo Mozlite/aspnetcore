@@ -99,7 +99,7 @@ namespace Mozlite.Mvc
                 baseName = baseName.Substring(0, baseName.Length - 10);
                 return new ResourceManager(baseName, assembly);
             });
-            return resourceManager.GetString(key);
+            return resourceManager.GetString(key) ?? key;
         }
 
         private class NullLocalizer
@@ -122,7 +122,7 @@ namespace Mozlite.Mvc
                 baseName = baseName.Substring(0, baseName.Length - 10);
                 return new ResourceManager(baseName, assembly);
             });
-            return resourceManager.GetString(key);
+            return resourceManager.GetString(key) ?? key;
         }
 
         /// <summary>

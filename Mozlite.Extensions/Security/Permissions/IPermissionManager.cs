@@ -170,5 +170,19 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="category">分类。</param>
         /// <returns>返回移动结果。</returns>
         Task<bool> MoveDownAsync(int id, string category);
+
+        /// <summary>
+        /// 判断权限名称是否存在。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        bool Exist(string permissionName);
+
+        /// <summary>
+        /// 判断权限名称是否存在。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<bool> ExistAsync(string permissionName);
     }
 }

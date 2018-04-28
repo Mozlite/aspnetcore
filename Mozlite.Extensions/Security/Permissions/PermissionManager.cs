@@ -460,6 +460,30 @@ namespace Mozlite.Extensions.Security.Permissions
             return RemoveCache(await DbContext.MoveDownAsync(id, x => x.Order, x => x.Category == category));
         }
 
+        /// <summary>
+        /// 判断权限名称是否存在。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual bool Exist(string permissionName)
+        {
+            var permission = new Permission(permissionName);
+            var permissions = LoadCachePermissions();
+            return permissions.ContainsKey(permission.Key);
+        }
+
+        /// <summary>
+        /// 判断权限名称是否存在。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual async Task<bool> ExistAsync(string permissionName)
+        {
+            var permission = new Permission(permissionName);
+            var permissions = await LoadCachePermissionsAsync();
+            return permissions.ContainsKey(permission.Key);
+        }
+
         private string GetCacheKey(int roleId, int permissionId) => $"{roleId}-{permissionId}";
 
         private bool RemoveCache(bool result = true)

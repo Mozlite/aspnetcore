@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -40,13 +41,16 @@ namespace Mozlite.Mvc.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "select";
+            var items = Init();
+            if (!string.IsNullOrEmpty(Text))//添加默认选项
+                items = new[] { new SelectListItem { Text = Text, Value = "" } }.Concat(items);
             if (For != null)
             {
                 var htmlGenerator = HttpContext.RequestServices.GetRequiredService<IHtmlGenerator>();
                 var tagHelper = new SelectTagHelper(htmlGenerator);
                 tagHelper.ViewContext = ViewContext;
                 tagHelper.For = For;
-                tagHelper.Items = Init();
+                tagHelper.Items = items;
                 tagHelper.Init(context);
                 tagHelper.Process(context, output);
             }
@@ -54,7 +58,7 @@ namespace Mozlite.Mvc.TagHelpers
             {
                 var value = Value?.ToString();
                 if (value != null) output.SetAttribute("value", value);
-                foreach (var item in Init())
+                foreach (var item in items)
                 {
                     output.AppendHtml("option", option =>
                     {

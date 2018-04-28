@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Extensions.Data
 {
@@ -27,6 +28,31 @@ namespace Mozlite.Extensions.Extensions.Data
         /// 缓存键。
         /// </summary>
         protected override object CacheKey => new Tuple<object, int>(base.CacheKey, Site.SiteId);
+
+        /// <summary>
+        /// 保存对象实例。
+        /// </summary>
+        /// <param name="model">模型实例对象。</param>
+        /// <returns>返回保存结果。</returns>
+        /// <param name="cancellationToken">取消标识。</param>
+        public override Task<DataResult> SaveAsync(TModel model, CancellationToken cancellationToken = default)
+        {
+            if (model.SiteId == 0)
+                model.SiteId = Site.SiteId;
+            return base.SaveAsync(model, cancellationToken);
+        }
+
+        /// <summary>
+        /// 保存对象实例。
+        /// </summary>
+        /// <param name="model">模型实例对象。</param>
+        /// <returns>返回保存结果。</returns>
+        public override DataResult Save(TModel model)
+        {
+            if (model.SiteId == 0)
+                model.SiteId = Site.SiteId;
+            return base.Save(model);
+        }
 
         /// <summary>
         /// 根据条件获取列表。
