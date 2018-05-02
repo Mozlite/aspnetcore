@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -38,6 +39,36 @@ namespace Mozlite.Mvc.TagHelpers
         public static void SetTag(this TagHelperOutput output, TagBuilder builder)
         {
             output.TagName = builder.TagName;
+            output.MergeAttributes(builder);
+            output.Content.AppendHtml(builder.InnerHtml);
+        }
+
+        /// <summary>
+        /// 讲当前输出设置为<paramref name="action"/>元素实例。
+        /// </summary>
+        /// <param name="output">输出实例对象。</param>
+        /// <param name="tagName">标签名称。</param>
+        /// <param name="action">构建实例对象。</param>
+        public static void Render(this TagHelperOutput output, string tagName, Action<TagBuilder> action)
+        {
+            output.TagName = tagName;
+            var builder = new TagBuilder(tagName);
+            action(builder);
+            output.MergeAttributes(builder);
+            output.Content.AppendHtml(builder.InnerHtml);
+        }
+
+        /// <summary>
+        /// 讲当前输出设置为<paramref name="action"/>元素实例。
+        /// </summary>
+        /// <param name="output">输出实例对象。</param>
+        /// <param name="tagName">标签名称。</param>
+        /// <param name="action">构建实例对象。</param>
+        public static async Task RenderAsync(this TagHelperOutput output, string tagName, Func<TagBuilder, Task> action)
+        {
+            output.TagName = tagName;
+            var builder = new TagBuilder(tagName);
+            await action(builder);
             output.MergeAttributes(builder);
             output.Content.AppendHtml(builder.InnerHtml);
         }

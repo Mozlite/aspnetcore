@@ -23,21 +23,22 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var builder = new TagBuilder("div");
-            builder.AddCssClass("modal-summary");
-            if (!string.IsNullOrEmpty(IconClass))
-                builder.AppendTag("i", tb => tb.AddCssClass(IconClass));
-            var content = await output.GetChildContentAsync();
-            builder.AppendTag("span", tb =>
-            {
-                tb.AddCssClass("modal-summary-text");
-                if (!content.IsEmptyOrWhiteSpace)
-                {
-                    builder.MergeAttribute("style", "display:block", true);
-                    tb.InnerHtml.AppendHtml(content);
-                }
-            });
-            output.SetTag(builder);
+            await output.RenderAsync("div", async builder =>
+             {
+                 builder.AddCssClass("modal-summary");
+                 if (!string.IsNullOrEmpty(IconClass))
+                     builder.AppendTag("i", tb => tb.AddCssClass(IconClass));
+                 var content = await output.GetChildContentAsync();
+                 builder.AppendTag("span", tb =>
+                 {
+                     tb.AddCssClass("modal-summary-text");
+                     if (!content.IsEmptyOrWhiteSpace)
+                     {
+                         builder.MergeAttribute("style", "display:block", true);
+                         tb.InnerHtml.AppendHtml(content);
+                     }
+                 });
+             });
         }
     }
 }

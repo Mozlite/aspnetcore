@@ -78,9 +78,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             {
                 output.Content.AppendHtml(Create(item.Key, item.Value, IsChecked(item.Value)));
             }
-            var builder = new TagBuilder("div");
-            builder.AddCssClass("moz-checkboxlist");
-            output.SetTag(builder);
+            output.Render("div", builder => builder.AddCssClass("moz-checkboxlist"));
         }
 
         /// <summary>
