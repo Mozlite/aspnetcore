@@ -43,7 +43,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
         /// <returns>返回上传后的结果！</returns>
-        public async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId)
+        public async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null)
         {
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
@@ -66,7 +66,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
         /// <returns>返回上传后的结果！</returns>
-        public async Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId)
+        public async Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null)
         {
             var uri = new Uri(url);
             using (var client = new HttpClient())

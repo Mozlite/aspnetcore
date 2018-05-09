@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
         /// <returns>返回上传后的结果！</returns>
-        Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId);
+        Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null);
 
         /// <summary>
         /// 下载文件。
@@ -25,7 +25,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
         /// <returns>返回上传后的结果！</returns>
-        Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId);
+        Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null);
 
         /// <summary>
         /// 通过GUID获取存储文件实例。
