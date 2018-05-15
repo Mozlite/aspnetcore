@@ -181,8 +181,8 @@ namespace Mozlite.Extensions.Extensions
         /// <returns>返回添加结果。</returns>
         public virtual DataResult Create(SiteDomain domain)
         {
-            if (IsValid(domain.Domain))
-                return DataAction.Created;
+            if (LoadCacheDomains().ContainsKey(domain.Domain))
+                return DataAction.Duplicate;
             if (_sddb.Create(domain))
             {
                 _cache.Remove(_cacheKey);
@@ -279,8 +279,9 @@ namespace Mozlite.Extensions.Extensions
         /// <returns>返回添加结果。</returns>
         public virtual async Task<DataResult> CreateAsync(SiteDomain domain)
         {
-            if (await IsValidAsync(domain.Domain))
-                return DataAction.Created;
+            var domains = await LoadCacheDomainsAsync();
+            if (domains.ContainsKey(domain.Domain))
+                return DataAction.Duplicate;
             if (await _sddb.CreateAsync(domain))
             {
                 _cache.Remove(_cacheKey);

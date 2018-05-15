@@ -111,6 +111,8 @@ namespace Mozlite.Mvc
         /// <returns>返回判断结果。</returns>
         public bool HasPermission(string permissionName)
         {
+            if (string.IsNullOrEmpty(permissionName))
+                return false;
             return GetRequiredService<IPermissionManager>().Exist(permissionName);
         }
 
@@ -119,9 +121,11 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="permissionName">权限名称。</param>
         /// <returns>返回判断结果。</returns>
-        public Task<bool> HasPermissionAsync(string permissionName)
+        public async Task<bool> HasPermissionAsync(string permissionName)
         {
-            return GetRequiredService<IPermissionManager>().ExistAsync(permissionName);
+            if (string.IsNullOrEmpty(permissionName))
+                return false;
+            return await GetRequiredService<IPermissionManager>().ExistAsync(permissionName);
         }
 
         /// <summary>
