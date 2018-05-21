@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.IO;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions
 {
@@ -17,5 +20,29 @@ namespace Mozlite.Extensions
             return cache.SetAbsoluteExpiration(Cores.DefaultCacheExpiration);
         }
 
+        /// <summary>
+        /// 添加数据加密密钥服务。
+        /// </summary>
+        /// <param name="services">服务器集合。</param>
+        /// <param name="directory">存储文件夹。</param>
+        /// <returns>返回服务器接口集合。</returns>
+        public static IServiceCollection AddMozliteDataProtection(this IServiceCollection services, string directory = "../storages/keys")
+        {
+            DirectoryInfo info;
+            try
+            {
+                info = new DirectoryInfo(directory);
+            }
+            catch
+            {
+                directory = Path.Combine(Directory.GetCurrentDirectory(), directory);
+                info = new DirectoryInfo(directory);
+            }
+            
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(info)
+                .ProtectKeysWithDpapi();
+            return services;
+        }
     }
 }

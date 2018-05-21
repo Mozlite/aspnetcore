@@ -10,6 +10,7 @@ using Mozlite.Extensions.Security;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Security.Permissions;
+using Mozlite.Mvc.Controllers;
 using Mozlite.Mvc.Messages;
 
 namespace Mozlite.Mvc
@@ -106,7 +107,7 @@ namespace Mozlite.Mvc
         {
             if (string.IsNullOrEmpty(code) || !Request.Cookies.TryGetValue(key, out var value))
                 return false;
-            code = Verifiers.Verifiers.Hashed(code);
+            code = Verifiers.Hashed(code);
             return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
         }
 

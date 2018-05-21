@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Mvc.Controllers
 {
@@ -15,8 +16,16 @@ namespace Mozlite.Mvc.Controllers
         [Route("js-refresher")]
         public IActionResult Index(string version)
         {
-            var client = new Version(version);
-            return Success(client != Version);
+            try
+            {
+                var client = new Version(version);
+                return Success(client != Version);
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, $"自动刷新出现错误：{exception.Message}");
+                return Success();
+            }
         }
     }
 }

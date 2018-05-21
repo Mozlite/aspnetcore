@@ -33,14 +33,9 @@ namespace Mozlite.Mvc.TagHelpers.Common
         private IEnumerable<SelectListItem> GetEnumItems(Type type)
         {
             if (type.IsNullableType())
-            {
                 type = Nullable.GetUnderlyingType(type);
-                yield return new SelectListItem
-                {
-                    Text = Text,
-                    Value = ""
-                };
-            }
+            else
+                Text = null;
             foreach (Enum value in Enum.GetValues(type))
             {
                 yield return new SelectListItem

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Extensions.Security.Permissions;
+using Mozlite.Mvc.Controllers;
 using Mozlite.Mvc.TagHelpers.Common;
 
 namespace Mozlite.Mvc
@@ -78,7 +79,7 @@ namespace Mozlite.Mvc
         {
             if (string.IsNullOrEmpty(code) || !Request.Cookies.TryGetValue(key, out var value))
                 return false;
-            code = Verifiers.Verifiers.Hashed(code);
+            code = Verifiers.Hashed(code);
             return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
         }
 

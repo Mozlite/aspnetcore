@@ -262,7 +262,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回执行结果。</returns>
         public virtual bool Lockout(int userId, DateTimeOffset? lockoutEnd = null)
         {
-            return Store.Update(userId, new { LockoutEnd = lockoutEnd, LockoutEnabled = lockoutEnd != null });
+            return Store.Update(userId, new { LockoutEnd = lockoutEnd });
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回执行结果。</returns>
         public virtual Task<bool> LockoutAsync(int userId, DateTimeOffset? lockoutEnd = null)
         {
-            return Store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd, LockoutEnabled = lockoutEnd != null });
+            return Store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd});
         }
 
         /// <summary>
@@ -382,23 +382,12 @@ namespace Mozlite.Extensions.Security
         where TRoleClaim : RoleClaimBase, new()
     {
         private IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> _store;
-
         /// <summary>
         /// 用户存储实例。
         /// </summary>
-        protected new IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> Store
-        {
-            get
-            {
-                if (_store == null)
-                {
-                    _store =
-                        base.Store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken,
-                            TRoleClaim>;
-                }
-                return _store;
-            }
-        }
+        protected new IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> Store => _store ?? (_store =
+                                                                                                                           base.Store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken,
+                                                                                                                               TRoleClaim>);
 
         /// <summary>
         /// 初始化类<see cref="UserManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
