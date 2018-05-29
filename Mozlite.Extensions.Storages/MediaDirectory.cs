@@ -35,15 +35,16 @@ namespace Mozlite.Extensions.Storages
             //媒体文件夹。
             _media = directory.GetPhysicalPath("media");
         }
-        
+
         /// <summary>
         /// 上传文件。
         /// </summary>
         /// <param name="file">表单文件。</param>
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
+        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        public async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null)
+        public async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
         {
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
@@ -56,7 +57,7 @@ namespace Mozlite.Extensions.Storages
             media.ExtensionName = extensionName;
             media.Extension = Path.GetExtension(file.FileName);
             media.Name = file.FileName;
-            return await CreateAsync(new FileInfo(tempFile), media, file.ContentType, targetId);
+            return await CreateAsync(new FileInfo(tempFile), media, file.ContentType, targetId, uniqueMediaFile);
         }
 
         /// <summary>
@@ -65,8 +66,9 @@ namespace Mozlite.Extensions.Storages
         /// <param name="url">文件URL地址。</param>
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
+        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        public async Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null)
+        public async Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
         {
             var uri = new Uri(url);
             using (var client = new HttpClient())
@@ -85,17 +87,24 @@ namespace Mozlite.Extensions.Storages
                 media.ExtensionName = extensionName;
                 media.Extension = Path.GetExtension(uri.AbsolutePath);
                 media.Name = Path.GetFileName(uri.AbsolutePath);
-                return await CreateAsync(new FileInfo(tempFile), media, media.Extension.GetContentType(), targetId);
+                return await CreateAsync(new FileInfo(tempFile), media, media.Extension.GetContentType(), targetId, uniqueMediaFile);
             }
         }
 
-        private async Task<MediaResult> CreateAsync(FileInfo tempFile, MediaFile file, string contentType, int? targetId)
+        private async Task<MediaResult> CreateAsync(FileInfo tempFile, MediaFile file, string contentType, int? targetId, bool uniqueMediaFile)
         {
             var fileId = tempFile.ComputeHash();
-            if (await _sfdb.AnyAsync(fileId))
+            var storage = await _sfdb.FindAsync(fileId);
+            if (storage != null)
             {
                 //实体文件已经存在，删除临时目录下的文件
                 tempFile.Delete();
+                if (uniqueMediaFile)//唯一文件存储
+                {
+                    var dbFile = await _mfdb.FindAsync(x => x.FileId == fileId);
+                    if (dbFile != null)
+                        return new MediaResult(dbFile.Url);
+                }
             }
             else
             {
