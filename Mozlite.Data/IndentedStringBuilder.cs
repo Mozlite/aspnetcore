@@ -9,27 +9,10 @@ namespace Mozlite.Data
     /// </summary>
     public class IndentedStringBuilder
     {
-        private const byte IndentSize = 4;
-
         private byte _indent;
+        private const byte IndentSize = 4;
         private bool _indentPending = true;
-
-        private readonly StringBuilder _stringBuilder = new StringBuilder();
-        /// <summary>
-        /// 初始化类<see cref="IndentedStringBuilder"/>。
-        /// </summary>
-        public IndentedStringBuilder()
-        {
-        }
-
-        /// <summary>
-        /// 初始化类<see cref="IndentedStringBuilder"/>。
-        /// </summary>
-        /// <param name="from">从当前实例再进行缩进。</param>
-        public IndentedStringBuilder(IndentedStringBuilder from)
-        {
-            _indent = from._indent;
-        }
+        private readonly StringBuilder _builder = new StringBuilder();
         
         /// <summary>
         /// 添加实例。
@@ -41,7 +24,7 @@ namespace Mozlite.Data
         {
             DoIndent();
 
-            _stringBuilder.Append(string.Join(seperator, o));
+            _builder.Append(string.Join(seperator, o));
 
             return this;
         }
@@ -59,7 +42,7 @@ namespace Mozlite.Data
 
             DoIndent();
 
-            _stringBuilder.AppendFormat(format, o);
+            _builder.AppendFormat(format, o);
 
             return this;
         }
@@ -73,7 +56,7 @@ namespace Mozlite.Data
         {
             DoIndent();
 
-            _stringBuilder.Append(o);
+            _builder.Append(o);
 
             return this;
         }
@@ -103,7 +86,7 @@ namespace Mozlite.Data
                 DoIndent();
             }
 
-            _stringBuilder.AppendLine(value);
+            _builder.AppendLine(value);
 
             _indentPending = true;
 
@@ -143,13 +126,13 @@ namespace Mozlite.Data
         /// 获取当前字符串实例。
         /// </summary>
         /// <returns>返回当前字符串内容实例。</returns>
-        public override string ToString() => _stringBuilder.ToString();
+        public override string ToString() => _builder.ToString();
 
         private void DoIndent()
         {
             if (_indentPending && _indent > 0)
             {
-                _stringBuilder.Append(new string(' ', _indent * IndentSize));
+                _builder.Append(new string(' ', _indent * IndentSize));
             }
 
             _indentPending = false;
@@ -172,12 +155,12 @@ namespace Mozlite.Data
         /// <summary>
         /// 清空内容。
         /// </summary>
-        protected void Clear() => _stringBuilder.Clear();
+        protected void Clear() => _builder.Clear();
 
         /// <summary>
         /// 判断是否为空。
         /// </summary>
         /// <returns>返回判断结果。</returns>
-        protected bool IsEmpty() => _stringBuilder.Length == 0;
+        protected bool IsEmpty() => _builder.Length == 0;
     }
 }

@@ -343,7 +343,8 @@ namespace Mozlite.Data.Internal
         public virtual TModel Find(Expression<Predicate<TModel>> expression)
         {
             Check.NotNull(expression, nameof(expression));
-            return ReadSql(SqlGenerator.Select(EntityType, expression));
+            var builder = SqlGenerator.Select(EntityType, expression);
+            return Query(builder, builder.Parameters);
         }
 
         /// <summary>
@@ -355,7 +356,41 @@ namespace Mozlite.Data.Internal
         public virtual async Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
         {
             Check.NotNull(expression, nameof(expression));
-            return await ReadSqlAsync(SqlGenerator.Select(EntityType, expression), cancellationToken);
+            var builder = SqlGenerator.Select(EntityType, expression);
+            return await QueryAsync(builder, builder.Parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <returns>返回模型实例对象。</returns>
+        public virtual TModel Query(string sql, object parameters = null)
+        {
+            using (var reader = ExecuteReader(sql, parameters))
+            {
+                if (reader.Read())
+                    return EntityType.Read<TModel>(reader);
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回模型实例对象。</returns>
+        public virtual async Task<TModel> QueryAsync(string sql, object parameters = null, CancellationToken cancellationToken = default)
+        {
+            using (var reader = await ExecuteReaderAsync(sql, parameters, cancellationToken: cancellationToken))
+            {
+                if (await reader.ReadAsync(cancellationToken))
+                    return EntityType.Read<TModel>(reader);
+            }
+            return default;
         }
 
         /// <summary>
@@ -398,7 +433,7 @@ namespace Mozlite.Data.Internal
         public virtual TModel Find(object key)
         {
             var sql = PrimaryKeySql("SELECT * FROM", key);
-            return ReadSql(sql);
+            return Query(sql, sql.Parameters);
         }
 
         /// <summary>
@@ -410,7 +445,7 @@ namespace Mozlite.Data.Internal
         public virtual Task<TModel> FindAsync(object key, CancellationToken cancellationToken = default)
         {
             var sql = PrimaryKeySql("SELECT * FROM", key);
-            return ReadSqlAsync(sql, cancellationToken);
+            return QueryAsync(sql, sql.Parameters, cancellationToken);
         }
 
         /// <summary>
@@ -420,7 +455,8 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         public virtual IEnumerable<TModel> Fetch(Expression<Predicate<TModel>> expression = null)
         {
-            return LoadSql(SqlGenerator.Select(EntityType, expression));
+            var sql = SqlGenerator.Select(EntityType, expression);
+            return Fetch(sql, sql.Parameters);
         }
 
         /// <summary>
@@ -431,7 +467,43 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         public virtual async Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
-            return await LoadSqlAsync(SqlGenerator.Select(EntityType, expression), cancellationToken);
+            var sql = SqlGenerator.Select(EntityType, expression);
+            return await FetchAsync(sql, sql.Parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <returns>返回模型实例对象。</returns>
+        public virtual IEnumerable<TModel> Fetch(string sql, object parameters = null)
+        {
+            var models = new List<TModel>();
+            using (var reader = ExecuteReader(sql, parameters))
+            {
+                while (reader.Read())
+                    models.Add(EntityType.Read<TModel>(reader));
+            }
+            return models;
+        }
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回模型实例对象。</returns>
+        public virtual async Task<IEnumerable<TModel>> FetchAsync(string sql, object parameters = null, CancellationToken cancellationToken = default)
+        {
+            var models = new List<TModel>();
+            using (var reader = await ExecuteReaderAsync(sql, parameters, cancellationToken: cancellationToken))
+            {
+                while (await reader.ReadAsync(cancellationToken))
+                    models.Add(EntityType.Read<TModel>(reader));
+            }
+            return models;
         }
 
         /// <summary>
@@ -655,70 +727,6 @@ namespace Mozlite.Data.Internal
         protected Task<bool> ExecuteSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
         {
             return ExecuteNonQueryAsync(sql.ToString(), sql.Parameters, cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// 读取模型实例列表。
-        /// </summary>
-        /// <param name="sql">SQL语句。</param>
-        /// <returns>返回模型实例列表。</returns>
-        protected IEnumerable<TModel> LoadSql(SqlIndentedStringBuilder sql)
-        {
-            var models = new List<TModel>();
-            using (var reader = ExecuteReader(sql.ToString(), sql.Parameters))
-            {
-                while (reader.Read())
-                    models.Add(EntityType.Read<TModel>(reader));
-            }
-            return models;
-        }
-
-        /// <summary>
-        /// 读取模型实例列表。
-        /// </summary>
-        /// <param name="sql">SQL语句。</param>
-        /// <param name="cancellationToken">取消标记。</param>
-        /// <returns>返回模型实例列表。</returns>
-        protected async Task<IEnumerable<TModel>> LoadSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
-        {
-            var models = new List<TModel>();
-            using (var reader = await ExecuteReaderAsync(sql.ToString(), sql.Parameters, cancellationToken: cancellationToken))
-            {
-                while (await reader.ReadAsync(cancellationToken))
-                    models.Add(EntityType.Read<TModel>(reader));
-            }
-            return models;
-        }
-
-        /// <summary>
-        /// 读取模型实例。
-        /// </summary>
-        /// <param name="sql">SQL语句。</param>
-        /// <returns>返回模型实例。</returns>
-        protected TModel ReadSql(SqlIndentedStringBuilder sql)
-        {
-            using (var reader = ExecuteReader(sql, sql.Parameters))
-            {
-                if (reader.Read())
-                    return EntityType.Read<TModel>(reader);
-            }
-            return default;
-        }
-
-        /// <summary>
-        /// 读取模型实例。
-        /// </summary>
-        /// <param name="sql">SQL语句。</param>
-        /// <param name="cancellationToken">取消标记。</param>
-        /// <returns>返回模型实例。</returns>
-        protected async Task<TModel> ReadSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
-        {
-            using (var reader = await ExecuteReaderAsync(sql, sql.Parameters, cancellationToken: cancellationToken))
-            {
-                if (await reader.ReadAsync(cancellationToken))
-                    return EntityType.Read<TModel>(reader);
-            }
-            return default;
         }
         #endregion
     }

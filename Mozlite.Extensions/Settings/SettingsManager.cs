@@ -144,17 +144,21 @@ namespace Mozlite.Extensions.Settings
         /// <param name="settings">网站配置实例。</param>
         public virtual async Task<bool> SaveSettingsAsync(string key, string settings)
         {
-            var cacheKey = key;
             var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings };
             if (await Context.AnyAsync(x => x.SettingKey == key))
             {
                 if (await Context.UpdateAsync(adapter))
                 {
-                    Cache.Remove(cacheKey);
+                    Refresh(key);
                     return true;
                 }
             }
-            return await Context.CreateAsync(adapter);
+            if(await Context.CreateAsync(adapter))
+            {
+                Refresh(key);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -185,17 +189,21 @@ namespace Mozlite.Extensions.Settings
         /// <param name="settings">网站配置实例。</param>
         public virtual bool SaveSettings(string key, string settings)
         {
-            var cacheKey = key;
             var adapter = new SettingsAdapter { SettingKey = key, SettingValue = settings };
             if (Context.Any(x => x.SettingKey == key))
             {
                 if (Context.Update(adapter))
                 {
-                    Cache.Remove(cacheKey);
+                    Refresh(key);
                     return true;
                 }
             }
-            return Context.Create(adapter);
+            if(Context.Create(adapter))
+            {
+                Refresh(key);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

@@ -34,18 +34,15 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="services">当前程序包含的后台服务列表。</param>
         public async Task EnsuredTaskServicesAsync(IEnumerable<ITaskService> services)
         {
-            var descriptors = (await _db.FetchAsync())?.ToDictionary(x => x.Type, StringComparer.OrdinalIgnoreCase) ??
-                new Dictionary<string, TaskDescriptor>(StringComparer.OrdinalIgnoreCase);
+            var descriptors = await _db.FetchAsync();
             foreach (var service in services)
             {
-                if (descriptors.TryGetValue(service.GetType().DisplayName(), out var descriptor))
+                var type = service.GetType().DisplayName();
+                var descriptor = descriptors.SingleOrDefault(x => x.Type == type);
+                if (descriptor != null)
                 {
-                    if (service.Disabled)
-                        descriptor.Enabled = false;
-                    if (descriptor.Name != service.Name ||
-                        descriptor.Description != service.Description)
-                        await _db.UpdateAsync(x => x.Id == descriptor.Id,
-                            new { service.Name, service.Description, descriptor.Enabled });
+                    await _db.UpdateAsync(x => x.Id == descriptor.Id, new { service.Name, service.Description, Enabled = !service.Disabled });
+                    descriptor.ShouldBeDeleting = false;
                 }
                 else
                 {
@@ -53,11 +50,17 @@ namespace Mozlite.Extensions.Tasks
                     descriptor.Name = service.Name;
                     descriptor.Description = service.Description;
                     descriptor.Enabled = !service.Disabled;
-                    descriptor.Type = service.GetType().DisplayName();
+                    descriptor.Type = type;
                     descriptor.ExtensionName = service.ExtensionName;
                     descriptor.Interval = service.Interval.ToString();
                     await _db.CreateAsync(descriptor);
                 }
+            }
+            //删除程序移除的后台服务
+            foreach (var descriptor in descriptors)
+            {
+                if (descriptor.ShouldBeDeleting)
+                    await _db.DeleteAsync(descriptor.Id);
             }
         }
 
@@ -138,7 +141,7 @@ namespace Mozlite.Extensions.Tasks
             error.AppendFormat(Resources.TaskExecuteError, name, exception.Message);
             error.AppendLine().AppendLine("===========================================================");
             error.AppendLine(exception.StackTrace);
-            await _db.UpdateAsync(x => x.Id == id, new {Error = error.ToString()});
+            await _db.UpdateAsync(x => x.Id == id, new { Error = error.ToString() });
         }
     }
 }

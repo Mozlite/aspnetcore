@@ -39,6 +39,7 @@ namespace Mozlite.Extensions.Tasks
                 var tasks = await _taskManager.LoadTasksAsync();
                 if (!tasks.Any())
                     return contexts;
+
                 foreach (var task in tasks)
                 {
                     if (!_services.TryGetValue(task.Type, out var service))

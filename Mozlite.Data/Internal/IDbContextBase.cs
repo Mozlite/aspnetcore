@@ -184,6 +184,24 @@ namespace Mozlite.Data.Internal
             CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <returns>返回模型实例对象。</returns>
+        TModel Query(string sql, object parameters = null);
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回模型实例对象。</returns>
+        Task<TModel> QueryAsync(string sql, object parameters = null,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// 根据主键删除模型实例对象。
         /// </summary>
         /// <param name="key">主键值，主键必须为一列时候才可使用。</param>
@@ -230,7 +248,25 @@ namespace Mozlite.Data.Internal
         /// <returns>返回模型实例对象。</returns>
         Task<IEnumerable<TModel>> FetchAsync(Expression<Predicate<TModel>> expression = null,
             CancellationToken cancellationToken = default);
-        
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <returns>返回模型实例对象。</returns>
+        IEnumerable<TModel> Fetch(string sql, object parameters = null);
+
+        /// <summary>
+        /// 通过SQL语句获取模型实例对象。
+        /// </summary>
+        /// <param name="sql">SQL语句。</param>
+        /// <param name="parameters">参数。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回模型实例对象。</returns>
+        Task<IEnumerable<TModel>> FetchAsync(string sql, object parameters = null,
+            CancellationToken cancellationToken = default); 
+
         /// <summary>
         /// 分页获取实例列表。
         /// </summary>

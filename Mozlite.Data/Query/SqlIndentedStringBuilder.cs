@@ -11,24 +11,7 @@ namespace Mozlite.Data.Query
     /// </summary>
     public class SqlIndentedStringBuilder : IndentedStringBuilder
     {
-        private readonly List<string> _parameters;
-        /// <summary>
-        /// 初始化类<see cref="SqlIndentedStringBuilder"/>。
-        /// </summary>
-        /// <param name="builder">字符串构建实例。</param>
-        public SqlIndentedStringBuilder(IndentedStringBuilder builder)
-            : base(builder)
-        {
-            _parameters = new List<string>();
-        }
-
-        /// <summary>
-        /// 初始化类<see cref="SqlIndentedStringBuilder"/>。
-        /// </summary>
-        public SqlIndentedStringBuilder()
-        {
-            _parameters = new List<string>();
-        }
+        private readonly List<string> _parameters = new List<string>();
 
         /// <summary>
         /// 添加一个参数。

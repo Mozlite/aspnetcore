@@ -80,5 +80,10 @@ namespace Mozlite.Extensions.Tasks
         /// 错误消息。
         /// </summary>
         public string Error { get; set; }
+
+        /// <summary>
+        /// 是否需要被删除。
+        /// </summary>
+        internal bool ShouldBeDeleting { get; set; } = true;
     }
 }
