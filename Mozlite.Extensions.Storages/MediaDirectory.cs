@@ -116,10 +116,17 @@ namespace Mozlite.Extensions.Storages
                 if (await _sfdb.CreateAsync(storedFile))
                 {//将文件移动到媒体存储路径下。
                     var mediaPath = Path.Combine(_media, storedFile.Path);
-                    var dir = Path.GetDirectoryName(mediaPath);
-                    if (!Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
-                    File.Move(tempFile.FullName, mediaPath);
+                    if (File.Exists(mediaPath))
+                    {//如果已经有磁盘文件就删除
+                        File.Delete(mediaPath);
+                    }
+                    else
+                    {
+                        var dir = Path.GetDirectoryName(mediaPath);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+                        File.Move(tempFile.FullName, mediaPath);
+                    }
                 }
             }
             file.TargetId = targetId;
