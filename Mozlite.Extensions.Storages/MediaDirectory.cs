@@ -117,8 +117,8 @@ namespace Mozlite.Extensions.Storages
                 {//将文件移动到媒体存储路径下。
                     var mediaPath = Path.Combine(_media, storedFile.Path);
                     if (File.Exists(mediaPath))
-                    {//如果已经有磁盘文件就删除
-                        File.Delete(mediaPath);
+                    {//如果已经有磁盘文件，删除临时文件
+                       tempFile.Delete();
                     }
                     else
                     {
