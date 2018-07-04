@@ -98,7 +98,7 @@ namespace Mozlite.Extensions.Storages
             if (storage != null)
             {
                 //实体文件已经存在，删除临时目录下的文件
-                tempFile.Delete();
+                EnsureStoredFile(storage, tempFile);
                 if (uniqueMediaFile)//唯一文件存储
                 {
                     var dbFile = await _mfdb.FindAsync(x => x.FileId == fileId);
@@ -109,30 +109,34 @@ namespace Mozlite.Extensions.Storages
             else
             {
                 //如果实体文件不存在则创建
-                var storedFile = new StoredFile();
-                storedFile.ContentType = contentType;
-                storedFile.FileId = fileId;
-                storedFile.Length = tempFile.Length;
-                if (await _sfdb.CreateAsync(storedFile))
-                {//将文件移动到媒体存储路径下。
-                    var mediaPath = Path.Combine(_media, storedFile.Path);
-                    if (File.Exists(mediaPath))
-                    {//如果已经有磁盘文件，删除临时文件
-                       tempFile.Delete();
-                    }
-                    else
-                    {
-                        var dir = Path.GetDirectoryName(mediaPath);
-                        if (!Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
-                        File.Move(tempFile.FullName, mediaPath);
-                    }
-                }
+                storage = new StoredFile();
+                storage.ContentType = contentType;
+                storage.FileId = fileId;
+                storage.Length = tempFile.Length;
+                if (await _sfdb.CreateAsync(storage))
+                    EnsureStoredFile(storage, tempFile);
             }
             file.TargetId = targetId;
             file.FileId = fileId;
             if (await _mfdb.CreateAsync(file)) return new MediaResult(file.Url);
             return new MediaResult(null, Resources.StoredFileFailured);
+        }
+
+        private void EnsureStoredFile(StoredFile file, FileInfo tempFile)
+        {
+            //将文件移动到媒体存储路径下。
+            var mediaPath = Path.Combine(_media, file.Path);
+            if (File.Exists(mediaPath))
+            {//如果已经有磁盘文件，删除临时文件
+                tempFile.Delete();
+            }
+            else
+            {
+                var dir = Path.GetDirectoryName(mediaPath);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                tempFile.MoveTo(mediaPath);
+            }
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace Mozlite.Extensions.Storages.Controllers
         {
             _mediaFileProvider = mediaFileProvider;
         }
-        
+
         /// <summary>
         /// 访问媒体文件。
         /// </summary>
@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Storages.Controllers
             if (!Guid.TryParse(name, out var id))
                 return NotFound();
             var file = await _mediaFileProvider.FindAsync(id);
-            if (file == null)
+            if (file == null || !System.IO.File.Exists(file.PhysicalPath))
                 return NotFound();
             return PhysicalFile(file.PhysicalPath, file.ContentType);
         }
@@ -49,7 +49,7 @@ namespace Mozlite.Extensions.Storages.Controllers
             if (!Guid.TryParse(name, out var id))
                 return NotFound();
             var file = await _mediaFileProvider.FindAsync(id);
-            if (file == null)
+            if (file == null || !System.IO.File.Exists(file.PhysicalPath))
                 return NotFound();
             Response.Headers.Add("Content-Disposition", $"attachment;filename={file.FileName}");
             return PhysicalFile(file.PhysicalPath, file.ContentType);
