@@ -347,6 +347,7 @@ namespace Mozlite.Mvc
         }
         #endregion
 
+        #region helpers
         private Browser? _browser;
         /// <summary>
         /// 浏览器类型。
@@ -374,41 +375,11 @@ namespace Mozlite.Mvc
                 return _browser.Value;
             }
         }
+        #endregion
     }
 
     /// <summary>
-    /// 浏览器。
-    /// </summary>
-    public enum Browser
-    {
-        /// <summary>
-        /// IE。
-        /// </summary>
-        IE,
-        /// <summary>
-        /// Edge。
-        /// </summary>
-        Edge,
-        /// <summary>
-        /// 谷歌。
-        /// </summary>
-        Chrome,
-        /// <summary>
-        /// 火狐。
-        /// </summary>
-        Firefox,
-        /// <summary>
-        /// Safari。
-        /// </summary>
-        Safari,
-        /// <summary>
-        /// 未知。
-        /// </summary>
-        Unknown
-    }
-
-    /// <summary>
-    /// 页面模型基类。
+    /// 页面模型基类，在POST表单页面中使用，自动绑定到表单实例中。
     /// </summary>
     /// <typeparam name="TModel">模型实例类型。</typeparam>
     public abstract class ModelBase<TModel> : ModelBase, IModelable

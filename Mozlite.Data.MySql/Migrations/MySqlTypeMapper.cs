@@ -48,8 +48,7 @@ namespace Mozlite.Data.MySql.Migrations
                 return size > 0 ? $"varchar({size})" : "longtext";
             if (type == typeof(byte[]))
                 return size > 0 ? $"varbinary({size})" : "longblob";
-            string retType;
-            if (_simpleMappings.TryGetValue(type, out retType))
+            if (_simpleMappings.TryGetValue(type, out var retType))
                 return retType;
 
             throw new NotSupportedException(string.Format(Resources.UnsupportedType, type.DisplayName()));

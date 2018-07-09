@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using Mozlite.Data.Migrations.Operations;
 using System.Reflection;
+using System.Diagnostics;
 using Mozlite.Extensions;
+using System.Linq.Expressions;
 using Mozlite.Data.Properties;
+using System.Collections.Generic;
+using Mozlite.Data.Migrations.Operations;
 
 namespace Mozlite.Data.Migrations
 {
@@ -360,12 +360,21 @@ namespace Mozlite.Data.Migrations
             }
 
             builder.Append(")");
-
+            CreateTableAppender(builder);
             if (terminate)
             {
                 builder.AppendLine(SqlHelper.StatementTerminator);
                 EndStatement(builder);
             }
+        }
+
+        /// <summary>
+        /// 添加表格后字符集得附加方法，主要用于MySQL表格格式，如：InnoDB。
+        /// </summary>
+        /// <param name="builder">构建实例。</param>
+        protected virtual void CreateTableAppender(MigrationCommandListBuilder builder)
+        {
+            
         }
 
         /// <summary>

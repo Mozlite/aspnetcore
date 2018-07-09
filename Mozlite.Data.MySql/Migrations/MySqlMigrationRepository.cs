@@ -15,13 +15,7 @@ namespace Mozlite.Data.MySql.Migrations
         /// <summary>
         /// 判断是否存在的脚本。
         /// </summary>
-        protected override string ExistsSql
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        protected override string ExistsSql => throw new NotSupportedException();
 
         /// <summary>
         /// 判断是否已经存在迁移表。

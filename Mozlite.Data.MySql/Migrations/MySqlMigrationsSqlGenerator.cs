@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Mozlite.Data.Migrations;
-using Mozlite.Data.Migrations.Operations;
-using System.Linq.Expressions;
 using Mozlite.Data.Query;
 using Mozlite.Extensions;
+using System.Linq.Expressions;
+using Mozlite.Data.Migrations;
+using System.Collections.Generic;
+using Mozlite.Data.Migrations.Operations;
 
 namespace Mozlite.Data.MySql.Migrations
 {
@@ -45,6 +44,15 @@ namespace Mozlite.Data.MySql.Migrations
             builder.Append("(")
                 .Append(ColumnList(operation.Columns))
                 .Append(")");
+        }
+
+        /// <summary>
+        /// 添加表格后字符集得附加方法，主要用于MySQL表格格式，如：InnoDB。
+        /// </summary>
+        /// <param name="builder">构建实例。</param>
+        protected override void CreateTableAppender(MigrationCommandListBuilder builder)
+        {
+            builder.Append("ENGINE=InnoDB DEFAULT CHARSET=utf8;");
         }
 
         /// <summary>
@@ -167,8 +175,7 @@ namespace Mozlite.Data.MySql.Migrations
 
             if (terminate)
             {
-                builder
-                    .AppendLine(SqlHelper.StatementTerminator)
+                builder.AppendLine(SqlHelper.StatementTerminator)
                     .EndCommand();
             }
         }
