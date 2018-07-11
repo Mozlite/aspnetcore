@@ -61,6 +61,24 @@ namespace Mozlite.Properties {
         }
         
         /// <summary>
+        ///   查找类似 属性表达式&apos;{0}&apos;不正确， 表达式必须提供一种属性访问，如： &apos;t =&gt; t.MyProperty&apos;；如果式多个属性，需要如下代码表示：&apos;t =&gt; new {{ t.MyProperty1, t.MyProperty2 }}&apos;。 的本地化字符串。
+        /// </summary>
+        internal static string InvalidPropertiesExpression {
+            get {
+                return ResourceManager.GetString("InvalidPropertiesExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 属性表达式&apos;{0}&apos;不正确， 表达式必须提供一种属性访问，如： &apos;t =&gt; t.MyProperty&apos;。 的本地化字符串。
+        /// </summary>
+        internal static string InvalidPropertyExpression {
+            get {
+                return ResourceManager.GetString("InvalidPropertyExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 新增了 的本地化字符串。
         /// </summary>
         internal static string LogAction_Add {

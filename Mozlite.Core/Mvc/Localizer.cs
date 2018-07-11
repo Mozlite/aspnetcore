@@ -92,8 +92,9 @@ namespace Mozlite.Mvc
         /// <returns>返回当前属性本地化字符串。</returns>
         public virtual string GetString<TResource>(Expression<Func<TResource, object>> expression)
         {
-            var key = expression.GetPropertyName();
-            return GetString<TResource>(key);
+            var member = expression.GetPropertyAccess();
+            if (member == null) return null;
+            return GetString(member.DeclaringType, member.Name);
         }
 
         /// <summary>
@@ -105,8 +106,10 @@ namespace Mozlite.Mvc
         /// <returns>返回当前属性本地化字符串。</returns>
         public virtual string GetString<TResource>(Expression<Func<TResource, object>> expression, params object[] args)
         {
-            var key = expression.GetPropertyName();
-            return GetString<TResource>(key, args);
+            var resource = GetString(expression);
+            if (resource == null)
+                return null;
+            return string.Format(resource, args);
         }
 
         /// <summary>

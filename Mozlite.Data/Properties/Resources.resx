@@ -126,12 +126,6 @@
   <data name="CollectionArgumentIsEmpty" xml:space="preserve">
     <value>参数'{0}'集合最少需要包含一个值。</value>
   </data>
-  <data name="InvalidPropertiesExpression" xml:space="preserve">
-    <value>属性表达式'{0}'不正确， 表达式必须提供一种属性访问，如： 't =&gt; t.MyProperty'；如果式多个属性，需要如下代码表示：'t =&gt; new {{ t.MyProperty1, t.MyProperty2 }}'。</value>
-  </data>
-  <data name="InvalidPropertyExpression" xml:space="preserve">
-    <value>属性表达式'{0}'不正确， 表达式必须提供一种属性访问，如： 't =&gt; t.MyProperty'。</value>
-  </data>
   <data name="MigrationError" xml:space="preserve">
     <value>数据迁移出错：{0}。</value>
   </data>
