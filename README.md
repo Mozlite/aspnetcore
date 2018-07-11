@@ -10,11 +10,17 @@
 # 项目构建目录
 
 根目录
+
 |--Project
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.*
+
 |--Mozlite
+
  &nbsp;&nbsp;&nbsp;&nbsp;|-- Mozlite.*
 
 ## Mozlite
