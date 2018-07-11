@@ -12,10 +12,15 @@
 根目录
 
 |--Project
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.*
+
 |--Mozlite
+
  &nbsp;&nbsp;&nbsp;&nbsp;|-- Mozlite.*
 
 ## Mozlite
@@ -25,3 +30,4 @@
 ## Project
 
 能源管理项目目录，设计到业务逻辑相关得所有项目，可以放到这个目录下面，TFS项目中保存当前项目得代码。
+
