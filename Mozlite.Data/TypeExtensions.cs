@@ -83,19 +83,7 @@ namespace Mozlite.Data
         {
             return type.IsClass && type.Name.IndexOf("f__AnonymousType", StringComparison.Ordinal) != -1;
         }
-
-        /// <summary>
-        /// 将以“,”分割的字符串，转换为数字数组。
-        /// </summary>
-        /// <param name="ids">当前ID集合。</param>
-        /// <returns>返回转换后的结果。</returns>
-        public static int[] SplitToInt32(this string ids)
-        {
-            return ids?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                 .Select(x => Convert.ToInt32(x.Trim()))
-                 .ToArray();
-        }
-
+        
         /// <summary>
         /// 获取唯一的主键属性值，如果主键不值一个属性，则会抛出错误。
         /// </summary>

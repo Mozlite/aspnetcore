@@ -11,7 +11,7 @@ namespace Mozlite.Data.Query.Translators.Internal
     public class InTranslator : IMethodCallTranslator
     {
         private static readonly MethodInfo _inMethodInfo
-            = typeof(Cores).GetRuntimeMethod(nameof(Cores.IsIncluded), new[] { typeof(object), typeof(IEnumerable) });
+            = typeof(Cores).GetRuntimeMethod(nameof(Cores.Included), new[] { typeof(object), typeof(IEnumerable) });
 
         /// <summary>
         /// 转换表达式。

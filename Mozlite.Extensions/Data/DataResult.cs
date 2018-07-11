@@ -15,7 +15,7 @@ namespace Mozlite.Extensions.Data
         /// </summary>
         /// <param name="code">编码。</param>
         /// <param name="desc">描述信息。</param>
-        public DataResult(int code, string desc)
+        private DataResult(int code, string desc)
         {
             _desc = desc;
             Code = code;

@@ -96,8 +96,7 @@ namespace Mozlite.Data.Migrations
             Check.NotNull(builder, nameof(builder));
 
             var operationType = operation.GetType();
-            Action<MigrationsSqlGenerator, MigrationOperation, MigrationCommandListBuilder> generateAction;
-            if (!_generateActions.TryGetValue(operationType, out generateAction))
+            if (!_generateActions.TryGetValue(operationType, out var generateAction))
             {
                 throw new InvalidOperationException(string.Format(Resources.UnknownOperation, operationType, GetType().DisplayName(false)));
             }

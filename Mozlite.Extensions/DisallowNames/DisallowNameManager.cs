@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Mozlite.Data;
+using System.Threading.Tasks;
 using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.DisallowNames
@@ -54,10 +54,9 @@ namespace Mozlite.Extensions.DisallowNames
         /// </summary>
         /// <param name="ids">非法名称Id。</param>
         /// <returns>返回删除结果。</returns>
-        public DataResult Delete(string ids)
+        public DataResult Delete(int[] ids)
         {
-            var wids = ids.SplitToInt32();
-            return DataResult.FromResult(_context.Delete(x => x.Id.IsIncluded(wids)), DataAction.Deleted);
+            return DataResult.FromResult(_context.Delete(x => x.Id.Included(ids)), DataAction.Deleted);
         }
 
         /// <summary>

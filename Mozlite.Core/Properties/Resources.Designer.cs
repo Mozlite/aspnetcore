@@ -61,6 +61,60 @@ namespace Mozlite.Properties {
         }
         
         /// <summary>
+        ///   查找类似 新增了 的本地化字符串。
+        /// </summary>
+        internal static string LogAction_Add {
+            get {
+                return ResourceManager.GetString("LogAction_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 ”{0}“(”{1}“) 的本地化字符串。
+        /// </summary>
+        internal static string LogAction_AddFormat {
+            get {
+                return ResourceManager.GetString("LogAction_AddFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改了 的本地化字符串。
+        /// </summary>
+        internal static string LogAction_Modify {
+            get {
+                return ResourceManager.GetString("LogAction_Modify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 “{0}”由”{1}“修改为“{2}” 的本地化字符串。
+        /// </summary>
+        internal static string LogAction_ModifyFormat {
+            get {
+                return ResourceManager.GetString("LogAction_ModifyFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 移除了 的本地化字符串。
+        /// </summary>
+        internal static string LogAction_Remove {
+            get {
+                return ResourceManager.GetString("LogAction_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 ”{0}“(”{1}“) 的本地化字符串。
+        /// </summary>
+        internal static string LogAction_RemoveFormat {
+            get {
+                return ResourceManager.GetString("LogAction_RemoveFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 类型“{1}”的属性“{0}”必须包含get访问器。 的本地化字符串。
         /// </summary>
         internal static string NoGetter {

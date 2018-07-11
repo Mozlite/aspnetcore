@@ -13,6 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\..\Mozlite.Core\Mozlite.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -176,7 +176,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回删除结果。</returns>
         public virtual DataResult Delete(IEnumerable<TKey> ids)
         {
-            return DataResult.FromResult(Context.Delete(x => x.Id.IsIncluded(ids)), DataAction.Deleted);
+            return DataResult.FromResult(Context.Delete(x => x.Id.Included(ids)), DataAction.Deleted);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Mozlite.Extensions.Data
         /// <returns>返回删除结果。</returns>
         public virtual async Task<DataResult> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default)
         {
-            return DataResult.FromResult(await Context.DeleteAsync(x => x.Id.IsIncluded(ids), cancellationToken), DataAction.Deleted);
+            return DataResult.FromResult(await Context.DeleteAsync(x => x.Id.Included(ids), cancellationToken), DataAction.Deleted);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Resources;
 using System.Reflection;
 using Microsoft.AspNetCore.Html;
 using System.Collections.Concurrent;
+using System.Linq.Expressions;
 
 namespace Mozlite.Mvc
 {
@@ -81,6 +82,31 @@ namespace Mozlite.Mvc
             if (resource == null)
                 return key;
             return string.Format(resource, args);
+        }
+
+        /// <summary>
+        /// 获取当前表达式类型属性得资源字符串。
+        /// </summary>
+        /// <typeparam name="TResource">当前属性所在得类型实例。</typeparam>
+        /// <param name="expression">表达式。</param>
+        /// <returns>返回当前属性本地化字符串。</returns>
+        public virtual string GetString<TResource>(Expression<Func<TResource, object>> expression)
+        {
+            var key = expression.GetPropertyName();
+            return GetString<TResource>(key);
+        }
+
+        /// <summary>
+        /// 获取当前表达式类型属性得资源字符串。
+        /// </summary>
+        /// <typeparam name="TResource">当前属性所在得类型实例。</typeparam>
+        /// <param name="expression">表达式。</param>
+        /// <param name="args">格式化参数。</param>
+        /// <returns>返回当前属性本地化字符串。</returns>
+        public virtual string GetString<TResource>(Expression<Func<TResource, object>> expression, params object[] args)
+        {
+            var key = expression.GetPropertyName();
+            return GetString<TResource>(key, args);
         }
 
         /// <summary>

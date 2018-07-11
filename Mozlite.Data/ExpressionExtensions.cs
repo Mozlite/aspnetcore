@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -92,7 +91,7 @@ namespace Mozlite.Data
             Debug.Assert(lambdaExpression.Body != null);
 
             var newExpression
-                = RemoveConvert(lambdaExpression.Body) as NewExpression;
+                = lambdaExpression.Body.RemoveConvert() as NewExpression;
 
             var parameterExpression
                 = lambdaExpression.Parameters.Single();
@@ -132,7 +131,7 @@ namespace Mozlite.Data
 
             do
             {
-                memberExpression = RemoveConvert(propertyAccessExpression) as MemberExpression;
+                memberExpression = propertyAccessExpression.RemoveConvert() as MemberExpression;
 
                 var propertyInfo = memberExpression?.Member as PropertyInfo;
 
@@ -149,24 +148,7 @@ namespace Mozlite.Data
 
             return propertyInfos;
         }
-
-        /// <summary>
-        /// 执行转换表达式，并且移除表达式内部。
-        /// </summary>
-        /// <param name="expression">表达式。</param>
-        /// <returns>返回表达式。</returns>
-        public static Expression RemoveConvert(this Expression expression)
-        {
-            while ((expression != null)
-                   && ((expression.NodeType == ExpressionType.Convert)
-                       || (expression.NodeType == ExpressionType.ConvertChecked)))
-            {
-                expression = RemoveConvert(((UnaryExpression)expression).Operand);
-            }
-
-            return expression;
-        }
-
+        
         /// <summary>
         /// 获取表达式执行后的值。
         /// </summary>
@@ -176,24 +158,7 @@ namespace Mozlite.Data
         {
             return Expression.Lambda(expression).Compile().DynamicInvoke();
         }
-
-        ///// <summary>
-        ///// 判断当前<paramref name="item"/>是否包含在<paramref name="items"/>中。
-        ///// </summary>
-        ///// <param name="item">当前项。</param>
-        ///// <param name="items">列表实例。</param>
-        ///// <returns>返回判断结果。</returns>
-        //public static bool Included(this object item, IEnumerable items)
-        //{
-        //    var enumerator = items.GetEnumerator();
-        //    do
-        //    {
-        //        if (ReferenceEquals(enumerator.Current, item))
-        //            return true;
-        //    } while (enumerator.MoveNext());
-        //    return false;
-        //}
-
+        
         /// <summary>
         /// 添加并且条件。
         /// </summary>

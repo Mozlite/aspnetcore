@@ -27,7 +27,7 @@ namespace Mozlite.Extensions.DisallowNames
         /// </summary>
         /// <param name="ids">非法名称Id。</param>
         /// <returns>返回删除结果。</returns>
-        DataResult Delete(string ids);
+        DataResult Delete(int[] ids);
 
         /// <summary>
         /// 判断当前名称是否为非法名称。

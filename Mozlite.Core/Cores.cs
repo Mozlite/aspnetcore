@@ -347,18 +347,19 @@ namespace Mozlite
         }
 
         /// <summary>
-        /// 判断当前<paramref name="current"/>是否包含在<paramref name="items"/>中。
+        /// 判断当前<paramref name="item"/>是否包含在<paramref name="items"/>中。
         /// </summary>
-        /// <param name="current">当前项。</param>
+        /// <param name="item">当前项。</param>
         /// <param name="items">列表实例。</param>
         /// <returns>返回判断结果。</returns>
-        public static bool IsIncluded(this object current, IEnumerable items)
+        public static bool Included(this object item, IEnumerable items)
         {
-            foreach (var item in items)
+            var enumerator = items.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                if (item.Equals(current))
+                if (Equals(enumerator.Current, item))
                     return true;
-            }
+            } 
             return false;
         }
 

@@ -1,7 +1,6 @@
-using System;
 using Xunit;
 
-namespace Mozlite.CoreTests
+namespace Mozlite.Core.Tests
 {
     public class CoresTest
     {
@@ -15,10 +14,10 @@ namespace Mozlite.CoreTests
         }
 
         [Fact]
-        public void IsIncluded(){
-            var result = 1.IsIncluded(new[] { 1, 2, 34 });
+        public void Included(){
+            var result = 1.Included(new[] { 1, 2, 34 });
             Assert.True(result);
-            result = "11".IsIncluded(new[] { "12", "13" });
+            result = "11".Included(new[] { "12", "13" });
             Assert.False(result);
         }
 
