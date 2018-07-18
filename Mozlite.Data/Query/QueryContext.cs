@@ -139,6 +139,11 @@ namespace Mozlite.Data.Query
                     builder.Append("FROM ")
                         .Append(typeof(TModel).GetTableName())
                         .Append(" AS a ");
+                    if (_nolock)
+                    {
+                        builder.Append(_sqlGenerator.WithNolock())
+                            .Append(" ");
+                    }
                     if (_joins.Count > 0)
                         builder.Append(string.Join(" ", _joins));
                     _fromSql = builder.ToString();
@@ -175,13 +180,17 @@ namespace Mozlite.Data.Query
         {
             var type = typeof(TForeign);
             var builder = new StringBuilder();
-            builder
-                .Append(key)
+            builder.Append(key)
                 .Append(" JOIN ")
                 .Append(type.GetTableName())
                 .Append(" AS ")
-                .Append(GetAlias(type))
-                .Append(" ON ");
+                .Append(GetAlias(type));
+            if (_nolock)
+            {
+                builder.Append(" ")
+                    .Append(_sqlGenerator.WithNolock());
+            }
+            builder.Append(" ON ");
             builder.Append(Visit(onExpression, GetExpressionAlias(typeof(TPrimary), typeof(TForeign))));
             _joins.Add(builder.ToString());
             return this;
@@ -219,13 +228,34 @@ namespace Mozlite.Data.Query
             => LeftJoin<TForeign>(onExpression);
 
         IQueryContext<TModel> IQueryContext<TModel>.LeftJoin<TPrimary, TForeign>(Expression<Func<TPrimary, TForeign, bool>> onExpression)
-            => LeftJoin<TPrimary, TForeign>(onExpression);
+            => LeftJoin(onExpression);
 
         IQueryContext<TModel> IQueryContext<TModel>.RightJoin<TForeign>(Expression<Func<TModel, TForeign, bool>> onExpression)
             => RightJoin<TForeign>(onExpression);
 
         IQueryContext<TModel> IQueryContext<TModel>.RightJoin<TPrimary, TForeign>(Expression<Func<TPrimary, TForeign, bool>> onExpression)
-            => RightJoin<TPrimary, TForeign>(onExpression);
+            => RightJoin(onExpression);
+
+        private bool _nolock;
+        /// <summary>
+        /// 忽略锁（脏查询）。
+        /// </summary>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryable<TModel> IQueryable<TModel>.WithNolock()
+        {
+            _nolock = true;
+            return this;
+        }
+
+        /// <summary>
+        /// 忽略锁（脏查询）。
+        /// </summary>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryContext<TModel> IQueryContext<TModel>.WithNolock()
+        {
+            _nolock = true;
+            return this;
+        }
         #endregion
 
         #region fields

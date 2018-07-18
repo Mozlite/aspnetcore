@@ -12,6 +12,15 @@ namespace Mozlite.Data.SqlServer.Query
     public class SqlServerQuerySqlGenerator : QuerySqlGenerator
     {
         /// <summary>
+        /// 忽略锁（脏查询）。
+        /// </summary>
+        /// <returns>返回SQL字符串。</returns>
+        public override string WithNolock()
+        {
+            return "with(nolock)";
+        }
+
+        /// <summary>
         /// 获取插入数据后自增长的SQL字符串。
         /// </summary>
         /// <returns>返回自增长获取的SQL字符串。</returns>

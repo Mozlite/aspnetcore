@@ -174,5 +174,10 @@ namespace Mozlite.Data
         /// <returns>返回当前查询实例对象。</returns>
         IQueryContext<TModel> OrderBy(Expression<Func<TModel, object>> expression, bool isDesc);
 
+        /// <summary>
+        /// 忽略锁（脏查询）。
+        /// </summary>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryContext<TModel> WithNolock();
     }
 }

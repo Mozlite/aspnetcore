@@ -190,6 +190,15 @@ namespace Mozlite.Data.Query
         }
 
         /// <summary>
+        /// 忽略锁（脏查询）。
+        /// </summary>
+        /// <returns>返回SQL字符串。</returns>
+        public virtual string WithNolock()
+        {
+            return null;
+        }
+
+        /// <summary>
         /// 删除实例。
         /// </summary>
         /// <param name="entityType">模型实例。</param>

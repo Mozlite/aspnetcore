@@ -121,5 +121,11 @@ namespace Mozlite.Data.Query
         /// <param name="key">主键值。</param>
         /// <returns>返回SQL构建实例。</returns>
         SqlIndentedStringBuilder PrimaryKeySql(IEntityType entityType, string sqlHeader, object key);
+
+        /// <summary>
+        /// 忽略锁（脏查询）。
+        /// </summary>
+        /// <returns>返回SQL字符串。</returns>
+        string WithNolock();
     }
 }
