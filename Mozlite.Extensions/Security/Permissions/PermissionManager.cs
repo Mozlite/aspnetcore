@@ -15,8 +15,8 @@ namespace Mozlite.Extensions.Security.Permissions
     /// <summary>
     /// 权限管理实现类。
     /// </summary>
-    /// <typeparam name="TUserRole">用户角色关联类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组关联类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     public abstract class PermissionManager<TUserRole, TRole> : IPermissionManager
         where TUserRole : IUserRole
         where TRole : RoleBase
@@ -40,8 +40,8 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <param name="prdb">数据库操作接口。</param>
         /// <param name="httpContextAccessor">当前HTTP上下文访问器。</param>
         /// <param name="cache">缓存接口。</param>
-        /// <param name="rdb">角色数据库操作接口。</param>
-        /// <param name="urdb">用户角色数据库操作接口。</param>
+        /// <param name="rdb">用户组数据库操作接口。</param>
+        /// <param name="urdb">用户用户组数据库操作接口。</param>
         protected PermissionManager(IDbContext<Permission> db, IDbContext<PermissionInRole> prdb, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IDbContext<TRole> rdb, IDbContext<TUserRole> urdb)
         {
             DbContext = db;
@@ -91,7 +91,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 获取权限值。
         /// </summary>
-        /// <param name="roleId">当前角色。</param>
+        /// <param name="roleId">当前用户组。</param>
         /// <param name="permissionId">权限Id。</param>
         /// <returns>返回权限值。</returns>
         public virtual PermissionValue GetPermissionValue(int roleId, int permissionId)
@@ -105,7 +105,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 获取权限值。
         /// </summary>
-        /// <param name="roleId">当前角色。</param>
+        /// <param name="roleId">当前用户组。</param>
         /// <param name="permissionId">权限Id。</param>
         /// <returns>返回权限值。</returns>
         public virtual async Task<PermissionValue> GetPermissionValueAsync(int roleId, int permissionId)
@@ -353,9 +353,9 @@ namespace Mozlite.Extensions.Security.Permissions
         }
 
         /// <summary>
-        /// 保存当前配置角色权限。
+        /// 保存当前配置用户组权限。
         /// </summary>
-        /// <param name="roleId">角色Id。</param>
+        /// <param name="roleId">用户组Id。</param>
         /// <param name="request">当前请求。</param>
         /// <returns>返回保存结果。</returns>
         public virtual async Task<DataResult> SaveAsync(int roleId, HttpRequest request)
@@ -385,9 +385,9 @@ namespace Mozlite.Extensions.Security.Permissions
         }
 
         /// <summary>
-        /// 保存当前配置角色权限。
+        /// 保存当前配置用户组权限。
         /// </summary>
-        /// <param name="roleId">角色Id。</param>
+        /// <param name="roleId">用户组Id。</param>
         /// <param name="request">当前请求。</param>
         /// <returns>返回保存结果。</returns>
         public virtual DataResult Save(int roleId, HttpRequest request)

@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Security.Stores
         public string ClaimValue { get; set; }
 
         /// <summary>
-        /// 将角色声明转换为<see cref="Claim"/>对象。
+        /// 将用户组声明转换为<see cref="Claim"/>对象。
         /// </summary>
         /// <returns>返回<see cref="Claim"/>实例对象。</returns>
         public virtual Claim ToClaim()

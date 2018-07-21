@@ -32,13 +32,13 @@ namespace Mozlite.Extensions.Extensions.Security
     /// 分页查询基类。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     public abstract class QueryBase<TUser, TRole> : QueryBase<TUser>
         where TUser : UserExBase, ISitable
         where TRole : RoleBase, ISitable
     {
         /// <summary>
-        /// 当前用户角色等级。
+        /// 当前用户用户组等级。
         /// </summary>
         public int MaxRoleLevel { get; set; }
 

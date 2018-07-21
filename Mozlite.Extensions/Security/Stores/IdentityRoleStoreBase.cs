@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Identity;
 namespace Mozlite.Extensions.Security.Stores
 {
     /// <summary>
-    /// 用户角色存储基类。
+    /// 用户用户组存储基类。
     /// </summary>
-    /// <typeparam name="TRole">用户角色类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色关联类。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRole">用户用户组类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组关联类。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class IdentityRoleStoreBase<TRole, TUserRole, TRoleClaim> :
         IRoleClaimStore<TRole>
         where TRole : RoleBase
@@ -34,35 +34,35 @@ namespace Mozlite.Extensions.Security.Stores
         protected IdentityErrorDescriber ErrorDescriber { get; }
 
         /// <summary>
-        /// 添加用户角色。
+        /// 添加用户用户组。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
+        /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色添加结果。</returns>
+        /// <returns>返回用户组添加结果。</returns>
         public abstract Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 更新用户角色。
+        /// 更新用户用户组。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
+        /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色更新结果。</returns>
+        /// <returns>返回用户组更新结果。</returns>
         public abstract Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 删除用户角色。
+        /// 删除用户用户组。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
+        /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色删除结果。</returns>
+        /// <returns>返回用户组删除结果。</returns>
         public abstract Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 获取角色ID。
+        /// 获取用户组ID。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
+        /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色ID。</returns>
+        /// <returns>返回用户组ID。</returns>
         public virtual Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -74,11 +74,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取角色名称。
+        /// 获取用户组名称。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
+        /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色名称。</returns>
+        /// <returns>返回用户组名称。</returns>
         public virtual Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -90,10 +90,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 设置角色名称。
+        /// 设置用户组名称。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
-        /// <param name="roleName">角色名称。</param>
+        /// <param name="role">用户用户组实例。</param>
+        /// <param name="roleName">用户组名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
         public virtual Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -107,11 +107,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 通过ID获取角色实例。
+        /// 通过ID获取用户组实例。
         /// </summary>
-        /// <param name="id">角色Id。</param>
+        /// <param name="id">用户组Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <returns>返回当前用户组实例对象。</returns>
         public virtual async Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (int.TryParse(id, out var roleId))
@@ -120,27 +120,27 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 通过ID获取角色实例。
+        /// 通过ID获取用户组实例。
         /// </summary>
-        /// <param name="id">角色Id。</param>
+        /// <param name="id">用户组Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <returns>返回当前用户组实例对象。</returns>
         public abstract Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 通过角色名称获取角色实例。
+        /// 通过用户组名称获取用户组实例。
         /// </summary>
-        /// <param name="normalizedName">角色名称。</param>
+        /// <param name="normalizedName">用户组名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <returns>返回当前用户组实例对象。</returns>
         public abstract Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 通过角色实例获取角色验证名称。
+        /// 通过用户组实例获取用户组验证名称。
         /// </summary>
-        /// <param name="role">角色实例。</param>
+        /// <param name="role">用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回当前角色验证名称。</returns>
+        /// <returns>返回当前用户组验证名称。</returns>
         public virtual Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -152,10 +152,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 设置角色验证名称。
+        /// 设置用户组验证名称。
         /// </summary>
-        /// <param name="role">用户角色实例。</param>
-        /// <param name="normalizedName">角色验证名称。</param>
+        /// <param name="role">用户用户组实例。</param>
+        /// <param name="normalizedName">用户组验证名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
         public virtual Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -174,33 +174,33 @@ namespace Mozlite.Extensions.Security.Stores
         public virtual void Dispose() { }
 
         /// <summary>
-        /// 获取角色声明列表。
+        /// 获取用户组声明列表。
         /// </summary>
-        /// <param name="role">角色实例。</param>
+        /// <param name="role">用户组实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前角色的声明列表。</returns>
+        /// <returns>返回当前用户组的声明列表。</returns>
         public abstract Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 添加角色声明。
+        /// 添加用户组声明。
         /// </summary>
-        /// <param name="role">角色实例对象。</param>
+        /// <param name="role">用户组实例对象。</param>
         /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public abstract Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 移除角色声明。
+        /// 移除用户组声明。
         /// </summary>
-        /// <param name="role">角色实例对象。</param>
+        /// <param name="role">用户组实例对象。</param>
         /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public abstract Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 通过角色和声明实例转换为声明实例。
+        /// 通过用户组和声明实例转换为声明实例。
         /// </summary>
-        /// <param name="role">当前角色实例。</param>
+        /// <param name="role">当前用户组实例。</param>
         /// <param name="claim">声明实例。</param>
         /// <returns>返回<see cref="TRoleClaim"/>实例对象。</returns>
         protected virtual TRoleClaim CreateRoleClaim(TRole role, Claim claim)

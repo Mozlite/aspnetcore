@@ -108,12 +108,12 @@ namespace Mozlite.Extensions.Security.Stores
     /// 用户存储接口。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public interface IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :
         IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
@@ -125,52 +125,52 @@ namespace Mozlite.Extensions.Security.Stores
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
-        /// 获取用户角色列表。
+        /// 获取用户用户组列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         IEnumerable<TRole> GetRoles(int userId);
 
         /// <summary>
-        /// 获取用户角色列表。
+        /// 获取用户用户组列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         Task<IEnumerable<TRole>> GetRolesAsync(int userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 将用户添加到角色中。
+        /// 将用户添加到用户组中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         bool AddUserToRoles(int userId, int[] roleIds);
 
         /// <summary>
-        /// 将用户添加到角色中。
+        /// 将用户添加到用户组中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回添加结果。</returns>
         Task<bool> AddUserToRolesAsync(int userId, int[] roleIds,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 设置用户角色。
+        /// 设置用户用户组。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         bool SetUserToRoles(int userId, int[] roleIds);
 
         /// <summary>
-        /// 设置用户角色。
+        /// 设置用户用户组。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回设置结果。</returns>
         Task<bool> SetUserToRolesAsync(int userId, int[] roleIds,

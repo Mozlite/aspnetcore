@@ -132,12 +132,12 @@ namespace Mozlite.Extensions.Security.Stores
         public string Avatar { get; set; }
 
         /// <summary>
-        /// 显示角色Id。
+        /// 显示用户组Id。
         /// </summary>
         public int RoleId { get; set; }
 
         /// <summary>
-        /// 显示角色名称。
+        /// 显示用户组名称。
         /// </summary>
         [Size(64)]
         public string RoleName { get; set; }

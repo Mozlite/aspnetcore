@@ -11,15 +11,15 @@ using Microsoft.AspNetCore.Identity;
 namespace Mozlite.Extensions.Security.Stores
 {
     /// <summary>
-    /// 用户存储基类，包含用户角色的相关操作。
+    /// 用户存储基类，包含用户用户组的相关操作。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : IdentityUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
         IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
@@ -32,12 +32,12 @@ namespace Mozlite.Extensions.Security.Stores
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
-        /// 角色数据库操作接口。
+        /// 用户组数据库操作接口。
         /// </summary>
         protected IDbContext<TRole> RoleContext { get; }
 
         /// <summary>
-        /// 角色管理接口。
+        /// 用户组管理接口。
         /// </summary>
         protected IRoleManager<TRole, TUserRole, TRoleClaim> RoleManager { get; }
 
@@ -104,7 +104,7 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 用户角色数据库操作接口。
+        /// 用户用户组数据库操作接口。
         /// </summary>
         protected IDbContext<TUserRole> UserRoleContext { get; }
 
@@ -116,9 +116,9 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
-        /// <param name="roleContext">角色上下文。</param>
-        /// <param name="userRoleContext">用户角色数据库操作接口。</param>
-        /// <param name="roleManager">角色管理接口。</param>
+        /// <param name="roleContext">用户组上下文。</param>
+        /// <param name="userRoleContext">用户用户组数据库操作接口。</param>
+        /// <param name="roleManager">用户组管理接口。</param>
         protected UserStoreBase(IdentityErrorDescriber describer,
             IDbContext<TUser> userContext,
             IDbContext<TUserClaim> userClaimContext,
@@ -571,10 +571,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 判断用户是否包含当前角色。
+        /// 判断用户是否包含当前用户组。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
         public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName,
@@ -587,9 +587,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 检索当前角色的所有用户列表。
+        /// 检索当前用户组的所有用户列表。
         /// </summary>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
         /// 返回用户列表。 
@@ -608,17 +608,17 @@ namespace Mozlite.Extensions.Security.Stores
 
         #region roles
         /// <summary>
-        /// 添加用户角色。
+        /// 添加用户用户组。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
             var role = await RoleManager.FindByNameAsync(normalizedRoleName);
             if (role == null || await UserRoleContext.AnyAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken))
                 return;
-            //更新用户表显示角色Id和角色名称
+            //更新用户表显示用户组Id和用户组名称
             await UserRoleContext.BeginTransactionAsync(async db =>
             {
                 if (!await db.CreateAsync(CreateUserRole(user, role), cancellationToken))
@@ -628,10 +628,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 移除用户角色。
+        /// 移除用户用户组。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -650,11 +650,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户的所有角色。
+        /// 获取用户的所有用户组。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的所有角色列表。</returns>
+        /// <returns>返回当前用户的所有用户组列表。</returns>
         public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             var roles = await RoleContext.AsQueryable()
@@ -666,10 +666,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户角色列表。
+        /// 获取用户用户组列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         public virtual IEnumerable<TRole> GetRoles(int userId)
         {
             return RoleContext.AsQueryable()
@@ -680,11 +680,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户角色列表。
+        /// 获取用户用户组列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return RoleContext.AsQueryable()
@@ -695,10 +695,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 将用户添加到角色中。
+        /// 将用户添加到用户组中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         public virtual bool AddUserToRoles(int userId, int[] roleIds)
         {
@@ -716,7 +716,7 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 设置用户最高级的角色。
+        /// 设置用户最高级的用户组。
         /// </summary>
         /// <param name="db">事务实例。</param>
         /// <param name="userId">用户Id。</param>
@@ -733,7 +733,7 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 设置用户最高级的角色。
+        /// 设置用户最高级的用户组。
         /// </summary>
         /// <param name="db">事务实例。</param>
         /// <param name="userId">用户Id。</param>
@@ -751,10 +751,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 将用户添加到角色中。
+        /// 将用户添加到用户组中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回添加结果。</returns>
         public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default(CancellationToken))
@@ -773,10 +773,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 设置用户角色。
+        /// 设置用户用户组。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         public virtual bool SetUserToRoles(int userId, int[] roleIds)
         {
@@ -795,10 +795,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 设置用户角色。
+        /// 设置用户用户组。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回设置结果。</returns>
         public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default(CancellationToken))

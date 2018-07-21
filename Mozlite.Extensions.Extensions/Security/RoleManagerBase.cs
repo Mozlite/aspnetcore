@@ -10,11 +10,11 @@ using Mozlite.Extensions.Extensions.Security.Stores;
 namespace Mozlite.Extensions.Extensions.Security
 {
     /// <summary>
-    /// 角色管理实现类。
+    /// 用户组管理实现类。
     /// </summary>
-    /// <typeparam name="TRole">角色类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class RoleManagerBase<TRole, TUserRole, TRoleClaim>
         : Mozlite.Extensions.Security.RoleManagerBase<TRole, TUserRole, TRoleClaim>, IRoleManager<TRole, TUserRole, TRoleClaim>
         where TRole : RoleExBase
@@ -54,21 +54,21 @@ namespace Mozlite.Extensions.Extensions.Security
         }
 
         /// <summary>
-        /// 通过角色名称获取角色实例。
+        /// 通过用户组名称获取用户组实例。
         /// </summary>
-        /// <param name="normalizedName">角色名称。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <param name="normalizedName">用户组名称。</param>
+        /// <returns>返回当前用户组实例对象。</returns>
         public override TRole FindByName(string normalizedName)
         {
             return FindByName(Site.SiteId, normalizedName);
         }
 
         /// <summary>
-        /// 通过角色名称获取角色实例。
+        /// 通过用户组名称获取用户组实例。
         /// </summary>
         /// <param name="siteId">网站Id。</param>
-        /// <param name="normalizedName">角色名称。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <param name="normalizedName">用户组名称。</param>
+        /// <returns>返回当前用户组实例对象。</returns>
         public virtual TRole FindByName(int siteId, string normalizedName)
         {
             normalizedName = NormalizeKey(normalizedName);
@@ -76,10 +76,10 @@ namespace Mozlite.Extensions.Extensions.Security
         }
 
         /// <summary>
-        /// 通过角色名称获取角色实例。
+        /// 通过用户组名称获取用户组实例。
         /// </summary>
-        /// <param name="normalizedName">角色名称。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <param name="normalizedName">用户组名称。</param>
+        /// <returns>返回当前用户组实例对象。</returns>
         public override Task<TRole> FindByNameAsync(string normalizedName)
         {
             normalizedName = NormalizeKey(normalizedName);
@@ -87,11 +87,11 @@ namespace Mozlite.Extensions.Extensions.Security
         }
 
         /// <summary>
-        /// 通过角色名称获取角色实例。
+        /// 通过用户组名称获取用户组实例。
         /// </summary>
         /// <param name="siteId">网站Id。</param>
-        /// <param name="normalizedName">角色名称。</param>
-        /// <returns>返回当前角色实例对象。</returns>
+        /// <param name="normalizedName">用户组名称。</param>
+        /// <returns>返回当前用户组实例对象。</returns>
         public virtual Task<TRole> FindByNameAsync(int siteId, string normalizedName)
         {
             normalizedName = NormalizeKey(normalizedName);
@@ -99,19 +99,19 @@ namespace Mozlite.Extensions.Extensions.Security
         }
 
         /// <summary>
-        /// 获取所有角色。
+        /// 获取所有用户组。
         /// </summary>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         public override Task<IEnumerable<TRole>> LoadAsync()
         {
             return LoadAsync(Site.SiteId);
         }
 
         /// <summary>
-        /// 获取所有角色。
+        /// 获取所有用户组。
         /// </summary>
         /// <param name="siteId">网站Id。</param>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         public virtual Task<IEnumerable<TRole>> LoadAsync(int siteId)
         {
             return Cache.GetOrCreateAsync(GetCacheKey(siteId), ctx =>
@@ -122,19 +122,19 @@ namespace Mozlite.Extensions.Extensions.Security
         }
 
         /// <summary>
-        /// 获取所有角色。
+        /// 获取所有用户组。
         /// </summary>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         public override IEnumerable<TRole> Load()
         {
             return Load(Site.SiteId);
         }
 
         /// <summary>
-        /// 获取所有角色。
+        /// 获取所有用户组。
         /// </summary>
         /// <param name="siteId">网站Id。</param>
-        /// <returns>返回角色列表。</returns>
+        /// <returns>返回用户组列表。</returns>
         public virtual IEnumerable<TRole> Load(int siteId)
         {
             return Cache.GetOrCreate(GetCacheKey(siteId), ctx =>
@@ -148,7 +148,7 @@ namespace Mozlite.Extensions.Extensions.Security
         /// 如果成功移除缓存。
         /// </summary>
         /// <param name="result">返回结果。</param>
-        /// <param name="role">当前角色实例。</param>
+        /// <param name="role">当前用户组实例。</param>
         /// <returns>返回结果。</returns>
         protected override bool FromResult(bool result, TRole role)
         {
@@ -161,8 +161,8 @@ namespace Mozlite.Extensions.Extensions.Security
         /// 初始化类<see cref="RoleManagerBase{TRole,TUserRole,TRoleClaim}"/>
         /// </summary>
         /// <param name="store">存储接口。</param>
-        /// <param name="roleValidators">角色验证集合。</param>
-        /// <param name="keyNormalizer">角色唯一键格式化接口。</param>
+        /// <param name="roleValidators">用户组验证集合。</param>
+        /// <param name="keyNormalizer">用户组唯一键格式化接口。</param>
         /// <param name="errors">错误实例。</param>
         /// <param name="logger">日志接口。</param>
         /// <param name="cache">缓存接口。</param>

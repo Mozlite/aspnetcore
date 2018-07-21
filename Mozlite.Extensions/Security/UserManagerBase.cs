@@ -364,12 +364,12 @@ namespace Mozlite.Extensions.Security
     /// 用户管理实现类。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class UserManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>,
             IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
@@ -407,10 +407,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 获取角色Id。
+        /// 获取用户组Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色Id集合。</returns>
+        /// <returns>返回用户组Id集合。</returns>
         public virtual int[] GetRoleIds(int userId)
         {
             var roles = GetRoles(userId);
@@ -418,10 +418,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 获取角色Id。
+        /// 获取用户组Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色Id集合。</returns>
+        /// <returns>返回用户组Id集合。</returns>
         public virtual async Task<int[]> GetRoleIdsAsync(int userId)
         {
             var roles = await GetRolesAsync(userId);
@@ -429,27 +429,27 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 获取角色列表。
+        /// 获取用户组列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色Id集合。</returns>
+        /// <returns>返回用户组Id集合。</returns>
         public virtual IEnumerable<TRole> GetRoles(int userId)
         {
             return Store.GetRoles(userId);
         }
 
         /// <summary>
-        /// 获取角色列表。
+        /// 获取用户组列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回角色Id集合。</returns>
+        /// <returns>返回用户组Id集合。</returns>
         public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId)
         {
             return Store.GetRolesAsync(userId);
         }
 
         /// <summary>
-        /// 获取最高级角色实例。
+        /// 获取最高级用户组实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回用户实例对象。</returns>
@@ -459,7 +459,7 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 获取最高级角色实例。
+        /// 获取最高级用户组实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回用户实例对象。</returns>
@@ -470,10 +470,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 将用户添加到角色中。
+        /// 将用户添加到用户组中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         public virtual bool AddUserToRoles(int userId, int[] roleIds)
         {
@@ -481,10 +481,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 将用户添加到角色中。
+        /// 将用户添加到用户组中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds)
         {
@@ -492,10 +492,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 设置用户角色。
+        /// 设置用户用户组。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回添加结果。</returns>
         public virtual bool SetUserToRoles(int userId, int[] roleIds)
         {
@@ -503,10 +503,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 设置用户角色。
+        /// 设置用户用户组。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">角色Id列表。</param>
+        /// <param name="roleIds">用户组Id列表。</param>
         /// <returns>返回设置结果。</returns>
         public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds)
         {

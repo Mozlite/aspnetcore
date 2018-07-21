@@ -8,15 +8,15 @@ using Mozlite.Extensions.Security.Stores;
 namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
-    /// 用户存储基类，包含用户角色的相关操作。
+    /// 用户存储基类，包含用户用户组的相关操作。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class UserExStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserExBase
@@ -64,9 +64,9 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
-        /// <param name="roleContext">角色上下文。</param>
-        /// <param name="userRoleContext">用户角色数据库操作接口。</param>
-        /// <param name="roleManager">角色管理接口。</param>
+        /// <param name="roleContext">用户组上下文。</param>
+        /// <param name="userRoleContext">用户用户组数据库操作接口。</param>
+        /// <param name="roleManager">用户组管理接口。</param>
         protected UserExStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, Mozlite.Extensions.Security.IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) 
             : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext, roleContext, userRoleContext, roleManager)
         {

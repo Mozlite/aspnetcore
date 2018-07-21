@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security.Activities

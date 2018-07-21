@@ -15,7 +15,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
         private readonly IPermissionManager _permissionManager;
 
         /// <summary>
-        /// 角色Id。
+        /// 用户组Id。
         /// </summary>
         [HtmlAttributeName("roleid")]
         public int RoleId { get; set; }

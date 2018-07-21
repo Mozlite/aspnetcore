@@ -3,7 +3,7 @@
 namespace Mozlite.Extensions.Extensions.Security.Stores
 {
     /// <summary>
-    /// 角色基类。
+    /// 用户组基类。
     /// </summary>
     public abstract class RoleExBase : RoleBase, ISitable
     {

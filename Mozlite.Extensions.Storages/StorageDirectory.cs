@@ -177,6 +177,11 @@ namespace Mozlite.Extensions.Storages
             }
 
             /// <summary>
+            /// 判断是否存在。
+            /// </summary>
+            public bool Exists => _info.Exists;
+
+            /// <summary>
             /// 已读取方式打开当前存储文件。
             /// </summary>
             /// <returns>返回文件流。</returns>

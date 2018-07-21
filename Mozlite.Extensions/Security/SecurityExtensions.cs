@@ -95,10 +95,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 角色唯一键已经存在。
+        /// 用户组唯一键已经存在。
         /// </summary>
         /// <param name="describer">错误描述实例。</param>
-        /// <param name="normalizedRoleName">角色唯一键。</param>
+        /// <param name="normalizedRoleName">用户组唯一键。</param>
         /// <returns>返回错误实例。</returns>
         public static IdentityError DuplicateNormalizedRoleName(this IdentityErrorDescriber describer, string normalizedRoleName)
         {

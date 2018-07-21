@@ -135,7 +135,7 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.NormalizedName, nullable: false)
                 .Column(x => x.RoleLevel));
 
-            //判断TUserRole是否单独一个表格，也可以把这个表格合并到TUser中，每一个用户只是应对一个角色
+            //判断TUserRole是否单独一个表格，也可以把这个表格合并到TUser中，每一个用户只是应对一个用户组
             if (typeof(UserRoleBase).IsAssignableFrom(typeof(TUserRole)))
                 builder.CreateTable<TUserRole>(table => table
                     .Column(x => x.UserId)

@@ -926,15 +926,15 @@ namespace Mozlite.Extensions.Security.Stores
     }
 
     /// <summary>
-    /// 用户存储基类，包含用户角色的相关操作。
+    /// 用户存储基类，包含用户用户组的相关操作。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
+    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class IdentityUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :
         IdentityUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>,
         IUserRoleStore<TUser>
@@ -953,11 +953,11 @@ namespace Mozlite.Extensions.Security.Stores
         protected IdentityUserStoreBase(IdentityErrorDescriber describer) : base(describer) { }
 
         /// <summary>
-        /// 实例化一个用户角色实例。
+        /// 实例化一个用户用户组实例。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="role">角色实例。</param>
-        /// <returns>返回用户角色实例。</returns>
+        /// <param name="role">用户组实例。</param>
+        /// <returns>返回用户用户组实例。</returns>
         protected virtual TUserRole CreateUserRole(TUser user, TRole role)
         {
             return new TUserRole
@@ -968,9 +968,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 检索当前角色的所有用户列表。
+        /// 检索当前用户组的所有用户列表。
         /// </summary>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
         /// 返回用户列表。 
@@ -978,34 +978,34 @@ namespace Mozlite.Extensions.Security.Stores
         public abstract Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 添加用户角色。
+        /// 添加用户用户组。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public abstract Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 移除用户角色。
+        /// 移除用户用户组。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public abstract Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 获取用户的所有角色。
+        /// 获取用户的所有用户组。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户的所有角色列表。</returns>
+        /// <returns>返回当前用户的所有用户组列表。</returns>
         public abstract Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// 判断用户是否包含当前角色。
+        /// 判断用户是否包含当前用户组。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="normalizedRoleName">验证角色名称。</param>
+        /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
         public abstract Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));

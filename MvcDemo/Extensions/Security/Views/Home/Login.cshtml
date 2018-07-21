@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "用户登陆";
+    Layout = "_Global";
+    ViewData["Skin"] = "login";
+}
+@using Demo.Extensions.Security.ViewModels
+@model Demo.Extensions.Security.ViewModels.LoginUser
+<div class="background">
+    <div class="small"></div>
+    <div class="real"></div>
+    <div class="overlay"></div>
+</div>
+
+<form class="form" method="post" onsubmit="return $(this).formSubmit(callback);">
+    <input type="hidden" name="RedirectUrl" value="@ViewData["RedirectUrl"]" />
+    <div class="login-wrapper">
+        <div class="login-middle">
+            <div class="login-inner">
+                <div>
+                    <img class="logo" src="~/images/logo.svg" />
+                </div>
+                <div class="title row">
+                    登陆
+                </div>
+                <div class="row">
+                    <div class="login-msg"></div>
+                    <div class="form-group">
+                        <input asp-for="UserName" placeholder="请输入用户名..." type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <input asp-for="Password" placeholder="密码" type="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <input asp-for="VCode" placeholder="验证码" type="text" class="form-control row-left" />
+                        <img onclick="this.src = '/login-vcode.png'.randomSuffix();" class="img-vcode" src="~/login-vcode.png" title="点击刷新验证码" />
+                    </div>
+                </div>
+                <div class="row mt15">
+                    <div class="row-left">
+                        <moz:checkbox istyle="Check" name="IsRemembered" value="true" checked="@(Model?.IsRemembered == true)">记住登陆状态</moz:checkbox>
+                    </div>
+                    <div class="pull-right text">
+                        <a href="#">忘记密码？</a>
+                    </div>
+                </div>
+                <div class="row mt15">
+                    <button type="submit" class="btn btn-primary">登陆</button>
+                </div>
+                <div class="row mt15 text">
+                    没有账户？<a asp-action="Register" asp-controller="Home" asp-area="@SecuritySettings.ExtensionName">创建一个</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function callback(data, form) {
+        if (data.type === 'success') {
+            if (data.data.redirectUrl)
+                location.href = data.data.redirectUrl;
+            else
+                location.href = '/';
+            return;
+        }
+        $('#VCode').val('');
+        $('.img-vcode').src = '/login-vcode.png'.randomSuffix();
+        $('.login-msg').html(data.message).show();
+    };
+</script>

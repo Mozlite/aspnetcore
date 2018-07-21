@@ -1,0 +1,22 @@
+﻿@page
+@using Demo
+@model Demo.MenuModel
+@{
+    Layout = null;
+}
+
+<div class="win-panel win-left">
+    <div class="win-body menu-wrapper">
+        <div class="win-content customScrollBar overlay">
+            <div class="menu">
+                @foreach (var application in Model.Applications)
+                {
+                    <a href="@application.LinkUrl" class="id-@application.ApplicationName @application.CssClass">
+                        <i class="@application.IconClass"></i>
+                        <span>@application.DisplayName</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

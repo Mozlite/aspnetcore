@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "用户管理";
+    ViewData["Nav"] = "users.index";
+    Layout = "_Admin";
+}
+@using Demo.Extensions.Security.ViewModels
+@model Demo.Extensions.Security.ViewModels.UserQuery
+
+<div class="actionbar">
+    <div class="toolbar">
+        <div class="leftbar">
+            <a href="javascript:;" onclick="$alert($('.data-view').checkedVal());" class="action"><i class="fa fa-check"></i> 选中值</a>
+            <a href="javascript:;" post-ids="@Url.Action("Deletes")" class="action"><i class="fa fa-trash"></i> 删除</a>
+        </div>
+        <div class="rightbar">
+            <button onclick="$alert('这里是警告信息，也可以是成功信息！');"><i class="fa fa-warning"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="content-container">
+        <div class="filterbar">
+            <div class="checkbox-all"><moz:checkbox></moz:checkbox></div>
+            <div class="actionbar">
+                <label>用户名：</label>
+                <div class="input-group" style="width: 200px;">
+                    <input asp-for="Name" type="text" class="form-control" />
+                    <div class="input-group-btn">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="pagebar"><moz:pager-select onchange="$href({page:this.value})"></moz:pager-select></div>
+        </div>
+        <div class="data-container">
+            <div class="data-view customScrollBar">
+                <div class="datalist hover">
+                    <div class="data-head">
+                        <div class="col-auto">
+                            用户名
+                        </div>
+                        <div class="col-dt">最后登陆时间</div>
+                        <div class="col-date">注册时间</div>
+                    </div>
+                    @foreach (var user in Model)
+                    {
+                        <div class="data-row">
+                            <div class="data-checkbox">
+                                <moz:checkbox value="@user.UserId"></moz:checkbox>
+                            </div>
+                            <div class="col-auto">
+                                @(user.NickName) (@user.UserName)
+                                <div class="actionbar">
+                                    <i post-id="@Url.Action("Delete")" class="fa fa-trash" title="删除"></i>
+                                    <i get-id="@Url.Action("Edit")" class="fa fa-pencil" title="编辑"></i>
+                                    <i get-id="@Url.Action("Detail")" class="fa fa-link" title="详情"></i>
+                                </div>
+                            </div>
+                            <div class="col-dt">@user.LastLoginDate?.ToString("yyyy-MM-dd HH:mm")</div>
+                            <div class="col-date">@user.CreatedDate.ToString("yyyy-MM-dd")</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -20,7 +20,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         DuplicateEmail,
         /// <summary>
-        /// 角色名称已经存在。
+        /// 用户组名称已经存在。
         /// </summary>
         DuplicateRoleName,
         /// <summary>
@@ -36,7 +36,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         UserLockedOut,
         /// <summary>
-        /// 角色名称无效。
+        /// 用户组名称无效。
         /// </summary>
         InvalidRoleName,
         /// <summary>
@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         UserLockoutNotEnabled,
         /// <summary>
-        /// 用户已经包含在角色中。
+        /// 用户已经包含在用户组中。
         /// </summary>
         UserAlreadyInRole,
         /// <summary>
@@ -104,7 +104,7 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         UserNotFound,
         /// <summary>
-        /// 角色唯一键已经存在。
+        /// 用户组唯一键已经存在。
         /// </summary>
         DuplicateNormalizedRoleName,
     }

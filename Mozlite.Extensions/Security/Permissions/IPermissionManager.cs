@@ -13,7 +13,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 获取权限值。
         /// </summary>
-        /// <param name="roleId">当前角色。</param>
+        /// <param name="roleId">当前用户组。</param>
         /// <param name="permissionId">权限Id。</param>
         /// <returns>返回权限值。</returns>
         PermissionValue GetPermissionValue(int roleId, int permissionId);
@@ -21,7 +21,7 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 获取权限值。
         /// </summary>
-        /// <param name="roleId">当前角色。</param>
+        /// <param name="roleId">当前用户组。</param>
         /// <param name="permissionId">权限Id。</param>
         /// <returns>返回权限值。</returns>
         Task<PermissionValue> GetPermissionValueAsync(int roleId, int permissionId);
@@ -124,17 +124,17 @@ namespace Mozlite.Extensions.Security.Permissions
         Task<IEnumerable<Permission>> LoadPermissionsAsync(string category = null);
 
         /// <summary>
-        /// 保存当前配置角色权限。
+        /// 保存当前配置用户组权限。
         /// </summary>
-        /// <param name="roleId">角色Id。</param>
+        /// <param name="roleId">用户组Id。</param>
         /// <param name="request">当前请求。</param>
         /// <returns>返回保存结果。</returns>
         Task<DataResult> SaveAsync(int roleId, HttpRequest request);
 
         /// <summary>
-        /// 保存当前配置角色权限。
+        /// 保存当前配置用户组权限。
         /// </summary>
-        /// <param name="roleId">角色Id。</param>
+        /// <param name="roleId">用户组Id。</param>
         /// <param name="request">当前请求。</param>
         /// <returns>返回保存结果。</returns>
         DataResult Save(int roleId, HttpRequest request);

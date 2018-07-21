@@ -3,17 +3,17 @@
 namespace Mozlite.Extensions.Security
 {
     /// <summary>
-    /// 默认角色。
+    /// 默认用户组。
     /// </summary>
     public class DefaultRole
     {
         /// <summary>
-        /// 网站所有者，最高权限角色。
+        /// 网站所有者，最高权限用户组。
         /// </summary>
         public static readonly DefaultRole Owner = new DefaultRole(Resources.Owner, "SYS:OWNER", int.MaxValue);
 
         /// <summary>
-        /// 网站所有者，最低权限角色。
+        /// 网站所有者，最低权限用户组。
         /// </summary>
         public static readonly DefaultRole Member = new DefaultRole(Resources.Member, "SYS:MEMBER", 0);
 
@@ -25,17 +25,17 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 角色名称。
+        /// 用户组名称。
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// 用于比对的角色名称。
+        /// 用于比对的用户组名称。
         /// </summary>
         public string NormalizedName { get; }
 
         /// <summary>
-        /// 角色等级。
+        /// 用户组等级。
         /// </summary>
         public int RoleLevel { get; }
     }
