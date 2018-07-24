@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
-namespace Mozlite.Mvc
+namespace Mozlite.Extensions.Storages.Configuration
 {
     /// <summary>
     /// ≈‰÷√π‹¿Ì°£

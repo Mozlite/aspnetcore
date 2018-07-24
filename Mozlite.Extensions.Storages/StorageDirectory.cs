@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Mozlite.Extensions.Storages.Properties;
 
@@ -18,13 +19,12 @@ namespace Mozlite.Extensions.Storages
         /// <summary>
         /// 初始化类<see cref="StorageDirectory"/>。
         /// </summary>
-        /// <param name="options">存储选项。</param>
-        /// <param name="environment">宿主环境接口。</param>
-        public StorageDirectory(IOptions<StorageOptions> options, IHostingEnvironment environment)
+        /// <param name="configuration">配置接口。</param>
+        public StorageDirectory(IConfiguration configuration)
         {
-            var path = options.Value.StorageDir.Trim();
+            var path = configuration["storageDir"]?.Trim() ?? "../storages";
             if (path.StartsWith("~/"))//虚拟目录
-                _root = Path.Combine(environment.WebRootPath, path.Substring(2));
+                _root = Path.Combine(Directory.GetCurrentDirectory(), path.Substring(2));
             else if (path.Length > 2 && path[1] == ':')//物理目录
                 _root = path;
             else

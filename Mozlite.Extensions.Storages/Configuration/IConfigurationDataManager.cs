@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Mozlite.Mvc
+namespace Mozlite.Extensions.Storages.Configuration
 {
     /// <summary>
     /// JSON配置数据管理接口。

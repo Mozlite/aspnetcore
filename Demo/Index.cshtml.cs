@@ -6,7 +6,6 @@ namespace Demo
     {
         public void OnGet()
         {
-            
         }
     }
 }
