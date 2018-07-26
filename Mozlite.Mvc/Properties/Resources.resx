@@ -123,6 +123,30 @@
   <data name="DaysBefore" xml:space="preserve">
     <value>{0} 天前</value>
   </data>
+  <data name="ErrorCode_AuthorizeFailure" xml:space="preserve">
+    <value>验证失败！</value>
+  </data>
+  <data name="ErrorCode_Failured" xml:space="preserve">
+    <value>失败！</value>
+  </data>
+  <data name="ErrorCode_InvalidParameter" xml:space="preserve">
+    <value>参数“{0}”无效!</value>
+  </data>
+  <data name="ErrorCode_InvalidToken" xml:space="preserve">
+    <value>令牌无效！</value>
+  </data>
+  <data name="ErrorCode_NullParameter" xml:space="preserve">
+    <value>参数“{0}”不能为空!</value>
+  </data>
+  <data name="ErrorCode_Succeeded" xml:space="preserve">
+    <value>成功！</value>
+  </data>
+  <data name="ErrorCode_TokenExpired" xml:space="preserve">
+    <value>令牌过期！</value>
+  </data>
+  <data name="ErrorCode_UnknownError" xml:space="preserve">
+    <value>很抱歉，发生了未知的错误！</value>
+  </data>
   <data name="HoursBefore" xml:space="preserve">
     <value>{0} 小时前</value>
   </data>

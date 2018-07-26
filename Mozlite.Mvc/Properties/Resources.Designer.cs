@@ -79,6 +79,78 @@ namespace Mozlite.Mvc.Properties {
         }
         
         /// <summary>
+        ///   查找类似 验证失败！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_AuthorizeFailure {
+            get {
+                return ResourceManager.GetString("ErrorCode_AuthorizeFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 失败！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_Failured {
+            get {
+                return ResourceManager.GetString("ErrorCode_Failured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 参数“{0}”无效! 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_InvalidParameter {
+            get {
+                return ResourceManager.GetString("ErrorCode_InvalidParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 令牌无效！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_InvalidToken {
+            get {
+                return ResourceManager.GetString("ErrorCode_InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 参数“{0}”不能为空! 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_NullParameter {
+            get {
+                return ResourceManager.GetString("ErrorCode_NullParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 成功！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_Succeeded {
+            get {
+                return ResourceManager.GetString("ErrorCode_Succeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 令牌过期！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_TokenExpired {
+            get {
+                return ResourceManager.GetString("ErrorCode_TokenExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 很抱歉，发生了未知的错误！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_UnknownError {
+            get {
+                return ResourceManager.GetString("ErrorCode_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 {0} 小时前 的本地化字符串。
         /// </summary>
         internal static string HoursBefore {
