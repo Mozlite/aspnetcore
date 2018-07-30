@@ -16,7 +16,7 @@ namespace Mozlite.Mvc.Apis
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
         /// <param name="cache">缓存接口。</param>
-        protected ApiManager(IDbContext<Application> context, IMemoryCache cache)
+        public ApiManager(IDbContext<Application> context, IMemoryCache cache)
             : base(context, cache)
         {
         }

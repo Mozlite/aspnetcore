@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Mozlite.Data.Migrations;
 using Mozlite.Mvc.Routing;
 
 namespace Mozlite.Mvc

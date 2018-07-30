@@ -41,13 +41,13 @@ namespace Mozlite.Mvc.Apis
         /// 过期时间。
         /// </summary>
         [NotUpdated]
-        public DateTime ExpiredDate { get; set; } = DateTime.Now;
+        public DateTimeOffset ExpiredDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
         /// 添加时间。
         /// </summary>
         [NotUpdated]
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
         /// 获取或设置唯一Id。

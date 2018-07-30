@@ -20,6 +20,7 @@ namespace Mozlite
         /// <returns>返回服务集合实例对象。</returns>
         public static IMozliteBuilder AddMozlite(this IServiceCollection services)
         {
+            services.TryAddSingleton(typeof(IServiceAccessor<>), typeof(ServiceAccessor<>));
             var exportedTypes = GetExportedTypes();
             foreach (var source in exportedTypes)
             {
@@ -93,7 +94,7 @@ namespace Mozlite
                     yield return type;
             }
         }
-        
+
         private static IEnumerable<Assembly> GetAssemblies()
         {
             var assemblies = new List<Assembly>();

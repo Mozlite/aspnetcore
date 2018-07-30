@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace Mozlite.Extensions.Storages
@@ -28,6 +29,20 @@ namespace Mozlite.Extensions.Storages
         /// <param name="path">文件相对路径。</param>
         /// <returns>文件的操作提供者接口实例。</returns>
         IStorageFile GetFile(string path);
+
+        /// <summary>
+        /// 将表单文件实例保存到临时文件夹中。
+        /// </summary>
+        /// <param name="file">表单文件实例。</param>
+        /// <returns>返回文件实例。</returns>
+        Task<FileInfo> SaveToTempAsync(IFormFile file);
+
+        /// <summary>
+        /// 将表单文件实例保存到临时文件夹中。
+        /// </summary>
+        /// <param name="file">表单文件实例。</param>
+        /// <returns>返回文件实例。</returns>
+        Task<FileInfo> SaveToTempAsync(Stream file);
 
         /// <summary>
         /// 将表单文件实例保存到特定的文件夹中。

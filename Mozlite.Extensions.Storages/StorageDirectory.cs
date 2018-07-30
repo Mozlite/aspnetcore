@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Mozlite.Extensions.Storages.Properties;
 
 namespace Mozlite.Extensions.Storages
@@ -64,6 +62,36 @@ namespace Mozlite.Extensions.Storages
         {
             path = GetPhysicalPath(path);
             return new StorageFile(path);
+        }
+
+        /// <summary>
+        /// 将表单文件实例保存到临时文件夹中。
+        /// </summary>
+        /// <param name="file">表单文件实例。</param>
+        /// <returns>返回文件实例。</returns>
+        public virtual async Task<FileInfo> SaveToTempAsync(IFormFile file)
+        {
+            var tempFile = GetTempPath(Guid.NewGuid().ToString());
+            using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
+            {
+                await file.CopyToAsync(fs);
+            }
+            return new FileInfo(tempFile);
+        }
+
+        /// <summary>
+        /// 将表单文件实例保存到临时文件夹中。
+        /// </summary>
+        /// <param name="file">表单文件实例。</param>
+        /// <returns>返回文件实例。</returns>
+        public virtual async Task<FileInfo> SaveToTempAsync(Stream file)
+        {
+            var tempFile = GetTempPath(Guid.NewGuid().ToString());
+            using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
+            {
+                await file.CopyToAsync(fs);
+            }
+            return new FileInfo(tempFile);
         }
 
         /// <summary>

@@ -42,4 +42,7 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Templates\Default\css\" />
+  </ItemGroup>
 </Project>

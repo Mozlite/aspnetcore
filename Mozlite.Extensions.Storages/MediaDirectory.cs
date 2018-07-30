@@ -48,16 +48,12 @@ namespace Mozlite.Extensions.Storages
         {
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
-            var tempFile = _directory.GetTempPath(Guid.NewGuid().ToString());
-            using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
-            {
-                await file.CopyToAsync(fs);
-            }
+            var tempFile = await _directory.SaveToTempAsync(file);
             var media = new MediaFile();
             media.ExtensionName = extensionName;
             media.Extension = Path.GetExtension(file.FileName);
             media.Name = file.FileName;
-            return await CreateAsync(new FileInfo(tempFile), media, file.ContentType, targetId, uniqueMediaFile);
+            return await CreateAsync(tempFile, media, file.ContentType, targetId, uniqueMediaFile);
         }
 
         /// <summary>
@@ -73,21 +69,16 @@ namespace Mozlite.Extensions.Storages
             var uri = new Uri(url);
             using (var client = new HttpClient())
             {
-                var tempFile = _directory.GetTempPath(Guid.NewGuid().ToString());
+                FileInfo tempFile;
                 client.DefaultRequestHeaders.Referrer = new Uri($"{uri.Scheme}://{uri.DnsSafeHost}{(uri.IsDefaultPort ? null : ":" + uri.Port)}/");
                 client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                 using (var stream = await client.GetStreamAsync(uri))
-                {
-                    using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
-                    {
-                        await stream.CopyToAsync(fs);
-                    }
-                }
+                    tempFile = await _directory.SaveToTempAsync(stream);
                 var media = new MediaFile();
                 media.ExtensionName = extensionName;
                 media.Extension = Path.GetExtension(uri.AbsolutePath);
                 media.Name = Path.GetFileName(uri.AbsolutePath);
-                return await CreateAsync(new FileInfo(tempFile), media, media.Extension.GetContentType(), targetId, uniqueMediaFile);
+                return await CreateAsync(tempFile, media, media.Extension.GetContentType(), targetId, uniqueMediaFile);
             }
         }
 

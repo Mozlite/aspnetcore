@@ -12,7 +12,6 @@ namespace Mozlite.Mvc.Apis
         /// <summary>
         /// 验证API，生成令牌。
         /// </summary>
-        /// <param name="appid">应用程序Id。</param>
         /// <param name="appSecret">应用程序密钥。</param>
         /// <returns>返回令牌验证结果。</returns>
         [Api("token", Anonymousable = true)]
@@ -20,12 +19,11 @@ namespace Mozlite.Mvc.Apis
         {
             if (string.IsNullOrEmpty(appSecret))
                 return NullParameter(nameof(appSecret));
-            var service = GetRequiredService<IApiManager>();
-            if (Application.AppSecret.Equals(appSecret, StringComparison.OrdinalIgnoreCase))
+            if (!Application.AppSecret.Equals(appSecret, StringComparison.OrdinalIgnoreCase))
                 return Error(ErrorCode.AuthorizeFailure);
             if (Application.ExpiredDate <= DateTime.Now)
             {
-                var result = await service.SaveGenerateTokenAsync(Application);
+                var result = await GetRequiredService<IApiManager>().SaveGenerateTokenAsync(Application);
                 if (!result)
                 {
                     Logger.LogError($"更新令牌失败：appid({Application.AppId}), token({Application.Token}), expiredDate({Application.ExpiredDate})。");

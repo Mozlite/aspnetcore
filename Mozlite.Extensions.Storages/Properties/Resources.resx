@@ -126,6 +126,12 @@
   <data name="FormFileInvalid" xml:space="preserve">
     <value>未能获取表单文件实例或者文件长度为0！</value>
   </data>
+  <data name="StorageClearTaskExecutor_Description" xml:space="preserve">
+    <value>定期清理存储文件夹和临时文件夹中得空文件夹或无效文件等</value>
+  </data>
+  <data name="StorageClearTaskExecutor_Name" xml:space="preserve">
+    <value>存储文件夹清理服务</value>
+  </data>
   <data name="StoredFileFailured" xml:space="preserve">
     <value>存储文件失败！</value>
   </data>
