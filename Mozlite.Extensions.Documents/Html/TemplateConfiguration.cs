@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Mozlite.Extensions.Html
 {
@@ -36,5 +37,10 @@ namespace Mozlite.Extensions.Html
         /// 描述。
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// 参数。
+        /// </summary>
+        public IDictionary<string, object> Parameters { get; set; }
     }
 }

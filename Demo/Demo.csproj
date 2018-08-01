@@ -5,11 +5,17 @@
     <RootNamespace>Demo</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Templates\Default\index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\Default\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Demo.Extensions\Demo.Extensions.csproj" />
@@ -41,8 +47,5 @@
     <Content Update="_Win.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Templates\Default\css\" />
   </ItemGroup>
 </Project>

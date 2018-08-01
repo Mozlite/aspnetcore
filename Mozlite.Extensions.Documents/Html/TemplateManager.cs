@@ -21,18 +21,22 @@ namespace Mozlite.Extensions.Html
         private readonly IStorageDirectory _storageDirectory;
         private readonly IMemoryCache _cache;
         private readonly ILogger<TemplateManager> _logger;
+        private readonly IServiceProvider _serviceProvider;
         private const string DirectoryName = "templates";
+
         /// <summary>
         /// 初始化类<see cref="TemplateManager"/>。
         /// </summary>
         /// <param name="storageDirectory">存储文件夹接口。</param>
         /// <param name="cache">缓存接口。</param>
         /// <param name="logger">日志接口。</param>
-        public TemplateManager(IStorageDirectory storageDirectory, IMemoryCache cache, ILogger<TemplateManager> logger)
+        /// <param name="serviceProvider">服务提供者接口。</param>
+        public TemplateManager(IStorageDirectory storageDirectory, IMemoryCache cache, ILogger<TemplateManager> logger, IServiceProvider serviceProvider)
         {
             _storageDirectory = storageDirectory;
             _cache = cache;
             _logger = logger;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -87,6 +91,27 @@ namespace Mozlite.Extensions.Html
             return templates.Values;
         }
 
+        /// <summary>
+        /// 获取配置实例。
+        /// </summary>
+        /// <returns>返回配置实例。</returns>
+        public async Task<TemplateConfiguration> GetTemplateAsync(Guid id)
+        {
+            var configs = await LoadConfigsAsync();
+            configs.TryGetValue(id, out var config);
+            return config;
+        }
+
+        /// <summary>
+        /// 获取模板物理路径。
+        /// </summary>
+        /// <param name="id">模板Id。</param>
+        /// <returns>返回当前目录物理路径。</returns>
+        public string GetTemplatePath(Guid id)
+        {
+            return _storageDirectory.GetPhysicalPath(id.ToString("N"));
+        }
+
         private async Task<TemplateConfiguration> LoadConfigAsync(FileInfo file)
         {
             using (var reader = file.OpenText())
@@ -118,16 +143,6 @@ namespace Mozlite.Extensions.Html
                 }
                 return templates.ToDictionary(x => x.Id);
             });
-        }
-
-        /// <summary>
-        /// 发布模板，生成静态页面。
-        /// </summary>
-        /// <param name="name">名称。</param>
-        /// <returns>返回发布状态。</returns>
-        public virtual async Task<TemplateStatus> ReleaseAsync(string name)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -17,5 +17,13 @@
         /// 配置丢失。
         /// </summary>
         ConfigMissing = 2,
+        /// <summary>
+        /// 未找到配置等。
+        /// </summary>
+        FileNotFound = 3,
+        /// <summary>
+        /// 模板不存在。
+        /// </summary>
+        TemplateNotFound = 3,
     }
 }

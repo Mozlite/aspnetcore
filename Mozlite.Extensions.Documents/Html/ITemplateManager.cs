@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -23,10 +24,16 @@ namespace Mozlite.Extensions.Html
         Task<IEnumerable<TemplateConfiguration>> LoadTemplatesAsync();
 
         /// <summary>
-        /// 发布模板，生成静态页面。
+        /// 获取配置实例。
         /// </summary>
-        /// <param name="name">名称。</param>
-        /// <returns>返回发布状态。</returns>
-        Task<TemplateStatus> ReleaseAsync(string name);
+        /// <returns>返回配置实例。</returns>
+        Task<TemplateConfiguration> GetTemplateAsync(Guid id);
+
+        /// <summary>
+        /// 获取模板物理路径。
+        /// </summary>
+        /// <param name="id">模板Id。</param>
+        /// <returns>返回当前目录物理路径。</returns>
+        string GetTemplatePath(Guid id);
     }
 }
