@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Mozlite.Extensions.Html
+namespace Mozlite.Extensions.Documents.Html
 {
     /// <summary>
     /// 模板接口。
     /// </summary>
-    public interface ITemplateManager : ISingletonService
+    public interface ITemplateManager : IScopedService
     {
         /// <summary>
         /// 安装模板，使用zip压缩。
@@ -35,5 +35,14 @@ namespace Mozlite.Extensions.Html
         /// <param name="id">模板Id。</param>
         /// <returns>返回当前目录物理路径。</returns>
         string GetTemplatePath(Guid id);
+
+        /// <summary>
+        /// 生成HTML并保存到文件中。
+        /// </summary>
+        /// <param name="path">路径。</param>
+        /// <param name="configuration">配置实例。</param>
+        /// <param name="outputTemplate">保存文件路径模板，可以用<paramref name="routeData"/>键来配置模板，如：{page}等。</param>
+        /// <param name="routeData">路由实例。</param>
+        Task SaveGeneratorAsync(string path, TemplateConfiguration configuration, string outputTemplate = null, IDictionary<string, object> routeData = null);
     }
 }

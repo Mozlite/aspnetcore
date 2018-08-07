@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Html
+﻿namespace Mozlite.Extensions.Documents.Html
 {
     /// <summary>
     /// 生成HTML相关配置。

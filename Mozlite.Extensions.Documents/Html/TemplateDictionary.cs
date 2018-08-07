@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Mozlite.Extensions.Html
+namespace Mozlite.Extensions.Documents.Html
 {
     /// <summary>
     /// 模板对象存储。

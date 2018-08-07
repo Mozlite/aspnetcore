@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Html
+﻿namespace Mozlite.Extensions.Documents.Html
 {
     /// <summary>
     /// 模板状态。

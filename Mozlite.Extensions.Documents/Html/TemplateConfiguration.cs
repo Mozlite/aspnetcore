@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace Mozlite.Extensions.Html
+namespace Mozlite.Extensions.Documents.Html
 {
     /// <summary>
     /// 模板配置。
@@ -42,5 +43,32 @@ namespace Mozlite.Extensions.Html
         /// 参数。
         /// </summary>
         public IDictionary<string, object> Parameters { get; set; }
+
+        private IDictionary<string, object> _tempData;
+        /// <summary>
+        /// 转换为临时对象。
+        /// </summary>
+        /// <returns>返回临时对象实例。</returns>
+        [DebuggerStepThrough]
+        internal IDictionary<string, object> ToTempData()
+        {
+            if (_tempData == null)
+            {
+                _tempData = new Dictionary<string, object>();
+                _tempData["Id"] = Id;
+                _tempData["Name"] = Name;
+                _tempData["Version"] = Version;
+                _tempData["Author"] = Author;
+                _tempData["Description"] = Description;
+                if (Parameters != null)
+                {
+                    foreach (var parameter in Parameters)
+                    {
+                        _tempData[$"P_{parameter.Key}"] = parameter.Value;
+                    }
+                }
+            }
+            return _tempData;
+        }
     }
 }

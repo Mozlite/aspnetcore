@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Mozlite.Extensions</RootNamespace>
+    <RootNamespace>Mozlite.Extensions.Documents</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
