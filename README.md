@@ -12,14 +12,23 @@
 根目录
 
 |--Project
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.*
+
 |--Mozlite
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Mozlite.*
+
 |--Tests
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Tests
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.Tests
+
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.*.Tests
 
 ## Mozlite
