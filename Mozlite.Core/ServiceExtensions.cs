@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.DependencyModel;
 
 namespace Mozlite
 {
@@ -22,6 +22,12 @@ namespace Mozlite
         {
             services.TryAddSingleton(typeof(IServiceAccessor<>), typeof(ServiceAccessor<>));
             var exportedTypes = GetExportedTypes();
+            TryAddContainer(services, exportedTypes);
+            return new MozliteBuilder(services);
+        }
+
+        private static void TryAddContainer(IServiceCollection services, IEnumerable<Type> exportedTypes)
+        {
             foreach (var source in exportedTypes)
             {
                 if (typeof(IServiceConfigurer).IsAssignableFrom(source))
@@ -62,7 +68,6 @@ namespace Mozlite
                     }
                 }
             }
-            return new MozliteBuilder(services);
         }
 
         private static IEnumerable<Type> GetExportedTypes()

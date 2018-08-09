@@ -1,17 +1,16 @@
-# Mozlite(aspnetcore 2.0)
+# Mozlite(aspnetcore 2.x)
 
-随着ASPNETCore更新到2.0，我们得框架也升级到2.0，但是还没有应用得实际得项目中。ASPNETCore1.1已经在实际商业项目中，正常使用了，这里主要介绍一下这个框架得主要内容。
+Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库等等功能模块，本框架的目的是为了更高效，更友好，更简单的进行项目开发，实现价值最大化，完全开放源代码，如有技术支持可以加QQ群：88794325,8781765。
 
 * [核心框架Mozltie.Core](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Core/README.md)
 * [数据库框架Mozlite.Data](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Data/README.md)
-   数据库框架需要引用特定数据库，如：`Mozlite.Data.SqlServer`，并且在Startup中进行注册：`builder.AddSqlServer(Configuration)`
 * [文件存储Mozltie.Extensions.Storages](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Extensions.Storages/README.md)
 
 # 项目构建目录
 
-根目录
+基于Mozlite开发的项目结构，建议使用如下的项目结构:
 
-|--Project
+|--Project(项目文件夹)
 
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project
 
@@ -19,9 +18,19 @@
 
 |&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.*
 
-|--Mozlite
+|--Mozlite(框架文件夹)
 
- &nbsp;&nbsp;&nbsp;&nbsp;|-- Mozlite.*
+|&nbsp;&nbsp;&nbsp;&nbsp;|-- Mozlite.*
+
+|--Tests(测试文件夹)
+
+|&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Tests
+
+|&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.Tests
+
+|&nbsp;&nbsp;&nbsp;&nbsp;|-- Project.Extensions.*.Tests
+
+|--Others(其他文件夹)
 
 ## Mozlite
 
@@ -31,3 +40,6 @@
 
 能源管理项目目录，设计到业务逻辑相关得所有项目，可以放到这个目录下面，TFS项目中保存当前项目得代码。
 
+# 相关链接
+
+* https://www.mozlite.com
