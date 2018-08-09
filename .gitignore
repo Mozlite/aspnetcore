@@ -259,15 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-/storages/media
 /.svn
-/ApcNet
-/ApcNet.Core
-/ApcNet.Extensions
-/apcnet.sln
-/.gitignore
-/package-lock.json
-/publisher
-/publisher.cmd
-*.rar
-/storages/keys
+/storages
