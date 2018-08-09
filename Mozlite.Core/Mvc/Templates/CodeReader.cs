@@ -8,15 +8,15 @@ namespace Mozlite.Mvc.Templates
     /// <summary>
     /// 语法读取器。
     /// </summary>
-    public class SyntaxReader
+    public class CodeReader
     {
         private readonly string _source;
         private int _index;
         /// <summary>
-        /// 初始化类<see cref="SyntaxReader"/>。
+        /// 初始化类<see cref="CodeReader"/>。
         /// </summary>
         /// <param name="source">源代码。</param>
-        public SyntaxReader(string source)
+        public CodeReader(string source)
         {
             _source = source?.Trim() ?? string.Empty;
         }

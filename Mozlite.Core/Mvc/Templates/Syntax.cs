@@ -101,6 +101,6 @@ namespace Mozlite.Mvc.Templates
         /// <summary>
         /// 声明语法。
         /// </summary>
-        public List<DeclaringSyntax> Declarings { get; } = new List<DeclaringSyntax>();
+        public List<Declaring> Declarings { get; } = new List<Declaring>();
     }
 }
