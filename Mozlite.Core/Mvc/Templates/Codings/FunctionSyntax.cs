@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Text;
 
-namespace Mozlite.Mvc.Templates
+namespace Mozlite.Mvc.Templates.Codings
 {
     /// <summary>
     /// 代码语法。
     /// </summary>
-    public class FunctionCodeSyntax : Syntax
+    public class FunctionSyntax : CodeSyntax
     {
         /// <summary>
         /// 参数。
@@ -39,21 +39,6 @@ namespace Mozlite.Mvc.Templates
                 builder.Append(");");
             }
             return builder.ToString();
-        }
-    }
-
-    /// <summary>
-    /// 代码语法。
-    /// </summary>
-    public class PropertyCodeSyntax : Syntax
-    {
-        /// <summary>
-        /// 当前语法的呈现字符串。
-        /// </summary>
-        /// <returns>返回当前语法的呈现字符串。</returns>
-        public override string ToString()
-        {
-            return "@" + Name;
         }
     }
 }

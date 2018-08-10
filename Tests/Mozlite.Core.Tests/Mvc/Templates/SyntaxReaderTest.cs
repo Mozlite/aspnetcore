@@ -1,16 +1,25 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Linq;
+using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Mvc.Templates;
+using Mozlite.Mvc.Templates.Codings;
 using Xunit;
 
 namespace Mozlite.Core.Tests.Mvc.Templates
 {
     public class SyntaxReaderTest
     {
+        private readonly ISyntaxManager _syntaxManager;
+        public SyntaxReaderTest()
+        {
+            _syntaxManager = Tests.GetRequiredService<ISyntaxManager>();
+        }
+
         [Fact]
         public void Parse()
         {
-            var syntax = new SyntaxManager();
-            var document = syntax.Parse(@"!doctype
+            var document = _syntaxManager.Parse(@"!doctype
 html(){
     head(){
         meta({http-equiv:""X-UA-Compatible"", content:""IE=edge""});
@@ -23,10 +32,39 @@ html(){
         script({type:""text/javascript"", src:""/js/jquery.min.js""}){}
     }
     body({class:""home""}){
-        div({style:""display:none;"", 'test-escape':""\""转义符\\'dfder""}){}
+        div({style:""display:none;"", 'test-escape':""{转义符\\'dfder""}){
+@if(TEst == ""test )""){div(){}}else if(Name==String.Empty){script({type:""text/javascript""}){}}else{
+!!注释测试
+alert();
+}
+}
     }
 }");
-            Assert.Equal("html", document.Name);
+            var html = document.FirstOrDefault();
+            Assert.Equal("html", html?.Name);
+
+            var render = _syntaxManager.Render(document, null);
+        }
+
+        [Fact]
+        public void ReadParameters()
+        {
+            var reader = new CodeReader(@"TEst == ""test )""){");
+            var parameters = reader.ReadParameters();
+            Assert.NotNull(parameters);
+            Assert.Equal(@"TEst == ""test )""", parameters[0]);
+        }
+
+        [Fact]
+        public void IfSyntax()
+        {
+            var document = _syntaxManager.Parse(
+                @"@if(TEst == ""test )""){div(){}}else if(Name==String.Empty){script({type:""text/javascript""}){}}else{
+!!注释测试
+alert();
+}");
+            var syntax = document.FirstOrDefault();
+            Assert.IsType<IfSyntax>(syntax);
         }
     }
 }

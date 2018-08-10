@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Mozlite.Mvc.Templates.Declarings;
 
 namespace Mozlite.Mvc.Templates
 {
@@ -25,6 +27,7 @@ namespace Mozlite.Mvc.Templates
         /// 过滤空字符串，并且判断是否可读。
         /// </summary>
         /// <returns>返回判断结果。</returns>
+        [DebuggerStepThrough]
         public bool MoveNext()
         {
             while (_source.Length > _index)
@@ -40,13 +43,14 @@ namespace Mozlite.Mvc.Templates
         /// 读取函数名称。
         /// </summary>
         /// <returns>返回函数名称。</returns>
+        [DebuggerStepThrough]
         public string ReadName()
         {
             var name = new StringBuilder();
             //关键词名称，必须组合的字母或数字
             while (_source.Length > _index)
             {
-                if (char.IsLetterOrDigit(_source, _index) || Current == '_')//字母，数字，下划线
+                if (char.IsLetterOrDigit(_source, _index) || Current == '_' || Current == '@')//字母，数字，下划线
                 {
                     name.Append(Current);
                     Skip();
@@ -58,19 +62,54 @@ namespace Mozlite.Mvc.Templates
         }
 
         /// <summary>
+        /// 读取声明列表。
+        /// </summary>
+        /// <returns>返回声明列表。</returns>
+        [DebuggerStepThrough]
+        public IEnumerable<Declaring> ReadDeclarings()
+        {
+            var declarings = new List<Declaring>();
+            //先读取声明
+            while (IsNextNonWhiteSpace('!'))
+            {
+                declarings.Add(new Declaring(this));
+            }
+            return declarings;
+        }
+
+        /// <summary>
         /// 读取参数。
         /// </summary>
         /// <returns>返回参数列表。</returns>
         public List<string> ReadParameters()
         {
             var parameters = new List<string>();
-            while (MoveNext())
+            var builder = new StringBuilder();
+            if (Current == '(')
+                Skip();
+            while (_index < _source.Length)
             {
-                parameters.Add(ReadQuoteValue());
-                if (Current == ')')
-                    return parameters;
+                var current = Current;
+                if (IsQuote(current))
+                {
+                    Skip();
+                    ReadQuote(current, builder);
+                    continue;
+                }
+
+                if (current == ')')
+                    break;
+                if (current == ',')
+                {
+                    parameters.Add(builder.ToString());
+                    builder = new StringBuilder();
+                }
+                else
+                    builder.Append(current);
                 Skip();
             }
+            Skip();
+            parameters.Add(builder.ToString());
             return parameters;
         }
 
@@ -78,6 +117,7 @@ namespace Mozlite.Mvc.Templates
         /// 跳过<paramref name="size"/>位置。
         /// </summary>
         /// <param name="size">跳过位置量。</param>
+        [DebuggerStepThrough]
         public void Skip(int size = 1)
         {
             _index += size;
@@ -87,6 +127,7 @@ namespace Mozlite.Mvc.Templates
         /// 跳过<paramref name="current"/>字符。
         /// </summary>
         /// <param name="current">跳过字符。</param>
+        [DebuggerStepThrough]
         public void SkipUntil(char current)
         {
             var isCurrent = false;
@@ -138,9 +179,9 @@ namespace Mozlite.Mvc.Templates
             if (IsQuote(current))
             {
                 Skip();
-                return ReadQuote(current);
+                return ReadQuote(current).Trim(current, ' ');
             }
-            return ReadUntil(':');
+            return ReadUntil(':').Trim();
         }
 
         private const char EscapeCharacter = '\\';
@@ -154,6 +195,9 @@ namespace Mozlite.Mvc.Templates
         public string ReadQuote(char quote, StringBuilder builder = null)
         {
             builder = builder ?? new StringBuilder();
+            if (quote == Current)
+                Skip();
+            builder.Append(quote);
             var last = ZeroCharacter;
             while (_source.Length > _index)
             {
@@ -187,10 +231,46 @@ namespace Mozlite.Mvc.Templates
                 }
                 Skip();
             }
-            return builder.ToString().Trim(' ', quote);
+
+            builder.Append(quote);
+            return builder.ToString();
         }
 
+        [DebuggerStepThrough]
         private bool IsQuote(char current) => current == '"' || current == '`' || current == '\'';
+
+        /// <summary>
+        /// 读取代码块。
+        /// </summary>
+        /// <param name="start">块开始符号。</param>
+        /// <param name="end">块结束符号。</param>
+        /// <param name="builder">字符串构建实例。</param>
+        /// <returns>返回当前字符串。</returns>
+        public string ReadBlock(char start, char end, StringBuilder builder = null)
+        {
+            builder = builder ?? new StringBuilder();
+            var blocks = 0;
+            while (_source.Length > _index)
+            {
+                var current = Current;
+                if (IsQuote(current))
+                {
+                    ReadQuote(current, builder);
+                    continue;
+                }
+
+                builder.Append(current);
+                _index++;
+
+                if (current == start)
+                    blocks++;
+                else if (current == end)
+                    blocks--;
+                if (blocks <= 0)
+                    break;
+            }
+            return builder.ToString();
+        }
 
         /// <summary>
         /// 读取字符串。
@@ -288,26 +368,54 @@ namespace Mozlite.Mvc.Templates
         /// </summary>
         /// <param name="current">当前字符串。</param>
         /// <param name="skip">是否将读取位置与当前位置。</param>
+        /// <param name="stringComparison">字符串对比模式。</param>
         /// <returns>返回判断结果。</returns>
-        public bool IsNextNonWhiteSpace(string current, bool skip = true)
+        public bool IsNextNonWhiteSpace(string current, bool skip = true, StringComparison stringComparison = StringComparison.Ordinal)
         {
-            if (MoveNext() && _source.IndexOf(current, _index, StringComparison.Ordinal) == _index)
+            var index = _index;//判断开始的位置
+            var builder = new StringBuilder();
+            while (_source.Length > index)
             {
-                if (skip) Skip(current.Length);
+                if (!char.IsWhiteSpace(_source, index))
+                {
+                    builder.Append(_source[index]);
+                    if (builder.Length == current.Length)
+                        break;
+                }
+                index++;
+            }
+
+            index++;
+            if (builder.ToString().Equals(current, stringComparison))
+            {
+                if (skip) _index = index;
                 return true;
             }
+
             return false;
+        }
+
+        /// <summary>
+        /// 判断是否下一个字符串是否为当前字符。
+        /// </summary>
+        /// <param name="current">当前字符。</param>
+        /// <returns>返回判断结果。</returns>
+        public bool IsNext(char current)
+        {
+            return _source.Length > _index + 1 &&
+                   _source[_index + 1] == current;
         }
 
         /// <summary>
         /// 判断是否下一个字符串是否为当前字符串。
         /// </summary>
         /// <param name="current">当前字符串。</param>
+        /// <param name="stringComparison">字符串对比模式。</param>
         /// <returns>返回判断结果。</returns>
-        public bool IsNext(string current)
+        public bool IsNext(string current, StringComparison stringComparison = StringComparison.Ordinal)
         {
             return _source.Length > _index + current.Length &&
-                   _source.IndexOf(current, _index, StringComparison.Ordinal) == _index;
+                   _source.IndexOf(current, _index, stringComparison) == _index;
         }
 
         /// <summary>
@@ -326,6 +434,17 @@ namespace Mozlite.Mvc.Templates
                     return ZeroCharacter;
                 }
             }
+        }
+
+        /// <summary>
+        /// 返回当前可读取的字符串。
+        /// </summary>
+        /// <returns>返回可读取的字符串。</returns>
+        public override string ToString()
+        {
+            if (_index < _source.Length)
+                return _source.Substring(_index);
+            return null;
         }
     }
 }

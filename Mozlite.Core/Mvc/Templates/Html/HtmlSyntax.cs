@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Mozlite.Mvc.Templates
+namespace Mozlite.Mvc.Templates.Html
 {
     /// <summary>
     /// HTML语法。
@@ -29,7 +29,7 @@ namespace Mozlite.Mvc.Templates
             {
                 foreach (var attribute in Attributes)
                 {
-                    builder.AppendFormat(" {0}=\"{1}\"", attribute.Key, attribute.Value);
+                    builder.AppendFormat(" {0}={1}", attribute.Key, attribute.Value);
                 }
             }
             if (IsBlock)
@@ -54,5 +54,9 @@ namespace Mozlite.Mvc.Templates
             }
             return builder.ToString();
         }
+    }
+
+    public class ScriptSyntax : HtmlSyntax
+    {
     }
 }

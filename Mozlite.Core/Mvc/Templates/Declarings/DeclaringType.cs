@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Mvc.Templates
+﻿namespace Mozlite.Mvc.Templates.Declarings
 {
     /// <summary>
     /// 声明类型。

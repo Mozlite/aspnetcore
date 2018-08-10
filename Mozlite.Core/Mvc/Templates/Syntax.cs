@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Mozlite.Mvc.Templates.Declarings;
 
 namespace Mozlite.Mvc.Templates
 {
@@ -23,7 +25,7 @@ namespace Mozlite.Mvc.Templates
         /// 将<paramref name="syntax"/>添加到尾部。
         /// </summary>
         /// <param name="syntax">当前函数。</param>
-        public void Append(Syntax syntax)
+        public virtual void Append(Syntax syntax)
         {
             IsBlock = true;
             syntax.Parent = this;
@@ -51,7 +53,7 @@ namespace Mozlite.Mvc.Templates
         /// 将<paramref name="syntaxs"/>添加到尾部。
         /// </summary>
         /// <param name="syntaxs">当前函数列表。</param>
-        public void Append(IEnumerable<Syntax> syntaxs)
+        public virtual void Append(IEnumerable<Syntax> syntaxs)
         {
             foreach (var syntax in syntaxs)
             {
@@ -64,7 +66,7 @@ namespace Mozlite.Mvc.Templates
         /// </summary>
         /// <param name="index">当前位置。</param>
         /// <param name="syntax">当前函数。</param>
-        public void Insert(int index, Syntax syntax)
+        public virtual void Insert(int index, Syntax syntax)
         {
             IsBlock = true;
             syntax.Parent = this;
@@ -76,7 +78,7 @@ namespace Mozlite.Mvc.Templates
         /// 移除当前索引的子语法项。
         /// </summary>
         /// <param name="index">当前索引位置。</param>
-        public void Remove(int index)
+        public virtual void Remove(int index)
         {
             _children.RemoveAt(index);
         }
@@ -88,7 +90,10 @@ namespace Mozlite.Mvc.Templates
 
         private readonly IList<Syntax> _children = new List<Syntax>();
 
-        public IEnumerator<Syntax> GetEnumerator()
+        /// <summary>
+        /// 迭代器。
+        /// </summary>
+        public virtual IEnumerator<Syntax> GetEnumerator()
         {
             return _children.GetEnumerator();
         }
@@ -102,5 +107,27 @@ namespace Mozlite.Mvc.Templates
         /// 声明语法。
         /// </summary>
         public List<Declaring> Declarings { get; } = new List<Declaring>();
+
+        /// <summary>
+        /// 添加声明。
+        /// </summary>
+        /// <param name="declarings">添加声明列表。</param>
+        public virtual void Append(IEnumerable<Declaring> declarings)
+        {
+            foreach (var declaring in declarings)
+            {
+                declaring.Parent = this;
+                Declarings.Add(declaring);
+            }
+        }
+
+        /// <summary>
+        /// 当前语法的呈现字符串。
+        /// </summary>
+        /// <returns>返回当前语法的呈现字符串。</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -1,11 +1,9 @@
-﻿using System.Text;
-
-namespace Mozlite.Mvc.Templates
+﻿namespace Mozlite.Mvc.Templates.Codings
 {
     /// <summary>
-    /// 文档语法。
+    /// 代码语法。
     /// </summary>
-    public class DocumentSyntax : Syntax
+    public class CodeSyntax : Syntax
     {
         /// <summary>
         /// 当前语法的呈现字符串。
@@ -13,7 +11,7 @@ namespace Mozlite.Mvc.Templates
         /// <returns>返回当前语法的呈现字符串。</returns>
         public override string ToString()
         {
-            return this.Join("\r\n");
+            return $"{Indent()}@{Name}\r\n";
         }
     }
 }

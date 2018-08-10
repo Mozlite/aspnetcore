@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite
 {
@@ -359,7 +360,7 @@ namespace Mozlite
             {
                 if (Equals(enumerator.Current, item))
                     return true;
-            } 
+            }
             return false;
         }
 
@@ -384,5 +385,18 @@ namespace Mozlite
         /// 默认缓存时长。
         /// </summary>
         public static readonly TimeSpan DefaultCacheExpiration = TimeSpan.FromMinutes(3);
+        
+        /// <summary>
+        /// 获取<see cref="IServiceProvider"/>实例，此方法只能用于单元测试。
+        /// </summary>
+        /// <param name="action">实例化容器。</param>
+        /// <returns>返回服务提供者接口实例。</returns>
+        public static IServiceProvider BuildServiceProvider(Action<IMozliteBuilder> action = null)
+        {
+            var services = new ServiceCollection();
+            var builder = services.AddMozlite();
+            action?.Invoke(builder);
+            return services.BuildServiceProvider();
+        }
     }
 }
