@@ -20,7 +20,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="configuration">配置接口。</param>
         public StorageDirectory(IConfiguration configuration)
         {
-            var path = configuration["storageDir"]?.Trim() ?? "../storages";
+            var path = configuration["StorageDir"]?.Trim() ?? "../storages";
             if (path.StartsWith("~/"))//虚拟目录
                 _root = Path.Combine(Directory.GetCurrentDirectory(), path.Substring(2));
             else if (path.Length > 2 && path[1] == ':')//物理目录
