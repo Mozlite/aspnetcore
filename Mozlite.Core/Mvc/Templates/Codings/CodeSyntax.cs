@@ -11,7 +11,7 @@
         /// <returns>返回当前语法的呈现字符串。</returns>
         public override string ToString()
         {
-            return $"{Indent()}@{Name}\r\n";
+            return $"{Indent()}{Name}\r\n";
         }
     }
 }

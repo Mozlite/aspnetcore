@@ -1,18 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace Mozlite.Mvc.Templates.Html
 {
     /// <summary>
-    /// HTML语法。
+    /// 代码块。
     /// </summary>
-    public class HtmlSyntax : Syntax
+    public class CodeHtmlSyntax : HtmlSyntax
     {
         /// <summary>
-        /// 参数。
+        /// 初始化类<see cref="CodeHtmlSyntax"/>。
         /// </summary>
-        public IDictionary<string, string> Attributes { get; internal set; }
+        public CodeHtmlSyntax()
+        {
+            IsBlock = true;
+        }
+
+        /// <summary>
+        /// 代码块。
+        /// </summary>
+        public string Code { get; set; }
 
         /// <summary>
         /// 当前语法的呈现字符串。
@@ -32,25 +38,16 @@ namespace Mozlite.Mvc.Templates.Html
                     builder.AppendFormat(" {0}={1}", attribute.Key, attribute.Value);
                 }
             }
-            if (IsBlock)
+
+            if (string.IsNullOrWhiteSpace(Code))
             {
-                if (this.Any())
-                {
-                    builder.AppendLine(">");
-                    foreach (var syntax in this)
-                    {
-                        builder.Append(syntax);
-                    }
-                    builder.Append(indent).AppendFormat("</{0}>", Name).AppendLine();
-                }
-                else
-                {
-                    builder.AppendFormat("></{0}>", Name).AppendLine();
-                }
+                builder.AppendFormat("></{0}>", Name).AppendLine();
             }
             else
             {
-                builder.Append("/>").AppendLine();
+                builder.AppendLine(">");
+                builder.AppendLine(Code);
+                builder.Append(indent).AppendFormat("</{0}>", Name).AppendLine();
             }
             return builder.ToString();
         }

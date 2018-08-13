@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Mozlite.Core.Tests
 {
+    /// <summary>
+    /// 测试类。
+    /// </summary>
     public static class Tests
     {
         static Tests()

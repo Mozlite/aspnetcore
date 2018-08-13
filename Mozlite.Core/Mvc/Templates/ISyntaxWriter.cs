@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Mozlite.Mvc.Templates
 {
@@ -11,14 +12,6 @@ namespace Mozlite.Mvc.Templates
         /// 名称。
         /// </summary>
         string Name { get; }
-        
-        /// <summary>
-        /// 将文档<paramref name="syntax"/>解析写入到写入器中。
-        /// </summary>
-        /// <param name="syntax">当前文档实例。</param>
-        /// <param name="writer">写入器实例对象。</param>
-        /// <param name="model">当前模型实例。</param>
-        void BeginWrite(Syntax syntax, TextWriter writer, object model);
 
         /// <summary>
         /// 将文档<paramref name="syntax"/>解析写入到写入器中。
@@ -26,6 +19,7 @@ namespace Mozlite.Mvc.Templates
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="writer">写入器实例对象。</param>
         /// <param name="model">当前模型实例。</param>
-        void EndWrite(Syntax syntax, TextWriter writer, object model);
+        /// <param name="write">写入子项目。</param>
+        void Write(Syntax syntax, TextWriter writer, object model, Action<Syntax, TextWriter, object> write);
     }
 }

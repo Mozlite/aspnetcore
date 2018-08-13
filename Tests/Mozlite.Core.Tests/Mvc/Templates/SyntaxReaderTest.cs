@@ -33,11 +33,19 @@ html(){
     }
     body({class:""home""}){
         div({style:""display:none;"", 'test-escape':""{转义符\\'dfder""}){
-@if(TEst == ""test )""){div(){}}else if(Name==String.Empty){script({type:""text/javascript""}){}}else{
-!!注释测试
-alert();
-}
-}
+            @if(TEst == ""test )""){
+                div(){
+                    script({type:""text/javascript""}){
+                        function test(){alert('xxx');}
+                    }
+                }
+            }else if(Name==String.Empty){
+                script({type:""text/javascript""}){}
+            }else{
+                !!注释测试
+                alert();
+            }
+        }
     }
 }");
             var html = document.FirstOrDefault();

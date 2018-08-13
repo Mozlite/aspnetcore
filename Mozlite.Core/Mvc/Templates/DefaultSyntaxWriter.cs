@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Mozlite.Mvc.Templates.Html;
 
 namespace Mozlite.Mvc.Templates
@@ -24,7 +25,8 @@ namespace Mozlite.Mvc.Templates
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="writer">写入器实例对象。</param>
         /// <param name="model">当前模型实例。</param>
-        public virtual void BeginWrite(Syntax syntax, TextWriter writer, object model)
+        /// <param name="write">写入子项目。</param>
+        public virtual void Write(Syntax syntax, TextWriter writer, object model, Action<Syntax, TextWriter, object> write)
         {
             if (syntax is HtmlSyntax html)
             {
@@ -41,39 +43,30 @@ namespace Mozlite.Mvc.Templates
                         writer.Write(htmlAttribute.Value);
                     }
                 }
+
                 if (syntax.IsBlock)
+                {
                     writer.WriteLine(">");
+                    foreach (var child in syntax)
+                    {
+                        write(child, writer, model);
+                    }
+                    writer.Write(html.Indent());
+                    writer.Write("</");
+                    writer.Write(html.Name);
+                    writer.WriteLine(">");
+                }
                 else
                     writer.WriteLine("/>");
             }
             else
             {
                 writer.Write(syntax.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 将文档<paramref name="syntax"/>解析写入到写入器中。
-        /// </summary>
-        /// <param name="syntax">当前文档实例。</param>
-        /// <param name="writer">写入器实例对象。</param>
-        /// <param name="model">当前模型实例。</param>
-        public virtual void EndWrite(Syntax syntax, TextWriter writer, object model)
-        {
-            if (!syntax.IsBlock)
-                return;
-
-            if (syntax is HtmlSyntax html)
-            {
-                writer.Write(html.Indent());
-                writer.Write("</");
-                writer.Write(html.Name);
-                writer.WriteLine(">");
-            }
-            else
-            {
-                writer.Write(syntax.Indent());
-                writer.WriteLine("}");
+                if (syntax.IsBlock)
+                {
+                    writer.Write(syntax.Indent());
+                    writer.WriteLine("}");
+                }
             }
         }
     }

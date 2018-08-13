@@ -117,13 +117,32 @@ namespace Mozlite.Mvc.Templates
                 }
                 else
                 {
-                    var current = new HtmlSyntax();
-                    current.Name = reader.ReadName();
-                    current.Attributes = reader.ReadAttributes();
-                    current.Declarings.AddRange(declares);
-                    syntax.Append(current);
-                    //函数结束
-                    ParseChildren(reader, current);
+                    var name = reader.ReadName();
+                    switch (name.ToLower())
+                    {
+                        case "script":
+                        case "style":
+                            {
+                                var current = new CodeHtmlSyntax();
+                                current.Name = name;
+                                current.Attributes = reader.ReadAttributes();
+                                current.Declarings.AddRange(declares);
+                                current.Code = reader.ReadBlock('{', '}').Trim('{', '}', ' ');
+                                syntax.Append(current);
+                            }
+                            continue;
+                        default:
+                            {
+                                var current = new HtmlSyntax();
+                                current.Name = name;
+                                current.Attributes = reader.ReadAttributes();
+                                current.Declarings.AddRange(declares);
+                                syntax.Append(current);
+                                //函数结束
+                                ParseChildren(reader, current);
+                            }
+                            continue;
+                    }
                 }
             }
         }
@@ -212,15 +231,7 @@ namespace Mozlite.Mvc.Templates
             }
             if (!_syntaxWriters.TryGetValue(syntax.Name, out var syntaxWriter))
                 syntaxWriter = _syntaxWriters[DefaultSyntaxWriter.DefaultName];
-            syntaxWriter.BeginWrite(syntax, writer, model);
-            if (syntax.Any())
-            {
-                foreach (var child in syntax)
-                {
-                    WriteSyntax(child, writer, model);
-                }
-            }
-            syntaxWriter.EndWrite(syntax, writer, model);
+            syntaxWriter.Write(syntax, writer, model, WriteSyntax);
         }
 
         /// <summary>
