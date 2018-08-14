@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Mozlite.Mvc.Templates
 {
@@ -20,6 +21,6 @@ namespace Mozlite.Mvc.Templates
         /// <param name="writer">写入器实例对象。</param>
         /// <param name="model">当前模型实例。</param>
         /// <param name="write">写入子项目。</param>
-        void Write(Syntax syntax, TextWriter writer, object model, Action<Syntax, TextWriter, object> write);
+        void Write(Syntax syntax, TextWriter writer, ViewDataDictionary model, Action<Syntax, TextWriter, ViewDataDictionary> write);
     }
 }

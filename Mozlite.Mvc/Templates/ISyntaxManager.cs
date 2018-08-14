@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Mozlite.Mvc.Templates
 {
@@ -27,7 +28,7 @@ namespace Mozlite.Mvc.Templates
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="writer">写入器实例对象。</param>
         /// <param name="model">当前模型实例。</param>
-        void Write(Syntax syntax, TextWriter writer, object model);
+        void Write(Syntax syntax, TextWriter writer, ViewDataDictionary model);
 
         /// <summary>
         /// 获取呈现的代码字符串。
@@ -35,6 +36,6 @@ namespace Mozlite.Mvc.Templates
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="model">当前模型实例。</param>
         /// <returns>返回呈现的代码字符串。</returns>
-        string Render(Syntax syntax, object model);
+        string Render(Syntax syntax, ViewDataDictionary model);
     }
 }

@@ -1,12 +1,9 @@
-﻿using System.IO;
-using System.Linq;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq;
 using Mozlite.Mvc.Templates;
 using Mozlite.Mvc.Templates.Codings;
 using Xunit;
 
-namespace Mozlite.Core.Tests.Mvc.Templates
+namespace Mozlite.Mvc.Tests.Mvc.Templates
 {
     public class SyntaxReaderTest
     {

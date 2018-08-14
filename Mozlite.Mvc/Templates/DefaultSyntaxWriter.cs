@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozlite.Mvc.Templates.Html;
 
 namespace Mozlite.Mvc.Templates
@@ -26,7 +27,7 @@ namespace Mozlite.Mvc.Templates
         /// <param name="writer">写入器实例对象。</param>
         /// <param name="model">当前模型实例。</param>
         /// <param name="write">写入子项目。</param>
-        public virtual void Write(Syntax syntax, TextWriter writer, object model, Action<Syntax, TextWriter, object> write)
+        public virtual void Write(Syntax syntax, TextWriter writer, ViewDataDictionary model, Action<Syntax, TextWriter, ViewDataDictionary> write)
         {
             if (syntax is HtmlSyntax html)
             {

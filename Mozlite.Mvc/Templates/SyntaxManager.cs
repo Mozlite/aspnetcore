@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozlite.Mvc.Templates.Codings;
 using Mozlite.Mvc.Templates.Declarings;
 using Mozlite.Mvc.Templates.Html;
@@ -209,7 +210,7 @@ namespace Mozlite.Mvc.Templates
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="writer">写入器实例对象。</param>
         /// <param name="model">当前模型实例。</param>
-        public void Write(Syntax syntax, TextWriter writer, object model)
+        public void Write(Syntax syntax, TextWriter writer, ViewDataDictionary model)
         {
             if (syntax is Document)
             {
@@ -222,7 +223,7 @@ namespace Mozlite.Mvc.Templates
                 WriteSyntax(syntax, writer, model);
         }
 
-        protected virtual void WriteSyntax(Syntax syntax, TextWriter writer, object model)
+        protected virtual void WriteSyntax(Syntax syntax, TextWriter writer, ViewDataDictionary model)
         {
             foreach (var declaring in syntax.Declarings)
             {
@@ -240,7 +241,7 @@ namespace Mozlite.Mvc.Templates
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="model">当前模型实例。</param>
         /// <returns>返回呈现的代码字符串。</returns>
-        public string Render(Syntax syntax, object model)
+        public string Render(Syntax syntax, ViewDataDictionary model)
         {
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
