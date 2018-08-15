@@ -26,7 +26,7 @@ Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库�
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Data.SqlServer
 
-│&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Data.Mvc
+│&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Mvc
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Extensions
 
