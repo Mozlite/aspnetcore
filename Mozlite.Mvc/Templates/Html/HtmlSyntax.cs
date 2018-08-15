@@ -29,7 +29,7 @@ namespace Mozlite.Mvc.Templates.Html
             {
                 foreach (var attribute in Attributes)
                 {
-                    builder.AppendFormat(" {0}={1}", attribute.Key, attribute.Value);
+                    builder.AppendFormat(" {0}=\"{1}\"", attribute.Key, attribute.Value);
                 }
             }
             if (IsBlock)

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozlite.Mvc.Templates.Codings;
 using Mozlite.Mvc.Templates.Declarings;
@@ -82,7 +83,7 @@ namespace Mozlite.Mvc.Templates
                             continue;
                         default:
                             {
-                                if (reader.IsNextNonWhiteSpace(';') || !reader.IsNextNonWhiteSpace('('))
+                                if (reader.IsNextNonWhiteSpace(';') || !reader.IsNextNonWhiteSpace('(', false))
                                 {//@属性
                                     var property = new CodeSyntax();
                                     property.Name = name;
@@ -158,7 +159,7 @@ namespace Mozlite.Mvc.Templates
             current.Parameters = reader.ReadParameters();
             ParseChildren(reader, current);
             //读取elseif语句
-            while (reader.IsNextNonWhiteSpace("elseif(", stringComparison: StringComparison.OrdinalIgnoreCase))
+            while (reader.IsNextNonWhiteSpace("elseif", stringComparison: StringComparison.OrdinalIgnoreCase))
             {
                 var elseif = new IfSyntax();
                 elseif.Name = "elseif";
@@ -209,9 +210,11 @@ namespace Mozlite.Mvc.Templates
         /// </summary>
         /// <param name="syntax">当前文档实例。</param>
         /// <param name="writer">写入器实例对象。</param>
-        /// <param name="model">当前模型实例。</param>
-        public void Write(Syntax syntax, TextWriter writer, ViewDataDictionary model)
+        /// <param name="viewData">当前模型实例。</param>
+        public void Write(Syntax syntax, TextWriter writer, Action<ViewDataDictionary> viewData)
         {
+            var model = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+            viewData?.Invoke(model);
             if (syntax is Document)
             {
                 foreach (var child in syntax)
@@ -223,6 +226,12 @@ namespace Mozlite.Mvc.Templates
                 WriteSyntax(syntax, writer, model);
         }
 
+        /// <summary>
+        /// 将语法解析后写入到写入器中。
+        /// </summary>
+        /// <param name="syntax">当前文档实例。</param>
+        /// <param name="writer">写入器实例对象。</param>
+        /// <param name="model">当前模型实例。</param>
         protected virtual void WriteSyntax(Syntax syntax, TextWriter writer, ViewDataDictionary model)
         {
             foreach (var declaring in syntax.Declarings)
@@ -239,13 +248,13 @@ namespace Mozlite.Mvc.Templates
         /// 获取呈现的代码字符串。
         /// </summary>
         /// <param name="syntax">当前文档实例。</param>
-        /// <param name="model">当前模型实例。</param>
+        /// <param name="viewData">当前模型实例。</param>
         /// <returns>返回呈现的代码字符串。</returns>
-        public string Render(Syntax syntax, ViewDataDictionary model)
+        public string Render(Syntax syntax, Action<ViewDataDictionary> viewData)
         {
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
-                Write(syntax, writer, model);
+                Write(syntax, writer, viewData);
             return builder.ToString();
         }
 

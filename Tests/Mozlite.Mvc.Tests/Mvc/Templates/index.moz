@@ -1,0 +1,20 @@
+﻿!doctype html
+html(){
+	head(){
+		title(){@SiteName}
+        meta({name:""keywords"", content:""@Keywords""});
+        meta({name:""description"", content:""@Description""});
+	}
+	body(){
+		ul({class:"list"}, collection){
+			@foreach(var model in sql("SELECT Name FROM data_Demos")){
+				li({class:"list-item"}){
+					span(){@model.Name}
+					@if(model.Count>0){
+						ul()
+					}
+				}
+			}
+		}
+	}
+}

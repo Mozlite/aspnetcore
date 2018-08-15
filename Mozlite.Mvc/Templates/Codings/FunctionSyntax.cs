@@ -12,7 +12,7 @@ namespace Mozlite.Mvc.Templates.Codings
         /// <summary>
         /// 参数。
         /// </summary>
-        public IEnumerable<string> Parameters { get; set; }
+        public string Parameters { get; set; }
 
         /// <summary>
         /// 当前语法的呈现字符串。

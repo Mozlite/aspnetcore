@@ -81,37 +81,7 @@ namespace Mozlite.Mvc.Templates
         /// 读取参数。
         /// </summary>
         /// <returns>返回参数列表。</returns>
-        public List<string> ReadParameters()
-        {
-            var parameters = new List<string>();
-            var builder = new StringBuilder();
-            if (Current == '(')
-                Skip();
-            while (_index < _source.Length)
-            {
-                var current = Current;
-                if (IsQuote(current))
-                {
-                    Skip();
-                    ReadQuote(current, builder);
-                    continue;
-                }
-
-                if (current == ')')
-                    break;
-                if (current == ',')
-                {
-                    parameters.Add(builder.ToString());
-                    builder = new StringBuilder();
-                }
-                else
-                    builder.Append(current);
-                Skip();
-            }
-            Skip();
-            parameters.Add(builder.ToString());
-            return parameters;
-        }
+        public string ReadParameters() => ReadBlock('(', ')').Trim('(', ')', ' ');
 
         /// <summary>
         /// 跳过<paramref name="size"/>位置。
@@ -168,7 +138,7 @@ namespace Mozlite.Mvc.Templates
             if (IsQuote(current))
             {
                 Skip();
-                return ReadQuote(current);
+                return ReadQuote(current).Trim(current, ' ');
             }
             return ReadUntil(new[] { ',', end });
         }
@@ -353,6 +323,7 @@ namespace Mozlite.Mvc.Templates
         /// <param name="current">当前字符。</param>
         /// <param name="skip">是否将读取位置与当前位置。</param>
         /// <returns>返回判断结果。</returns>
+        [DebuggerStepThrough]
         public bool IsNextNonWhiteSpace(char current, bool skip = true)
         {
             if (MoveNext() && Current == current)

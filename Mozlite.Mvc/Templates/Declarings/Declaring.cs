@@ -44,7 +44,7 @@ namespace Mozlite.Mvc.Templates.Declarings
         /// <summary>
         /// 参数。
         /// </summary>
-        public List<string> Parameters { get; set; }
+        public string Parameters { get; set; }
 
         /// <summary>
         /// 特性。
@@ -81,11 +81,8 @@ namespace Mozlite.Mvc.Templates.Declarings
                         return $"<!{Name}>";
                     return $"<{Name} {Declare}/>";
                 default:
-                    var parameters = Parameters?
-                        .Select(x => $"\"{x?.Replace("\"", "\\\"")}\"")
-                        .ToArray();
-                    if (parameters != null)
-                        return $"{Name}({string.Join(", ", parameters)})";
+                    if (Parameters != null)
+                        return $"{Name}({Parameters})";
                     return $"{Name}()";
             }
         }

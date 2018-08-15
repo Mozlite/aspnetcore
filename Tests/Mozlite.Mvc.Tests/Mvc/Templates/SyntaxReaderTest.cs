@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozlite.Mvc.Templates;
 using Mozlite.Mvc.Templates.Codings;
 using Xunit;
@@ -22,8 +25,8 @@ html(){
         meta({http-equiv:""X-UA-Compatible"", content:""IE=edge""});
         meta({name:""viewport"", content:""width=device-width, initial-scale=1""});
         title(){@SiteName}
-        meta({name:""keywords"", content:""@Keywords""});
-        meta({name:""description"", content:""@Description""});
+        meta({name:""keywords"", content:@Keywords});
+        meta({name:""description"", content:@Description});
         link({href:""/dist/css/index.min.css"", rel:""stylesheet""});
         link({href:""/css/theme.css"", rel:""stylesheet""});
         script({type:""text/javascript"", src:""/js/jquery.min.js""}){}
@@ -48,16 +51,20 @@ html(){
             var html = document.FirstOrDefault();
             Assert.Equal("html", html?.Name);
 
-            var render = _syntaxManager.Render(document, null);
+            var render = _syntaxManager.Render(document, data =>
+            {
+                data["SiteName"] = "Mozlite";
+                data["Description"] = "网站描述";
+            });
         }
 
         [Fact]
         public void ReadParameters()
         {
-            var reader = new CodeReader(@"TEst == ""test )""){");
+            var reader = new CodeReader(@"(TEst == ""test )""){");
             var parameters = reader.ReadParameters();
             Assert.NotNull(parameters);
-            Assert.Equal(@"TEst == ""test )""", parameters[0]);
+            Assert.Equal(@"TEst == ""test )""", parameters);
         }
 
         [Fact]
