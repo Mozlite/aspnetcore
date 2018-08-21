@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Core.Tests", "Tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AF72D1C2-C05F-4B45-B2ED-9001F1B908DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Mvc.Tests", "Tests\Mozlite.Mvc.Tests\Mozlite.Mvc.Tests.csproj", "{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Mvc.Tests", "Tests\Mozlite.Mvc.Tests\Mozlite.Mvc.Tests.csproj", "{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.Extensions.Storages.Tests", "Tests\Mozlite.Extensions.Storages.Tests\Mozlite.Extensions.Storages.Tests.csproj", "{C806925A-7C43-407C-9F84-979D9D90C18C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C806925A-7C43-407C-9F84-979D9D90C18C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C806925A-7C43-407C-9F84-979D9D90C18C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C806925A-7C43-407C-9F84-979D9D90C18C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C806925A-7C43-407C-9F84-979D9D90C18C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{22E029D7-3629-402A-8DEC-D27311D6B3BF} = {AF72D1C2-C05F-4B45-B2ED-9001F1B908DA}
 		{610D6831-7DF8-4EBC-BF08-225AB079B8C9} = {A07144ED-071A-49A5-B2F3-A8BB3D573F00}
 		{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6} = {A07144ED-071A-49A5-B2F3-A8BB3D573F00}
+		{C806925A-7C43-407C-9F84-979D9D90C18C} = {A07144ED-071A-49A5-B2F3-A8BB3D573F00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251F6AEA-87FC-4AE7-9351-4607AB4EB97D}

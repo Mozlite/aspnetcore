@@ -1,0 +1,26 @@
+﻿function ul(){ id="sysmessage" class="dropdown-menu-list scroller" jmoz-callback="callback" jmoz-template="json" jmoz-interval="30" jmoz-remote="@Url.Action("Unread", "Home", new{area = MessageSettings.ExtensionName})" style="overflow: hidden; outline: none;" tabindex="5001">
+    {{foreach item in $model.query}}
+    <li class="unread {{item.style}}">
+        <a href="/messages/home/detail/{{item.id}}">
+            <i class="pull-right {{item.iconClass}}"></i>
+
+            <span class="line">
+                {{item.content}}
+            </span>
+
+            <span class="line small">
+                {{item.createdDate.toJsonDateString()}}
+            </span>
+        </a>
+    </li>
+    {{/foreach}}
+    function callback(d) {
+        $('.unread-msgcount').html(d.size);
+        if (d.size > 0) {
+            $('.msgcount').html(d.size).show();
+        }
+        else {
+            $('.msgcount').hide();
+        }
+    };
+}

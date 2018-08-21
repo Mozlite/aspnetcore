@@ -1,41 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Mvc\Templates\header.moz" />
-    <None Remove="Mvc\Templates\index.moz" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Mvc\Templates\header.moz" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Include="Mvc\Templates\index.moz" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Mozlite.Core\Mozlite.Core.csproj" />
     <ProjectReference Include="..\..\Mozlite.Data\Mozlite.Data.csproj" />
+    <ProjectReference Include="..\..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
     <ProjectReference Include="..\..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
-    <ProjectReference Include="..\..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Office\imports.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
