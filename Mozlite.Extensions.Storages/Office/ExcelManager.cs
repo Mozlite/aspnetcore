@@ -36,14 +36,12 @@ namespace Mozlite.Extensions.Storages.Office
             var model = new ExcelObject<TModel>();
             using (var document = SpreadsheetDocument.Open(path, false))
             {
-                var sheets = document.WorkbookPart
+                var sheet = document.WorkbookPart
                     .WorksheetParts
                     .Select(x => x.Worksheet)
-                    .ToArray();
-                if (sheets.Length == 0)
+                    .FirstOrDefault();
+                if (sheet == null)
                     throw new Exception("Excel中没有存在任何工作表。");
-                var sheet = sheets.SingleOrDefault(x => x.LocalName.Equals(model.SheetName, StringComparison.OrdinalIgnoreCase)) ??
-                            sheets.First();
                 var shared = document.WorkbookPart.SharedStringTablePart?.SharedStringTable;
                 var data = sheet.GetFirstChild<SheetData>();
                 model.SheetName = sheet.LocalName;
