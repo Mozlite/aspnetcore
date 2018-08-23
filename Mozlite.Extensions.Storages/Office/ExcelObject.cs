@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -23,109 +22,42 @@ namespace Mozlite.Extensions.Storages.Office
         /// </summary>
         public IEntityType EntityType { get; }
 
+        private readonly List<ExcelColumnDescriptor> _descriptors = new List<ExcelColumnDescriptor>();
         /// <summary>
         /// 初始化类<see cref="ExcelObject{TModel}"/>。
         /// </summary>
         public ExcelObject()
         {
-            var excelAttribute = typeof(TModel).GetCustomAttribute<ExcelAttribute>();
-            if (excelAttribute == null)
-                throw new Exception($"当前类型{typeof(TModel)}没有{typeof(ExcelAttribute)}特性。");
-            Types = excelAttribute.Types;
-            Names = excelAttribute.Names;
-            ColumnNames = (string[])Names.Clone();
+            SheetName = typeof(TModel).GetCustomAttribute<ExcelSheetAttribute>()?.SheetName ?? "sheet1";
             EntityType = typeof(TModel).GetEntityType();
-            for (int i = 0; i < Names.Length; i++)
+            foreach (var property in EntityType.GetProperties())
             {
-                var property = EntityType.FindProperty(Names[i]).PropertyInfo;
-                var column = property.GetCustomAttribute<ExcelColumnAttribute>();
-                if (column != null && !string.IsNullOrWhiteSpace(column.ColumnName))
+                if (property.PropertyInfo.IsDefined(typeof(ExcelColumnAttribute)) ||
+                    property.PropertyInfo.IsDefined(typeof(ExcelAttribute)))
                 {
-                    ColumnNames[i] = column.ColumnName.Trim();
+                    _descriptors.Add(new ExcelColumnDescriptor(property));
                 }
             }
+            if (Columns == 0)
+                throw new Exception($"当前类型“{typeof(TModel)}”没有任何属性有使用“{typeof(ExcelAttribute)}”或者“{typeof(ExcelColumnAttribute)}”标记。");
         }
 
         /// <summary>
-        /// 获取定义的样式。
+        /// 初始化类<see cref="ExcelObject{TModel}"/>。
         /// </summary>
-        /// <returns>返回定义的单元格样式。</returns>
-        public Stylesheet GetDefinedStylesheet()
+        /// <param name="models">列表实例。</param>
+        public ExcelObject(IEnumerable<TModel> models)
+            : this()
         {
-            var style = new Stylesheet();
-            style.Fonts = new Fonts();
-            style.CellFormats = new CellFormats();
-            style.NumberingFormats = new NumberingFormats();
-            uint index = 0, fontIndex = 1, formatId = 0;
-            foreach (var name in Names)
-            {
-                index++;
-                var cellFormat = new CellFormat();
-                cellFormat.FormatId = formatId++;
-                style.CellFormats.AppendChild(cellFormat);
-                var property = EntityType.FindProperty(name).PropertyInfo;
-                var attribute = property.GetCustomAttribute<ExcelStyleAttribute>();
-                if (attribute != null)
-                {
-                    Font font = attribute;
-                    style.Fonts.AppendChild(font);
-                    cellFormat.FontId = fontIndex++;
-                    if (attribute.HorizontalAlignment != HorizontalAlignment.General || attribute.VerticalAlignment != VerticalAlignment.None)
-                    {
-                        var alignment = new Alignment();
-                        if (attribute.HorizontalAlignment != HorizontalAlignment.General)
-                            alignment.Horizontal = (HorizontalAlignmentValues)(int)attribute.HorizontalAlignment;
-                        if (attribute.VerticalAlignment != VerticalAlignment.None)
-                            alignment.Vertical = (VerticalAlignmentValues)(int)attribute.VerticalAlignment;
-                        cellFormat.Alignment = alignment;
-                        cellFormat.ApplyAlignment = true;
-                    }
-                    cellFormat.ApplyFont = true;
-                }
-
-                var column = property.GetCustomAttribute<ExcelColumnAttribute>();
-                if (column != null)
-                {
-                    var format = new NumberingFormat();
-                    format.FormatCode = column.Format;
-                    format.NumberFormatId = index;
-                    cellFormat.NumberFormatId = index;
-                    cellFormat.ApplyNumberFormat = true;
-                    style.NumberingFormats.AppendChild(format);
-                }
-            }
-
-            var modelAttribute = typeof(TModel).GetCustomAttribute<ExcelStyleAttribute>();
-            if (modelAttribute != null)
-            {
-                Font font = modelAttribute;
-                style.Fonts.AppendChild(font);
-                var headerCellFormat = new CellFormat();
-                headerCellFormat.ApplyFont = true;
-                style.CellFormats.AppendChild(headerCellFormat);
-                headerCellFormat.FontId = fontIndex;
-                headerCellFormat.FormatId = formatId;
-            }
-
-            return style;
+            _models.AddRange(models);
         }
 
         /// <summary>
-        /// 字段类型：i忽略，n数值，s字符串，f浮点值，d日期，m为Decimal, b布尔。
+        /// 当前对象定义的描述列表。
         /// </summary>
-        public char[] Types { get; }
+        public List<ExcelColumnDescriptor> Descriptors => _descriptors;
 
-        /// <summary>
-        /// 属性名称。
-        /// </summary>
-        public string[] Names { get; }
-
-        /// <summary>
-        /// 字段名称。
-        /// </summary>
-        public string[] ColumnNames { get; }
-
-        private readonly IList<TModel> _models = new List<TModel>();
+        private readonly List<TModel> _models = new List<TModel>();
 
         /// <summary>
         /// 获取迭代器。
@@ -155,6 +87,6 @@ namespace Mozlite.Extensions.Storages.Office
         /// <summary>
         /// 列数。
         /// </summary>
-        public int Columns => Names.Length;
+        public int Columns => _descriptors.Count;
     }
 }

@@ -4,10 +4,9 @@ using System;
 namespace Mozlite.Extensions.Storages.Office
 {
     /// <summary>
-    /// Excel导出字体特性，如果是Class则表示第一行头部样式。
+    /// Excel导出字体特性。
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
-    public class ExcelStyleAttribute : Attribute
+    public abstract class ExcelFontAttribute : Attribute
     {
         /// <summary>
         /// 字体大小。
@@ -52,7 +51,7 @@ namespace Mozlite.Extensions.Storages.Office
         /// <summary>
         /// 文本垂直对齐样式。
         /// </summary>
-        public VerticalTextAlignment VerticalTextAlignment { get; set; }
+        public VerticalTextAlignment VerticalTextAlignment { get; set; } = VerticalTextAlignment.None;
 
         /// <summary>
         /// 字体名称。
@@ -60,43 +59,40 @@ namespace Mozlite.Extensions.Storages.Office
         public string FontName { get; set; }
 
         /// <summary>
-        /// 横向对齐方式。
+        /// 是否为空。
         /// </summary>
-        public HorizontalAlignment HorizontalAlignment { get; set; }
+        private bool IsEmpty => FontSize == 0 && string.IsNullOrEmpty(Color) && !Bold && !Italic && !Strike &&
+                               !Outline && !Shadow && !Underline && string.IsNullOrEmpty(FontName) &&
+                               VerticalTextAlignment == VerticalTextAlignment.None;
 
         /// <summary>
-        /// 垂直对齐方式。
+        /// 转换为Excel的字体实例。
         /// </summary>
-        public VerticalAlignment VerticalAlignment { get; set; }
-
-        /// <summary>
-        /// 隐式转换为Excel字体。
-        /// </summary>
-        /// <param name="current">当前特性实例。</param>
-
-        public static implicit operator Font(ExcelStyleAttribute current)
+        /// <returns>返回字体实例。</returns>
+        public Font ToExcelFont()
         {
+            if (IsEmpty) return null;
             var font = new Font();
-            if (current.FontSize > 0)
-                font.FontSize = new FontSize { Val = current.FontSize };
-            if (!string.IsNullOrWhiteSpace(current.Color))
-                font.Color = new Color { Rgb = current.Color.TrimStart('#', ' ') };
-            if (current.Bold)
+            if (FontSize > 0)
+                font.FontSize = new FontSize { Val = FontSize };
+            if (!string.IsNullOrWhiteSpace(Color))
+                font.Color = new Color { Rgb = Color.TrimStart('#', ' ') };
+            if (Bold)
                 font.Bold = new Bold();
-            if (current.Italic)
+            if (Italic)
                 font.Italic = new Italic();
-            if (current.Outline)
+            if (Outline)
                 font.Outline = new Outline();
-            if (current.Underline)
+            if (Underline)
                 font.Underline = new Underline();
-            if (current.Shadow)
+            if (Shadow)
                 font.Shadow = new Shadow();
-            if (current.Strike)
+            if (Strike)
                 font.Strike = new Strike();
-            if (current.VerticalTextAlignment != VerticalTextAlignment.None)
-                font.VerticalTextAlignment = new DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment { Val = (VerticalAlignmentRunValues)(int)current.VerticalTextAlignment };
-            if (!string.IsNullOrWhiteSpace(current.FontName))
-                font.FontName = new FontName { Val = current.FontName.Trim() };
+            if (VerticalTextAlignment != VerticalTextAlignment.None)
+                font.VerticalTextAlignment = new DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment { Val = (VerticalAlignmentRunValues)(int)VerticalTextAlignment };
+            if (!string.IsNullOrWhiteSpace(FontName))
+                font.FontName = new FontName { Val = FontName.Trim() };
             return font;
         }
     }

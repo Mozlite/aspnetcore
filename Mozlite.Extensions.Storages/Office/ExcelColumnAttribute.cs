@@ -3,30 +3,24 @@
 namespace Mozlite.Extensions.Storages.Office
 {
     /// <summary>
-    /// Excel导出格式特性。
+    /// 数据列特性。
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ExcelColumnAttribute : Attribute
+    public class ExcelColumnAttribute : ExcelFontAttribute, IAlignment
     {
         /// <summary>
-        /// 初始化类<see cref="ExcelColumnAttribute"/>。
+        /// 横向对齐方式。
         /// </summary>
-        /// <param name="columnName">字段名称。</param>
-        /// <param name="format">导出格式。</param>
-        public ExcelColumnAttribute(string columnName, string format = null)
-        {
-            ColumnName = columnName;
-            Format = format;
-        }
+        public HorizontalAlignment Horizontal { get; set; } = HorizontalAlignment.General;
 
         /// <summary>
-        /// 字段名称。
+        /// 垂直对齐方式。
         /// </summary>
-        public string ColumnName { get; }
+        public VerticalAlignment Vertical { get; set; } = VerticalAlignment.None;
 
         /// <summary>
-        /// 导出格式。
+        /// 数值格式。
         /// </summary>
-        public string Format { get; }
+        public string Format { get; set; }
     }
 }

@@ -5,30 +5,37 @@ namespace Mozlite.Extensions.Storages.Office
     /// <summary>
     /// Excel配置。
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ExcelAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class ExcelAttribute : ExcelFontAttribute, IAlignment
     {
         /// <summary>
-        /// 初始化类<see cref="ExcelAttribute"/>，名称和类型需要一一对应。
+        /// 初始化类<see cref="ExcelAttribute"/>。
         /// </summary>
-        /// <param name="types">字段类型：i忽略，n数值，s字符串，f浮点值，d日期，m为Decimal, b布尔。</param>
-        /// <param name="names">字段名称：忽略的字段不需要配置，其他和类型配置一一对应。</param>
-        public ExcelAttribute(string types, params string[] names)
+        /// <param name="name">名称，导入时做唯一判断。</param>
+        public ExcelAttribute(string name = null)
         {
-            Types = types.Replace(" ", "").ToCharArray();
-            Names = names;
-            if (types.Length != names.Length)
-                throw new Exception("名称和类型需要一一对应。");
+            Name = name;
+            Bold = true;
         }
 
         /// <summary>
-        /// 名称。
+        /// 字段名称。
         /// </summary>
-        public string[] Names { get; }
+        public string Name { get; }
 
         /// <summary>
-        /// 类型。
+        /// 导出排序，从小到大。
         /// </summary>
-        public char[] Types { get; }
+        public int Index { get; set; }
+
+        /// <summary>
+        /// 横向对齐方式。
+        /// </summary>
+        public HorizontalAlignment Horizontal { get; set; } = HorizontalAlignment.Center;
+
+        /// <summary>
+        /// 垂直对齐方式。
+        /// </summary>
+        public VerticalAlignment Vertical { get; set; } = VerticalAlignment.None;
     }
 }
