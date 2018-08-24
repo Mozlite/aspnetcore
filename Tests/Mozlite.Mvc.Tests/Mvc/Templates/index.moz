@@ -2,8 +2,8 @@
 html(){
 	head(){
 		title(){@SiteName}
-        meta({name:""keywords"", content:""@Keywords""});
-        meta({name:""description"", content:""@Description""});
+        meta({name:"keywords", content:"@Keywords"});
+        meta({name:"description", content:"@Description"});
         !section header
 	}
 	body(){
