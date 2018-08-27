@@ -56,7 +56,8 @@ namespace Mozlite.Mvc.TagHelpers
             if (content.IsEmptyOrWhiteSpace)
                 return;
             output.TagName = TagName;
-            output.AddCssClass("moz-jshtml-" + GetCounter());
+            var id = "moz-jshtml-" + GetCounter();
+            output.AddCssClass(id);
         }
     }
 }

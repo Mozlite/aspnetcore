@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Mvc.Properties;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.TagHelpers
 {
@@ -34,14 +35,14 @@ namespace Mozlite.Mvc.TagHelpers
         public object Value { get; set; }
 
         /// <summary>
-        /// 访问并呈现当前标签实例。
+        /// 异步访问并呈现当前标签实例。
         /// </summary>
         /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "select";
-            var items = Init();
+            var items = Init() ?? await InitAsync() ?? Enumerable.Empty<SelectListItem>();
             if (!string.IsNullOrEmpty(Text))//添加默认选项
                 items = new[] { new SelectListItem { Text = Text, Value = "" } }.Concat(items);
             if (For != null)
@@ -75,6 +76,18 @@ namespace Mozlite.Mvc.TagHelpers
         /// 初始化选项列表。
         /// </summary>
         /// <returns>返回选项列表。</returns>
-        protected abstract IEnumerable<SelectListItem> Init();
+        protected virtual IEnumerable<SelectListItem> Init()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 初始化选项列表。
+        /// </summary>
+        /// <returns>返回选项列表。</returns>
+        protected virtual Task<IEnumerable<SelectListItem>> InitAsync()
+        {
+            return Task.FromResult<IEnumerable<SelectListItem>>(null);
+        }
     }
 }
