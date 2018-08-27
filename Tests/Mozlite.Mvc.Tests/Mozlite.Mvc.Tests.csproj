@@ -12,10 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Mvc\Templates\header.moz" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Page Include="Mvc\Templates\header.moz" />
     <Page Include="Mvc\Templates\index.moz" />
   </ItemGroup>
 

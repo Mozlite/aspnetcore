@@ -12,7 +12,7 @@ html(){
 				li({class:"list-item"}){
 					span(){@model.Name}
 					@if(model.Count>0){
-						ul.({class:"list"}, collection);
+						ul({class:"list"}, collection);
 					}
 				}
 			}
