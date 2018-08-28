@@ -1,4 +1,4 @@
-# Mozlite.Extensions.Core
+# Mozlite.Extensions
 
 通用扩展模块，主要对功能应用的扩展模块，主要包含了常用的分类，配置，用户等等基础模块。在Mozlite中，如果扩展一个模块的模型实例，先定义一个模型实体类`Entity`，然后就是数据库迁移类`EntityDataMigration`，接着需要定义一个`IEntityManager`接口，然后实现这个接口`EntityManager`。
 
