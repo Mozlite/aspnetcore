@@ -1,17 +1,17 @@
 ﻿!doctype html
 html(){
 	head(){
-		title(){@SiteName}
+		title(){`test title for $SiteName;`}
         meta({name:"keywords", content:"@Keywords"});
         meta({name:"description", content:"@Description"});
         !section header
 	}
 	body(){
 		ul({class:"list"}, collection){
-			@foreach(var model in sql("SELECT Name FROM data_Demos")){
+			$foreach(var model in sql("SELECT Name FROM data_Demos")){
 				li({class:"list-item"}){
-					span(){@model.Name}
-					@if(model.Count>0){
+					span(){$model.Name}
+					$if(model.Count>0){
 						ul({class:"list"}, collection);
 					}
 				}
