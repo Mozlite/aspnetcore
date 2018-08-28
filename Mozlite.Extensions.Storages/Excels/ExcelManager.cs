@@ -1,15 +1,15 @@
-﻿using DocumentFormat.OpenXml;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Mozlite.Extensions.Storages.Office
+namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// EXCEL管理类。

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Mozlite.Extensions.Storages.Office
+namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// Excel数据。

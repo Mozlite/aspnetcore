@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mozlite.Extensions.Storages.Office
+namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// EXCEL管理接口。

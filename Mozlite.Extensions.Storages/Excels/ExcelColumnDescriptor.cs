@@ -1,10 +1,10 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace Mozlite.Extensions.Storages.Office
+namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// Excel列描述信息。

@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Storages.Office
+﻿namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// 文本垂直对齐样式。

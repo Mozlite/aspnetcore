@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mozlite.Extensions.Storages.Office
+namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// 数据列特性。

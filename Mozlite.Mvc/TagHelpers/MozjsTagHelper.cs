@@ -42,7 +42,7 @@ namespace Mozlite.Mvc.TagHelpers
         /// <summary>
         /// 发送的数据。
         /// </summary>
-        [HtmlAttributeName("data", DictionaryAttributePrefix = "data-")]
+        [HtmlAttributeName("js", DictionaryAttributePrefix = "js-")]
         public IDictionary<string, string> Data { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>

@@ -1,30 +1,26 @@
-﻿namespace Mozlite.Extensions.Storages.Office
+﻿namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
-    /// 横向对齐。
+    /// 垂直对齐方式。
     /// </summary>
-    public enum HorizontalAlignment
+    public enum VerticalAlignment
     {
         /// <summary>
-        /// 默认。
+        /// 无。
         /// </summary>
-        General,
+        None = -1,
         /// <summary>
-        /// 左对齐。
+        /// 顶端对齐。
         /// </summary>
-        Left,
+        Top,
         /// <summary>
-        /// 居中。
+        /// 居中对齐。
         /// </summary>
         Center,
         /// <summary>
-        /// 右对齐。
+        /// 底部对齐。
         /// </summary>
-        Right,
-        /// <summary>
-        /// 分散对齐。
-        /// </summary>
-        Fill,
+        Bottom,
         /// <summary>
         /// 两端对齐。
         /// </summary>

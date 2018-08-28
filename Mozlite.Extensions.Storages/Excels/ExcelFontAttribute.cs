@@ -1,7 +1,7 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using System;
+﻿using System;
+using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace Mozlite.Extensions.Storages.Office
+namespace Mozlite.Extensions.Storages.Excels
 {
     /// <summary>
     /// Excel导出字体特性。
