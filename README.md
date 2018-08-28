@@ -24,7 +24,7 @@ Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库�
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Mvc
 
-│&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Extensions
+│&nbsp;&nbsp;&nbsp;&nbsp;├── [Mozlite.Extensions](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Extensions/README.md)
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── [Mozlite.Extensions.Storages](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Extensions.Storages/README.md)
 
