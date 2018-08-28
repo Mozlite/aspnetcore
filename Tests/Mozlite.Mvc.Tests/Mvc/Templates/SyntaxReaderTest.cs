@@ -1,7 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozlite.Mvc.Templates;
 using Mozlite.Mvc.Templates.Codings;
 using Xunit;
