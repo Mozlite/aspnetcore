@@ -1,10 +1,6 @@
 # Mozlite(aspnetcore 2.x)
 
-Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库等等功能模块，本框架的目的是为了更高效，更友好，更简单的进行项目开发，实现价值最大化，完全开放源代码，如有技术支持可以加QQ群：88794325,8781765。
-
-* [核心框架Mozltie.Core](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Core/README.md)
-* [数据库框架Mozlite.Data](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Data/README.md)
-* [文件存储Mozltie.Extensions.Storages](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Extensions.Storages/README.md)
+Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库等等功能模块，本框架的目的是为了更高效，更友好，更简单的进行项目开发，实现价值最大化，完全开放源代码，如有技术支持可以加QQ群：`88794325`,`8781765`。
 
 # 项目构建目录
 
@@ -20,15 +16,17 @@ Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库�
 
 ├──Mozlite(框架文件夹)
 
-│&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Core
+│&nbsp;&nbsp;&nbsp;&nbsp;├── [Mozlite.Core](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Core/README.md)
 
-│&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Data
+│&nbsp;&nbsp;&nbsp;&nbsp;├── [Mozlite.Data](https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Data/README.md)
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Data.SqlServer
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Mvc
 
 │&nbsp;&nbsp;&nbsp;&nbsp;├── Mozlite.Extensions
+
+│&nbsp;&nbsp;&nbsp;&nbsp;├── [Mozlite.Extensions.Storages(https://github.com/Mozlite/aspnetcore/blob/master/Mozlite.Extensions.Storages/README.md)
 
 │&nbsp;&nbsp;&nbsp;&nbsp;└── Mozlite.Extensions.*
 
