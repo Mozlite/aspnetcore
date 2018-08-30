@@ -66,7 +66,7 @@ namespace Mozlite.Utils
         /// <returns>返回判断结果。</returns>
         public bool IsNextNonWhiteSpace(char current, bool skip = true)
         {
-            var index = _index;
+            var index = _index + 1;
             while (_length > index)
             {
                 if (!char.IsWhiteSpace(_source, index))
@@ -76,7 +76,7 @@ namespace Mozlite.Utils
 
             if (_source[index] == current)
             {
-                if (skip) _index = index;
+                if (skip) _index = index + 1;
                 return true;
             }
 
@@ -104,7 +104,7 @@ namespace Mozlite.Utils
         /// <returns>返回判断结果。</returns>
         public bool IsNextNonWhiteSpace(string current, bool skip = true, StringComparison stringComparison = StringComparison.Ordinal)
         {
-            var index = _index;//判断开始的位置
+            var index = _index + 1;//判断开始的位置
             var builder = new StringBuilder();
             while (_source.Length > index)
             {
@@ -117,10 +117,9 @@ namespace Mozlite.Utils
                 index++;
             }
 
-            index++;
             if (builder.ToString().Equals(current, stringComparison))
             {
-                if (skip) _index = index;
+                if (skip) _index = index + 1;
                 return true;
             }
 
