@@ -1,26 +1,109 @@
-﻿function ul(){ id="sysmessage" class="dropdown-menu-list scroller" jmoz-callback="callback" jmoz-template="json" jmoz-interval="30" jmoz-remote="@Url.Action("Unread", "Home", new{area = MessageSettings.ExtensionName})" style="overflow: hidden; outline: none;" tabindex="5001">
-    {{foreach item in $model.query}}
-    <li class="unread {{item.style}}">
-        <a href="/messages/home/detail/{{item.id}}">
-            <i class="pull-right {{item.iconClass}}"></i>
+﻿<script type="text/javascript">
+    $(function () {
+        var $this = $('.jshtml-1'); var a;
+        (function b() {
+            $.ajax({
+                url: url + '&_' + (+new Date()),
+                dataType: 'JSON', type: 'GET', success: function (e) { c(e); if (a) clearTimeout(a); a = setTimeout(b, $delay); },
+                error: function () { if (a) clearTimeout(a); a = setTimeout(b, $delay); }
+            });
+        })();
 
-            <span class="line">
-                {{item.content}}
-            </span>
+        var d = [];
+        function c($model) {
+            d = [];
 
-            <span class="line small">
-                {{item.createdDate.toJsonDateString()}}
-            </span>
+            $this.html(d.join(''));
+            f($model);
+        }
+
+        function w(block) {
+            d.push(block);
+        }
+
+        function f($model) {
+
+        }
+    });
+</script>
+
+{{foreach item in $model.query}}
+<li class="unread ${item.style}">
+    <a href="/messages/home/detail/${item.id}">
+        <i class="pull-right ${item.iconClass}"></i>
+        {{switch item.id}}
+        {{case 1}}
+
+        {{/case}}
+        {{/switch}}
+
+        {{if item.content.length > 2}}
+        <span class="line">
+            ${item.content}
+        </span>
+        {{/if}}
+        {{elseif item.content.length > 0}}
+        ${item.content}
+        {{/elseif}}
+        {{else}}
+        错误了!
+        {{/else}}
+        <span class="line small">
+            ${item.createdDate.toJsonDateString()}
+        </span>
+    </a>
+</li>
+{{/foreach}}
+<moz:js tag="ul">
+    $model.query.forEach(function(item) {
+    <li class="unread ${item.style}">
+        <a href="/messages/home/detail/${item.id}">
+            <i class="pull-right ${item.iconClass}"></i>
+            if(item.count < 0){
+            <span class="count">${item.count}</span>
+            }
+            `你好，测试！`
         </a>
     </li>
-    {{/foreach}}
-    function callback(d) {
-        $('.unread-msgcount').html(d.size);
-        if (d.size > 0) {
-            $('.msgcount').html(d.size).show();
+    });
+    $('.unread-msgcount').html($model.size);
+    if ($model.size > 0) {
+    $('.msgcount').html($model.size).show();
+    }
+    else {
+    $('.msgcount').hide();
+    }
+</moz:js>
+
+<script type="text/javascript">
+    var s = [];
+    var selfs = ['img', 'hr', 'meta'];
+    function write(tag, attributes, children) {
+        var args = arguments;
+        if (typeof attributes === "boolean") {
+            if (!attributes) return; //条件判断是否显示
+            attributes = children;
+            args = args.slice(3);
+        } else {
+            args = args.slice(2);
         }
-        else {
-            $('.msgcount').hide();
-        }
-    };
-}
+
+    }
+
+    $model.query.forEach(item => write('li', { class: `unread ${item.style}` }, function () {
+        write('a',
+            { href: `/messages/home/detail/${item.id}` },
+            function () {
+                write('i', { class: `pull-right ${item.iconClass}` }),
+                    write('span', item.count > 0, { class: `count` }, item.count),
+                    `你好测试`
+            });
+    }));
+    $('.unread-msgcount').html($model.size);
+    if ($model.size > 0) {
+        $('.msgcount').html($model.size).show();
+    }
+    else {
+        $('.msgcount').hide();
+    }
+</script>

@@ -1,6 +1,7 @@
-﻿using System;
-using System.Text;
+﻿#if DEBUG
+using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Mozlite.Utils
@@ -8,7 +9,7 @@ namespace Mozlite.Utils
     /// <summary>
     /// 属性格式化器，用于API调用格式化，快速生成属性名称。
     /// </summary>
-    public static class PropertyFormatter
+    public static class Formatter
     {
         private const string Separator = "--sdf%32$4s#df--";
         private static readonly IDictionary<string, string> _typeNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -93,3 +94,4 @@ namespace Mozlite.Utils
         }
     }
 }
+#endif
