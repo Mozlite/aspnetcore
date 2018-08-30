@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Mozlite.Mvc.Themes.Menus
+namespace Mozlite.Mvc.AdminMenus
 {
     /// <summary>
     /// 菜单提供者工厂接口。

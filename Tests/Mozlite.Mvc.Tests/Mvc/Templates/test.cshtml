@@ -1,109 +1,23 @@
-﻿<script type="text/javascript">
+﻿<script>
     $(function () {
-        var $this = $('.jshtml-1'); var a;
+        var $this = $('.mozjs-1'), a, d;
         (function b() {
             $.ajax({
-                url: url + '&_' + (+new Date()),
-                dataType: 'JSON', type: 'GET', success: function (e) { c(e); if (a) clearTimeout(a); a = setTimeout(b, $delay); },
-                error: function () { if (a) clearTimeout(a); a = setTimeout(b, $delay); }
+                url: '/test/data?_=' + (+new Date()),
+                dataType: 'JSON',
+                type: 'GET',
+                success: function (e) { d = []; $render(e); if (a) clearTimeout(a); a = setTimeout(b, 5000); }, error: function () { if (a) clearTimeout(a); a = setTimeout(b, 5000); }
             });
-        })();
+        })(); function w(s) { d.push(s); } function $render($model) {
+            $model.forEach(item => render(item));
 
-        var d = [];
-        function c($model) {
-            d = [];
-
-            $this.html(d.join(''));
-            f($model);
-        }
-
-        function w(block) {
-            d.push(block);
-        }
-
-        function f($model) {
-
-        }
-    });
-</script>
-
-{{foreach item in $model.query}}
-<li class="unread ${item.style}">
-    <a href="/messages/home/detail/${item.id}">
-        <i class="pull-right ${item.iconClass}"></i>
-        {{switch item.id}}
-        {{case 1}}
-
-        {{/case}}
-        {{/switch}}
-
-        {{if item.content.length > 2}}
-        <span class="line">
-            ${item.content}
-        </span>
-        {{/if}}
-        {{elseif item.content.length > 0}}
-        ${item.content}
-        {{/elseif}}
-        {{else}}
-        错误了!
-        {{/else}}
-        <span class="line small">
-            ${item.createdDate.toJsonDateString()}
-        </span>
-    </a>
-</li>
-{{/foreach}}
-<moz:js tag="ul">
-    $model.query.forEach(function(item) {
-    <li class="unread ${item.style}">
-        <a href="/messages/home/detail/${item.id}">
-            <i class="pull-right ${item.iconClass}"></i>
-            if(item.count < 0){
-            <span class="count">${item.count}</span>
+            function render(item) {
+                w('<li style="color:'); w(item.color); w(';'); w(item.bold ? 'font-weight:bold;' : ''); w('">'); w(item.id); w(item.name); if (item.data) {
+                    w('<ul class="sub">'); item.data.forEach(it => render(it));
+                    w('</ul>');
+                }
+                w('</li>');
             }
-            `你好，测试！`
-        </a>
-    </li>
-    });
-    $('.unread-msgcount').html($model.size);
-    if ($model.size > 0) {
-    $('.msgcount').html($model.size).show();
-    }
-    else {
-    $('.msgcount').hide();
-    }
-</moz:js>
-
-<script type="text/javascript">
-    var s = [];
-    var selfs = ['img', 'hr', 'meta'];
-    function write(tag, attributes, children) {
-        var args = arguments;
-        if (typeof attributes === "boolean") {
-            if (!attributes) return; //条件判断是否显示
-            attributes = children;
-            args = args.slice(3);
-        } else {
-            args = args.slice(2);
+            $this.html(d.join(''));
         }
-
-    }
-
-    $model.query.forEach(item => write('li', { class: `unread ${item.style}` }, function () {
-        write('a',
-            { href: `/messages/home/detail/${item.id}` },
-            function () {
-                write('i', { class: `pull-right ${item.iconClass}` }),
-                    write('span', item.count > 0, { class: `count` }, item.count),
-                    `你好测试`
-            });
-    }));
-    $('.unread-msgcount').html($model.size);
-    if ($model.size > 0) {
-        $('.msgcount').html($model.size).show();
-    }
-    else {
-        $('.msgcount').hide();
-    }
-</script>
+    });</script>

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Extensions;
 
-namespace Mozlite.Mvc.Themes.Menus
+namespace Mozlite.Mvc.AdminMenus
 {
     /// <summary>
     /// 菜单提供者工厂实现类。
@@ -39,7 +38,7 @@ namespace Mozlite.Mvc.Themes.Menus
         {
             return _cache.GetOrCreate($"memus[{provider}]", ctx =>
             {
-                ctx.SetDefaultAbsoluteExpiration();
+                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
                 var dic = new Dictionary<string, MenuItem>(StringComparer.OrdinalIgnoreCase);
                 var providers =
                     _providers.Where(p => string.Compare(p.Name, provider, StringComparison.OrdinalIgnoreCase) == 0);
@@ -59,7 +58,6 @@ namespace Mozlite.Mvc.Themes.Menus
         /// <returns>返回当前菜单项。</returns>
         public MenuItem GetMenu(string provider, string name)
         {
-            if (name == null) return null;
             LoadMenus(provider).TryGetValue(name, out var item);
             return item;
         }
