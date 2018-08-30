@@ -8,14 +8,24 @@ namespace Mozlite.Extensions.Security
     public class DefaultRole
     {
         /// <summary>
+        /// 网站所有者，最高权限用户组名称。
+        /// </summary>
+        public const string OwnerName = "SYS:OWNER";
+
+        /// <summary>
         /// 网站所有者，最高权限用户组。
         /// </summary>
-        public static readonly DefaultRole Owner = new DefaultRole(Resources.Owner, "SYS:OWNER", int.MaxValue);
+        public static readonly DefaultRole Owner = new DefaultRole(Resources.Owner, OwnerName, int.MaxValue);
 
+        /// <summary>
+        /// 网站所有者，最低权限用户组名称。
+        /// </summary>
+        public const string MemberName = "SYS:MEMBER";
+        
         /// <summary>
         /// 网站所有者，最低权限用户组。
         /// </summary>
-        public static readonly DefaultRole Member = new DefaultRole(Resources.Member, "SYS:MEMBER", 0);
+        public static readonly DefaultRole Member = new DefaultRole(Resources.Member, MemberName, 0);
 
         private DefaultRole(string name, string normalizedName, int roleLevel)
         {
