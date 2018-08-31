@@ -57,6 +57,17 @@ namespace Mozlite.Extensions.Data
         /// <summary>
         /// 根据条件更新特定的实例。
         /// </summary>
+        /// <param name="id">唯一Id。</param>
+        /// <param name="satement">更新对象。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual DataResult Update(TKey id, object satement)
+        {
+            return DataResult.FromResult(Context.Update(id, satement), DataAction.Updated);
+        }
+
+        /// <summary>
+        /// 根据条件更新特定的实例。
+        /// </summary>
         /// <param name="expression">条件表达式。</param>
         /// <param name="satement">更新对象。</param>
         /// <returns>返回更新结果。</returns>
@@ -139,6 +150,18 @@ namespace Mozlite.Extensions.Data
         public virtual Task<bool> IsDuplicatedAsync(TModel model, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// 根据条件更新特定的实例。
+        /// </summary>
+        /// <param name="id">唯一Id。</param>
+        /// <param name="satement">更新对象。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual async Task<DataResult> UpdateAsync(TKey id, object satement, CancellationToken cancellationToken = default)
+        {
+            return DataResult.FromResult(await Context.UpdateAsync(id, satement, cancellationToken), DataAction.Updated);
         }
 
         /// <summary>
