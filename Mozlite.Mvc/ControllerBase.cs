@@ -1,18 +1,19 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Mozlite.Extensions.Security;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Logging;
+using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Controllers;
 using Mozlite.Mvc.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Mozlite.Mvc
 {
@@ -377,6 +378,17 @@ namespace Mozlite.Mvc
             if (result.Succeed())
                 return Json(BsType.Success, result.ToString(args));
             return Json(BsType.Danger, result.ToString(args));
+        }
+
+        /// <summary>
+        /// 返回JSON试图结果。
+        /// </summary>
+        /// <param name="result">数据结果。</param>
+        /// <returns>返回JSON试图结果。</returns>
+        protected IActionResult Error(IdentityResult result)
+        {
+            var errors = result.Errors.Select(x => x.Description).ToList();
+            return Json(BsType.Danger, string.Join(", ", errors));
         }
         #endregion
 

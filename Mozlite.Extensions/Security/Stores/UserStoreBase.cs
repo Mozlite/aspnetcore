@@ -313,7 +313,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             if (user.UserName != null && UserContext.Any(x => x.UserId != user.UserId && x.UserName == user.UserName))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
-            if (user.UserName != null && UserContext.Any(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName))
+            if (user.NormalizedUserName != null && UserContext.Any(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
             return IdentityResult.Success;
         }
@@ -328,7 +328,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             if (user.UserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.UserName == user.UserName, cancellationToken))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
-            if (user.UserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName, cancellationToken))
+            if (user.NormalizedUserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName, cancellationToken))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
             return IdentityResult.Success;
         }

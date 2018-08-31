@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Security
 {
@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Security
         /// 数据库操作接口。
         /// </summary>
         protected IUserDbContext<TUser, TUserClaim, TUserLogin, TUserToken> DbContext { get; }
-        
+
         private HttpContext _httpContext;
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Mozlite.Extensions.Security
                 return _httpContext;
             }
         }
-        
+
         private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>
         /// 获取当前用户。
@@ -247,6 +247,32 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="userId">用户实例。</param>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual IdentityResult IsDuplicated(int userId, string userName)
+        {
+            if (DbContext.UserContext.Any(x => x.UserId != userId && (x.UserName == userName || x.NormalizedUserName == userName)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(userName));
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="userId">用户实例。</param>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual async Task<IdentityResult> IsDuplicatedAsync(int userId, string userName)
+        {
+            if (await DbContext.UserContext.AnyAsync(x => x.UserId != userId && (x.UserName == userName || x.NormalizedUserName == userName)))
+                return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(userName));
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
         /// 锁定或者解锁用户。
         /// </summary>
         /// <param name="userId">用户Id。</param>
@@ -265,7 +291,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回执行结果。</returns>
         public virtual Task<bool> LockoutAsync(int userId, DateTimeOffset? lockoutEnd = null)
         {
-            return _store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd});
+            return _store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd });
         }
 
         /// <summary>

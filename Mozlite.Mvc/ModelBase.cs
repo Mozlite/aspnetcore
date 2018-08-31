@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -364,6 +365,17 @@ namespace Mozlite.Mvc
                 key = $"Model.{key}";
             ModelState.AddModelError(key, string.Format(message, args));
             return Error();
+        }
+
+        /// <summary>
+        /// 返回JSON试图结果。
+        /// </summary>
+        /// <param name="result">数据结果。</param>
+        /// <returns>返回JSON试图结果。</returns>
+        protected IActionResult Error(IdentityResult result)
+        {
+            var errors = result.Errors.Select(x => x.Description).ToList();
+            return Json(BsType.Danger, string.Join(", ", errors));
         }
         #endregion
 

@@ -217,6 +217,22 @@ namespace Mozlite.Extensions.Security
         Task<IdentityResult> IsDuplicatedAsync(TUser user);
 
         /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="userId">用户实例。</param>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回判断结果。</returns>
+        IdentityResult IsDuplicated(int userId, string userName);
+
+        /// <summary>
+        /// 判断当前用户名称是否存在。
+        /// </summary>
+        /// <param name="userId">用户实例。</param>
+        /// <param name="userName">用户名称。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<IdentityResult> IsDuplicatedAsync(int userId, string userName);
+
+        /// <summary>
         /// 锁定或者解锁用户。
         /// </summary>
         /// <param name="userId">用户Id。</param>
