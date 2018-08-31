@@ -47,7 +47,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   使用此强类型资源类，为所有资源查找
+        ///   重写当前线程的 CurrentUICulture 属性
         ///   重写当前线程的 CurrentUICulture 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -147,6 +147,24 @@ namespace Mozlite.Extensions.Properties {
         internal static string DataAction_UpdatedFailured {
             get {
                 return ResourceManager.GetString("DataAction_UpdatedFailured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 电子邮件发送服务 的本地化字符串。
+        /// </summary>
+        internal static string EmailTaskService {
+            get {
+                return ResourceManager.GetString("EmailTaskService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 发送队列在数据库中的电子邮件 的本地化字符串。
+        /// </summary>
+        internal static string EmailTaskService_Description {
+            get {
+                return ResourceManager.GetString("EmailTaskService_Description", resourceCulture);
             }
         }
         
