@@ -26,17 +26,17 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 用户组数据库操作接口。
         /// </summary>
-        protected IDbContext<TRole> RoleContext { get; }
+        public IDbContext<TRole> RoleContext { get; }
 
         /// <summary>
         /// 用户用户组数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserRole> UserRoleContext { get; }
+        public IDbContext<TUserRole> UserRoleContext { get; }
 
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        protected IDbContext<TRoleClaim> RoleClaimContext { get; }
+        public IDbContext<TRoleClaim> RoleClaimContext { get; }
 
         /// <summary>
         /// 初始化类<see cref="RoleStoreBase{TRole,TUserRole,TRoleClaim}"/>。
@@ -81,7 +81,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组添加结果。</returns>
-        public override async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (role == null)
@@ -113,7 +113,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组更新结果。</returns>
-        public override async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (role == null)
@@ -144,7 +144,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组删除结果。</returns>
-        public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (role == null)
@@ -237,7 +237,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual async Task<bool> MoveUpAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<bool> MoveUpAsync(TRole role, CancellationToken cancellationToken = default)
         {
             if (role == null)
             {
@@ -264,7 +264,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户组实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回移动结果。</returns>
-        public virtual async Task<bool> MoveDownAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<bool> MoveDownAsync(TRole role, CancellationToken cancellationToken = default)
         {
             if (role == null)
             {
@@ -320,7 +320,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="id">用户组Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前用户组实例对象。</returns>
-        public override Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return RoleContext.FindAsync(id, cancellationToken);
         }
@@ -331,7 +331,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="normalizedName">用户组名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前用户组实例对象。</returns>
-        public override Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default)
         {
             return RoleContext.FindAsync(x => x.NormalizedName == normalizedName, cancellationToken);
         }
@@ -342,7 +342,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户组实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户组的声明列表。</returns>
-        public override async Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default)
         {
             if (role == null)
             {
@@ -358,7 +358,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户组实例对象。</param>
         /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public override async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
         {
             if (role == null)
             {
@@ -377,7 +377,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="role">用户组实例对象。</param>
         /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public override async Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
         {
             if (role == null)
             {
@@ -405,7 +405,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户组列表。</returns>
-        public virtual Task<IEnumerable<TRole>> LoadRolesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<IEnumerable<TRole>> LoadRolesAsync(CancellationToken cancellationToken = default)
         {
             return RoleContext.FetchAsync(cancellationToken: cancellationToken);
         }

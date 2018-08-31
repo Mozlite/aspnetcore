@@ -40,20 +40,12 @@ namespace Mozlite.Extensions.Security
             }
         }
 
-        private IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> _store;
+        private readonly IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> _store;
         /// <summary>
-        /// 用户存储实例。
+        /// 数据库操作接口。
         /// </summary>
-        protected new IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> Store
-        {
-            get
-            {
-                if (_store == null)
-                    _store = base.Store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
-                return _store;
-            }
-        }
-
+        protected IUserDbContext<TUser, TUserClaim, TUserLogin, TUserToken> DbContext { get; }
+        
         private HttpContext _httpContext;
 
         /// <summary>
@@ -79,7 +71,7 @@ namespace Mozlite.Extensions.Security
             if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
                 return current;
             if (int.TryParse(GetUserId(HttpContext.User), out var userId))
-                current = Store.FindUser(userId);
+                current = _store.FindUser(userId);
             else
                 current = null;
             HttpContext.Items[_currentUserCacheKey] = current;
@@ -95,7 +87,7 @@ namespace Mozlite.Extensions.Security
             if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
                 return current;
             if (int.TryParse(GetUserId(HttpContext.User), out var userId))
-                current = await Store.FindUserAsync(userId);
+                current = await _store.FindUserAsync(userId);
             else
                 current = null;
             HttpContext.Items[_currentUserCacheKey] = current;
@@ -198,7 +190,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回更新结果。</returns>
         public virtual bool Update(int userId, object fields)
         {
-            return Store.Update(userId, fields);
+            return _store.Update(userId, fields);
         }
 
         /// <summary>
@@ -209,7 +201,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回更新结果。</returns>
         public virtual Task<bool> UpdateAsync(int userId, object fields)
         {
-            return Store.UpdateAsync(userId, fields);
+            return _store.UpdateAsync(userId, fields);
         }
 
         /// <summary>
@@ -220,7 +212,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回查询分页实例。</returns>
         public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
         {
-            return Store.Load(query);
+            return _store.Load(query);
         }
 
         /// <summary>
@@ -231,7 +223,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回查询分页实例。</returns>
         public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
         {
-            return Store.LoadAsync(query);
+            return _store.LoadAsync(query);
         }
 
         /// <summary>
@@ -241,7 +233,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回判断结果。</returns>
         public virtual IdentityResult IsDuplicated(TUser user)
         {
-            return Store.IsDuplicated(user);
+            return _store.IsDuplicated(user);
         }
 
         /// <summary>
@@ -251,7 +243,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回判断结果。</returns>
         public virtual Task<IdentityResult> IsDuplicatedAsync(TUser user)
         {
-            return Store.IsDuplicatedAsync(user, CancellationToken);
+            return _store.IsDuplicatedAsync(user, CancellationToken);
         }
 
         /// <summary>
@@ -262,7 +254,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回执行结果。</returns>
         public virtual bool Lockout(int userId, DateTimeOffset? lockoutEnd = null)
         {
-            return Store.Update(userId, new { LockoutEnd = lockoutEnd });
+            return _store.Update(userId, new { LockoutEnd = lockoutEnd });
         }
 
         /// <summary>
@@ -273,7 +265,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回执行结果。</returns>
         public virtual Task<bool> LockoutAsync(int userId, DateTimeOffset? lockoutEnd = null)
         {
-            return Store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd});
+            return _store.UpdateAsync(userId, new { LockoutEnd = lockoutEnd});
         }
 
         /// <summary>
@@ -283,7 +275,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户实例。</returns>
         public virtual Task<TUser> FindByIdAsync(int userId)
         {
-            return Store.FindUserAsync(userId);
+            return _store.FindUserAsync(userId);
         }
 
         /// <summary>
@@ -293,7 +285,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户实例。</returns>
         public override Task<TUser> FindByNameAsync(string userName)
         {
-            return Store.FindByNameAsync(userName);
+            return _store.FindByNameAsync(userName);
         }
 
         /// <summary>
@@ -357,6 +349,8 @@ namespace Mozlite.Extensions.Security
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _services = services;
+            _store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
+            DbContext = store as IUserDbContext<TUser, TUserClaim, TUserLogin, TUserToken>;
         }
     }
 
@@ -381,13 +375,11 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
-        private IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> _store;
+        private readonly IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> _store;
         /// <summary>
-        /// 用户存储实例。
+        /// 数据库操作接口。
         /// </summary>
-        protected new IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> Store => _store ?? (_store =
-                                                                                                                           base.Store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken,
-                                                                                                                               TRoleClaim>);
+        protected new IUserRoleDbContext<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> DbContext { get; }
 
         /// <summary>
         /// 初始化类<see cref="UserManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
@@ -404,6 +396,8 @@ namespace Mozlite.Extensions.Security
         protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
+            _store = store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>;
+            DbContext = store as IUserRoleDbContext<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>;
         }
 
         /// <summary>
@@ -435,7 +429,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户组Id集合。</returns>
         public virtual IEnumerable<TRole> GetRoles(int userId)
         {
-            return Store.GetRoles(userId);
+            return _store.GetRoles(userId);
         }
 
         /// <summary>
@@ -445,7 +439,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户组Id集合。</returns>
         public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId)
         {
-            return Store.GetRolesAsync(userId);
+            return _store.GetRolesAsync(userId);
         }
 
         /// <summary>
@@ -477,7 +471,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回添加结果。</returns>
         public virtual bool AddUserToRoles(int userId, int[] roleIds)
         {
-            return Store.AddUserToRoles(userId, roleIds);
+            return _store.AddUserToRoles(userId, roleIds);
         }
 
         /// <summary>
@@ -488,7 +482,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回添加结果。</returns>
         public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds)
         {
-            return Store.AddUserToRolesAsync(userId, roleIds);
+            return _store.AddUserToRolesAsync(userId, roleIds);
         }
 
         /// <summary>
@@ -499,7 +493,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回添加结果。</returns>
         public virtual bool SetUserToRoles(int userId, int[] roleIds)
         {
-            return Store.SetUserToRoles(userId, roleIds);
+            return _store.SetUserToRoles(userId, roleIds);
         }
 
         /// <summary>
@@ -510,7 +504,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回设置结果。</returns>
         public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds)
         {
-            return Store.SetUserToRolesAsync(userId, roleIds);
+            return _store.SetUserToRolesAsync(userId, roleIds);
         }
 
     }

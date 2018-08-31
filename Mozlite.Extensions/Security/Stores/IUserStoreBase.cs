@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -13,6 +13,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public interface IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        : IUserDbContext<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -49,7 +50,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="fields">用户列。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回更新结果。</returns>
-        Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 通过用户验证名称查询用户实例。
@@ -60,7 +61,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 返回当前用户实例对象。
         /// </returns>
         Task<TUser> FindByNameAsync(string normalizedUserName,
-           CancellationToken cancellationToken = default(CancellationToken));
+           CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 通过Id获取用户实例。
@@ -68,7 +69,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default);
 
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回查询分页实例。</returns>
-        Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>;
+        Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TUser>;
 
         /// <summary>
         /// 判断当前用户名称是否存在。
@@ -101,7 +102,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -115,7 +116,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public interface IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :
-        IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>, IUserRoleDbContext<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserBase
         where TRole : RoleBase
         where TUserClaim : UserClaimBase, new()
@@ -138,7 +139,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组列表。</returns>
         Task<IEnumerable<TRole>> GetRolesAsync(int userId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 将用户添加到用户组中。
@@ -156,7 +157,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回添加结果。</returns>
         Task<bool> AddUserToRolesAsync(int userId, int[] roleIds,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 设置用户用户组。
@@ -174,6 +175,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回设置结果。</returns>
         Task<bool> SetUserToRolesAsync(int userId, int[] roleIds,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
     }
 }

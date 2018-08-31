@@ -34,29 +34,42 @@ namespace Mozlite.Extensions.Security.Stores
         /// <summary>
         /// 用户组数据库操作接口。
         /// </summary>
-        protected IDbContext<TRole> RoleContext { get; }
+        public IDbContext<TRole> RoleContext { get; }
 
         /// <summary>
         /// 用户组管理接口。
         /// </summary>
-        protected IRoleManager<TRole, TUserRole, TRoleClaim> RoleManager { get; }
+        public IRoleManager<TRole, TUserRole, TRoleClaim> RoleManager { get; }
 
         /// <summary>
         /// 用户数据库操作接口。
         /// </summary>
-        protected IDbContext<TUser> UserContext { get; }
+        public IDbContext<TUser> UserContext { get; }
+
         /// <summary>
         /// 用户声明数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserClaim> UserClaimContext { get; }
+        public IDbContext<TUserClaim> UserClaimContext { get; }
+
         /// <summary>
         /// 用户登陆数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserLogin> UserLoginContext { get; }
+        public IDbContext<TUserLogin> UserLoginContext { get; }
+
         /// <summary>
         /// 用户标识数据库操作接口。
         /// </summary>
-        protected IDbContext<TUserToken> UserTokenContext { get; }
+        public IDbContext<TUserToken> UserTokenContext { get; }
+
+        /// <summary>
+        /// 用户用户组数据库操作接口。
+        /// </summary>
+        public IDbContext<TUserRole> UserRoleContext { get; }
+
+        /// <summary>
+        /// 用户声明数据库操作接口。
+        /// </summary>
+        public IDbContext<TRoleClaim> RoleClaimContext { get; }
 
         /// <summary>
         /// 通过用户验证名称查询用户实例。
@@ -98,15 +111,10 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="fields">用户列。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回更新结果。</returns>
-        public virtual Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default)
         {
             return UserContext.UpdateAsync(userId, fields, cancellationToken);
         }
-
-        /// <summary>
-        /// 用户用户组数据库操作接口。
-        /// </summary>
-        protected IDbContext<TUserRole> UserRoleContext { get; }
 
         /// <summary>
         /// 初始化类<see cref="UserStoreBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
@@ -118,6 +126,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userTokenContext">用户标识数据库接口。</param>
         /// <param name="roleContext">用户组上下文。</param>
         /// <param name="userRoleContext">用户用户组数据库操作接口。</param>
+        /// <param name="roleClaimContext">用户组声明数据库操作接口。</param>
         /// <param name="roleManager">用户组管理接口。</param>
         protected UserStoreBase(IdentityErrorDescriber describer,
             IDbContext<TUser> userContext,
@@ -126,6 +135,7 @@ namespace Mozlite.Extensions.Security.Stores
             IDbContext<TUserToken> userTokenContext,
             IDbContext<TRole> roleContext,
             IDbContext<TUserRole> userRoleContext,
+            IDbContext<TRoleClaim> roleClaimContext,
             IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) : base(describer)
         {
             RoleContext = roleContext;
@@ -135,6 +145,7 @@ namespace Mozlite.Extensions.Security.Stores
             UserLoginContext = userLoginContext;
             UserTokenContext = userTokenContext;
             UserRoleContext = userRoleContext;
+            RoleClaimContext = roleClaimContext;
         }
 
         /// <summary>
@@ -143,7 +154,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回添加用户结果。</returns>
-        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -174,7 +185,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回更新结果。</returns>
-        public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -205,7 +216,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回删除结果。</returns>
-        public override async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -238,7 +249,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回当前用户实例对象。
         /// </returns>
-        public override async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (int.TryParse(userId, out var id))
@@ -254,7 +265,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回当前用户实例对象。
         /// </returns>
-        public override Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
         {
             return UserContext.FindAsync(x => x.NormalizedUserName == normalizedUserName, cancellationToken);
         }
@@ -265,7 +276,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        public override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default)
         {
             return UserContext.FindAsync(userId, cancellationToken);
         }
@@ -288,7 +299,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回查询分页实例。</returns>
-        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default(CancellationToken)) where TQuery : QueryBase<TUser>
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TUser>
         {
             return UserContext.LoadAsync(query, cancellationToken: cancellationToken);
         }
@@ -313,7 +324,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        public virtual async Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default)
         {
             if (user.UserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.UserName == user.UserName, cancellationToken))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
@@ -357,7 +368,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例的所有声明列表。</returns>
-        public override async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default)
         {
             if (user == null)
             {
@@ -373,7 +384,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="claims">声明列表。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public override async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
         {
             if (user == null)
             {
@@ -402,7 +413,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="newClaim">新的声明实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (user == null)
             {
@@ -428,7 +439,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="claims">声明列表。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (user == null)
             {
@@ -457,7 +468,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回用户列表。 
         /// </returns>
-        public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (claim == null)
@@ -511,7 +522,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="login">用户登陆信息实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -533,7 +544,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="providerKey">登陆唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -553,7 +564,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回当前用户所有登陆信息。
         /// </returns>
-        public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default)
         {
             var loginInfos = await UserLoginContext.FetchAsync(x => x.UserId == user.UserId, cancellationToken);
             return loginInfos.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName)).ToList();
@@ -565,7 +576,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="normalizedEmail">验证邮件地址。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        public override Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
         {
             return UserContext.FindAsync(x => x.NormalizedEmail == normalizedEmail, cancellationToken);
         }
@@ -578,7 +589,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
         public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var role = await RoleManager.FindByNameAsync(normalizedRoleName);
             if (role == null)
@@ -594,7 +605,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回用户列表。 
         /// </returns>
-        public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default)
         {
             var role = await RoleManager.FindByNameAsync(normalizedRoleName);
             if (role == null)
@@ -613,7 +624,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
         {
             var role = await RoleManager.FindByNameAsync(normalizedRoleName);
             if (role == null || await UserRoleContext.AnyAsync(x => x.UserId == user.UserId && x.RoleId == role.RoleId, cancellationToken))
@@ -634,7 +645,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var role = await RoleManager.FindByNameAsync(normalizedRoleName);
             if (role != null)
@@ -655,7 +666,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的所有用户组列表。</returns>
-        public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default)
         {
             var roles = await RoleContext.AsQueryable()
                 .Select(x => x.Name)
@@ -685,7 +696,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组列表。</returns>
-        public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<IEnumerable<TRole>> GetRolesAsync(int userId, CancellationToken cancellationToken = default)
         {
             return RoleContext.AsQueryable()
                 .Select()
@@ -739,7 +750,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回设置结果。</returns>
-        protected virtual async Task<bool> SetMaxRoleAsync(IDbTransactionContext<TRole> db, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        protected virtual async Task<bool> SetMaxRoleAsync(IDbTransactionContext<TRole> db, int userId, CancellationToken cancellationToken = default)
         {
             var role = await db.AsQueryable()
                 .Select()
@@ -757,7 +768,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="roleIds">用户组Id列表。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> AddUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default)
         {
             return UserRoleContext.BeginTransactionAsync(async db =>
             {
@@ -801,7 +812,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="roleIds">用户组Id列表。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回设置结果。</returns>
-        public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> SetUserToRolesAsync(int userId, int[] roleIds, CancellationToken cancellationToken = default)
         {
             return UserRoleContext.BeginTransactionAsync(async db =>
             {

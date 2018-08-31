@@ -23,7 +23,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="context">数据库事务操作实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回操作结果，返回<c>true</c>表示操作成功，将自动提交事务，如果<c>false</c>或发生错误，则回滚事务。</returns>
-        Task<bool> OnCreatedAsync(IDbTransactionContext<TRole> context, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> OnCreatedAsync(IDbTransactionContext<TRole> context, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 当用户组更新前触发得方法。
@@ -38,7 +38,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="context">数据库事务操作实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回操作结果，返回<c>true</c>表示操作成功，将自动提交事务，如果<c>false</c>或发生错误，则回滚事务。</returns>
-        Task<bool> OnUpdateAsync(IDbTransactionContext<TRole> context, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> OnUpdateAsync(IDbTransactionContext<TRole> context, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 当用户组删除前触发得方法。
@@ -53,6 +53,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="context">数据库事务操作实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回操作结果，返回<c>true</c>表示操作成功，将自动提交事务，如果<c>false</c>或发生错误，则回滚事务。</returns>
-        Task<bool> OnDeleteAsync(IDbTransactionContext<TRole> context, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> OnDeleteAsync(IDbTransactionContext<TRole> context, CancellationToken cancellationToken = default);
     }
 }

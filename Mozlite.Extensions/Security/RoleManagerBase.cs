@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Security.Stores;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Identity;
-using Mozlite.Extensions.Security.Stores;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Security
 {
@@ -26,19 +26,11 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         protected IMemoryCache Cache { get; }
 
-        private IRoleStoreBase<TRole, TUserRole, TRoleClaim> _store;
+        private readonly IRoleStoreBase<TRole, TUserRole, TRoleClaim> _store;
         /// <summary>
-        /// 数据存储接口实例。
+        /// 用户组数据库操作接口。
         /// </summary>
-        protected new IRoleStoreBase<TRole, TUserRole, TRoleClaim> Store
-        {
-            get
-            {
-                if (_store == null)
-                    _store = base.Store as IRoleStoreBase<TRole, TUserRole, TRoleClaim>;
-                return _store;
-            }
-        }
+        protected IRoleDbContext<TRole, TUserRole, TRoleClaim> DbContext { get; }
 
         /// <summary>
         /// 初始化类<see cref="RoleManagerBase{TRole, TUserRole, TRoleClaim}"/>
@@ -53,6 +45,8 @@ namespace Mozlite.Extensions.Security
             IMemoryCache cache)
             : base(store, roleValidators, keyNormalizer, errors, logger)
         {
+            _store = store as IRoleStoreBase<TRole, TUserRole, TRoleClaim>;
+            DbContext = store as IRoleDbContext<TRole, TUserRole, TRoleClaim>;
             Cache = cache;
         }
 
@@ -64,7 +58,7 @@ namespace Mozlite.Extensions.Security
             return Cache.GetOrCreate(_cacheKey, ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                return Store.LoadRoles();
+                return _store.LoadRoles();
             });
         }
 
@@ -75,7 +69,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回当前用户组实例对象。</returns>
         public virtual Task<TRole> FindByIdAsync(int id)
         {
-            return Store.FindByIdAsync(id, CancellationToken);
+            return _store.FindByIdAsync(id, CancellationToken);
         }
 
         /// <summary>
@@ -87,7 +81,7 @@ namespace Mozlite.Extensions.Security
             return Cache.GetOrCreateAsync(_cacheKey, async ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                return await Store.LoadRolesAsync(CancellationToken);
+                return await _store.LoadRolesAsync(CancellationToken);
             });
         }
 
@@ -128,7 +122,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回当前用户组实例对象。</returns>
         public virtual TRole FindById(int id)
         {
-            return Store.FindById(id);
+            return _store.FindById(id);
         }
 
         /// <summary>
@@ -139,7 +133,7 @@ namespace Mozlite.Extensions.Security
         public virtual TRole FindByName(string normalizedName)
         {
             normalizedName = NormalizeKey(normalizedName);
-            return Store.FindByName(normalizedName);
+            return _store.FindByName(normalizedName);
         }
 
         /// <summary>
@@ -167,7 +161,7 @@ namespace Mozlite.Extensions.Security
             var result = IsDuplicated(role);
             if (!result.Succeeded)
                 return result;
-            return FromResult(Store.Create(role), role);
+            return FromResult(_store.Create(role), role);
         }
 
         /// <summary>
@@ -183,7 +177,7 @@ namespace Mozlite.Extensions.Security
             var result = await IsDuplicatedAsync(role);
             if (!result.Succeeded)
                 return result;
-            return FromResult(await Store.CreateAsync(role, CancellationToken), role);
+            return FromResult(await _store.CreateAsync(role, CancellationToken), role);
         }
 
         /// <summary>
@@ -198,7 +192,7 @@ namespace Mozlite.Extensions.Security
             var result = IsDuplicated(role);
             if (!result.Succeeded)
                 return result;
-            return FromResult(Store.Update(role), role);
+            return FromResult(_store.Update(role), role);
         }
 
         /// <summary>
@@ -233,7 +227,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回移动结果。</returns>
         public virtual bool MoveUp(TRole role)
         {
-            return FromResult(Store.MoveUp(role), role);
+            return FromResult(_store.MoveUp(role), role);
         }
 
         /// <summary>
@@ -243,7 +237,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回移动结果。</returns>
         public virtual bool MoveDown(TRole role)
         {
-            return FromResult(Store.MoveDown(role), role);
+            return FromResult(_store.MoveDown(role), role);
         }
 
         /// <summary>
@@ -253,7 +247,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回移动结果。</returns>
         public virtual async Task<bool> MoveUpAsync(TRole role)
         {
-            return FromResult(await Store.MoveUpAsync(role), role);
+            return FromResult(await _store.MoveUpAsync(role), role);
         }
 
         /// <summary>
@@ -263,7 +257,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回移动结果。</returns>
         public virtual async Task<bool> MoveDownAsync(TRole role)
         {
-            return FromResult(await Store.MoveDownAsync(role), role);
+            return FromResult(await _store.MoveDownAsync(role), role);
         }
 
         /// <summary>
@@ -273,7 +267,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回用户组更新结果。</returns>
         public virtual IdentityResult Delete(TRole role)
         {
-            return FromResult(Store.Delete(role), role);
+            return FromResult(_store.Delete(role), role);
         }
 
         /// <summary>

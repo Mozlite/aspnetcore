@@ -101,7 +101,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户ID。</returns>
-        public virtual Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -117,7 +117,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户名称。</returns>
-        public virtual Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -133,7 +133,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="userName">用户名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -151,7 +151,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户验证名称。</returns>
-        public virtual Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -167,7 +167,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="normalizedName">用户验证名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetNormalizedUserNameAsync(TUser user, string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetNormalizedUserNameAsync(TUser user, string normalizedName, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -184,7 +184,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回添加用户结果。</returns>
-        public abstract Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 更新用户实例。
@@ -192,7 +192,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回更新结果。</returns>
-        public abstract Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 删除用户实例。
@@ -200,7 +200,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回删除结果。</returns>
-        public abstract Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 通过用户ID查询用户实例。
@@ -210,7 +210,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回当前用户实例对象。
         /// </returns>
-        public abstract Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 通过用户验证名称查询用户实例。
@@ -220,7 +220,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回当前用户实例对象。
         /// </returns>
-        public abstract Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 设置当前用户实例的哈希密码。
@@ -228,7 +228,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="passwordHash">哈希密码。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -245,7 +245,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的哈希密码。</returns>
-        public virtual Task<string> GetPasswordHashAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetPasswordHashAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -261,7 +261,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        public virtual Task<bool> HasPasswordAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> HasPasswordAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(user.PasswordHash != null);
@@ -273,7 +273,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        public abstract Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取用户登陆信息。
@@ -305,7 +305,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例的所有声明列表。</returns>
-        public abstract Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 添加用户声明。
@@ -313,7 +313,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="claims">声明列表。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 替换用户声明。
@@ -322,7 +322,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="claim">声明实例对象。</param>
         /// <param name="newClaim">新的声明实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 移除用户声明。
@@ -330,7 +330,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例。</param>
         /// <param name="claims">声明列表。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 添加用户登陆信息。
@@ -338,7 +338,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="login">用户登陆信息实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 移除用户登陆信息。
@@ -347,7 +347,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="loginProvider">登陆提供者名称。</param>
         /// <param name="providerKey">登陆唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取当前用户的登陆信息列表。
@@ -357,7 +357,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回当前用户所有登陆信息。
         /// </returns>
-        public abstract Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 通过登陆提供者和唯一键获取用户实例。
@@ -369,7 +369,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 返回用户实例对象。
         /// </returns>
         public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var userLogin = await FindUserLoginAsync(loginProvider, providerKey, cancellationToken);
@@ -386,7 +386,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的邮件确认状态。</returns>
-        public virtual Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -402,7 +402,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="confirmed">邮件确认状态。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -419,7 +419,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="email">邮件地址。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -436,7 +436,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的邮件地址。</returns>
-        public virtual Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -452,7 +452,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的验证邮件地址。</returns>
-        public virtual Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -468,7 +468,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="normalizedEmail">验证邮件地址。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -485,7 +485,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="normalizedEmail">验证邮件地址。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        public abstract Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取当前用户实体的锁定截至日期。
@@ -493,7 +493,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的锁定截至日期。</returns>
-        public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -509,7 +509,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="lockoutEnd">锁定截至日期。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -526,7 +526,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户登陆失败次数。</returns>
-        public virtual Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -542,7 +542,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task ResetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task ResetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -559,7 +559,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户登陆失败次数。</returns>
-        public virtual Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -575,7 +575,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        public virtual Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -591,7 +591,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="enabled">锁定启用状态。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -608,7 +608,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="phoneNumber">电话号码。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -625,7 +625,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回电话号码。</returns>
-        public virtual Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -641,7 +641,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的电话号码确认状态。</returns>
-        public virtual Task<bool> GetPhoneNumberConfirmedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> GetPhoneNumberConfirmedAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -657,7 +657,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="confirmed">电话号码确认状态。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -674,7 +674,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="stamp">安全戳。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -692,7 +692,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的安全戳。</returns>
-        public virtual Task<string> GetSecurityStampAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<string> GetSecurityStampAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -708,7 +708,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="enabled">电话/电子邮件验证状态。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public virtual Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -725,7 +725,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的电话/电子邮件验证状态。</returns>
-        public virtual Task<bool> GetTwoFactorEnabledAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> GetTwoFactorEnabledAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -743,7 +743,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回用户列表。 
         /// </returns>
-        public abstract Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取用户标识。
@@ -975,7 +975,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>
         /// 返回用户列表。 
         /// </returns>
-        public abstract Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 添加用户用户组。
@@ -983,7 +983,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">当前用户实例。</param>
         /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 移除用户用户组。
@@ -991,7 +991,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        public abstract Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取用户的所有用户组。
@@ -999,7 +999,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户的所有用户组列表。</returns>
-        public abstract Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 判断用户是否包含当前用户组。
@@ -1008,6 +1008,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="normalizedRoleName">验证用户组名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        public abstract Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken));
+        public abstract Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default);
     }
 }
