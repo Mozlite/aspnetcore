@@ -21,7 +21,12 @@ namespace Mozlite.Extensions.Messages.Tasks
         private readonly ISettingsManager _settingsManager;
         private readonly IMessageManager _messageManager;
         private readonly ILogger<EmailSendTaskService> _logger;
-
+        /// <summary>
+        /// 初始化类<see cref="EmailSendTaskService"/>。
+        /// </summary>
+        /// <param name="settingsManager">配置接口。</param>
+        /// <param name="messageManager">消息管理接口。</param>
+        /// <param name="logger">日志接口。</param>
         public EmailSendTaskService(ISettingsManager settingsManager, IMessageManager messageManager, ILogger<EmailSendTaskService> logger)
         {
             _settingsManager = settingsManager;

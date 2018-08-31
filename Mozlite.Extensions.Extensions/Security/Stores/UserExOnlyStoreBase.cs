@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="user">用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回判断结果。</returns>
-        public override async Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default)
         {
             if (user.UserName != null && await UserContext.AnyAsync(x => x.SiteId == user.SiteId && x.UserId != user.UserId && x.UserName == user.UserName, cancellationToken))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));

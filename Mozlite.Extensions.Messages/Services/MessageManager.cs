@@ -11,11 +11,14 @@ namespace Mozlite.Extensions.Messages.Services
     /// </summary>
     public class MessageManager : IMessageManager
     {
-        private readonly IDbContext<Message> _db;
-
-        public MessageManager(IDbContext<Message> db)
+        private readonly IDbContext<Message> _context;
+        /// <summary>
+        /// 初始化类<see cref="MessageManager"/>。
+        /// </summary>
+        /// <param name="context">数据库操作接口。</param>
+        public MessageManager(IDbContext<Message> context)
         {
-            _db = db;
+            _context = context;
         }
 
         /// <summary>
@@ -25,7 +28,7 @@ namespace Mozlite.Extensions.Messages.Services
         /// <returns>返回添加结果。</returns>
         public bool Create(Message message)
         {
-            return _db.Create(message);
+            return _context.Create(message);
         }
 
         /// <summary>
@@ -35,7 +38,7 @@ namespace Mozlite.Extensions.Messages.Services
         /// <returns>返回添加结果。</returns>
         public Task<bool> CreateAsync(Message message)
         {
-            return _db.CreateAsync(message);
+            return _context.CreateAsync(message);
         }
 
         /// <summary>
@@ -152,7 +155,7 @@ namespace Mozlite.Extensions.Messages.Services
         /// <returns>返回消息列表。</returns>
         public Task<IEnumerable<Message>> LoadAsync(MessageType messageType, MessageStatus? status = null)
         {
-            var query = _db.AsQueryable();
+            var query = _context.AsQueryable();
             query.Where(x => x.MessageType == messageType);
             if (status != null)
                 query.Where(x => x.Status == status);
@@ -168,7 +171,7 @@ namespace Mozlite.Extensions.Messages.Services
         /// <returns>返回设置结果。</returns>
         public Task<bool> SetFailuredAsync(int id, int maxTryTimes)
         {
-            return _db.BeginTransactionAsync(async db =>
+            return _context.BeginTransactionAsync(async db =>
             {
                 await db.UpdateAsync(x => x.Id == id, x => new { TryTimes = x.TryTimes + 1 });
                 await db.UpdateAsync(x => x.Id == id && x.TryTimes > maxTryTimes,
@@ -184,7 +187,7 @@ namespace Mozlite.Extensions.Messages.Services
         /// <returns>返回设置结果。</returns>
         public Task<bool> SetSuccessAsync(int id)
         {
-            return _db.UpdateAsync(x => x.Id == id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
+            return _context.UpdateAsync(x => x.Id == id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
         }
     }
 }

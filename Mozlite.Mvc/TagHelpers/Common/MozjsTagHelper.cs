@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using Mozlite.Utils;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Mozlite.Utils;
 
-namespace Mozlite.Mvc.TagHelpers
+namespace Mozlite.Mvc.TagHelpers.Common
 {
     /// <summary>
     /// js脚本标签，可以和HTML混合并用，开放参数：

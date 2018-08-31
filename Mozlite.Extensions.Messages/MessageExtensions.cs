@@ -20,7 +20,7 @@ namespace Mozlite.Extensions.Messages
             action(dic);
             foreach (var kw in dic)
             {
-                message = message.Replace($"[${kw.Key};]", kw.Value);
+                message = message.Replace($"${{{kw.Key}}};", kw.Value);
             }
             return message;
         }

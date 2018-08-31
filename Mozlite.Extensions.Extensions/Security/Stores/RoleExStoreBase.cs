@@ -80,7 +80,7 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="siteId">网站Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组列表。</returns>
-        public virtual Task<IEnumerable<TRole>> LoadRolesAsync(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<IEnumerable<TRole>> LoadRolesAsync(int siteId, CancellationToken cancellationToken = default)
         {
             return RoleContext.FetchAsync(x => x.SiteId == siteId, cancellationToken);
         }
@@ -104,7 +104,7 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前用户组实例对象。</returns>
         public virtual Task<TRole> FindByNameAsync(int siteId, string normalizedName,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return RoleContext.FindAsync(x => x.SiteId == siteId && x.NormalizedName == normalizedName, cancellationToken);
         }

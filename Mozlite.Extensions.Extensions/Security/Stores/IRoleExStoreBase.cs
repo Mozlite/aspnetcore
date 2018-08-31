@@ -29,7 +29,7 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="siteId">网站Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回用户组列表。</returns>
-        Task<IEnumerable<TRole>> LoadRolesAsync(int siteId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IEnumerable<TRole>> LoadRolesAsync(int siteId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 通过用户组名称获取用户组实例。
@@ -46,6 +46,6 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="normalizedName">用户组名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前用户组实例对象。</returns>
-        Task<TRole> FindByNameAsync(int siteId, string normalizedName, CancellationToken cancellationToken = default(CancellationToken));
+        Task<TRole> FindByNameAsync(int siteId, string normalizedName, CancellationToken cancellationToken = default);
     }
 }
