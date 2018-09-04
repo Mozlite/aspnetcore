@@ -12,7 +12,6 @@ using Mozlite.Mvc.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Mozlite.Mvc
@@ -27,7 +26,7 @@ namespace Mozlite.Mvc
         /// <summary>
         /// 当前程序的版本。
         /// </summary>
-        public Version Version => _version ?? (_version = Assembly.GetEntryAssembly().GetName().Version);
+        public Version Version => _version ?? (_version = Cores.Version);
 
         private ILocalizer _localizer;
         /// <summary>

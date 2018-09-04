@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -70,7 +69,7 @@ namespace Mozlite.Mvc.Apis
         /// <summary>
         /// 当前程序的版本。
         /// </summary>
-        public Version Version => _version ?? (_version = Assembly.GetEntryAssembly().GetName().Version);
+        public Version Version => _version ?? (_version = Cores.Version);
 
         private ILocalizer _localizer;
         /// <summary>

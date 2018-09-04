@@ -4,7 +4,6 @@ using Mozlite.Mvc.Messages;
 using Mozlite.Extensions.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security;
@@ -28,7 +27,7 @@ namespace Mozlite.Mvc
         /// <summary>
         /// 当前程序的版本。
         /// </summary>
-        public Version Version => _version ?? (_version = Assembly.GetEntryAssembly().GetName().Version);
+        public Version Version => _version ?? (_version = Cores.Version);
 
         private ILocalizer _localizer;
         /// <summary>

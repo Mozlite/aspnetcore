@@ -5,6 +5,7 @@ using System.Collections;
 using Mozlite.Properties;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
@@ -398,5 +399,10 @@ namespace Mozlite
             action?.Invoke(builder);
             return services.BuildServiceProvider();
         }
+
+        /// <summary>
+        /// 当前程序的版本。
+        /// </summary>
+        public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
     }
 }
