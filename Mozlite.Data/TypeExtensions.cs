@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
@@ -69,6 +70,8 @@ namespace Mozlite.Data
                 return false;
             if (info.IsDefined(typeof(IdentityAttribute)))
                 return false;
+            if (info.IsDefined(typeof(KeyAttribute)))
+                return false;//主键也不更新
             if (info.IsDefined(typeof(RowVersionAttribute)))
                 return false;
             return true;

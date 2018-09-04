@@ -8,7 +8,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
     /// <summary>
     /// 显示日期。
     /// </summary>
-    [HtmlTargetElement("x:datetimeoffset", Attributes = AttributeName)]
+    [HtmlTargetElement("moz:datetimeoffset", Attributes = AttributeName)]
     public class DateTimeOffsetLengthTagHelper : TagHelperBase
     {
         private const string AttributeName = "date";

@@ -29,20 +29,7 @@ namespace Mozlite.Extensions.Extensions.Security
         protected SiteContextBase Site => _siteContextAccessor.SiteContext;
 
 
-        private IRoleExStoreBase<TRole, TUserRole, TRoleClaim> _store;
-        /// <summary>
-        /// 数据存储接口实例。
-        /// </summary>
-        protected new IRoleExStoreBase<TRole, TUserRole, TRoleClaim> Store
-        {
-            get
-            {
-                if (_store == null)
-                    _store = base.Store as IRoleExStoreBase<TRole, TUserRole, TRoleClaim>;
-                return _store;
-            }
-        }
-
+        private readonly IRoleExStoreBase<TRole, TUserRole, TRoleClaim> _store;
         /// <summary>
         /// 获取缓存键。
         /// </summary>
@@ -72,7 +59,7 @@ namespace Mozlite.Extensions.Extensions.Security
         public virtual TRole FindByName(int siteId, string normalizedName)
         {
             normalizedName = NormalizeKey(normalizedName);
-            return Store.FindByName(siteId, normalizedName);
+            return _store.FindByName(siteId, normalizedName);
         }
 
         /// <summary>
@@ -95,7 +82,7 @@ namespace Mozlite.Extensions.Extensions.Security
         public virtual Task<TRole> FindByNameAsync(int siteId, string normalizedName)
         {
             normalizedName = NormalizeKey(normalizedName);
-            return Store.FindByNameAsync(siteId, normalizedName, CancellationToken);
+            return _store.FindByNameAsync(siteId, normalizedName, CancellationToken);
         }
 
         /// <summary>
@@ -117,7 +104,7 @@ namespace Mozlite.Extensions.Extensions.Security
             return Cache.GetOrCreateAsync(GetCacheKey(siteId), ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                return Store.LoadRolesAsync(siteId);
+                return _store.LoadRolesAsync(siteId);
             });
         }
 
@@ -140,7 +127,7 @@ namespace Mozlite.Extensions.Extensions.Security
             return Cache.GetOrCreate(GetCacheKey(siteId), ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                return Store.LoadRoles(siteId);
+                return _store.LoadRoles(siteId);
             });
         }
 
@@ -170,6 +157,7 @@ namespace Mozlite.Extensions.Extensions.Security
         protected RoleManagerBase(IRoleStore<TRole> store, IEnumerable<IRoleValidator<TRole>> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger, IMemoryCache cache, ISiteContextAccessorBase siteContextAccessor)
             : base(store, roleValidators, keyNormalizer, errors, logger, cache)
         {
+            _store = store as IRoleExStoreBase<TRole, TUserRole, TRoleClaim>;
             _siteContextAccessor = siteContextAccessor;
         }
     }

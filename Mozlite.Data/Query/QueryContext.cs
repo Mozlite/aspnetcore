@@ -342,12 +342,23 @@ namespace Mozlite.Data.Query
         }
 
 
+        /// <summary>
+        /// 设置选择列(不重复)。
+        /// </summary>
+        /// <typeparam name="TEntity">模型类型。</typeparam>
+        /// <param name="fields">列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> Distinct<TEntity>(Expression<Func<TEntity, object>> fields)
         {
             IsDistinct = true;
             return Select(fields);
         }
 
+        /// <summary>
+        /// 设置选择列(不重复)。
+        /// </summary>
+        /// <param name="fields">列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> Distinct(Expression<Func<TModel, object>> fields)
         {
             return Distinct<TModel>(fields);
