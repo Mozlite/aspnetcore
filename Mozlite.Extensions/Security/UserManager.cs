@@ -141,6 +141,14 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 登出。
+        /// </summary>
+        public virtual Task SignOutAsync()
+        {
+            return SignInManager.SignOutAsync();
+        }
+
+        /// <summary>
         /// 修改密码。
         /// </summary>
         /// <param name="user">用户实例对象。</param>

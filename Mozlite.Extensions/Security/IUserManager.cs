@@ -108,6 +108,11 @@ namespace Mozlite.Extensions.Security
         Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Func<TUser, Task> success);
 
         /// <summary>
+        /// 登出。
+        /// </summary>
+        Task SignOutAsync();
+
+        /// <summary>
         /// 修改密码。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
