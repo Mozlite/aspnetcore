@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 
 namespace Mozlite.Mvc
 {
@@ -54,6 +56,28 @@ namespace Mozlite.Mvc
         {
             var queryString = string.Join("&", query.Select(x => $"{x.Key}={x.Value}"));
             return "?" + queryString;
+        }
+
+        /// <summary>
+        /// 获取当前Action对应的地址。
+        /// </summary>
+        /// <param name="urlHelper">URL辅助接口。</param>
+        /// <param name="action">试图。</param>
+        /// <param name="controller">控制器。</param>
+        /// <param name="values">路由对象。</param>
+        /// <returns>返回当前Url地址。</returns>
+        public static string ActionUrl(this IUrlHelper urlHelper, string action, string controller = null, object values = null)
+        {
+            urlHelper.ActionContext.ActionDescriptor.RouteValues.TryGetValue("area", out var areaName);
+            if (controller == null)
+                urlHelper.ActionContext.ActionDescriptor.RouteValues.TryGetValue("controller", out controller);
+            if (values == null)
+                return urlHelper.Action(action, controller, areaName == null ? null : new { area = areaName });
+            var routes = new RouteValueDictionary(values);
+            if (routes.ContainsKey("area") || areaName == null)
+                return urlHelper.Action(action, controller, routes);
+            routes.Add("area", areaName);
+            return urlHelper.Action(action, controller, routes);
         }
     }
 }
