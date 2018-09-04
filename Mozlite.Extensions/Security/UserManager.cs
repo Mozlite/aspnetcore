@@ -18,14 +18,14 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class UserManager<TUser, TUserClaim, TUserLogin, TUserToken>
         : UserManager<TUser>, IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
-        private readonly IServiceProvider _services;
+        private readonly IServiceProvider _serviceProvider;
         private SignInManager<TUser> _signInManager;
         /// <summary>
         /// 登陆管理实例。
@@ -35,7 +35,7 @@ namespace Mozlite.Extensions.Security
             get
             {
                 if (_signInManager == null)
-                    _signInManager = _services.GetRequiredService<SignInManager<TUser>>();
+                    _signInManager = _serviceProvider.GetRequiredService<SignInManager<TUser>>();
                 return _signInManager;
             }
         }
@@ -56,7 +56,7 @@ namespace Mozlite.Extensions.Security
             get
             {
                 if (_httpContext == null)
-                    _httpContext = _services.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                    _httpContext = _serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
                 return _httpContext;
             }
         }
@@ -360,7 +360,7 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 初始化类<see cref="UserManagerBase{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
+        /// 初始化类<see cref="UserManager{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="store">用户存储接口。</param>
         /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
@@ -369,12 +369,11 @@ namespace Mozlite.Extensions.Security
         /// <param name="passwordValidators">密码验证接口。</param>
         /// <param name="keyNormalizer">唯一键格式化字符串。</param>
         /// <param name="errors">错误实例。</param>
-        /// <param name="services">服务提供者接口。</param>
-        /// <param name="logger">日志接口。</param>
-        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
-            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        /// <param name="serviceProvider">服务提供者接口。</param>
+        protected UserManager(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider serviceProvider)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, serviceProvider, serviceProvider.GetRequiredService<ILogger<UserManager<TUser>>>())
         {
-            _services = services;
+            _serviceProvider = serviceProvider;
             _store = store as IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>;
             DbContext = store as IUserDbContext<TUser, TUserClaim, TUserLogin, TUserToken>;
         }
@@ -390,8 +389,8 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
-    public abstract class UserManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>,
+    public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : UserManager<TUser, TUserClaim, TUserLogin, TUserToken>,
             IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserBase
         where TRole : RoleBase
@@ -408,7 +407,7 @@ namespace Mozlite.Extensions.Security
         protected new IUserRoleDbContext<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> DbContext { get; }
 
         /// <summary>
-        /// 初始化类<see cref="UserManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
+        /// 初始化类<see cref="UserManager{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
         /// <param name="store">用户存储接口。</param>
         /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
@@ -417,10 +416,9 @@ namespace Mozlite.Extensions.Security
         /// <param name="passwordValidators">密码验证接口。</param>
         /// <param name="keyNormalizer">唯一键格式化字符串。</param>
         /// <param name="errors">错误实例。</param>
-        /// <param name="services">服务提供者接口。</param>
-        /// <param name="logger">日志接口。</param>
-        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
-            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        /// <param name="serviceProvider">服务提供者接口。</param>
+        protected UserManager(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider serviceProvider)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, serviceProvider)
         {
             _store = store as IUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>;
             DbContext = store as IUserRoleDbContext<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>;

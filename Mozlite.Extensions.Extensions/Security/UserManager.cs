@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mozlite.Extensions.Security.Stores;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +16,8 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>
-        : Mozlite.Extensions.Security.UserManagerBase<TUser, TUserClaim, TUserLogin, TUserToken>, IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class UserManager<TUser, TUserClaim, TUserLogin, TUserToken>
+        : Mozlite.Extensions.Security.UserManager<TUser, TUserClaim, TUserLogin, TUserToken>, IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserExBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -30,7 +29,7 @@ namespace Mozlite.Extensions.Extensions.Security
         protected SiteContextBase Site { get; }
 
         /// <summary>
-        /// 初始化类<see cref="UserManagerBase{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
+        /// 初始化类<see cref="UserManager{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="store">用户存储接口。</param>
         /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
@@ -39,12 +38,11 @@ namespace Mozlite.Extensions.Extensions.Security
         /// <param name="passwordValidators">密码验证接口。</param>
         /// <param name="keyNormalizer">唯一键格式化字符串。</param>
         /// <param name="errors">错误实例。</param>
-        /// <param name="services">服务提供者接口。</param>
-        /// <param name="logger">日志接口。</param>
-        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
-            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        /// <param name="serviceProvider">服务提供者接口。</param>
+        protected UserManager(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider serviceProvider)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, serviceProvider)
         {
-            Site = services.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
+            Site = serviceProvider.GetRequiredService<ISiteContextAccessorBase>().SiteContext;
         }
 
         /// <summary>
@@ -82,8 +80,8 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
-    public abstract class UserManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : Mozlite.Extensions.Security.UserManagerBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
+    public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : Mozlite.Extensions.Security.UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
             IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         where TUser : UserExBase
         where TRole : RoleExBase
@@ -100,7 +98,7 @@ namespace Mozlite.Extensions.Extensions.Security
 
         private readonly Lazy<SiteContextBase> _lazy;
         /// <summary>
-        /// 初始化类<see cref="UserManagerBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
+        /// 初始化类<see cref="UserManager{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
         /// <param name="store">用户存储接口。</param>
         /// <param name="optionsAccessor"><see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions" />实例对象。</param>
@@ -109,12 +107,11 @@ namespace Mozlite.Extensions.Extensions.Security
         /// <param name="passwordValidators">密码验证接口。</param>
         /// <param name="keyNormalizer">唯一键格式化字符串。</param>
         /// <param name="errors">错误实例。</param>
-        /// <param name="services">服务提供者接口。</param>
-        /// <param name="logger">日志接口。</param>
-        protected UserManagerBase(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<TUser>> logger)
-            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        /// <param name="serviceProvider">服务提供者接口。</param>
+        protected UserManager(IUserStore<TUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<TUser> passwordHasher, IEnumerable<IUserValidator<TUser>> userValidators, IEnumerable<IPasswordValidator<TUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider serviceProvider)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, serviceProvider)
         {
-            _lazy = new Lazy<SiteContextBase>(() => services.GetRequiredService<ISiteContextAccessorBase>().SiteContext);
+            _lazy = new Lazy<SiteContextBase>(() => serviceProvider.GetRequiredService<ISiteContextAccessorBase>().SiteContext);
         }
 
         /// <summary>

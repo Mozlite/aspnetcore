@@ -15,7 +15,7 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
-    public abstract class RoleManagerBase<TRole, TUserRole, TRoleClaim> : RoleManager<TRole>,
+    public abstract class RoleManager<TRole, TUserRole, TRoleClaim> : RoleManager<TRole>,
         IRoleManager<TRole, TUserRole, TRoleClaim>
         where TRole : RoleBase
         where TUserRole : IUserRole
@@ -33,7 +33,7 @@ namespace Mozlite.Extensions.Security
         protected IRoleDbContext<TRole, TUserRole, TRoleClaim> DbContext { get; }
 
         /// <summary>
-        /// 初始化类<see cref="RoleManagerBase{TRole, TUserRole, TRoleClaim}"/>
+        /// 初始化类<see cref="RoleManager{TRole, TUserRole, TRoleClaim}"/>
         /// </summary>
         /// <param name="store">存储接口。</param>
         /// <param name="roleValidators">用户组验证集合。</param>
@@ -41,7 +41,7 @@ namespace Mozlite.Extensions.Security
         /// <param name="errors">错误实例。</param>
         /// <param name="logger">日志接口。</param>
         /// <param name="cache">缓存接口。</param>
-        protected RoleManagerBase(IRoleStore<TRole> store, IEnumerable<IRoleValidator<TRole>> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger,
+        protected RoleManager(IRoleStore<TRole> store, IEnumerable<IRoleValidator<TRole>> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger,
             IMemoryCache cache)
             : base(store, roleValidators, keyNormalizer, errors, logger)
         {
