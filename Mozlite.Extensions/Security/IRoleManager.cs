@@ -160,5 +160,19 @@ namespace Mozlite.Extensions.Security
         /// <param name="role">当前用户组实例。</param>
         /// <returns>返回判断结果。</returns>
         IdentityResult IsDuplicated(TRole role);
+
+        /// <summary>
+        /// 删除用户组。
+        /// </summary>
+        /// <param name="ids">用户组Id。</param>
+        /// <returns>返回删除结果。</returns>
+        IdentityResult Delete(int[] ids);
+
+        /// <summary>
+        /// 删除用户组。
+        /// </summary>
+        /// <param name="ids">用户组Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<IdentityResult> DeleteAsync(int[] ids);
     }
 }

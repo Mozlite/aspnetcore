@@ -101,6 +101,32 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 删除用户组。
+        /// </summary>
+        /// <param name="ids">用户组Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual IdentityResult Delete(int[] ids)
+        {
+            var result = IdentityResult.Success;
+            if (!DbContext.RoleContext.Delete(x => x.RoleId.Included(ids)))
+                result = IdentityResult.Failed(ErrorDescriber.DefaultError());
+            return FromResult(result, null);
+        }
+
+        /// <summary>
+        /// 删除用户组。
+        /// </summary>
+        /// <param name="ids">用户组Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<IdentityResult> DeleteAsync(int[] ids)
+        {
+            var result = IdentityResult.Success;
+            if (!await DbContext.RoleContext.DeleteAsync(x => x.RoleId.Included(ids)))
+                result = IdentityResult.Failed(ErrorDescriber.DefaultError());
+            return FromResult(result, null);
+        }
+
+        /// <summary>
         /// 判断用户组名称或唯一键是否已经存在。
         /// </summary>
         /// <param name="role">当前用户组实例。</param>
