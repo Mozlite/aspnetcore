@@ -247,6 +247,34 @@ namespace Mozlite.Extensions.Security
         /// <param name="lockoutEnd">锁定截至日期。</param>
         /// <returns>返回执行结果。</returns>
         Task<bool> LockoutAsync(int userId, DateTimeOffset? lockoutEnd = null);
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="ids">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        IdentityResult Delete(int[] ids);
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        IdentityResult Delete(int id);
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="ids">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<IdentityResult> DeleteAsync(int[] ids);
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<IdentityResult> DeleteAsync(int id);
     }
 
     /// <summary>

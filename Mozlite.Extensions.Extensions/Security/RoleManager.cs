@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Identity;
-using Mozlite.Extensions.Security.Stores;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Extensions.Security.Stores;
+using Mozlite.Extensions.Security.Stores;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Extensions.Security
 {
@@ -140,7 +140,7 @@ namespace Mozlite.Extensions.Extensions.Security
         protected override bool FromResult(bool result, TRole role)
         {
             if (result)
-                Cache.Remove(GetCacheKey(role.SiteId));
+                Cache.Remove(GetCacheKey(role?.SiteId ?? Site.SiteId));
             return result;
         }
 

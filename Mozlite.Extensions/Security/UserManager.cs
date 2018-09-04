@@ -295,6 +295,54 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="ids">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual IdentityResult Delete(int[] ids)
+        {
+            if(DbContext.UserContext.Delete(x=>x.UserId.Included(ids)))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual IdentityResult Delete(int id)
+        {
+            if (DbContext.UserContext.Delete(id))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="ids">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<IdentityResult> DeleteAsync(int[] ids)
+        {
+            if (await DbContext.UserContext.DeleteAsync(x => x.UserId.Included(ids)))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
+        /// 删除用户。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<IdentityResult> DeleteAsync(int id)
+        {
+            if (await DbContext.UserContext.DeleteAsync(id))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
+        }
+
+        /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
