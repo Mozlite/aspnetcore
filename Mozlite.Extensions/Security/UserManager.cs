@@ -218,7 +218,7 @@ namespace Mozlite.Extensions.Security
         /// <typeparam name="TQuery">查询类型。</typeparam>
         /// <param name="query">查询实例。</param>
         /// <returns>返回查询分页实例。</returns>
-        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : UserQuery<TUser>
         {
             return _store.Load(query);
         }
@@ -229,7 +229,7 @@ namespace Mozlite.Extensions.Security
         /// <typeparam name="TQuery">查询类型。</typeparam>
         /// <param name="query">查询实例。</param>
         /// <returns>返回查询分页实例。</returns>
-        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : UserQuery<TUser>
         {
             return _store.LoadAsync(query);
         }

@@ -78,7 +78,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <typeparam name="TQuery">查询类型。</typeparam>
         /// <param name="query">查询实例。</param>
         /// <returns>返回查询分页实例。</returns>
-        TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
+        TQuery Load<TQuery>(TQuery query) where TQuery : UserQuery<TUser>;
 
         /// <summary>
         /// 分页加载用户。
@@ -87,7 +87,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回查询分页实例。</returns>
-        Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : QueryBase<TUser>;
+        Task<TQuery> LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken = default) where TQuery : UserQuery<TUser>;
 
         /// <summary>
         /// 判断当前用户名称是否存在。

@@ -175,7 +175,7 @@ namespace Mozlite.Extensions.Security
         /// <typeparam name="TQuery">查询类型。</typeparam>
         /// <param name="query">查询实例。</param>
         /// <returns>返回查询分页实例。</returns>
-        TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
+        TQuery Load<TQuery>(TQuery query) where TQuery : UserQuery<TUser>;
 
         /// <summary>
         /// 分页加载用户。
@@ -183,7 +183,7 @@ namespace Mozlite.Extensions.Security
         /// <typeparam name="TQuery">查询类型。</typeparam>
         /// <param name="query">查询实例。</param>
         /// <returns>返回查询分页实例。</returns>
-        Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TUser>;
+        Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : UserQuery<TUser>;
 
         /// <summary>
         /// 新建用户实例（不会对密码进行加密）。
