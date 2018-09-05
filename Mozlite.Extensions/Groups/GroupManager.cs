@@ -58,7 +58,7 @@ namespace Mozlite.Extensions.Groups
             var models = Cache.GetOrCreate(CacheKey, ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                var categories = Fetch();
+                var categories = Context.Fetch();
                 var dic = categories.ToDictionary(c => c.Id);
                 dic[0] = Activator.CreateInstance<TGroup>();
                 foreach (var category in categories)
@@ -82,7 +82,7 @@ namespace Mozlite.Extensions.Groups
             var models = await Cache.GetOrCreateAsync(CacheKey, async ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                var categories = await FetchAsync(cancellationToken: cancellationToken);
+                var categories = await Context.FetchAsync(cancellationToken: cancellationToken);
                 var dic = categories.ToDictionary(c => c.Id);
                 dic[0] = Activator.CreateInstance<TGroup>();
                 foreach (var category in categories)
