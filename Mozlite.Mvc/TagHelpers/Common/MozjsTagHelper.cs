@@ -1,8 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using Mozlite.Utils;
+using System;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.TagHelpers.Common
 {
@@ -10,6 +11,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
     /// js脚本标签，可以和HTML混合并用，开放参数：
     /// $this:表示当前标签jQuery对象；
     /// $model:表示当前JSON对象；
+    /// 注意：script标签里的代码将在呈现后进行调用。
     /// </summary>
     [HtmlTargetElement("*", Attributes = "mozjs")]
     [HtmlTargetElement("moz:js", Attributes = "href")]
@@ -86,12 +88,25 @@ namespace Mozlite.Mvc.TagHelpers.Common
             }
 
             var source = content.GetContent();
+            var scripts = new StringBuilder();
+            //提取脚本
+            source = _regex.Replace(source, match =>
+            {
+                var script = match.Groups[1].Value.Trim().Trim(';');
+                script = _whiteSpace.Replace(script, "$1");
+                scripts.Append(script).Append(";");
+                return null;
+            }).Trim();
             output.Content.AppendHtml("function _(s) { d.push(s);}function r($model) {");
             Process(output.Content, source);
-            output.Content.AppendHtml(
-                "$this.html(d.join(''));}});");
+            output.Content.AppendHtml("$this.html(d.join(''));")
+                .AppendHtml(scripts.ToString())
+                .AppendHtml("}});");
             output.Content.AppendHtml("</script>");
         }
+
+        private static readonly Regex _whiteSpace = new Regex("([{;}])(\\r)?\\n\\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex _regex = new Regex("<script.*?>(.*?)</script>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         private void SetTimeout(TagHelperContent output)
         {
