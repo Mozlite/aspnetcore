@@ -69,7 +69,7 @@ namespace Mozlite.Mvc.Apis
         /// 初始化类<see cref="ApiAttribute"/>。
         /// </summary>
         /// <param name="name">API名称。</param>
-        public ApiAttribute(string name) : base($"apis/{name}")
+        public ApiAttribute(string name) : base($"openapis/{name}")
         {
         }
     }
