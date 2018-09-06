@@ -344,7 +344,7 @@ namespace Mozlite.Mvc
 
         private IActionResult Json(BsType type, string message)
         {
-            if (!ModelState.IsValid)
+            if (type != BsType.Success && !ModelState.IsValid)
             {
                 type = BsType.Danger;
                 var dic = new Dictionary<string, string>();

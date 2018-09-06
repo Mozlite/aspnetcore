@@ -305,7 +305,7 @@ namespace Mozlite.Mvc
 
         private IActionResult Json(BsType type, string message)
         {
-            if (!ModelState.IsValid)
+            if (type != BsType.Success && !ModelState.IsValid)
             {
                 var dic = new Dictionary<string, string>();
                 foreach (var key in ModelState.Keys)
