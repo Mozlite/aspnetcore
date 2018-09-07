@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mozlite.Data.Internal;
+using Mozlite.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
@@ -8,8 +10,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Mozlite.Data.Internal;
-using Mozlite.Extensions;
 
 namespace Mozlite.Data.Query
 {
@@ -145,14 +145,14 @@ namespace Mozlite.Data.Query
                             .Append(" ");
                     }
                     if (_joins.Count > 0)
-                        builder.Append(string.Join(" ", _joins));
+                        builder.Append(string.Join(" ", _joins.Select(x => x())));
                     _fromSql = builder.ToString();
                 }
                 return _fromSql;
             }
         }
 
-        private readonly List<string> _joins = new List<string>();
+        private readonly List<Func<string>> _joins = new List<Func<string>>();
         /// <summary>
         /// 设置表格关联。
         /// </summary>
@@ -178,21 +178,24 @@ namespace Mozlite.Data.Query
 
         private IQueryable<TModel> Join<TPrimary, TForeign>(string key, Expression<Func<TPrimary, TForeign, bool>> onExpression)
         {
-            var type = typeof(TForeign);
-            var builder = new StringBuilder();
-            builder.Append(key)
-                .Append(" JOIN ")
-                .Append(type.GetTableName())
-                .Append(" AS ")
-                .Append(GetAlias(type));
-            if (_nolock)
+            _joins.Add(() =>
             {
-                builder.Append(" ")
-                    .Append(_sqlGenerator.WithNolock());
-            }
-            builder.Append(" ON ");
-            builder.Append(Visit(onExpression, GetExpressionAlias(typeof(TPrimary), typeof(TForeign))));
-            _joins.Add(builder.ToString());
+                var type = typeof(TForeign);
+                var builder = new StringBuilder();
+                builder.Append(key)
+                    .Append(" JOIN ")
+                    .Append(type.GetTableName())
+                    .Append(" AS ")
+                    .Append(GetAlias(type));
+                if (_nolock)
+                {
+                    builder.Append(" ")
+                        .Append(_sqlGenerator.WithNolock());
+                }
+                builder.Append(" ON ");
+                builder.Append(Visit(onExpression, GetExpressionAlias(typeof(TPrimary), typeof(TForeign))));
+                return builder.ToString();
+            });
             return this;
         }
 
@@ -204,21 +207,47 @@ namespace Mozlite.Data.Query
                 Expression<Func<TPrimary, TForeign, bool>> onExpression)
             => InnerJoin(onExpression);
 
+        /// <summary>
+        /// 设置表格左关联。
+        /// </summary>
+        /// <typeparam name="TForeign">拼接类型。</typeparam>
+        /// <param name="onExpression">关联条件表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> LeftJoin<TForeign>(Expression<Func<TModel, TForeign, bool>> onExpression)
         {
             return LeftJoin<TModel, TForeign>(onExpression);
         }
 
+        /// <summary>
+        /// 设置表格左关联。
+        /// </summary>
+        /// <typeparam name="TPrimary">主键所在的模型类型。</typeparam>
+        /// <typeparam name="TForeign">外键所在的模型类型。</typeparam>
+        /// <param name="onExpression">关联条件表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> LeftJoin<TPrimary, TForeign>(Expression<Func<TPrimary, TForeign, bool>> onExpression)
         {
             return Join("LEFT", onExpression);
         }
 
+        /// <summary>
+        /// 设置表格右关联。
+        /// </summary>
+        /// <typeparam name="TForeign">拼接类型。</typeparam>
+        /// <param name="onExpression">关联条件表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> RightJoin<TForeign>(Expression<Func<TModel, TForeign, bool>> onExpression)
         {
             return RightJoin<TModel, TForeign>(onExpression);
         }
 
+        /// <summary>
+        /// 设置表格右关联。
+        /// </summary>
+        /// <typeparam name="TPrimary">主键所在的模型类型。</typeparam>
+        /// <typeparam name="TForeign">外键所在的模型类型。</typeparam>
+        /// <param name="onExpression">关联条件表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> RightJoin<TPrimary, TForeign>(Expression<Func<TPrimary, TForeign, bool>> onExpression)
         {
             return Join("RIGHT", onExpression);

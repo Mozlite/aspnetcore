@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Mozlite.Extensions.Storages.Excels
 {
@@ -18,9 +18,12 @@ namespace Mozlite.Extensions.Storages.Excels
         public ExcelColumnDescriptor(IProperty property)
         {
             Get = property.Get;
-            if (!_converters.TryGetValue(property.ClrType, out var convert))
+            if (_converters.TryGetValue(property.ClrType, out var convert))
+                Set = (instance, value) => property.Set(instance, convert(value));
+            else if (property.ClrType.IsEnum)
+                Set = (instance, value) => property.Set(instance, EnumConverter(value, property.ClrType));
+            else
                 throw new Exception($"暂时不支持导入属性{property.Name}的类型：{property.ClrType}！");
-            Set = (instance, value) => property.Set(instance, convert(value));
             var info = property.PropertyInfo;
             var headAttribute = info.GetCustomAttribute<ExcelAttribute>();
             HeadCellFormat = new CellFormat();
@@ -121,5 +124,16 @@ namespace Mozlite.Extensions.Storages.Excels
             [typeof(string)] = v => v,
         });
 
+        private static object EnumConverter(string value, Type type)
+        {
+            try
+            {
+                return Enum.Parse(type, value, true);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
     }
 }
