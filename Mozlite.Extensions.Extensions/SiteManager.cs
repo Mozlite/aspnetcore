@@ -567,7 +567,7 @@ namespace Mozlite.Extensions.Extensions
                 return db.As<SiteDomain>().Create(domain);
             }))
             {
-                Installer.Current = InstallerStatus.Success;
+                InstallerHostedService.Current = InstallerStatus.Success;
                 _cache.Remove(_cacheKey);
                 return true;
             }
@@ -602,7 +602,7 @@ namespace Mozlite.Extensions.Extensions
                 return await db.As<SiteDomain>().CreateAsync(domain);
             }))
             {
-                Installer.Current = InstallerStatus.Success;
+                InstallerHostedService.Current = InstallerStatus.Success;
                 _cache.Remove(_cacheKey);
                 return true;
             }

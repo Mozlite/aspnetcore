@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -34,6 +35,10 @@ namespace Mozlite
                 {
                     var service = Activator.CreateInstance(source) as IServiceConfigurer;
                     service?.ConfigureServices(services);
+                }
+                else if (typeof(IHostedService).IsAssignableFrom(source))
+                {//后台任务
+                    services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IHostedService), source));
                 }
                 else//注册类型
                 {

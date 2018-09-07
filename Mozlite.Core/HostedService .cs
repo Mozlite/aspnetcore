@@ -1,13 +1,14 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace Mozlite.Tasks
+namespace Mozlite
 {
     /// <summary>
-    /// 宿主服务基类。
+    /// 后台服务基类。
     /// </summary>
-    public abstract class HostedService : IHostedService
+    public abstract class HostedService : IHostedService, IServices, IDisposable
     {
         private Task _executingTask;
         private CancellationTokenSource _cts;
@@ -39,5 +40,13 @@ namespace Mozlite.Tasks
         /// <param name="cancellationToken">取消标记。</param>
         /// <returns>返回当前执行得任务。</returns>
         protected abstract Task ExecuteAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// 释放资源。
+        /// </summary>
+        public void Dispose()
+        {
+            _cts?.Cancel();
+        }
     }
 }

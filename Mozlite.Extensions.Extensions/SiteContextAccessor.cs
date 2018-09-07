@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.Extensions
             if (_context != null)
                 return _context;
             _context = new TSiteContext();
-            if (Installer.Current != InstallerStatus.Success) return _context;
+            if (InstallerHostedService.Current != InstallerStatus.Success) return _context;
             _context.Site = _siteManager.GetSiteByKey<TSite>(siteKey);
             _context.Domain = _siteManager.GetDomain(_context.SiteId);
             return _context;

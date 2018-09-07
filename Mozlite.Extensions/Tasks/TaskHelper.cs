@@ -18,7 +18,7 @@ namespace Mozlite.Extensions.Tasks
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (Installer.Current >= InstallerStatus.Success)
+                if (InstallerHostedService.Current >= InstallerStatus.Success)
                     break;
                 await Task.Delay(100, cancellationToken);
             }
@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Tasks
         {
             while (true)
             {
-                if (Installer.Current >= InstallerStatus.Initializing)
+                if (InstallerHostedService.Current >= InstallerStatus.Initializing)
                     break;
                 await Task.Delay(100);
             }

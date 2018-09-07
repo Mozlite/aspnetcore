@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Extensions.Security.Stores;
 
@@ -35,6 +37,20 @@ namespace Mozlite.Extensions.Security
                 .AddRoleManager<TRoleManager>()
                 .AddErrorDescriber<SecurityErrorDescriptor>()
                 .AddDefaultTokenProviders();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = new PathString("/login");
+                options.LogoutPath = new PathString("/logout");
+                options.AccessDeniedPath = new PathString("/denied");
+                options.ReturnUrlParameter = "url";
+            })
+            .Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+            services.AddAuthentication();
             ConfigureSecurityServices(services);
         }
 

@@ -4,35 +4,56 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Extensions.Tasks
 {
     /// <summary>
     /// 后台服务。
     /// </summary>
-    public class ServiceTaskExecutor : ITaskExecutor
+    public class TaskHostedService : HostedService
     {
         private readonly Dictionary<string, ITaskService> _services;
         private readonly ITaskManager _taskManager;
         private readonly IMemoryCache _cache;
+        private readonly ILogger<TaskHostedService> _logger;
 
         /// <summary>
-        /// 初始化<see cref="ServiceTaskExecutor"/>。
+        /// 初始化<see cref="TaskHostedService"/>。
         /// </summary>
         /// <param name="services">后台服务列表。</param>
         /// <param name="taskManager">后台服务管理。</param>
         /// <param name="cache">缓存接口。</param>
-        public ServiceTaskExecutor(IEnumerable<ITaskService> services, ITaskManager taskManager, IMemoryCache cache)
+        /// <param name="logger">日志接口。</param>
+        public TaskHostedService(IEnumerable<ITaskService> services, ITaskManager taskManager, IMemoryCache cache, ILogger<TaskHostedService> logger)
         {
             _services = services.ToDictionary(x => x.GetType().DisplayName(), StringComparer.OrdinalIgnoreCase);
             _taskManager = taskManager;
             _cache = cache;
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// 当应用程序开启时候触发得方法。
+        /// </summary>
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("开启后台任务执行...");
+            return base.StartAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// 当应用程序关闭时候触发得方法。
+        /// </summary>
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("关闭后台任务执行...");
+            return base.StopAsync(cancellationToken);
         }
 
         private async Task<IEnumerable<TaskContext>> LoadContextsAsync()
         {
-            return await _cache.GetOrCreateAsync(typeof(ServiceTaskExecutor), async ctx =>
+            return await _cache.GetOrCreateAsync(typeof(TaskHostedService), async ctx =>
             {
                 ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(5));//五分钟重新获取一次数据库配置
                 var contexts = new List<TaskContext>();
@@ -66,7 +87,7 @@ namespace Mozlite.Extensions.Tasks
         /// 执行的后台任务方法。
         /// </summary>
         /// <returns>返回任务实例。</returns>
-        public async Task ExecuteAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             //等待数据迁移
             await cancellationToken.WaitInstalledAsync();

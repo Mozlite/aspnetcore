@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Mozlite.Data.Migrations;
+using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Installers;
-using Mozlite.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions
 {
@@ -13,10 +12,13 @@ namespace Mozlite.Extensions
     /// <summary>
     /// 数据库迁移后台执行实现类。
     /// </summary>
-    public class Installer : ITaskExecutor
+    public class InstallerHostedService : HostedService
     {
         private static InstallerStatus _current = InstallerStatus.DataMigration;
         private static readonly object _locker = new object();
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger _logger;
+
         /// <summary>
         /// 当前安装状态。
         /// </summary>
@@ -38,14 +40,12 @@ namespace Mozlite.Extensions
             }
         }
 
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger _logger;
         /// <summary>
-        /// 初始化类<see cref="Installer"/>。
+        /// 初始化类<see cref="InstallerHostedService"/>。
         /// </summary>
         /// <param name="serviceProvider">服务提供者。</param>
         /// <param name="logger">日志接口。</param>
-        public Installer(IServiceProvider serviceProvider, ILogger<ITaskExecutor> logger)
+        public InstallerHostedService(IServiceProvider serviceProvider, ILogger<InstallerHostedService> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -56,7 +56,7 @@ namespace Mozlite.Extensions
         /// </summary>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回任务实例。</returns>
-        public async Task ExecuteAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             //数据库迁移
             if (Current == InstallerStatus.DataMigration)
@@ -66,6 +66,7 @@ namespace Mozlite.Extensions
                 _logger.LogInformation("数据库迁移完成！");
                 Current = InstallerStatus.MigrationCompleted;
             }
+
             //执行安装接口
             if (Current == InstallerStatus.MigrationCompleted)
             {
