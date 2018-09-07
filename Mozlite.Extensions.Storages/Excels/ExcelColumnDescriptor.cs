@@ -1,8 +1,8 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Mozlite.Extensions.Storages.Excels
 {
@@ -18,10 +18,11 @@ namespace Mozlite.Extensions.Storages.Excels
         public ExcelColumnDescriptor(IProperty property)
         {
             Get = property.Get;
-            if (_converters.TryGetValue(property.ClrType, out var convert))
+            var type = property.ClrType.UnwrapNullableType();
+            if (_converters.TryGetValue(type, out var convert))
                 Set = (instance, value) => property.Set(instance, convert(value));
-            else if (property.ClrType.IsEnum)
-                Set = (instance, value) => property.Set(instance, EnumConverter(value, property.ClrType));
+            else if (type.IsEnum)
+                Set = (instance, value) => property.Set(instance, EnumConverter(value, type));
             else
                 throw new Exception($"暂时不支持导入属性{property.Name}的类型：{property.ClrType}！");
             var info = property.PropertyInfo;
