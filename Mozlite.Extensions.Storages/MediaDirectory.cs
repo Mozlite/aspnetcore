@@ -44,7 +44,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="targetId">目标Id。</param>
         /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        public async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
+        public virtual async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
         {
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
@@ -135,7 +135,7 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="id">媒体文件Id。</param>
         /// <returns>返回存储文件实例。</returns>
-        public async Task<StoredPhysicalFile> FindAsync(Guid id)
+        public virtual async Task<StoredPhysicalFile> FindAsync(Guid id)
         {
             var file = await _sfdb.AsQueryable().InnerJoin<MediaFile>((sf, mf) => sf.FileId == mf.FileId)
                 .Where<MediaFile>(x => x.Id == id)
@@ -144,6 +144,16 @@ namespace Mozlite.Extensions.Storages
                 .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
             file.PhysicalPath = Path.Combine(_media, file.PhysicalPath);
             return file;
+        }
+
+        /// <summary>
+        /// 加载文件。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回文件列表。</returns>
+        public virtual Task<MediaQuery> LoadAsync(MediaQuery query)
+        {
+            return _mfdb.LoadAsync(query);
         }
     }
 }

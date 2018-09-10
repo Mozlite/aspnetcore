@@ -30,6 +30,6 @@ namespace Mozlite.Extensions.Storages
         /// <summary>
         /// ÊÇ·ñ³É¹¦¡£
         /// </summary>
-        public bool Succeeded { get; } = true;
+        public bool Succeeded { get; }
     }
 }

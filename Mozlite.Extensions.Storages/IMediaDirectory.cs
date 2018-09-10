@@ -35,5 +35,12 @@ namespace Mozlite.Extensions.Storages
         /// <param name="id">媒体文件Id。</param>
         /// <returns>返回存储文件实例。</returns>
         Task<StoredPhysicalFile> FindAsync(Guid id);
+
+        /// <summary>
+        /// 加载文件。
+        /// </summary>
+        /// <param name="query">查询实例。</param>
+        /// <returns>返回文件列表。</returns>
+        Task<MediaQuery> LoadAsync(MediaQuery query);
     }
 }
