@@ -28,13 +28,7 @@ namespace Mozlite.Extensions.Security.Stores
         [Size(64)]
         [NotUpdated]
         public string NormalizedUserName { get; set; }
-
-        /// <summary>
-        /// 获取或设置用户显示名称。
-        /// </summary>
-        [Size(64)]
-        public string NickName { get; set; }
-
+        
         /// <summary>
         /// 电子邮件。
         /// </summary>
@@ -154,9 +148,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         public override string ToString()
         {
-            if (NickName == null || NickName == UserName)
-                return UserName;
-            return $"{NickName}({UserName})";
+            return UserName;
         }
     }
 }
