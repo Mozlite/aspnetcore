@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mozlite.Mvc.Routing;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,7 +22,8 @@ namespace Mozlite.Mvc
         /// <param name="services">当前服务集合。</param>
         /// <returns>返回MVC构建实例。</returns>
         public static IMvcBuilder AddMozliteMvc(this IServiceCollection services)
-        {
+        {//防止添加用户活动日志的时候未注册HTTP上下文实例。
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services.AddMvc()
                 .AddRazorOptions(options =>
                 {//网站的程序集名称，约定扩展程序集名称必须为“网站程序集名称.Extensions.当前扩展区域名称”

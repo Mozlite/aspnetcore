@@ -8,12 +8,6 @@ namespace Mozlite.Extensions.Installers
     public interface IInstallerManager : ISingletonService
     {
         /// <summary>
-        /// 是否是新站。
-        /// </summary>
-        /// <returns>返回判断结果。</returns>
-        Task<bool> IsNewAsync();
-
-        /// <summary>
         /// 保存注册码。
         /// </summary>
         /// <param name="registration">注册码实例。</param>

@@ -1,6 +1,6 @@
-﻿using System.Threading;
+﻿using Mozlite.Extensions.Installers;
+using System.Threading;
 using System.Threading.Tasks;
-using Mozlite.Extensions.Installers;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -28,14 +28,26 @@ namespace Mozlite.Extensions.Tasks
         /// 等待到安装初始化完成。
         /// </summary>
         /// <returns>返回当前任务。</returns>
-        public static async Task WaitInitializingAsync()
+        public static async Task<string> GetInstallerUrlAsync()
         {
             while (true)
             {
-                if (InstallerHostedService.Current >= InstallerStatus.Initializing)
+                if (InstallerHostedService.Current > InstallerStatus.Initializing)
                     break;
                 await Task.Delay(100);
             }
+            switch (InstallerHostedService.Current)
+            {
+                case InstallerStatus.Setup:
+                    return "/installer/index";
+                case InstallerStatus.Expired:
+                    return "/installer/expired";
+                case InstallerStatus.Failured:
+                    return "/installer/failured";
+                case InstallerStatus.Unregister:
+                    return "/installer/register";
+            }
+            return null;
         }
     }
 }

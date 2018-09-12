@@ -11,6 +11,6 @@ namespace Mozlite.Extensions.Installers
         /// 安装时候预先执行的接口。
         /// </summary>
         /// <returns>返回执行结果。</returns>
-        Task<bool> ExecuteAsync();
+        Task<InstallerStatus> ExecuteAsync();
     }
 }

@@ -6,19 +6,14 @@
     public enum InstallerStatus
     {
         /// <summary>
-        /// 数据迁移。
-        /// </summary>
-        DataMigration,
-
-        /// <summary>
-        /// 数据库完成。
-        /// </summary>
-        MigrationCompleted,
-
-        /// <summary>
         /// 初始化。
         /// </summary>
         Initializing,
+
+        /// <summary>
+        /// 安装配置。
+        /// </summary>
+        Setup,
 
         /// <summary>
         /// 成功。
@@ -34,5 +29,10 @@
         /// 失败。
         /// </summary>
         Failured,
+
+        /// <summary>
+        /// 未注册。
+        /// </summary>
+        Unregister,
     }
 }

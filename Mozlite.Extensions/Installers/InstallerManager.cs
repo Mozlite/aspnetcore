@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Mozlite.Data;
+﻿using Mozlite.Data;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Installers
 {
@@ -21,15 +21,6 @@ namespace Mozlite.Extensions.Installers
         }
 
         /// <summary>
-        /// 是否是新站。
-        /// </summary>
-        /// <returns>返回判断结果。</returns>
-        public async Task<bool> IsNewAsync()
-        {
-            return !await _context.AnyAsync();
-        }
-
-        /// <summary>
         /// 保存注册码。
         /// </summary>
         /// <param name="registration">注册码实例。</param>
@@ -37,7 +28,7 @@ namespace Mozlite.Extensions.Installers
         public async Task<bool> SaveLisenceAsync(Registration registration)
         {
             var lisence = new Lisence { Registration = Cores.Encrypto(JsonConvert.SerializeObject(registration)) };
-            if (await IsNewAsync())
+            if (await _context.AnyAsync())
                 return await _context.CreateAsync(lisence);
             return await _context.UpdateAsync(lisence);
         }
@@ -48,18 +39,24 @@ namespace Mozlite.Extensions.Installers
         /// <returns>返回注册码实例。</returns>
         public async Task<Registration> GetLisenceAsync()
         {
-            try
+            var registions = await _context.FetchAsync();
+            if (registions.Any())
             {
-                var registration = (await _context.FetchAsync()).FirstOrDefault()?.Registration;
-                if (string.IsNullOrWhiteSpace(registration))
-                    return null;
-                registration = Cores.Decrypto(registration.Trim());
-                return JsonConvert.DeserializeObject<Registration>(registration);
+                try
+                {
+                    var code = registions.First().Registration;
+                    code = Cores.Decrypto(code.Trim());
+                    return JsonConvert.DeserializeObject<Registration>(code);
+                }
+                catch
+                {
+                    // ignored
+                }
             }
-            catch
-            {
-                return null;
-            }
+
+            var registration = new Registration();
+            await SaveLisenceAsync(registration);
+            return registration;
         }
     }
 }

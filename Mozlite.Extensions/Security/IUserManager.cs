@@ -285,6 +285,21 @@ namespace Mozlite.Extensions.Security
         /// <param name="id">用户Id。</param>
         /// <returns>返回删除结果。</returns>
         Task<IdentityResult> DeleteAsync(int id);
+
+        /// <summary>
+        /// 添加用户社会化登陆信息。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="login">用户登陆信息。</param>
+        /// <returns>返回添加结果。</returns>
+        Task<IdentityResult> AddLoginAsync(TUser user, UserLoginInfo login);
+
+        /// <summary>
+        /// 生成电子邮件确认码。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回当前确认码。</returns>
+        Task<string> GenerateEmailConfirmationTokenAsync(TUser user);
     }
 
     /// <summary>

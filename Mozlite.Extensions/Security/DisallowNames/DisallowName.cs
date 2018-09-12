@@ -5,7 +5,7 @@ namespace Mozlite.Extensions.Security.DisallowNames
     /// <summary>
     /// 非法用户名。
     /// </summary>
-    [Table("core_DisallowNames")]
+    [Table("core_Users_Disallows")]
     public class DisallowName
     {
         /// <summary>

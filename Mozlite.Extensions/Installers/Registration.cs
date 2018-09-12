@@ -10,7 +10,7 @@ namespace Mozlite.Extensions.Installers
         /// <summary>
         /// 用户名。
         /// </summary>
-        public string UserName { get; set; } = "apcnet";
+        public string UserName { get; set; } = "mozlite";
 
         /// <summary>
         /// 注册码。
@@ -21,5 +21,10 @@ namespace Mozlite.Extensions.Installers
         /// 过期时间。
         /// </summary>
         public DateTimeOffset Expired { get; set; } = DateTimeOffset.MaxValue;
+
+        /// <summary>
+        /// 安装状态。
+        /// </summary>
+        public InstallerStatus Status { get; set; }
     }
 }
