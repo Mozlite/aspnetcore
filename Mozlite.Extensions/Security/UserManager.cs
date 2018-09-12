@@ -30,7 +30,7 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 登陆管理实例。
         /// </summary>
-        protected SignInManager<TUser> SignInManager
+        public SignInManager<TUser> SignInManager
         {
             get
             {

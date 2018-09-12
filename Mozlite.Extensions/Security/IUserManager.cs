@@ -20,6 +20,11 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
     {
         /// <summary>
+        /// 登陆管理实例。
+        /// </summary>
+        SignInManager<TUser> SignInManager { get; }
+
+        /// <summary>
         /// 通过用户Id查询用户实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>

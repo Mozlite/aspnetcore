@@ -19,6 +19,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取或设置用户名称。
         /// </summary>
         [Size(64)]
+        [NotUpdated]
         public string UserName { get; set; }
 
         /// <summary>
@@ -27,7 +28,13 @@ namespace Mozlite.Extensions.Security.Stores
         [Size(64)]
         [NotUpdated]
         public string NormalizedUserName { get; set; }
-        
+
+        /// <summary>
+        /// 获取或设置用户显示名称。
+        /// </summary>
+        [Size(64)]
+        public string NickName { get; set; }
+
         /// <summary>
         /// 电子邮件。
         /// </summary>
@@ -93,7 +100,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 登入失败次数。
         /// </summary>
         public int AccessFailedCount { get; set; }
-        
+
         /// <summary>
         /// 注册IP。
         /// </summary>
@@ -147,7 +154,9 @@ namespace Mozlite.Extensions.Security.Stores
         /// </summary>
         public override string ToString()
         {
-            return UserName;
+            if (NickName == null || NickName == UserName)
+                return UserName;
+            return $"{NickName}({UserName})";
         }
     }
 }
