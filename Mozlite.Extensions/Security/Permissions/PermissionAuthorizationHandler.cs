@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+ï»¿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -6,25 +6,25 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 namespace Mozlite.Extensions.Security.Permissions
 {
     /// <summary>
-    /// È¨ÏŞÑéÖ¤´¦Àí·½·¨Àà¡£
+    /// æƒé™éªŒè¯å¤„ç†æ–¹æ³•ç±»ã€‚
     /// </summary>
     public class PermissionAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement>
     {
         private readonly IPermissionManager _permissionManager;
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="PermissionAuthorizationHandler"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="PermissionAuthorizationHandler"/>ã€‚
         /// </summary>
-        /// <param name="permissionManager">È¨ÏŞ¹ÜÀí½Ó¿ÚÊµÀı¶ÔÏó¡£</param>
+        /// <param name="permissionManager">æƒé™ç®¡ç†æ¥å£å®ä¾‹å¯¹è±¡ã€‚</param>
         public PermissionAuthorizationHandler(IPermissionManager permissionManager)
         {
             _permissionManager = permissionManager;
         }
 
         /// <summary>
-        /// ÑéÖ¤µ±Ç°È¨ÏŞµÄºÏ·¨ĞÔ¡£
+        /// éªŒè¯å½“å‰æƒé™çš„åˆæ³•æ€§ã€‚
         /// </summary>
-        /// <param name="context">ÑéÖ¤ÉÏÏÂÎÄ¡£</param>
-        /// <param name="requirement">È¨ÏŞÊµÀı¡£</param>
+        /// <param name="context">éªŒè¯ä¸Šä¸‹æ–‡ã€‚</param>
+        /// <param name="requirement">æƒé™å®ä¾‹ã€‚</param>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement)
         {
             var permissionName = requirement?.Name;

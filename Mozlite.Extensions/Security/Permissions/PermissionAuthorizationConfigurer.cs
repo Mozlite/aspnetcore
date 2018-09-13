@@ -1,17 +1,17 @@
-using Microsoft.AspNetCore.Authorization;
+ï»¿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
     /// <summary>
-    /// ×¢²áÑéÖ¤´¦ÀíÀà¡£
+    /// æ³¨å†ŒéªŒè¯å¤„ç†ç±»ã€‚
     /// </summary>
     public class PermissionAuthorizationConfigurer : IServiceConfigurer
     {
         /// <summary>
-        /// ÅäÖÃ·şÎñ·½·¨¡£
+        /// é…ç½®æœåŠ¡æ–¹æ³•ã€‚
         /// </summary>
-        /// <param name="services">·şÎñ¼¯ºÏÊµÀı¡£</param>
+        /// <param name="services">æœåŠ¡é›†åˆå®ä¾‹ã€‚</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();

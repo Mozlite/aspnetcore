@@ -1,20 +1,20 @@
-namespace Mozlite.Extensions.Security.Permissions
+ï»¿namespace Mozlite.Extensions.Security.Permissions
 {
     /// <summary>
-    /// È¨ÏŞµÄÖµ¡£
+    /// æƒé™çš„å€¼ã€‚
     /// </summary>
     public enum PermissionValue
     {
         /// <summary>
-        /// ½ûÖ¹¡£
+        /// ç¦æ­¢ã€‚
         /// </summary>
         Deny,
         /// <summary>
-        /// Î´ÉèÖÃ¡£
+        /// æœªè®¾ç½®ã€‚
         /// </summary>
         NotSet,
         /// <summary>
-        /// ÔÊĞí¡£
+        /// å…è®¸ã€‚
         /// </summary>
         Allow,
     }

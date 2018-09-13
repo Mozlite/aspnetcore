@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using Mozlite.Extensions.Storages.Properties;
 namespace Mozlite.Extensions.Storages
 {
     /// <summary>
-    /// Ã½ÌåÎÄ¼şÌá¹©ÕßÊµÏÖÀà¡£
+    /// åª’ä½“æ–‡ä»¶æä¾›è€…å®ç°ç±»ã€‚
     /// </summary>
     public class MediaDirectory : IMediaDirectory
     {
@@ -22,28 +22,28 @@ namespace Mozlite.Extensions.Storages
         private readonly string _media;
 
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="MediaDirectory"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="MediaDirectory"/>ã€‚
         /// </summary>
-        /// <param name="directory">´æ´¢ÎÄ¼ş¼Ğ¡£</param>
-        /// <param name="mfdb">Êı¾İ¿â²Ù×÷½Ó¿Ú¡£</param>
-        /// <param name="sfdb">Êı¾İ¿â²Ù×÷½Ó¿Ú¡£</param>
+        /// <param name="directory">å­˜å‚¨æ–‡ä»¶å¤¹ã€‚</param>
+        /// <param name="mfdb">æ•°æ®åº“æ“ä½œæ¥å£ã€‚</param>
+        /// <param name="sfdb">æ•°æ®åº“æ“ä½œæ¥å£ã€‚</param>
         public MediaDirectory(IStorageDirectory directory, IDbContext<MediaFile> mfdb, IDbContext<StoredFile> sfdb)
         {
             _directory = directory;
             _mfdb = mfdb;
             _sfdb = sfdb;
-            //Ã½ÌåÎÄ¼ş¼Ğ¡£
+            //åª’ä½“æ–‡ä»¶å¤¹ã€‚
             _media = directory.GetPhysicalPath("media");
         }
 
         /// <summary>
-        /// ÉÏ´«ÎÄ¼ş¡£
+        /// ä¸Šä¼ æ–‡ä»¶ã€‚
         /// </summary>
-        /// <param name="file">±íµ¥ÎÄ¼ş¡£</param>
-        /// <param name="extensionName">À©Õ¹Ãû³Æ¡£</param>
-        /// <param name="targetId">Ä¿±êId¡£</param>
-        /// <param name="uniqueMediaFile">Ã¿Ò»¸öÎÄ¼şºÍÃ½Ìå´æ´¢ÎÄ¼şÒ»Ò»¶ÔÓ¦¡£</param>
-        /// <returns>·µ»ØÉÏ´«ºóµÄ½á¹û£¡</returns>
+        /// <param name="file">è¡¨å•æ–‡ä»¶ã€‚</param>
+        /// <param name="extensionName">æ‰©å±•åç§°ã€‚</param>
+        /// <param name="targetId">ç›®æ ‡Idã€‚</param>
+        /// <param name="uniqueMediaFile">æ¯ä¸€ä¸ªæ–‡ä»¶å’Œåª’ä½“å­˜å‚¨æ–‡ä»¶ä¸€ä¸€å¯¹åº”ã€‚</param>
+        /// <returns>è¿”å›ä¸Šä¼ åçš„ç»“æœï¼</returns>
         public virtual async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
         {
             if (file == null || file.Length == 0)
@@ -57,13 +57,13 @@ namespace Mozlite.Extensions.Storages
         }
 
         /// <summary>
-        /// ÏÂÔØÎÄ¼ş¡£
+        /// ä¸‹è½½æ–‡ä»¶ã€‚
         /// </summary>
-        /// <param name="url">ÎÄ¼şURLµØÖ·¡£</param>
-        /// <param name="extensionName">À©Õ¹Ãû³Æ¡£</param>
-        /// <param name="targetId">Ä¿±êId¡£</param>
-        /// <param name="uniqueMediaFile">Ã¿Ò»¸öÎÄ¼şºÍÃ½Ìå´æ´¢ÎÄ¼şÒ»Ò»¶ÔÓ¦¡£</param>
-        /// <returns>·µ»ØÉÏ´«ºóµÄ½á¹û£¡</returns>
+        /// <param name="url">æ–‡ä»¶URLåœ°å€ã€‚</param>
+        /// <param name="extensionName">æ‰©å±•åç§°ã€‚</param>
+        /// <param name="targetId">ç›®æ ‡Idã€‚</param>
+        /// <param name="uniqueMediaFile">æ¯ä¸€ä¸ªæ–‡ä»¶å’Œåª’ä½“å­˜å‚¨æ–‡ä»¶ä¸€ä¸€å¯¹åº”ã€‚</param>
+        /// <returns>è¿”å›ä¸Šä¼ åçš„ç»“æœï¼</returns>
         public async Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
         {
             var uri = new Uri(url);
@@ -88,9 +88,9 @@ namespace Mozlite.Extensions.Storages
             var storage = await _sfdb.FindAsync(fileId);
             if (storage != null)
             {
-                //ÊµÌåÎÄ¼şÒÑ¾­´æÔÚ£¬É¾³ıÁÙÊ±Ä¿Â¼ÏÂµÄÎÄ¼ş
+                //å®ä½“æ–‡ä»¶å·²ç»å­˜åœ¨ï¼Œåˆ é™¤ä¸´æ—¶ç›®å½•ä¸‹çš„æ–‡ä»¶
                 EnsureStoredFile(storage, tempFile);
-                if (uniqueMediaFile)//Î¨Ò»ÎÄ¼ş´æ´¢
+                if (uniqueMediaFile)//å”¯ä¸€æ–‡ä»¶å­˜å‚¨
                 {
                     var dbFile = await _mfdb.FindAsync(x => x.FileId == fileId);
                     if (dbFile != null)
@@ -99,7 +99,7 @@ namespace Mozlite.Extensions.Storages
             }
             else
             {
-                //Èç¹ûÊµÌåÎÄ¼ş²»´æÔÚÔò´´½¨
+                //å¦‚æœå®ä½“æ–‡ä»¶ä¸å­˜åœ¨åˆ™åˆ›å»º
                 storage = new StoredFile();
                 storage.ContentType = contentType;
                 storage.FileId = fileId;
@@ -115,10 +115,10 @@ namespace Mozlite.Extensions.Storages
 
         private void EnsureStoredFile(StoredFile file, FileInfo tempFile)
         {
-            //½«ÎÄ¼şÒÆ¶¯µ½Ã½Ìå´æ´¢Â·¾¶ÏÂ¡£
+            //å°†æ–‡ä»¶ç§»åŠ¨åˆ°åª’ä½“å­˜å‚¨è·¯å¾„ä¸‹ã€‚
             var mediaPath = Path.Combine(_media, file.Path);
             if (File.Exists(mediaPath))
-            {//Èç¹ûÒÑ¾­ÓĞ´ÅÅÌÎÄ¼ş£¬É¾³ıÁÙÊ±ÎÄ¼ş
+            {//å¦‚æœå·²ç»æœ‰ç£ç›˜æ–‡ä»¶ï¼Œåˆ é™¤ä¸´æ—¶æ–‡ä»¶
                 tempFile.Delete();
             }
             else
@@ -131,10 +131,10 @@ namespace Mozlite.Extensions.Storages
         }
 
         /// <summary>
-        /// Í¨¹ıGUID»ñÈ¡´æ´¢ÎÄ¼şÊµÀı¡£
+        /// é€šè¿‡GUIDè·å–å­˜å‚¨æ–‡ä»¶å®ä¾‹ã€‚
         /// </summary>
-        /// <param name="id">Ã½ÌåÎÄ¼şId¡£</param>
-        /// <returns>·µ»Ø´æ´¢ÎÄ¼şÊµÀı¡£</returns>
+        /// <param name="id">åª’ä½“æ–‡ä»¶Idã€‚</param>
+        /// <returns>è¿”å›å­˜å‚¨æ–‡ä»¶å®ä¾‹ã€‚</returns>
         public virtual async Task<StoredPhysicalFile> FindAsync(Guid id)
         {
             var file = await _sfdb.AsQueryable().InnerJoin<MediaFile>((sf, mf) => sf.FileId == mf.FileId)
@@ -147,10 +147,10 @@ namespace Mozlite.Extensions.Storages
         }
 
         /// <summary>
-        /// ¼ÓÔØÎÄ¼ş¡£
+        /// åŠ è½½æ–‡ä»¶ã€‚
         /// </summary>
-        /// <param name="query">²éÑ¯ÊµÀı¡£</param>
-        /// <returns>·µ»ØÎÄ¼şÁĞ±í¡£</returns>
+        /// <param name="query">æŸ¥è¯¢å®ä¾‹ã€‚</param>
+        /// <returns>è¿”å›æ–‡ä»¶åˆ—è¡¨ã€‚</returns>
         public virtual Task<MediaQuery> LoadAsync(MediaQuery query)
         {
             return _mfdb.LoadAsync(query);

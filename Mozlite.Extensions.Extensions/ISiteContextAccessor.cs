@@ -1,24 +1,24 @@
-namespace Mozlite.Extensions.Extensions
+ï»¿namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
-    /// µ±Ç°ÍøÕ¾ÉÏÏÂÎÄ·ÃÎÊÆ÷¡£
+    /// å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡è®¿é—®å™¨ã€‚
     /// </summary>
-    /// <typeparam name="TSite">ÍøÕ¾ÀàĞÍ¡£</typeparam>
-    /// <typeparam name="TSiteContext">ÍøÕ¾ÉÏÏÂÎÄ¡£</typeparam>
+    /// <typeparam name="TSite">ç½‘ç«™ç±»å‹ã€‚</typeparam>
+    /// <typeparam name="TSiteContext">ç½‘ç«™ä¸Šä¸‹æ–‡ã€‚</typeparam>
     public interface ISiteContextAccessor<TSite, TSiteContext> : ISiteContextAccessorBase
         where TSite : SiteBase, new()
         where TSiteContext : SiteContextBase<TSite>, new()
     {
         /// <summary>
-        /// »ñÈ¡µ±Ç°ÍøÕ¾ÉÏÏÂÎÄ¡£
+        /// è·å–å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡ã€‚
         /// </summary>
         new TSiteContext SiteContext { get; }
 
         /// <summary>
-        /// ÉèÖÃµ±Ç°ÉÏÏÂÎÄÊµÀı£¬ºóÌ¨ÏÖ³¡ÖĞÊ¹ÓÃ¡£
+        /// è®¾ç½®å½“å‰ä¸Šä¸‹æ–‡å®ä¾‹ï¼Œåå°ç°åœºä¸­ä½¿ç”¨ã€‚
         /// </summary>
-        /// <param name="siteKey">ÍøÕ¾Î¨Ò»¼ü¡£</param>
-        /// <returns>·µ»Øµ±Ç°ÍøÕ¾ÉÏÏÂÎÄÊµÀı¡£</returns>
+        /// <param name="siteKey">ç½‘ç«™å”¯ä¸€é”®ã€‚</param>
+        /// <returns>è¿”å›å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡å®ä¾‹ã€‚</returns>
         new TSiteContext GetThreadSiteContext(string siteKey = null);
     }
 }

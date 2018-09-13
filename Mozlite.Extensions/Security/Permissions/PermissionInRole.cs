@@ -1,28 +1,28 @@
-using System.ComponentModel.DataAnnotations;
+ï»¿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
     /// <summary>
-    /// ÓÃ»§×éÈ¨ÏŞ¡£
+    /// ç”¨æˆ·ç»„æƒé™ã€‚
     /// </summary>
     [Table("core_Permissions_In_Roles")]
     public class PermissionInRole
     {
         /// <summary>
-        /// ÓÃ»§×éId¡£
+        /// ç”¨æˆ·ç»„Idã€‚
         /// </summary>
         [Key]
         public int RoleId { get; set; }
 
         /// <summary>
-        /// È¨ÏŞId¡£
+        /// æƒé™Idã€‚
         /// </summary>
         [Key]
         public int PermissionId { get; set; }
 
         /// <summary>
-        /// µ±Ç°È¨ÏŞÉè¶¨¡£
+        /// å½“å‰æƒé™è®¾å®šã€‚
         /// </summary>
         public PermissionValue Value { get; set; }
     }

@@ -1,15 +1,15 @@
-namespace Mozlite.Extensions.Storages
+ï»¿namespace Mozlite.Extensions.Storages
 {
     /// <summary>
-    /// ÉÏ´«/ÏÂÔØ½á¹û¡£
+    /// ä¸Šä¼ /ä¸‹è½½ç»“æœã€‚
     /// </summary>
     public class MediaResult
     {
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="MediaResult"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="MediaResult"/>ã€‚
         /// </summary>
-        /// <param name="url">ÎÄ¼ş·ÃÎÊµÄURLµØÖ·¡£</param>
-        /// <param name="message">´íÎóÏûÏ¢¡£</param>
+        /// <param name="url">æ–‡ä»¶è®¿é—®çš„URLåœ°å€ã€‚</param>
+        /// <param name="message">é”™è¯¯æ¶ˆæ¯ã€‚</param>
         public MediaResult(string url, string message = null)
         {
             Url = url;
@@ -18,17 +18,17 @@ namespace Mozlite.Extensions.Storages
         }
 
         /// <summary>
-        /// ÎÄ¼ş·ÃÎÊµÄURLµØÖ·¡£
+        /// æ–‡ä»¶è®¿é—®çš„URLåœ°å€ã€‚
         /// </summary>
         public string Url { get; }
 
         /// <summary>
-        /// ´íÎóÏûÏ¢¡£
+        /// é”™è¯¯æ¶ˆæ¯ã€‚
         /// </summary>
         public string Message { get; }
 
         /// <summary>
-        /// ÊÇ·ñ³É¹¦¡£
+        /// æ˜¯å¦æˆåŠŸã€‚
         /// </summary>
         public bool Succeeded { get; }
     }

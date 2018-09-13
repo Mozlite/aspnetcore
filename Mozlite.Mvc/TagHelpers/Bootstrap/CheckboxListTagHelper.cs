@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -7,44 +7,44 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Mozlite.Mvc.TagHelpers.Bootstrap
 {
     /// <summary>
-    /// ¸´Ñ¡¿òÁĞ±í±êÇ©¡£
+    /// å¤é€‰æ¡†åˆ—è¡¨æ ‡ç­¾ã€‚
     /// </summary>
     public abstract class CheckboxListTagHelper : ViewContextableTagHelperBase
     {
         /// <summary>
-        /// Ãû³Æ¡£
+        /// åç§°ã€‚
         /// </summary>
         [HtmlAttributeName("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// ÒÔ¡°,¡±·Ö¸îÖµ¡£
+        /// ä»¥â€œ,â€åˆ†å‰²å€¼ã€‚
         /// </summary>
         [HtmlAttributeName("value")]
         public string Value { get; set; }
 
         /// <summary>
-        /// Ã¿ÏîÑùÊ½ÀàĞÍ¡£
+        /// æ¯é¡¹æ ·å¼ç±»å‹ã€‚
         /// </summary>
         [HtmlAttributeName("iclass")]
         public string ItemClass { get; set; }
 
         /// <summary>
-        /// Ã¿ÏîÑ¡ÖĞÑùÊ½ÀàĞÍ¡£
+        /// æ¯é¡¹é€‰ä¸­æ ·å¼ç±»å‹ã€‚
         /// </summary>
         [HtmlAttributeName("istyle")]
         public CheckedStyle CheckedStyle { get; set; }
 
         /// <summary>
-        /// ÉèÖÃÊôĞÔÄ£ĞÍ¡£
+        /// è®¾ç½®å±æ€§æ¨¡å‹ã€‚
         /// </summary>
         [HtmlAttributeName("for")]
         public ModelExpression For { get; set; }
 
         /// <summary>
-        /// ³õÊ¼»¯µ±Ç°±êÇ©ÉÏÏÂÎÄ¡£
+        /// åˆå§‹åŒ–å½“å‰æ ‡ç­¾ä¸Šä¸‹æ–‡ã€‚
         /// </summary>
-        /// <param name="context">µ±Ç°HTML±êÇ©ÉÏÏÂÎÄ£¬°üº¬µ±Ç°HTMLÏà¹ØĞÅÏ¢¡£</param>
+        /// <param name="context">å½“å‰HTMLæ ‡ç­¾ä¸Šä¸‹æ–‡ï¼ŒåŒ…å«å½“å‰HTMLç›¸å…³ä¿¡æ¯ã€‚</param>
         public override void Init(TagHelperContext context)
         {
             if (string.IsNullOrEmpty(Name) && For != null)
@@ -63,10 +63,10 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         }
 
         /// <summary>
-        /// ·ÃÎÊ²¢³ÊÏÖµ±Ç°±êÇ©ÊµÀı¡£
+        /// è®¿é—®å¹¶å‘ˆç°å½“å‰æ ‡ç­¾å®ä¾‹ã€‚
         /// </summary>
-        /// <param name="context">µ±Ç°HTML±êÇ©ÉÏÏÂÎÄ£¬°üº¬µ±Ç°HTMLÏà¹ØĞÅÏ¢¡£</param>
-        /// <param name="output">µ±Ç°±êÇ©Êä³öÊµÀı£¬ÓÃÓÚ³ÊÏÖ±êÇ©Ïà¹ØĞÅÏ¢¡£</param>
+        /// <param name="context">å½“å‰HTMLæ ‡ç­¾ä¸Šä¸‹æ–‡ï¼ŒåŒ…å«å½“å‰HTMLç›¸å…³ä¿¡æ¯ã€‚</param>
+        /// <param name="output">å½“å‰æ ‡ç­¾è¾“å‡ºå®ä¾‹ï¼Œç”¨äºå‘ˆç°æ ‡ç­¾ç›¸å…³ä¿¡æ¯ã€‚</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (Value != null)
@@ -81,19 +81,19 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         }
 
         /// <summary>
-        /// ÅĞ¶ÏÑ¡ÖĞµÄ×´Ì¬¡£
+        /// åˆ¤æ–­é€‰ä¸­çš„çŠ¶æ€ã€‚
         /// </summary>
-        /// <param name="current">µ±Ç°ÏîÄ¿Öµ¡£</param>
-        /// <returns>·µ»ØÅĞ¶Ï½á¹û¡£</returns>
+        /// <param name="current">å½“å‰é¡¹ç›®å€¼ã€‚</param>
+        /// <returns>è¿”å›åˆ¤æ–­ç»“æœã€‚</returns>
         protected virtual bool IsChecked(string current)
         {
             return Value?.IndexOf($",{current},") >= 0;
         }
 
         /// <summary>
-        /// ¸½¼Ó¸´Ñ¡ÏîÄ¿ÁĞ±í£¬ÎÄ±¾/Öµ¡£
+        /// é™„åŠ å¤é€‰é¡¹ç›®åˆ—è¡¨ï¼Œæ–‡æœ¬/å€¼ã€‚
         /// </summary>
-        /// <param name="items">¸´Ñ¡¿òÏîÄ¿ÁĞ±íÊµÀı¡£</param>
+        /// <param name="items">å¤é€‰æ¡†é¡¹ç›®åˆ—è¡¨å®ä¾‹ã€‚</param>
         protected abstract void Init(IDictionary<string, string> items);
 
         private TagBuilder Create(string text, string value, bool isChecked)

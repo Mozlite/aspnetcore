@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -9,21 +9,21 @@ using Microsoft.Extensions.Logging;
 namespace Mozlite.Extensions.Security.Permissions
 {
     /// <summary>
-    /// È¨ÏŞÑéÖ¤ÌØĞÔ¡£
+    /// æƒé™éªŒè¯ç‰¹æ€§ã€‚
     /// </summary>
     public class PermissionAuthorizeAttribute : TypeFilterAttribute
     {
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="PermissionAuthorizeAttribute"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="PermissionAuthorizeAttribute"/>ã€‚
         /// </summary>
-        /// <param name="permission">µ±Ç°È¨ÏŞÃû³Æ¡£</param>
+        /// <param name="permission">å½“å‰æƒé™åç§°ã€‚</param>
         public PermissionAuthorizeAttribute(string permission) : base(typeof(PermissionAuthorizeAttributeImpl))
         {
             Arguments = new object[] { new OperationAuthorizationRequirement { Name = permission } };
         }
 
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="PermissionAuthorizeAttribute"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="PermissionAuthorizeAttribute"/>ã€‚
         /// </summary>
         public PermissionAuthorizeAttribute() : base(typeof(PermissionAuthorizeAttributeImpl))
         {

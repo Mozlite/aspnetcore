@@ -1,14 +1,14 @@
-using System;
+ï»¿using System;
 using Microsoft.AspNetCore.Http;
 using Mozlite.Extensions.Installers;
 
 namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
-    /// ÊµÏÖµ±Ç°ÍøÕ¾ÉÏÏÂÎÄ·ÃÎÊÊµÀı¡£
+    /// å®ç°å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡è®¿é—®å®ä¾‹ã€‚
     /// </summary>
-    /// <typeparam name="TSite">ÍøÕ¾ÀàĞÍ¡£</typeparam>
-    /// <typeparam name="TSiteContext">ÍøÕ¾ÉÏÏÂÎÄ¡£</typeparam>
+    /// <typeparam name="TSite">ç½‘ç«™ç±»å‹ã€‚</typeparam>
+    /// <typeparam name="TSiteContext">ç½‘ç«™ä¸Šä¸‹æ–‡ã€‚</typeparam>
     public abstract class SiteContextAccessor<TSite, TSiteContext> : ISiteContextAccessor<TSite, TSiteContext>
         where TSite : SiteBase, new()
         where TSiteContext : SiteContextBase<TSite>, new()
@@ -17,10 +17,10 @@ namespace Mozlite.Extensions.Extensions
         private readonly IHttpContextAccessor _contextAccessor;
 
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="SiteContextAccessor{TSite, TSiteContext}"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="SiteContextAccessor{TSite, TSiteContext}"/>ã€‚
         /// </summary>
-        /// <param name="siteManager">ÍøÕ¾¹ÜÀí½Ó¿Ú¡£</param>
-        /// <param name="contextAccessor">HTTP·ÃÎÊÉÏÏÂÎÄ¡£</param>
+        /// <param name="siteManager">ç½‘ç«™ç®¡ç†æ¥å£ã€‚</param>
+        /// <param name="contextAccessor">HTTPè®¿é—®ä¸Šä¸‹æ–‡ã€‚</param>
         protected SiteContextAccessor(ISiteManager siteManager, IHttpContextAccessor contextAccessor)
         {
             _siteManager = siteManager;
@@ -31,22 +31,22 @@ namespace Mozlite.Extensions.Extensions
         private static TSiteContext _context;
 
         /// <summary>
-        /// »ñÈ¡µ±Ç°ÍøÕ¾ÉÏÏÂÎÄ¡£
+        /// è·å–å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡ã€‚
         /// </summary>
         public TSiteContext SiteContext => GetRequestSiteContext() ?? GetThreadSiteContext();
 
         /// <summary>
-        /// ÉèÖÃµ±Ç°ÉÏÏÂÎÄÊµÀı¡£
+        /// è®¾ç½®å½“å‰ä¸Šä¸‹æ–‡å®ä¾‹ã€‚
         /// </summary>
-        /// <param name="siteKey">ÍøÕ¾Î¨Ò»¼ü¡£</param>
-        /// <returns>·µ»Øµ±Ç°ÍøÕ¾ÉÏÏÂÎÄÊµÀı¡£</returns>
+        /// <param name="siteKey">ç½‘ç«™å”¯ä¸€é”®ã€‚</param>
+        /// <returns>è¿”å›å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡å®ä¾‹ã€‚</returns>
         SiteContextBase ISiteContextAccessorBase.GetThreadSiteContext(string siteKey) => GetThreadSiteContext(siteKey);
 
         /// <summary>
-        /// ÉèÖÃµ±Ç°ÉÏÏÂÎÄÊµÀı£¬ºóÌ¨ÏÖ³¡ÖĞÊ¹ÓÃ¡£
+        /// è®¾ç½®å½“å‰ä¸Šä¸‹æ–‡å®ä¾‹ï¼Œåå°ç°åœºä¸­ä½¿ç”¨ã€‚
         /// </summary>
-        /// <param name="siteKey">ÍøÕ¾Î¨Ò»¼ü¡£</param>
-        /// <returns>·µ»Øµ±Ç°ÍøÕ¾ÉÏÏÂÎÄÊµÀı¡£</returns>
+        /// <param name="siteKey">ç½‘ç«™å”¯ä¸€é”®ã€‚</param>
+        /// <returns>è¿”å›å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡å®ä¾‹ã€‚</returns>
         public TSiteContext GetThreadSiteContext(string siteKey = null)
         {
             if (_context != null)
@@ -64,7 +64,7 @@ namespace Mozlite.Extensions.Extensions
         }
 
         /// <summary>
-        /// »ñÈ¡µ±Ç°ÍøÕ¾ÉÏÏÂÎÄ¡£
+        /// è·å–å½“å‰ç½‘ç«™ä¸Šä¸‹æ–‡ã€‚
         /// </summary>
         SiteContextBase ISiteContextAccessorBase.SiteContext => SiteContext;
     }

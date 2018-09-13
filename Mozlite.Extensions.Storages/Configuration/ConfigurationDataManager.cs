@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Mozlite.Extensions.Storages.Configuration
 {
     /// <summary>
-    /// ÅäÖÃ¹ÜÀí¡£
+    /// é…ç½®ç®¡ç†ã€‚
     /// </summary>
     public class ConfigurationDataManager : IConfigurationDataManager
     {
@@ -25,21 +25,21 @@ namespace Mozlite.Extensions.Storages.Configuration
         private string GetCacheKey(string name) => $"{ConfigDir}:[{name}]";
 
         /// <summary>
-        /// ³õÊ¼»¯Àà<see cref="ConfigurationDataManager"/>¡£
+        /// åˆå§‹åŒ–ç±»<see cref="ConfigurationDataManager"/>ã€‚
         /// </summary>
-        /// <param name="cache">»º´æ½Ó¿Ú¡£</param>
+        /// <param name="cache">ç¼“å­˜æ¥å£ã€‚</param>
         public ConfigurationDataManager(IMemoryCache cache)
         {
             _cache = cache;
         }
         
         /// <summary>
-        /// ¼ÓÔØÅäÖÃ¡£   
+        /// åŠ è½½é…ç½®ã€‚   
         /// </summary>
-        /// <typeparam name="TConfiguration">ÅäÖÃÀàĞÍ¡£</typeparam>
-        /// <param name="name">Ãû³Æ£¬²»°üº¬ÎÄ¼şÀ©Õ¹Ãû¡£</param>
-        /// <param name="minutes">»º´æ·ÖÖÓÊı¡£</param>
-        /// <returns>·µ»ØÅäÖÃÊµÀı¡£</returns>
+        /// <typeparam name="TConfiguration">é…ç½®ç±»å‹ã€‚</typeparam>
+        /// <param name="name">åç§°ï¼Œä¸åŒ…å«æ–‡ä»¶æ‰©å±•åã€‚</param>
+        /// <param name="minutes">ç¼“å­˜åˆ†é’Ÿæ•°ã€‚</param>
+        /// <returns>è¿”å›é…ç½®å®ä¾‹ã€‚</returns>
         public virtual TConfiguration LoadConfiguration<TConfiguration>(string name, int minutes = 3)
         {
             if (minutes <= 0) return LoadConfiguration<TConfiguration>(name);
@@ -61,12 +61,12 @@ namespace Mozlite.Extensions.Storages.Configuration
         }
 
         /// <summary>
-        /// ¼ÓÔØÅäÖÃ¡£   
+        /// åŠ è½½é…ç½®ã€‚   
         /// </summary>
-        /// <typeparam name="TConfiguration">ÅäÖÃÀàĞÍ¡£</typeparam>
-        /// <param name="name">Ãû³Æ£¬²»°üº¬ÎÄ¼şÀ©Õ¹Ãû¡£</param>
-        /// <param name="minutes">»º´æ·ÖÖÓÊı¡£</param>
-        /// <returns>·µ»ØÅäÖÃÊµÀı¡£</returns>
+        /// <typeparam name="TConfiguration">é…ç½®ç±»å‹ã€‚</typeparam>
+        /// <param name="name">åç§°ï¼Œä¸åŒ…å«æ–‡ä»¶æ‰©å±•åã€‚</param>
+        /// <param name="minutes">ç¼“å­˜åˆ†é’Ÿæ•°ã€‚</param>
+        /// <returns>è¿”å›é…ç½®å®ä¾‹ã€‚</returns>
         public virtual async Task<TConfiguration> LoadConfigurationAsync<TConfiguration>(string name, int minutes = 3)
         {
             if (minutes <= 0) return await LoadConfigurationAsync<TConfiguration>(name);
@@ -88,10 +88,10 @@ namespace Mozlite.Extensions.Storages.Configuration
         }
 
         /// <summary>
-        /// ±£´æÅäÖÃ¡£
+        /// ä¿å­˜é…ç½®ã€‚
         /// </summary>
-        /// <param name="name">Ãû³Æ£¬²»°üº¬ÎÄ¼şÀ©Õ¹Ãû¡£</param>
-        /// <param name="configuration">ÅäÖÃÊµÀı¡£</param>
+        /// <param name="name">åç§°ï¼Œä¸åŒ…å«æ–‡ä»¶æ‰©å±•åã€‚</param>
+        /// <param name="configuration">é…ç½®å®ä¾‹ã€‚</param>
         public virtual void SaveConfiguration(string name, object configuration)
         {
             var path = GetPath(name);
@@ -102,10 +102,10 @@ namespace Mozlite.Extensions.Storages.Configuration
         }
 
         /// <summary>
-        /// ±£´æÅäÖÃ¡£
+        /// ä¿å­˜é…ç½®ã€‚
         /// </summary>
-        /// <param name="name">Ãû³Æ£¬²»°üº¬ÎÄ¼şÀ©Õ¹Ãû¡£</param>
-        /// <param name="configuration">ÅäÖÃÊµÀı¡£</param>
+        /// <param name="name">åç§°ï¼Œä¸åŒ…å«æ–‡ä»¶æ‰©å±•åã€‚</param>
+        /// <param name="configuration">é…ç½®å®ä¾‹ã€‚</param>
         public virtual async Task SaveConfigurationAsync(string name, object configuration)
         {
             var path = GetPath(name);
