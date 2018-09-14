@@ -1,23 +1,27 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Mozlite.Mvc;
 
-namespace Mozlite.Mvc
+namespace Mozlite.Extensions.Installers
 {
     /// <summary>
-    /// 应用程序配置接口。
+    /// 应用程序配置。
     /// </summary>
-    public interface IApplicationConfigurer : IServices
+    public class ApplicationConfigurer : IApplicationConfigurer
     {
         /// <summary>
         /// 优先级。
         /// </summary>
-        int Priority { get; }
+        public int Priority => int.MaxValue;
 
         /// <summary>
         /// 配置应用程序实例。
         /// </summary>
         /// <param name="app">应用程序构建实例。</param>
         /// <param name="configuration">配置接口。</param>
-        void Configure(IApplicationBuilder app, IConfiguration configuration);
+        public void Configure(IApplicationBuilder app, IConfiguration configuration)
+        {
+            app.UseMiddleware<InstallerMiddleware>();
+        }
     }
 }

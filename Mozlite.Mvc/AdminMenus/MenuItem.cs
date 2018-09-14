@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Mozlite.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Mozlite.Data;
 
 namespace Mozlite.Mvc.AdminMenus
 {
@@ -50,6 +50,8 @@ namespace Mozlite.Mvc.AdminMenus
         private readonly IDictionary<string, MenuItem> _children = new Dictionary<string, MenuItem>(StringComparer.OrdinalIgnoreCase);
         private string _controller;
         private string _action;
+        private string _page;
+        private string _pageHandler;
         private RouteValueDictionary _routeValues;
         private string _href;
 
@@ -147,9 +149,12 @@ namespace Mozlite.Mvc.AdminMenus
         public string LinkUrl(IUrlHelper urlHelper, string defaultUrl = "javascript:;")
         {
             if (_href != null) return _href;
-            if (_action == null)
-                return defaultUrl;
-            _href = urlHelper.Action(_action, _controller, _routeValues);
+            if (_page != null)
+                _href = urlHelper.Page(_page, _pageHandler, _routeValues);
+            else if (_action != null)
+                _href = urlHelper.Action(_action, _controller, _routeValues);
+            else
+                _href = defaultUrl;
             return _href;
         }
 
@@ -167,12 +172,32 @@ namespace Mozlite.Mvc.AdminMenus
         /// <summary>
         /// 添加子菜单链接地址。
         /// </summary>
+        /// <param name="page">页面。</param>
+        /// <param name="pageHandler">处理方法。</param>
+        /// <param name="area">区域。</param>
+        /// <param name="routeValues">路由实例。</param>
+        /// <returns>返回当前菜单实例。</returns>
+        public MenuItem Page(string page, string pageHandler = null, string area = "", object routeValues = null)
+        {
+            _page = page;
+            _pageHandler = pageHandler;
+            var routes = routeValues == null ? new RouteValueDictionary() : new RouteValueDictionary(routeValues);
+            routes["Area"] = area;
+            if (!routes.ContainsKey("id"))
+                routes["id"] = null;
+            _routeValues = routes;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加子菜单链接地址。
+        /// </summary>
         /// <param name="action">试图。</param>
         /// <param name="controller">控制器名称。</param>
         /// <param name="area">区域。</param>
         /// <param name="routeValues">路由实例。</param>
         /// <returns>返回当前菜单实例。</returns>
-        public MenuItem Href(string action, string controller, string area, object routeValues = null)
+        public MenuItem Action(string action, string controller, string area = "", object routeValues = null)
         {
             _controller = controller;
             _action = action;

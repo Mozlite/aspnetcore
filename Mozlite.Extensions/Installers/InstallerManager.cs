@@ -25,7 +25,7 @@ namespace Mozlite.Extensions.Installers
         /// </summary>
         /// <param name="registration">注册码实例。</param>
         /// <returns>返回保存结果。</returns>
-        public async Task<bool> SaveLisenceAsync(Registration registration)
+        public async Task<bool> SaveRegistrationAsync(Registration registration)
         {
             var lisence = new Lisence { Registration = Cores.Encrypto(JsonConvert.SerializeObject(registration)) };
             if (await _context.AnyAsync())
@@ -37,7 +37,7 @@ namespace Mozlite.Extensions.Installers
         /// 获取注册码。
         /// </summary>
         /// <returns>返回注册码实例。</returns>
-        public async Task<Registration> GetLisenceAsync()
+        public async Task<Registration> GetRegistrationAsync()
         {
             var registions = await _context.FetchAsync();
             if (registions.Any())
@@ -55,8 +55,20 @@ namespace Mozlite.Extensions.Installers
             }
 
             var registration = new Registration();
-            await SaveLisenceAsync(registration);
+            await SaveRegistrationAsync(registration);
             return registration;
+        }
+
+        /// <summary>
+        /// 设置成功。
+        /// </summary>
+        /// <param name="status">状态。</param>
+        /// <returns>返回保存结果。</returns>
+        public async Task<bool> SuccessAsync(InstallerStatus status)
+        {
+            var registration = await GetRegistrationAsync();
+            registration.Status = status;
+            return await SaveRegistrationAsync(registration);
         }
     }
 }

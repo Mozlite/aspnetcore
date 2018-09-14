@@ -30,6 +30,8 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回当前任务。</returns>
         public static async Task<string> GetInstallerUrlAsync()
         {
+            if (InstallerHostedService.Current == InstallerStatus.Success)
+                return null;
             while (true)
             {
                 if (InstallerHostedService.Current > InstallerStatus.Initializing)

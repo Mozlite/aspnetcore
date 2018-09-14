@@ -300,6 +300,67 @@ namespace Mozlite.Extensions.Security
         /// <param name="user">用户实例。</param>
         /// <returns>返回当前确认码。</returns>
         Task<string> GenerateEmailConfirmationTokenAsync(TUser user);
+
+        /// <summary>
+        /// 验证密码。
+        /// </summary>
+        /// <param name="user">当前用户。</param>
+        /// <param name="password">当前密码。</param>
+        /// <returns>返回判断结果。</returns>
+        Task<bool> CheckPasswordAsync(TUser user, string password);
+
+        /// <summary>
+        /// 获取登陆信息。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <returns>返回登陆信息列表。</returns>
+        Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user);
+
+        /// <summary>
+        /// 获取验证密钥。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <returns>返回密钥。</returns>
+        Task<string> GetAuthenticatorKeyAsync(TUser user);
+
+        /// <summary>
+        /// 二次登陆验证判定。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="verificationCode">验证码。</param>
+        /// <returns>返回判定结果。</returns>
+        Task<bool> VerifyTwoFactorTokenAsync(TUser user, string verificationCode);
+
+        /// <summary>
+        /// 计算二次登陆验码数量。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回计算结果。</returns>
+        Task<int> CountRecoveryCodesAsync(TUser user);
+
+        /// <summary>
+        /// 生成二次登陆验证码。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="count">生成数量。</param>
+        /// <returns>返回生成的验证码。</returns>
+        Task<IEnumerable<string>> GenerateNewTwoFactorRecoveryCodesAsync(TUser user, int count);
+
+        /// <summary>
+        /// 重置用的验证密钥。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回重置结果。</returns>
+        Task<IdentityResult> ResetAuthenticatorKeyAsync(TUser user);
+
+        /// <summary>
+        /// 移除登陆信息。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="providerKey">提供者密钥。</param>
+        /// <returns>返回移除结果。</returns>
+        Task<IdentityResult> RemoveLoginAsync(TUser user, string loginProvider, string providerKey);
     }
 
     /// <summary>

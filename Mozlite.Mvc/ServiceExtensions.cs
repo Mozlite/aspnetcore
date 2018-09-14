@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mozlite.Mvc.Routing;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Mozlite.Mvc
@@ -111,7 +112,9 @@ namespace Mozlite.Mvc
         public static IApplicationBuilder UseMozliteMvc(this IApplicationBuilder app, IConfiguration configuration)
         {
             //配置程序集
-            var services = app.ApplicationServices.GetService<IEnumerable<IApplicationConfigurer>>();
+            var services = app.ApplicationServices.GetService<IEnumerable<IApplicationConfigurer>>()
+                .OrderByDescending(x => x.Priority)
+                .ToArray();
             foreach (var service in services)
                 service.Configure(app, configuration);
             //MVC

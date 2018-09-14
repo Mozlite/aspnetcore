@@ -416,6 +416,29 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
+        /// 验证密码。
+        /// </summary>
+        /// <param name="user">当前用户。</param>
+        /// <param name="password">当前密码。</param>
+        /// <returns>返回判断结果。</returns>
+        public override Task<bool> CheckPasswordAsync(TUser user, string password)
+        {
+            password = PasswordSalt(user.NormalizedUserName, password);
+            return base.CheckPasswordAsync(user, password);
+        }
+
+        /// <summary>
+        /// 二次登陆验证判定。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="verificationCode">验证码。</param>
+        /// <returns>返回判定结果。</returns>
+        public virtual Task<bool> VerifyTwoFactorTokenAsync(TUser user, string verificationCode)
+        {
+            return base.VerifyTwoFactorTokenAsync(user, Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+        }
+
+        /// <summary>
         /// 初始化类<see cref="UserManager{TUser, TUserClaim, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="store">用户存储接口。</param>
