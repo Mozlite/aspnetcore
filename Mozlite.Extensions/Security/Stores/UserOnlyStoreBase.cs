@@ -116,9 +116,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
             await UserContext.CreateAsync(user, cancellationToken);
             return IdentityResult.Success;
         }
@@ -133,9 +131,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
             await UserContext.UpdateAsync(user, cancellationToken);
             return IdentityResult.Success;
         }

@@ -61,6 +61,31 @@ namespace Mozlite.Extensions.Security
             }
         }
 
+        /// <summary>
+        /// 新建用户实例（不会对密码进行加密）。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <returns>返回添加用户结果。</returns>
+        public override Task<IdentityResult> CreateAsync(TUser user)
+        {
+            if (user.CreatedIP == null)
+                user.CreatedIP = HttpContext.GetUserAddress();
+            return base.CreateAsync(user);
+        }
+
+        /// <summary>
+        /// 新建用户实例。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="password">未加密时的密码。</param>
+        /// <returns>返回添加用户结果。</returns>
+        public override Task<IdentityResult> CreateAsync(TUser user, string password)
+        {
+            if (user.CreatedIP == null)
+                user.CreatedIP = HttpContext.GetUserAddress();
+            return base.CreateAsync(user, password);
+        }
+
         private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>
         /// 获取当前用户。

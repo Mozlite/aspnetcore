@@ -1,0 +1,51 @@
+﻿@page
+@model TwoFactorAuthenticationModel
+@{
+    ViewData["Title"] = "二次登陆验证(2FA)";
+    ViewData["Current"] = AccountMenu.TwoFactorAuthentication;
+}
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<h4>@ViewData["Title"]</h4>
+@if (Model.Is2faEnabled)
+{
+    if (Model.RecoveryCodesLeft == 0)
+    {
+        <div class="alert alert-danger">
+            <strong>你没有验证码剩余。</strong>
+            <p>在你通过验证码登陆之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
+        </div>
+    }
+    else if (Model.RecoveryCodesLeft == 1)
+    {
+        <div class="alert alert-danger">
+            <strong>你只有1个验证码剩余。</strong>
+            <p>在你通过验证码登陆之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
+        </div>
+    }
+    else if (Model.RecoveryCodesLeft <= 3)
+    {
+        <div class="alert alert-warning">
+            <strong>你只有 @(Model.RecoveryCodesLeft)个验证码剩余。</strong>
+            <p>在你通过验证码登陆之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
+        </div>
+    }
+
+    if (Model.IsMachineRemembered)
+    {
+        <form method="post" style="display: inline-block">
+            <button type="submit" class="btn btn-default">忘记登陆状态</button>
+        </form>
+    }
+    <a asp-page="./Disable2fa" class="btn btn-default">禁用二次登陆</a>
+    <a asp-page="./GenerateRecoveryCodes" class="btn btn-default">重新生成验证码</a>
+}
+<h5>验证应用</h5>
+@if (!Model.HasAuthenticator)
+{
+    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-default">激活二次登陆验证</a>
+}
+else
+{
+    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-default">激活二次登陆验证</a>
+    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-default">重置二次登陆验证</a>
+}
