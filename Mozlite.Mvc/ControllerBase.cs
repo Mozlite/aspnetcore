@@ -161,7 +161,7 @@ namespace Mozlite.Mvc
         /// <returns>返回试图结果。</returns>
         protected IActionResult WarningView(string message, object model = null, string action = null)
         {
-            return View(BsType.Warning, message, model, action);
+            return View(StatusType.Warning, message, model, action);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Mozlite.Mvc
         /// <returns>返回试图结果。</returns>
         protected IActionResult InfoView(string message, object model = null, string action = null)
         {
-            return View(BsType.Info, message, model, action);
+            return View(StatusType.Info, message, model, action);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Mozlite.Mvc
         /// <returns>返回试图结果。</returns>
         protected IActionResult ErrorView(string message, object model = null, string action = null)
         {
-            return View(BsType.Danger, message, model, action);
+            return View(StatusType.Danger, message, model, action);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Mozlite.Mvc
         /// <returns>返回试图结果。</returns>
         protected IActionResult SuccessView(string message, object model = null, string action = null)
         {
-            return View(BsType.Success, message, model, action);
+            return View(StatusType.Success, message, model, action);
         }
 
         /// <summary>
@@ -209,8 +209,8 @@ namespace Mozlite.Mvc
         protected IActionResult View(DataResult result, object model, params object[] args)
         {
             if (result.Succeed())
-                return View(BsType.Success, result.ToString(args), model);
-            return View(BsType.Danger, result.ToString(args), model);
+                return View(StatusType.Success, result.ToString(args), model);
+            return View(StatusType.Danger, result.ToString(args), model);
         }
 
         /// <summary>
@@ -223,16 +223,22 @@ namespace Mozlite.Mvc
         protected IActionResult View(DataResult result, string url, object model, params object[] args)
         {
             if (result.Succeed())
-                return View(BsType.Success, result.ToString(args), model, url);
-            return View(BsType.Danger, result.ToString(args), model);
+                return View(StatusType.Success, result.ToString(args), model, url);
+            return View(StatusType.Danger, result.ToString(args), model);
         }
 
-        private IActionResult View(BsType type, string message, object model, string url = null)
+        private IActionResult View(StatusType type, string message, object model, string url = null)
         {
+            var statusMessage = new StatusMessage(TempData);
+            statusMessage.Type = type;
+            statusMessage.Message = message;
             // 不是网址
-            if (url != null && url.IndexOf('/') == -1)
-                url = Url.Action(url, ControllerName, new { area = AreaName });
-            ViewBag.BsMessage = new BsMessage(message, type, url);
+            if (url != null)
+            {
+                if (url.IndexOf('/') == -1)
+                    url = Url.Action(url, ControllerName, new { area = AreaName });
+                return Redirect(url);
+            }
             return View(model);
         }
         #endregion
@@ -245,7 +251,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Info(string message = null)
         {
-            return Json(BsType.Info, message);
+            return Json(StatusType.Info, message);
         }
 
         /// <summary>
@@ -256,7 +262,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Info<TData>(string message, TData data)
         {
-            return Json(BsType.Info, message, data);
+            return Json(StatusType.Info, message, data);
         }
 
         /// <summary>
@@ -266,7 +272,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Warning(string message = null)
         {
-            return Json(BsType.Warning, message);
+            return Json(StatusType.Warning, message);
         }
 
         /// <summary>
@@ -277,7 +283,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Warning<TData>(string message, TData data)
         {
-            return Json(BsType.Warning, message, data);
+            return Json(StatusType.Warning, message, data);
         }
 
         /// <summary>
@@ -287,7 +293,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Error(string message = null)
         {
-            return Json(BsType.Danger, message);
+            return Json(StatusType.Danger, message);
         }
 
         /// <summary>
@@ -298,7 +304,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Error<TData>(string message, TData data)
         {
-            return Json(BsType.Danger, message, data);
+            return Json(StatusType.Danger, message, data);
         }
 
         /// <summary>
@@ -318,7 +324,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Success<TData>(TData data)
         {
-            return Json(BsType.Success, null, data);
+            return Json(StatusType.Success, null, data);
         }
 
         /// <summary>
@@ -328,7 +334,7 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Success(string message)
         {
-            return Json(BsType.Success, message);
+            return Json(StatusType.Success, message);
         }
 
         /// <summary>
@@ -339,14 +345,14 @@ namespace Mozlite.Mvc
         /// <returns>返回JSON结果。</returns>
         protected IActionResult Success<TData>(string message, TData data)
         {
-            return Json(BsType.Success, message, data);
+            return Json(StatusType.Success, message, data);
         }
 
-        private IActionResult Json(BsType type, string message)
+        private IActionResult Json(StatusType type, string message)
         {
-            if (type != BsType.Success && !ModelState.IsValid)
+            if (type != StatusType.Success && !ModelState.IsValid)
             {
-                type = BsType.Danger;
+                type = StatusType.Danger;
                 var dic = new Dictionary<string, string>();
                 foreach (var key in ModelState.Keys)
                 {
@@ -361,7 +367,7 @@ namespace Mozlite.Mvc
             return Json(new JsonMesssage(type, message));
         }
 
-        private IActionResult Json<TData>(BsType type, string message, TData data)
+        private IActionResult Json<TData>(StatusType type, string message, TData data)
         {
             return Json(new JsonMesssage<TData>(type, message, data));
         }
@@ -375,8 +381,8 @@ namespace Mozlite.Mvc
         protected IActionResult Json(DataResult result, params object[] args)
         {
             if (result.Succeed())
-                return Json(BsType.Success, result.ToString(args));
-            return Json(BsType.Danger, result.ToString(args));
+                return Json(StatusType.Success, result.ToString(args));
+            return Json(StatusType.Danger, result.ToString(args));
         }
 
         /// <summary>
@@ -387,7 +393,7 @@ namespace Mozlite.Mvc
         protected IActionResult Error(IdentityResult result)
         {
             var errors = result.Errors.Select(x => x.Description).ToList();
-            return Json(BsType.Danger, string.Join(", ", errors));
+            return Json(StatusType.Danger, string.Join(", ", errors));
         }
         #endregion
 

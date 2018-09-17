@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="type">显示类型。</param>
         /// <param name="message">消息。</param>
-        public JsonMesssage(BsType type, string message)
+        public JsonMesssage(StatusType type, string message)
         {
             Type = type.ToString().ToLower();
             Message = message;
@@ -44,7 +44,7 @@
         /// <param name="type">显示类型。</param>
         /// <param name="message">消息。</param>
         /// <param name="data">数据实例对象。</param>
-        public JsonMesssage(BsType type, string message, TData data) : base(type, message)
+        public JsonMesssage(StatusType type, string message, TData data) : base(type, message)
         {
             Data = data;
         }

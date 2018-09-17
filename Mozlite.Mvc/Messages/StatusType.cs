@@ -3,7 +3,7 @@
     /// <summary>
     /// Bootstrap显示类型。
     /// </summary>
-    public enum BsType
+    public enum StatusType
     {
         /// <summary>
         /// 成功。
