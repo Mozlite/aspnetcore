@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Mozlite.Extensions.Storages.Properties;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages
 {
@@ -87,11 +87,22 @@ namespace Mozlite.Extensions.Storages
         public virtual async Task<FileInfo> SaveToTempAsync(Stream file)
         {
             var tempFile = GetTempPath(Guid.NewGuid().ToString());
-            using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
-            {
-                await file.CopyToAsync(fs);
-            }
+            await file.SaveToAsync(tempFile);
             return new FileInfo(tempFile);
+        }
+
+        /// <summary>
+        /// 将字符串保存到临时文件夹中。
+        /// </summary>
+        /// <param name="text">要保存的字符串。</param>
+        /// <param name="fileName">文件名。</param>
+        /// <returns>返回文件实例。</returns>
+        public virtual async Task<FileInfo> SaveToTempAsync(string text, string fileName = null)
+        {
+            fileName = fileName ?? Guid.NewGuid().ToString();
+            fileName = GetTempPath(fileName);
+            await StorageHelper.SaveTextAsync(fileName, text);
+            return new FileInfo(fileName);
         }
 
         /// <summary>
@@ -117,6 +128,23 @@ namespace Mozlite.Extensions.Storages
             {
                 await file.CopyToAsync(fs);
             }
+            return new StorageFile(fileName);
+        }
+
+        /// <summary>
+        /// 将字符串保存到特定的文件夹中。
+        /// </summary>
+        /// <param name="text">要保存的字符串。</param>
+        /// <param name="directoryName">文件夹名称。</param>
+        /// <param name="fileName">文件名称，如果为空，则直接使用表单实例的文件名。</param>
+        /// <returns>返回文件提供者操作接口实例。</returns>
+        public virtual async Task<IStorageFile> SaveAsync(string text, string directoryName, string fileName)
+        {
+            directoryName = GetPhysicalPath(directoryName);
+            if (!Directory.Exists(directoryName))
+                Directory.CreateDirectory(directoryName);
+            fileName = Path.Combine(directoryName, fileName);
+            await StorageHelper.SaveTextAsync(fileName, text);
             return new StorageFile(fileName);
         }
 

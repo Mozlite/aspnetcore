@@ -45,6 +45,14 @@ namespace Mozlite.Extensions.Storages
         Task<FileInfo> SaveToTempAsync(Stream file);
 
         /// <summary>
+        /// 将字符串保存到临时文件夹中。
+        /// </summary>
+        /// <param name="text">要保存的字符串。</param>
+        /// <param name="fileName">文件名。</param>
+        /// <returns>返回文件实例。</returns>
+        Task<FileInfo> SaveToTempAsync(string text, string fileName = null);
+
+        /// <summary>
         /// 将表单文件实例保存到特定的文件夹中。
         /// </summary>
         /// <param name="file">表单文件实例。</param>
@@ -52,6 +60,15 @@ namespace Mozlite.Extensions.Storages
         /// <param name="fileName">文件名称，如果为空，则直接使用表单实例的文件名。</param>
         /// <returns>返回文件提供者操作接口实例。</returns>
         Task<IStorageFile> SaveAsync(IFormFile file, string directoryName, string fileName = null);
+
+        /// <summary>
+        /// 将字符串保存到特定的文件夹中。
+        /// </summary>
+        /// <param name="text">要保存的字符串。</param>
+        /// <param name="directoryName">文件夹名称。</param>
+        /// <param name="fileName">文件名称，如果为空，则直接使用表单实例的文件名。</param>
+        /// <returns>返回文件提供者操作接口实例。</returns>
+        Task<IStorageFile> SaveAsync(string text, string directoryName, string fileName);
 
         /// <summary>
         /// 清理空文件夹。
