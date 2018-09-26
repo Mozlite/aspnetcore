@@ -30,6 +30,33 @@ namespace Mozlite.Data.SqlServer.Query
         }
 
         /// <summary>
+        /// 判断唯一主键关联是否存在。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public override SqlIndentedStringBuilder Any(IEntityType entityType)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            AppendWherePrimaryKey(builder, entityType);
+            return builder;
+        }
+
+        /// <summary>
+        /// 判断是否存在。
+        /// </summary>
+        /// <param name="entityType">模型实例。</param>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回SQL构建实例。</returns>
+        public override SqlIndentedStringBuilder Any(IEntityType entityType, Expression expression)
+        {
+            var builder = new SqlIndentedStringBuilder();
+            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.AppendEx(Visit(expression), " WHERE {0}").Append(SqlHelper.StatementTerminator);
+            return builder;
+        }
+
+        /// <summary>
         /// 移动排序。
         /// </summary>
         /// <param name="entityType">模型实例。</param>

@@ -175,6 +175,13 @@ namespace Mozlite.Extensions.Security
         Task<bool> UpdateAsync(int userId, object fields);
 
         /// <summary>
+        /// 更新用户列。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <returns>返回更新结果。</returns>
+        Task<IdentityResult> UpdateAsync(TUser user);
+
+        /// <summary>
         /// 分页加载用户。
         /// </summary>
         /// <typeparam name="TQuery">查询类型。</typeparam>

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Data;
-using System.Threading;
-using Mozlite.Extensions;
-using System.Data.Common;
+﻿using Microsoft.Extensions.Logging;
 using Mozlite.Data.Query;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
+using Mozlite.Extensions;
+using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
+using System.Data;
+using System.Data.Common;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mozlite.Data.Internal
 {
@@ -582,6 +582,35 @@ namespace Mozlite.Data.Internal
             var sql = SqlGenerator.Any(EntityType);
             sql.AddPrimaryKey(key);
             return await ScalarSqlAsync(sql, cancellationToken) != null;
+        }
+
+        /// <summary>
+        /// 获取条件表达式的数量。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回计算结果。</returns>
+        public virtual int Count(Expression<Predicate<TModel>> expression)
+        {
+            var sql = SqlGenerator.Scalar(EntityType, "COUNT", null, expression, "1");
+            var scalar = ExecuteScalar(sql);
+            if (scalar == null || scalar == DBNull.Value)
+                return 0;
+            return Convert.ToInt32(scalar);
+        }
+
+        /// <summary>
+        /// 获取条件表达式的数量。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回计算结果。</returns>
+        public virtual async Task<int> CountAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        {
+            var sql = SqlGenerator.Scalar(EntityType, "COUNT", null, expression, "1");
+            var scalar = await ExecuteScalarAsync(sql, cancellationToken: cancellationToken);
+            if (scalar == null || scalar == DBNull.Value)
+                return 0;
+            return Convert.ToInt32(scalar);
         }
 
         /// <summary>

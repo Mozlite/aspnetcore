@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Extensions;
-using System.Linq.Expressions;
+using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Mozlite.Data.Query
 {
@@ -226,7 +226,7 @@ namespace Mozlite.Data.Query
         public virtual SqlIndentedStringBuilder Any(IEntityType entityType)
         {
             var builder = new SqlIndentedStringBuilder();
-            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.Append("SELECT 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
             AppendWherePrimaryKey(builder, entityType);
             return builder;
         }
@@ -249,11 +249,14 @@ namespace Mozlite.Data.Query
         /// <param name="method">聚合函数。</param>
         /// <param name="column">聚合列。</param>
         /// <param name="expression">条件表达式。</param>
+        /// <param name="nullColumn">当<paramref name="column"/>为空的时候，使用的值。</param>
         /// <returns>返回SQL构建实例。</returns>
-        public SqlIndentedStringBuilder Scalar(IEntityType entityType, string method, LambdaExpression column, Expression expression)
+        public virtual SqlIndentedStringBuilder Scalar(IEntityType entityType, string method, LambdaExpression column, Expression expression, string nullColumn = null)
         {
+            if (column != null)
+                nullColumn = SqlHelper.DelimitIdentifier(column.GetPropertyAccess().Name);
             var builder = new SqlIndentedStringBuilder();
-            builder.Append($"SELECT {method}({SqlHelper.DelimitIdentifier(column.GetPropertyAccess().Name)}) FROM {SqlHelper.DelimitIdentifier(entityType.Table)}");
+            builder.Append($"SELECT {method}({nullColumn}) FROM {SqlHelper.DelimitIdentifier(entityType.Table)}");
             builder.AppendEx(Visit(expression), " WHERE {0}")
                 .AppendLine(SqlHelper.StatementTerminator);
             return builder;
@@ -296,7 +299,7 @@ namespace Mozlite.Data.Query
         public virtual SqlIndentedStringBuilder Any(IEntityType entityType, Expression expression)
         {
             var builder = new SqlIndentedStringBuilder();
-            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.Append("SELECT 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
             builder.AppendEx(Visit(expression), " WHERE {0}").Append(SqlHelper.StatementTerminator);
             return builder;
         }

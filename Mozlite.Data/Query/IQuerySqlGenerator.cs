@@ -88,8 +88,9 @@ namespace Mozlite.Data.Query
         /// <param name="method">聚合函数。</param>
         /// <param name="column">聚合列。</param>
         /// <param name="expression">条件表达式。</param>
+        /// <param name="nullColumn">当<paramref name="column"/>为空的时候，使用的值。</param>
         /// <returns>返回SQL构建实例。</returns>
-        SqlIndentedStringBuilder Scalar(IEntityType entityType, string method, LambdaExpression column, Expression expression);
+        SqlIndentedStringBuilder Scalar(IEntityType entityType, string method, LambdaExpression column, Expression expression, string nullColumn = null);
 
         /// <summary>
         /// 解析表达式。

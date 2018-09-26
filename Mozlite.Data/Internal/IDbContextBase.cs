@@ -317,6 +317,22 @@ namespace Mozlite.Data.Internal
             CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 获取条件表达式的数量。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回计算结果。</returns>
+        int Count(Expression<Predicate<TModel>> expression);
+
+        /// <summary>
+        /// 获取条件表达式的数量。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标记。</param>
+        /// <returns>返回计算结果。</returns>
+        Task<int> CountAsync(Expression<Predicate<TModel>> expression,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// 通过条件表达式获取聚合实例对象。
         /// </summary>
         /// <param name="convertFunc">转换函数。</param>
