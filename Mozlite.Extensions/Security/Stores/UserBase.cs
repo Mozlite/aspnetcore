@@ -144,6 +144,11 @@ namespace Mozlite.Extensions.Security.Stores
         public string RoleName { get; set; }
 
         /// <summary>
+        /// 用户账户操作。
+        /// </summary>
+        public int Action { get; set; }
+
+        /// <summary>
         /// 返回当前用户的用户名。
         /// </summary>
         public override string ToString()

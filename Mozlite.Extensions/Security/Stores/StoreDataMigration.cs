@@ -24,8 +24,7 @@ namespace Mozlite.Extensions.Security.Stores
         {
             builder.CreateTable<TUser>(table =>
             {
-                table
-                    .Column(x => x.UserId)
+                table.Column(x => x.UserId)
                     .Column(x => x.UserName, nullable: false)
                     .Column(x => x.NormalizedUserName, nullable: false)
                     .Column(x => x.PasswordHash, nullable: false)
@@ -47,7 +46,8 @@ namespace Mozlite.Extensions.Security.Stores
                     .Column(x => x.RoleId, defaultValue: 0)
                     .Column(x => x.RoleName)
                     .Column(x => x.LoginIP)
-                    .Column(x => x.LastLoginDate);
+                    .Column(x => x.LastLoginDate)
+                    .Column(x => x.Action);
                 Create(table);
             });
 
