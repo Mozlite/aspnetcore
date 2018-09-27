@@ -29,8 +29,8 @@ namespace Mozlite.Extensions.Installers
         {
             var lisence = new Lisence { Registration = Cores.Encrypto(JsonConvert.SerializeObject(registration)) };
             if (await _context.AnyAsync())
-                return await _context.CreateAsync(lisence);
-            return await _context.UpdateAsync(lisence);
+                return await _context.UpdateAsync(lisence);
+            return await _context.CreateAsync(lisence);
         }
 
         /// <summary>

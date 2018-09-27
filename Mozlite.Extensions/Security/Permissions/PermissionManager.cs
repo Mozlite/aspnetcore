@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using Mozlite.Data;
-using System.Threading.Tasks;
-using Mozlite.Extensions.Data;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using Mozlite.Extensions.Properties;
-using Mozlite.Extensions.Security.Stores;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Data;
+using Mozlite.Extensions.Data;
+using Mozlite.Extensions.Properties;
+using Mozlite.Extensions.Security.Stores;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
@@ -297,6 +297,7 @@ namespace Mozlite.Extensions.Security.Permissions
         public async Task RefreshOwnersAsync()
         {
             var role = await _rdb.FindAsync(x => x.NormalizedName == DefaultRole.Owner.NormalizedName);
+            if (role == null) return;
             var permissions = await LoadCachePermissionsAsync();
             foreach (var permission in permissions.Values)
             {
@@ -313,6 +314,7 @@ namespace Mozlite.Extensions.Security.Permissions
         public void RefreshOwners()
         {
             var role = _rdb.Find(x => x.NormalizedName == DefaultRole.Owner.NormalizedName);
+            if (role == null) return;
             var permissions = LoadCachePermissions().Values;
             foreach (var permission in permissions)
             {
