@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Data;
+using Mozlite.Extensions.Security.Stores;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Security
 {
@@ -10,6 +14,68 @@ namespace Mozlite.Extensions.Security
     /// </summary>
     public static class SecurityExtensions
     {
+        /// <summary>
+        /// 获取用户实例。
+        /// </summary>
+        /// <param name="httpContextAccessor">当前HTTP上下文。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public static TUser GetUser<TUser>(this IHttpContextAccessor httpContextAccessor)
+            where TUser : UserBase
+        {
+            return httpContextAccessor.HttpContext?.GetUser<TUser>();
+        }
+
+        /// <summary>
+        /// 获取用户实例。
+        /// </summary>
+        /// <param name="httpContext">当前HTTP上下文。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public static TUser GetUser<TUser>(this HttpContext httpContext)
+            where TUser : UserBase
+        {
+            var key = typeof(TUser);
+            if (httpContext.Items.TryGetValue(key, out object user) && user is TUser current)
+                return current;
+            var userId = httpContext.User.GetUserId();
+            if (userId > 0)
+                current = httpContext.RequestServices.GetRequiredService<IDbContext<TUser>>().Find(userId);
+            else
+                current = null;
+            httpContext.Items[key] = current;
+            return current;
+        }
+
+        /// <summary>
+        /// 获取用户实例。
+        /// </summary>
+        /// <param name="httpContextAccessor">当前HTTP上下文。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public static Task<TUser> GetUserAsync<TUser>(this IHttpContextAccessor httpContextAccessor)
+            where TUser : UserBase
+        {
+            return httpContextAccessor.HttpContext?.GetUserAsync<TUser>();
+        }
+
+        /// <summary>
+        /// 获取用户实例。
+        /// </summary>
+        /// <param name="httpContext">当前HTTP上下文。</param>
+        /// <returns>返回当前用户实例。</returns>
+        public static async Task<TUser> GetUserAsync<TUser>(this HttpContext httpContext)
+            where TUser : UserBase
+        {
+            var key = typeof(TUser);
+            if (httpContext.Items.TryGetValue(key, out object user) && user is TUser current)
+                return current;
+            var userId = httpContext.User.GetUserId();
+            if (userId > 0)
+                current = await httpContext.RequestServices.GetRequiredService<IDbContext<TUser>>().FindAsync(userId);
+            else
+                current = null;
+            httpContext.Items[key] = current;
+            return current;
+        }
+
         /// <summary>
         /// 获取用户的IP地址。
         /// </summary>

@@ -26,13 +26,18 @@ namespace Mozlite.Mvc.TagHelpers
         /// 默认显示字符串：如“请选择”。
         /// </summary>
         [HtmlAttributeName("default-text")]
-        public string Text { get; set; } = Resources.SelectDefaultText;
+        public string Text { get; set; }
 
         /// <summary>
         /// 值。
         /// </summary>
         [HtmlAttributeName("value")]
         public object Value { get; set; }
+
+        /// <summary>
+        /// 设置默认：“请选择”字符串。
+        /// </summary>
+        protected void SetDefault() => Text = Resources.SelectDefaultText;
 
         /// <summary>
         /// 异步访问并呈现当前标签实例。

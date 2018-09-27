@@ -11,8 +11,11 @@ namespace Mozlite.Mvc.Messages
         private const string StatusMessageKey = "StatusMessage";
         private const string StatusTypeKey = "StatusType";
         private const string StatusUrlKey = "StatusUrl";
-
-        internal StatusMessage(ITempDataDictionary tempData)
+        /// <summary>
+        /// 初始化类<see cref="StatusMessage"/>。
+        /// </summary>
+        /// <param name="tempData">临时数据存储实例。</param>
+        public StatusMessage(ITempDataDictionary tempData)
         {
             _tempData = tempData;
         }

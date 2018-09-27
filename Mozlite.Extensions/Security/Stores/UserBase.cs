@@ -149,6 +149,16 @@ namespace Mozlite.Extensions.Security.Stores
         public int Action { get; set; }
 
         /// <summary>
+        /// 判断当前用户账户操作是否归零。
+        /// </summary>
+        /// <param name="action">当前操作码。</param>
+        public void AttachActionProvider(int action)
+        {
+            if (Action == action)
+                Action = 0;
+        }
+
+        /// <summary>
         /// 返回当前用户的用户名。
         /// </summary>
         public override string ToString()

@@ -86,38 +86,17 @@ namespace Mozlite.Extensions.Security
             return base.CreateAsync(user, password);
         }
 
-        private readonly Type _currentUserCacheKey = typeof(TUser);
         /// <summary>
         /// 获取当前用户。
         /// </summary>
         /// <returns>返回当前用户实例。</returns>
-        public TUser GetUser()
-        {
-            if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
-                return current;
-            if (int.TryParse(GetUserId(HttpContext.User), out var userId))
-                current = _store.FindUser(userId);
-            else
-                current = null;
-            HttpContext.Items[_currentUserCacheKey] = current;
-            return current;
-        }
+        public TUser GetUser() => HttpContext.GetUser<TUser>();
 
         /// <summary>
         /// 获取当前用户。
         /// </summary>
         /// <returns>返回当前用户实例。</returns>
-        public async Task<TUser> GetUserAsync()
-        {
-            if (HttpContext.Items.TryGetValue(_currentUserCacheKey, out object user) && user is TUser current)
-                return current;
-            if (int.TryParse(GetUserId(HttpContext.User), out var userId))
-                current = await _store.FindUserAsync(userId);
-            else
-                current = null;
-            HttpContext.Items[_currentUserCacheKey] = current;
-            return current;
-        }
+        public Task<TUser> GetUserAsync() => HttpContext.GetUserAsync<TUser>();
 
         /// <summary>
         /// 判断当前用户是否已经登陆。

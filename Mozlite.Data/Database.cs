@@ -20,8 +20,10 @@ namespace Mozlite.Data
     {
         private readonly DbProviderFactory _factory;
         private readonly ISqlHelper _sqlHelper;
-        private readonly string _connectionString;
-        private readonly string _prefix;
+        /// <summary>
+        /// 数据库选项。
+        /// </summary>
+        protected DatabaseOptions Options { get; }
 
         /// <summary>
         /// 初始化 <see cref="Database"/> 类的新实例。
@@ -34,8 +36,7 @@ namespace Mozlite.Data
         {
             _factory = factory;
             _sqlHelper = sqlHelper;
-            _connectionString = options.Value.ConnectionString;
-            _prefix = options.Value.Prefix;
+            Options = options.Value;
             Logger = logger;
         }
 
@@ -51,7 +52,7 @@ namespace Mozlite.Data
         protected DbConnection GetConnection()
         {
             var connection = _factory.CreateConnection();
-            connection.ConnectionString = _connectionString;
+            connection.ConnectionString = Options.ConnectionString;
             return connection;
         }
 
@@ -114,7 +115,7 @@ namespace Mozlite.Data
         {
             var command = _factory.CreateCommand();
             command.Connection = connection;
-            command.CommandText = commandText.ReplacePrefix(_prefix);
+            command.CommandText = commandText.ReplacePrefix(Options.Prefix);
             command.CommandType = commandType;
             command.Parameters.Clear();
             if (parameters != null)
@@ -311,7 +312,7 @@ namespace Mozlite.Data
                         command.CommandTimeout = timeout;
                         command.Connection = connection;
                         command.Transaction = transaction;
-                        var current = new Transaction(command, _prefix, AttachParameters, LogError);
+                        var current = new Transaction(command, Options.Prefix, AttachParameters, LogError);
                         if (executor(current))
                         {
                             transaction.Commit();
@@ -329,6 +330,19 @@ namespace Mozlite.Data
                 }
             }
         }
+
+        /// <summary>
+        /// 批量插入数据。
+        /// </summary>
+        /// <typeparam name="TModel">模型类型。</typeparam>
+        /// <param name="models">模型列表。</param>
+        public abstract Task BulkInsertAsync<TModel>(IEnumerable<TModel> models);
+
+        /// <summary>
+        /// 获取数据库版本信息。
+        /// </summary>
+        /// <returns>返回数据库版本信息。</returns>
+        public abstract string GetVersion();
 
         /// <summary>
         /// 开启一个事务并执行。
@@ -350,7 +364,7 @@ namespace Mozlite.Data
                         command.CommandTimeout = timeout;
                         command.Connection = connection;
                         command.Transaction = transaction;
-                        var current = new Transaction(command, _prefix, AttachParameters, LogError);
+                        var current = new Transaction(command, Options.Prefix, AttachParameters, LogError);
                         if (await executor(current))
                         {
                             transaction.Commit();
