@@ -29,6 +29,11 @@ namespace Mozlite.Extensions.Storages.Excels
         public int Index { get; set; }
 
         /// <summary>
+        /// 导入列引用，如：A,B,C,D,E...，不包含行号。
+        /// </summary>
+        public string Reference { get; set; }
+
+        /// <summary>
         /// 横向对齐方式。
         /// </summary>
         public HorizontalAlignment Horizontal { get; set; } = HorizontalAlignment.Center;

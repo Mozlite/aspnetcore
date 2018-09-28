@@ -32,6 +32,7 @@ namespace Mozlite.Extensions.Storages.Excels
             AppendAlignment(HeadCellFormat, headAttribute);
             ColumnName = headAttribute.Name?.Trim() ?? property.Name;
             Index = headAttribute.Index;
+            Reference = headAttribute.Reference;
 
             CellFormat = new CellFormat();
             var attribute = info.GetCustomAttribute<ExcelColumnAttribute>();
@@ -55,6 +56,11 @@ namespace Mozlite.Extensions.Storages.Excels
         /// 字段名称。
         /// </summary>
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// 列引用，如：A,B,C,D,E...，不包含行号。
+        /// </summary>
+        public string Reference { get; set; }
 
         /// <summary>
         /// 字体样式。

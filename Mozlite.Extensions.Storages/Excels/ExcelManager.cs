@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Mozlite.Extensions.Storages.Excels
 {
@@ -50,28 +51,45 @@ namespace Mozlite.Extensions.Storages.Excels
             }
         }
 
+        /// <summary>
+        /// 加载Excel文件。
+        /// </summary>
+        /// <param name="file">表单文件。</param>
+        /// <returns>返回Excel内容。</returns>
+        public async Task<IEnumerable<TModel>> LoadAsync<TModel>(IFormFile file) where TModel : class, new()
+        {
+            var storageDirectory = _serviceProvider.GetRequiredService<IStorageDirectory>();
+            var info = await storageDirectory.SaveToTempAsync(file);
+            var models = Load<TModel>(info.FullName);
+            info.Delete();
+            return models;
+        }
+
         private void Load<TModel>(ExcelObject<TModel> models, SharedStringTable shared, SheetData sheet) where TModel : class, new()
         {
             var isFirst = true;
-            var dic = new Dictionary<int, Action<object, string>>();
+            var dic = new Dictionary<string, Action<object, string>>();
             foreach (var row in sheet.Descendants<Row>())
             {
                 if (isFirst)
                 {//第一行，描述
                     var cells = row.Descendants<Cell>().ToList();
-                    for (int i = 0; i < cells.Count; i++)
+                    foreach (var cell in cells)
                     {
-                        var name = GetCellValue(cells[i], shared);
-                        if (string.IsNullOrWhiteSpace(name))
-                            continue;
-
-                        name = name.Trim();
-                        var descriptor =
-                            models.Descriptors.SingleOrDefault(x =>
-                                name.Equals(x.ColumnName, StringComparison.OrdinalIgnoreCase));
+                        var reference = _regex.Replace(cell.CellReference, String.Empty);
+                        var descriptor = models.Descriptors.SingleOrDefault(x =>
+                            reference.Equals(x.Reference, StringComparison.OrdinalIgnoreCase));
                         if (descriptor == null)
-                            continue;
-                        dic.Add(i, descriptor.Set);
+                        {
+                            var name = GetCellValue(cell, shared)?.Trim();
+                            if (string.IsNullOrWhiteSpace(name))
+                                continue;
+                            descriptor = models.Descriptors.SingleOrDefault(x =>
+                                name.Equals(x.ColumnName, StringComparison.OrdinalIgnoreCase));
+                            if (descriptor == null)
+                                continue;
+                        }
+                        dic.Add(reference, descriptor.Set);
                     }
                     isFirst = false;
                 }
@@ -82,16 +100,18 @@ namespace Mozlite.Extensions.Storages.Excels
             }
         }
 
-        private static TModel Load<TModel>(Dictionary<int, Action<object, string>> setters, Row row, SharedStringTable shared) where TModel : class, new()
+        private static readonly Regex _regex = new Regex("\\d+");
+
+        private static TModel Load<TModel>(Dictionary<string, Action<object, string>> setters, Row row, SharedStringTable shared) where TModel : class, new()
         {
             var cells = row.Descendants<Cell>().ToList();
             var current = new TModel();
-            for (int i = 0; i < cells.Count; i++)
+            foreach (var cell in cells)
             {
-                if (!setters.TryGetValue(i, out var setter))
+                if (!setters.TryGetValue(_regex.Replace(cell.CellReference, String.Empty), out var setter))
                     continue;
 
-                var value = GetCellValue(cells[i], shared);
+                var value = GetCellValue(cell, shared);
                 if (value != null)
                     setter(current, value);
             }
@@ -293,24 +313,6 @@ namespace Mozlite.Extensions.Storages.Excels
             stylesheet.Fills.Count = (uint)stylesheet.Fills.ChildElements.Count;
             var stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
             stylesheet.Save(stylesPart);
-        }
-
-        /// <summary>
-        /// 导入表单文件。
-        /// </summary>
-        /// <typeparam name="TModel">当前模型实例类型。</typeparam>
-        /// <param name="file">表单文件。</param>
-        /// <param name="saveAsync">保存方法。</param>
-        public async Task ImportAsync<TModel>(IFormFile file, Func<TModel, Task> saveAsync) where TModel : class, new()
-        {
-            var storageDirectory = _serviceProvider.GetRequiredService<IStorageDirectory>();
-            var info = await storageDirectory.SaveToTempAsync(file);
-            var models = Load<TModel>(info.FullName);
-            foreach (var model in models)
-            {
-                await saveAsync(model);
-            }
-            info.Delete();
         }
 
         /// <summary>
