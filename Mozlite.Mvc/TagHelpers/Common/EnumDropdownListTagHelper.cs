@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System;
+using System.Collections.Generic;
 
 namespace Mozlite.Mvc.TagHelpers.Common
 {
@@ -12,11 +12,15 @@ namespace Mozlite.Mvc.TagHelpers.Common
     public class EnumDropdownListTagHelper : DropdownListTagHelper
     {
         private readonly ILocalizer _localizer;
+        /// <summary>
+        /// 初始化类<see cref="EnumDropdownListTagHelper"/>。
+        /// </summary>
+        /// <param name="localizer">本地化接口。</param>
         public EnumDropdownListTagHelper(ILocalizer localizer)
         {
             _localizer = localizer;
         }
-        
+
         /// <summary>
         /// 初始化选项列表。
         /// </summary>
