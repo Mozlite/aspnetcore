@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -17,7 +18,8 @@ namespace Mozlite.Extensions.Security.Activities
         /// 配置服务方法。
         /// </summary>
         /// <param name="services">服务集合实例。</param>
-        public void ConfigureServices(IServiceCollection services)
+        /// <param name="configuration">配置接口。</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IActivityManagerBase, TActivityManagerImplementation>();
             services.AddSingleton(typeof(TActivityManager), typeof(TActivityManagerImplementation));

@@ -1,6 +1,6 @@
-﻿using System;
-using Mozlite.Data;
+﻿using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
+using System;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -9,7 +9,7 @@ namespace Mozlite.Extensions.Security.Activities
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TUserActivity">用户活动状态类型。</typeparam>
-    public abstract class UserActivityQueryBase<TUser, TUserActivity> : Mozlite.Data.QueryBase<TUserActivity>
+    public abstract class ActivityQueryBase<TUser, TUserActivity> : QueryBase<TUserActivity>
         where TUser : UserBase
         where TUserActivity : UserActivity
     {
@@ -65,6 +65,39 @@ namespace Mozlite.Extensions.Security.Activities
             if (!string.IsNullOrEmpty(IP))
                 context.Where(x => x.IPAdress == IP);
             context.OrderByDescending(x => x.Id);
+        }
+
+    }
+
+    /// <summary>
+    /// 用户活动查询实例。
+    /// </summary>
+    /// <typeparam name="TUser">用户类型。</typeparam>
+    /// <typeparam name="TUserActivity">用户活动状态类型。</typeparam>
+    /// <typeparam name="TRole">用户组类型。</typeparam>
+    public abstract class ActivityQueryBase<TUser, TRole, TUserActivity> : ActivityQueryBase<TUser, TUserActivity>
+        where TUser : UserBase
+        where TRole : RoleBase
+        where TUserActivity : UserActivity
+    {
+        /// <summary>
+        /// 当前用户用户组等级。
+        /// </summary>
+        public int MaxRoleLevel { get; set; }
+
+        /// <summary>
+        /// 初始化查询上下文。
+        /// </summary>
+        /// <param name="context">查询上下文。</param>
+        protected override void Init(IQueryContext<TUserActivity> context)
+        {
+            base.Init(context);
+            if (MaxRoleLevel > 0)
+            {
+                context.Select()
+                    .LeftJoin<TUser, TRole>((u, r) => u.RoleId == r.RoleId)
+                    .Where<TRole>(x => x.RoleLevel < MaxRoleLevel);
+            }
         }
     }
 }

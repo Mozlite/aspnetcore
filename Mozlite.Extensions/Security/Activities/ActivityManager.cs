@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security.Activities
 {
@@ -55,10 +54,9 @@ namespace Mozlite.Extensions.Security.Activities
         /// 查询活动状态。
         /// </summary>
         /// <typeparam name="TQuery">查询实例类型。</typeparam>
-        /// <typeparam name="TUser">用户类型。</typeparam>
         /// <param name="query">当前查询实例对象。</param>
         /// <returns>查询实例对象。</returns>
-        public virtual TQuery Load<TQuery, TUser>(TQuery query) where TQuery : UserActivityQueryBase<TUser, TActivity> where TUser : UserBase
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : QueryBase<TActivity>
         {
             return Context.Load(query);
         }
@@ -67,10 +65,9 @@ namespace Mozlite.Extensions.Security.Activities
         /// 查询活动状态。
         /// </summary>
         /// <typeparam name="TQuery">查询实例类型。</typeparam>
-        /// <typeparam name="TUser">用户类型。</typeparam>
         /// <param name="query">当前查询实例对象。</param>
         /// <returns>查询实例对象。</returns>
-        public virtual Task<TQuery> LoadAsync<TQuery, TUser>(TQuery query) where TQuery : UserActivityQueryBase<TUser, TActivity> where TUser : UserBase
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : QueryBase<TActivity>
         {
             return Context.LoadAsync(query);
         }

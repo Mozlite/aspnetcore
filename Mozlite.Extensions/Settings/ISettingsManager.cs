@@ -106,5 +106,29 @@ namespace Mozlite.Extensions.Settings
         /// </summary>
         /// <param name="key">配置唯一键。</param>
         void Refresh(string key);
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        bool DeleteSettings<TSiteSettings>();
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        bool DeleteSettings(string key);
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        Task<bool> DeleteSettingsAsync<TSiteSettings>();
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        Task<bool> DeleteSettingsAsync(string key);
     }
 }

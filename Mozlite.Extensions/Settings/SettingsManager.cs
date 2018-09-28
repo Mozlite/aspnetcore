@@ -1,7 +1,7 @@
-﻿using Mozlite.Data;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Settings
 {
@@ -153,7 +153,7 @@ namespace Mozlite.Extensions.Settings
                     return true;
                 }
             }
-            if(await Context.CreateAsync(adapter))
+            if (await Context.CreateAsync(adapter))
             {
                 Refresh(key);
                 return true;
@@ -198,7 +198,7 @@ namespace Mozlite.Extensions.Settings
                     return true;
                 }
             }
-            if(Context.Create(adapter))
+            if (Context.Create(adapter))
             {
                 Refresh(key);
                 return true;
@@ -213,6 +213,48 @@ namespace Mozlite.Extensions.Settings
         public virtual void Refresh(string key)
         {
             Cache.Remove(key);
+        }
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        public virtual bool DeleteSettings<TSiteSettings>() =>
+            DeleteSettings(typeof(TSiteSettings).FullName);
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        public virtual bool DeleteSettings(string key)
+        {
+            if (Context.Delete(key))
+            {
+                Refresh(key);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        public virtual Task<bool> DeleteSettingsAsync<TSiteSettings>() =>
+            DeleteSettingsAsync(typeof(TSiteSettings).FullName);
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        public virtual async Task<bool> DeleteSettingsAsync(string key)
+        {
+            if (await Context.DeleteAsync(key))
+            {
+                Refresh(key);
+                return true;
+            }
+            return false;
         }
     }
 }
