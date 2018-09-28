@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,23 +19,24 @@ namespace Mozlite
         /// 添加框架容器注册。
         /// </summary>
         /// <param name="services">服务容器集合。</param>
+        /// <param name="configuration">配置接口。</param>
         /// <returns>返回服务集合实例对象。</returns>
-        public static IMozliteBuilder AddMozlite(this IServiceCollection services)
+        public static IMozliteBuilder AddMozlite(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddSingleton(typeof(IServiceAccessor<>), typeof(ServiceAccessor<>));
             var exportedTypes = GetExportedTypes();
-            TryAddContainer(services, exportedTypes);
+            TryAddContainer(services, exportedTypes, configuration);
             return new MozliteBuilder(services);
         }
 
-        private static void TryAddContainer(IServiceCollection services, IEnumerable<Type> exportedTypes)
+        private static void TryAddContainer(IServiceCollection services, IEnumerable<Type> exportedTypes, IConfiguration configuration)
         {
             foreach (var source in exportedTypes)
             {
                 if (typeof(IServiceConfigurer).IsAssignableFrom(source))
                 {
                     var service = Activator.CreateInstance(source) as IServiceConfigurer;
-                    service?.ConfigureServices(services);
+                    service?.ConfigureServices(services, configuration);
                 }
                 else if (typeof(IHostedService).IsAssignableFrom(source))
                 {//后台任务

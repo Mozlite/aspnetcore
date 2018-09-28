@@ -14,6 +14,11 @@ namespace Mozlite.Extensions
         string Name { get; }
 
         /// <summary>
+        /// 显示名称。
+        /// </summary>
+        string DisplayName { get; }
+
+        /// <summary>
         /// 类型。
         /// </summary>
         Type ClrType { get; }

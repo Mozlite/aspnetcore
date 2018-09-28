@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Mozlite.Mvc;
+using Mozlite.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Mozlite.Mvc;
-using Mozlite.Properties;
 
 namespace Mozlite.Extensions.Logging
 {
@@ -54,26 +54,28 @@ namespace Mozlite.Extensions.Logging
                     if (string.IsNullOrEmpty(value))
                         continue;
                     //新增
-                    _entities.Add(new LogEntity { Action = LogAction.Add, Name = property.Name, Value = value });
+                    _entities.Add(new LogEntity { Action = LogAction.Add, Property = property, Value = value });
                     continue;
                 }
                 if (string.IsNullOrEmpty(value))
                 {
                     //删除
-                    _entities.Add(new LogEntity { Action = LogAction.Remove, Name = property.Name, Source = source });
+                    _entities.Add(new LogEntity { Action = LogAction.Remove, Property = property, Source = source });
                     continue;
                 }
                 if (source.Equals(value, StringComparison.OrdinalIgnoreCase))
                     continue;
                 //修改
-                _entities.Add(new LogEntity { Action = LogAction.Modify, Name = property.Name, Source = source, Value = value });
+                _entities.Add(new LogEntity { Action = LogAction.Modify, Property = property, Source = source, Value = value });
             }
             return _entities.Count > 0;
         }
 
-        private string Local(string key)
+        private string Local(IProperty property)
         {
-            return Localizer == null ? key : Localizer.GetString(EntityType.ClrType, key);
+            if (property.DisplayName != null)
+                return property.DisplayName;
+            return Localizer == null ? property.Name : Localizer.GetString(property.DeclaringType.ClrType, property.Name);
         }
 
         /// <summary>
@@ -96,14 +98,14 @@ namespace Mozlite.Extensions.Logging
                         builder.Append(Resources.LogAction_Add);
                         foreach (var entity in group)
                         {
-                            list.Add(string.Format(Resources.LogAction_AddFormat, Local(entity.Name), entity.Value));
+                            list.Add(string.Format(Resources.LogAction_AddFormat, Local(entity.Property), entity.Value));
                         }
                         break;
                     case LogAction.Modify:
                         builder.Append(Resources.LogAction_Modify);
                         foreach (var entity in group)
                         {
-                            list.Add(string.Format(Resources.LogAction_ModifyFormat, Local(entity.Name), entity.Source,
+                            list.Add(string.Format(Resources.LogAction_ModifyFormat, Local(entity.Property), entity.Source,
                                 entity.Value));
                         }
                         break;
@@ -111,7 +113,7 @@ namespace Mozlite.Extensions.Logging
                         builder.Append(Resources.LogAction_Remove);
                         foreach (var entity in group)
                         {
-                            list.Add(string.Format(Resources.LogAction_RemoveFormat, Local(entity.Name), entity.Source));
+                            list.Add(string.Format(Resources.LogAction_RemoveFormat, Local(entity.Property), entity.Source));
                         }
                         break;
                 }
@@ -139,7 +141,7 @@ namespace Mozlite.Extensions.Logging
             /// <summary>
             /// 属性名称。
             /// </summary>
-            public string Name { get; set; }
+            public IProperty Property { get; set; }
 
             /// <summary>
             /// 原始数据。

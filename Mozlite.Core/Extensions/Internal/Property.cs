@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -30,12 +31,19 @@ namespace Mozlite.Extensions.Internal
             IsPrimaryKey = info.IsDefined(typeof(KeyAttribute));
             MaxLength = info.GetCustomAttribute<SizeAttribute>()?.MaximumLength;
             IsRowVersion = info.IsDefined(typeof(RowVersionAttribute));
+            DisplayName = info.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
+                          info.GetCustomAttribute<DisplayAttribute>()?.Name;
         }
 
         /// <summary>
         /// 名称。
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// 显示名称。
+        /// </summary>
+        public string DisplayName { get; }
 
         /// <summary>
         /// 类型。
