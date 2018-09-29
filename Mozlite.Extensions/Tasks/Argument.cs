@@ -1,51 +1,47 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.AspNetCore.Html;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 
 namespace Mozlite.Extensions.Tasks
 {
     /// <summary>
     /// 参数实例对象。
     /// </summary>
-    public class Argument : IEnumerable<string>
+    public class Argument
     {
-        private const string Splitter = "=a=r=g=u=\r\n=m=e=n=t=";
-        private readonly List<string> _arguments = new List<string>();
-
+        private readonly IDictionary<string, object> _arguments = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         /// <summary>
-        /// 返回一个循环访问集合的枚举器。
+        /// 初始化类<see cref="Argument"/>。
         /// </summary>
-        /// <returns>
-        /// 可用于循环访问集合的 <see cref="T:System.Collections.Generic.IEnumerator`1"/>。
-        /// </returns>
-        public IEnumerator<string> GetEnumerator()
-        {
-            return _arguments.GetEnumerator();
-        }
+        public Argument() { }
 
-        /// <summary>
-        /// 返回一个循环访问集合的枚举器。
-        /// </summary>
-        /// <returns>
-        /// 可用于循环访问集合的 <see cref="T:System.Collections.IEnumerator"/> 对象。
-        /// </returns>
-        IEnumerator IEnumerable.GetEnumerator()
+        internal Argument(string arguments)
         {
-            return GetEnumerator();
+            if (string.IsNullOrWhiteSpace(arguments))
+                return;
+            var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(arguments);
+            foreach (var o in data)
+            {
+                _arguments[o.Key] = o.Value;
+            }
         }
 
         /// <summary>
         /// 索引查找和设置参数实例对象。
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="name">参数名称。</param>
         /// <returns></returns>
-        public string this[int index]
+        public object this[string name]
         {
-            get => _arguments[index];
-            set => _arguments[index] = value;
+            get
+            {
+                if (_arguments.TryGetValue(name, out var value))
+                    return value;
+                return null;
+            }
+            set => _arguments[name] = value;
         }
 
         /// <summary>
@@ -56,7 +52,7 @@ namespace Mozlite.Extensions.Tasks
         /// </returns>
         public override string ToString()
         {
-            return string.Join(Splitter, _arguments);
+            return JsonConvert.SerializeObject(_arguments);
         }
 
         /// <summary>
@@ -65,63 +61,7 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回显示字符串。</returns>
         public IHtmlContent ToHtmlString()
         {
-            var args = string.Join(", ", _arguments.Select(arg => $"\"{arg.Replace("\"", "\\\"")}\""));
-            return new HtmlString($"({args})");
-        }
-
-        /// <summary>
-        /// 隐式转换<see cref="Argument"/>。
-        /// </summary>
-        /// <param name="arguments">参数字符串。</param>
-        public static implicit operator Argument(string arguments)
-        {
-            var args = new Argument();
-            args._arguments.AddRange(arguments.Split(new[] { Splitter }, StringSplitOptions.None));
-            return args;
-        }
-
-        /// <summary>
-        /// 隐式转换<see cref="Argument"/>。
-        /// </summary>
-        /// <param name="arguments">参数列表。</param>
-        public static implicit operator Argument(List<string> arguments)
-        {
-            var args = new Argument();
-            args._arguments.AddRange(arguments);
-            return args;
-        }
-
-        /// <summary>
-        /// 隐式转换<see cref="Argument"/>。
-        /// </summary>
-        /// <param name="arguments">参数列表。</param>
-        public static implicit operator Argument(List<object> arguments)
-        {
-            var args = new Argument();
-            args._arguments.AddRange(arguments.Select(a => a?.ToString()));
-            return args;
-        }
-
-        /// <summary>
-        /// 隐式转换<see cref="Argument"/>。
-        /// </summary>
-        /// <param name="arguments">参数列表。</param>
-        public static implicit operator Argument(string[] arguments)
-        {
-            var args = new Argument();
-            args._arguments.AddRange(arguments);
-            return args;
-        }
-
-        /// <summary>
-        /// 隐式转换<see cref="Argument"/>。
-        /// </summary>
-        /// <param name="arguments">参数列表。</param>
-        public static implicit operator Argument(object[] arguments)
-        {
-            var args = new Argument();
-            args._arguments.AddRange(arguments.Select(a => a?.ToString()));
-            return args;
+            return new HtmlString($"({ToString()})");
         }
 
         /// <summary>
@@ -132,22 +72,10 @@ namespace Mozlite.Extensions.Tasks
         /// <summary>
         /// 获取整形参数。
         /// </summary>
-        /// <param name="index">索引值。</param>
+        /// <param name="name">参数名称。</param>
         /// <param name="defaultValue">默认值。</param>
         /// <returns>返回当前参数。</returns>
-        public int GetInt32(int index, int defaultValue = 0)
-        {
-            try
-            {
-                if (int.TryParse(this[index], out var value))
-                    return value;
-                return defaultValue;
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
+        public int GetInt32(string name, int defaultValue = 0) => (int?)this[name] ?? defaultValue;
 
         /// <summary>
         /// 任务管理接口。
@@ -176,5 +104,15 @@ namespace Mozlite.Extensions.Tasks
         /// 当前服务Id。
         /// </summary>
         public TaskContext TaskContext { get; internal set; }
+
+        /// <summary>
+        /// 自定义后台服务运行模式。
+        /// </summary>
+        public string Interval { get => this[nameof(Interval)]?.ToString(); set => this[nameof(Interval)] = value; }
+
+        /// <summary>
+        /// 错误消息。
+        /// </summary>
+        public string Error { get => this[nameof(Error)]?.ToString(); set => this[nameof(Error)] = value; }
     }
 }

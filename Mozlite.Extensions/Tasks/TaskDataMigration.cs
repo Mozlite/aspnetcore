@@ -22,7 +22,6 @@ namespace Mozlite.Extensions.Tasks
                 .Column(s => s.Type)
                 .Column(s => s.Interval)
                 .Column(s => s.Enabled)
-                .Column(s => s.Error)
                 .Column(s => s.LastExecuted)
                 .Column(s => s.NextExecuting));
         }

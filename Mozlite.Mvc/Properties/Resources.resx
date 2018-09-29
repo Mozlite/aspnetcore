@@ -156,6 +156,24 @@
   <data name="LastPage" xml:space="preserve">
     <value>上一页</value>
   </data>
+  <data name="LogAction_Add" xml:space="preserve">
+    <value>新增了</value>
+  </data>
+  <data name="LogAction_AddFormat" xml:space="preserve">
+    <value>”{0}“(”{1}“)</value>
+  </data>
+  <data name="LogAction_Modify" xml:space="preserve">
+    <value>修改了</value>
+  </data>
+  <data name="LogAction_ModifyFormat" xml:space="preserve">
+    <value>“{0}”由”{1}“修改为“{2}”</value>
+  </data>
+  <data name="LogAction_Remove" xml:space="preserve">
+    <value>移除了</value>
+  </data>
+  <data name="LogAction_RemoveFormat" xml:space="preserve">
+    <value>”{0}“(”{1}“)</value>
+  </data>
   <data name="MunitesBefore" xml:space="preserve">
     <value>{0} 分钟前</value>
   </data>

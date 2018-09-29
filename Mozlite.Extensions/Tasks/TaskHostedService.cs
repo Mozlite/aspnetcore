@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -65,16 +65,14 @@ namespace Mozlite.Extensions.Tasks
                 {
                     if (!_services.TryGetValue(task.Type, out var service))
                         continue;
-                    var context = new TaskContext
-                    {
-                        Id = task.Id,
-                        Interval = task.Interval,
-                        ExecuteAsync = service.ExecuteAsync,
-                        Argument = task.Argument ?? string.Empty,
-                        Name = task.Name,
-                        LastExecuted = task.LastExecuted,
-                        NextExecuting = task.NextExecuting
-                    };
+                    var context = new TaskContext();
+                    context.Argument = new Argument(task.Argument);
+                    context.Interval = !string.IsNullOrWhiteSpace(context.Argument.Interval) ? context.Argument.Interval : task.Interval;
+                    context.Id = task.Id;
+                    context.ExecuteAsync = service.ExecuteAsync;
+                    context.Name = task.Name;
+                    context.LastExecuted = task.LastExecuted;
+                    context.NextExecuting = task.NextExecuting;
                     context.Argument.TaskContext = context;
                     context.Argument.TaskManager = _taskManager;
                     contexts.Add(context);

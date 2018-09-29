@@ -1,40 +1,40 @@
-﻿using Mozlite.Mvc;
-using Mozlite.Properties;
+﻿using Mozlite.Data;
+using Mozlite.Extensions;
+using Mozlite.Mvc.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Mozlite.Extensions.Logging
+namespace Mozlite.Mvc.Logging
 {
     /// <summary>
     /// 日志暂存对象，性能不高，一般用于实体修改。
     /// </summary>
-    public class LogStorage
+    public class LogContext
     {
-        /// <summary>
-        /// 实体类型。
-        /// </summary>
-        public IEntityType EntityType { get; }
-
-        /// <summary>
-        /// 本地化接口。
-        /// </summary>
-        public ILocalizer Localizer { get; set; }
+        private readonly IEntityType _entityType;
+        private readonly ILocalizer _localizer;
 
         private readonly IDictionary<string, string> _stored = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        /// <summary>
-        /// 初始化类<see cref="LogStorage"/>。
-        /// </summary>
-        /// <param name="entity">当前实体对象。</param>
-        public LogStorage(object entity)
+
+        private LogContext(object entity, ILocalizer localizer)
         {
-            EntityType = entity.GetType().GetEntityType();
-            foreach (var property in EntityType.GetProperties())
+            _entityType = entity.GetType().GetEntityType();
+            foreach (var property in _entityType.GetProperties())
             {
                 _stored[property.Name] = property.Get(entity)?.ToString();
             }
+            _localizer = localizer;
         }
+
+        /// <summary>
+        /// 实例化一个日志上下文。
+        /// </summary>
+        /// <param name="entity">当前实体对象实例。</param>
+        /// <param name="localizer">本地化接口。</param>
+        /// <returns>返回日志上下文。</returns>
+        public static LogContext Create(object entity, ILocalizer localizer = null) => new LogContext(entity, localizer);
 
         private IList<LogEntity> _entities;
         /// <summary>
@@ -45,8 +45,10 @@ namespace Mozlite.Extensions.Logging
         public bool Diff(object modified)
         {
             _entities = new List<LogEntity>();
-            foreach (var property in EntityType.GetProperties())
+            foreach (var property in _entityType.GetProperties())
             {
+                if (!property.IsUpdatable())
+                    continue;
                 var source = _stored[property.Name];
                 var value = property.Get(modified)?.ToString();
                 if (string.IsNullOrEmpty(source))
@@ -75,7 +77,7 @@ namespace Mozlite.Extensions.Logging
         {
             if (property.DisplayName != null)
                 return property.DisplayName;
-            return Localizer == null ? property.Name : Localizer.GetString(property.DeclaringType.ClrType, property.Name);
+            return _localizer == null ? property.Name : _localizer.GetString(property.DeclaringType.ClrType, property.Name);
         }
 
         /// <summary>
@@ -85,7 +87,7 @@ namespace Mozlite.Extensions.Logging
         public override string ToString()
         {
             if (_entities == null || _entities.Count == 0)
-                return null;
+                return string.Empty;
             var builder = new StringBuilder();
             foreach (var group in _entities.GroupBy(x => x.Action))
             {
@@ -121,12 +123,6 @@ namespace Mozlite.Extensions.Logging
             }
             return builder.ToString();
         }
-
-        /// <summary>
-        /// 隐式转换为字符串。
-        /// </summary>
-        /// <param name="storage">日志存储实例。</param>
-        public static implicit operator string(LogStorage storage) => storage.ToString();
 
         /// <summary>
         /// 日志实体。

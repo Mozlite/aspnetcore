@@ -73,13 +73,7 @@ namespace Mozlite.Extensions.Tasks
         /// <summary>
         /// 参数。
         /// </summary>
-        [Size(256)]
         public string Argument { get; set; }
-
-        /// <summary>
-        /// 错误消息。
-        /// </summary>
-        public string Error { get; set; }
 
         /// <summary>
         /// 是否需要被删除。

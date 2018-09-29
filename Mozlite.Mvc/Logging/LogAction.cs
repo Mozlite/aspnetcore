@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Logging
+﻿namespace Mozlite.Mvc.Logging
 {
     /// <summary>
     /// 日志操作码。

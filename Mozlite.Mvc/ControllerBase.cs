@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Data;
-using Mozlite.Extensions.Logging;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Controllers;
+using Mozlite.Mvc.Logging;
 using Mozlite.Mvc.Messages;
 using System;
 using System.Collections.Generic;
@@ -49,18 +49,6 @@ namespace Mozlite.Mvc
                 }
                 return _logger;
             }
-        }
-
-        /// <summary>
-        /// 实例化一个日志存储对象，用于存储修改前得实例。
-        /// </summary>
-        /// <param name="storage">当前修改模型修改前得实例对象。</param>
-        /// <returns>返回日志实例存储对象。</returns>
-        protected LogStorage CreateStorage(object storage)
-        {
-            var log = new LogStorage(storage);
-            log.Localizer = Localizer;
-            return log;
         }
 
         private int _pageIndex = -1;

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Data;
-using Mozlite.Extensions.Logging;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Controllers;
@@ -34,8 +33,7 @@ namespace Mozlite.Mvc
         /// 本地化接口。
         /// </summary>
         public ILocalizer Localizer => _localizer ?? (_localizer = GetRequiredService<ILocalizer>());
-
-
+        
         private ILogger _logger;
         /// <summary>
         /// 日志接口。
@@ -52,19 +50,7 @@ namespace Mozlite.Mvc
                 return _logger;
             }
         }
-
-        /// <summary>
-        /// 实例化一个日志存储对象，用于存储修改前得实例。
-        /// </summary>
-        /// <param name="storage">当前修改模型修改前得实例对象。</param>
-        /// <returns>返回日志实例存储对象。</returns>
-        protected LogStorage CreateStorage(object storage)
-        {
-            var log = new LogStorage(storage);
-            log.Localizer = Localizer;
-            return log;
-        }
-
+        
         private int _pageIndex = -1;
         /// <summary>
         /// 当前页码。

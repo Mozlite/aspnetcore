@@ -47,7 +47,7 @@ namespace Mozlite.Properties {
         }
         
         /// <summary>
-        ///   使用此强类型资源类，为所有资源查找
+        ///   重写当前线程的 CurrentUICulture 属性
         ///   重写当前线程的 CurrentUICulture 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -75,60 +75,6 @@ namespace Mozlite.Properties {
         internal static string InvalidPropertyExpression {
             get {
                 return ResourceManager.GetString("InvalidPropertyExpression", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 新增了 的本地化字符串。
-        /// </summary>
-        internal static string LogAction_Add {
-            get {
-                return ResourceManager.GetString("LogAction_Add", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 ”{0}“(”{1}“) 的本地化字符串。
-        /// </summary>
-        internal static string LogAction_AddFormat {
-            get {
-                return ResourceManager.GetString("LogAction_AddFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 修改了 的本地化字符串。
-        /// </summary>
-        internal static string LogAction_Modify {
-            get {
-                return ResourceManager.GetString("LogAction_Modify", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 “{0}”由”{1}“修改为“{2}” 的本地化字符串。
-        /// </summary>
-        internal static string LogAction_ModifyFormat {
-            get {
-                return ResourceManager.GetString("LogAction_ModifyFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 移除了 的本地化字符串。
-        /// </summary>
-        internal static string LogAction_Remove {
-            get {
-                return ResourceManager.GetString("LogAction_Remove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 ”{0}“(”{1}“) 的本地化字符串。
-        /// </summary>
-        internal static string LogAction_RemoveFormat {
-            get {
-                return ResourceManager.GetString("LogAction_RemoveFormat", resourceCulture);
             }
         }
         
