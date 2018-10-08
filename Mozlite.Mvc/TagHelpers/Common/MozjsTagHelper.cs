@@ -19,7 +19,10 @@ namespace Mozlite.Mvc.TagHelpers.Common
     public class MozjsTagHelper : ViewContextableTagHelperBase
     {
         /// <summary>
-        /// 子字符串为mozjs语法：HTML和js混合语法。
+        /// 子字符串为mozjs语法：HTML和js混合语法，开放参数：
+        /// $this:表示当前标签jQuery对象；
+        /// $model:表示当前JSON对象；
+        /// 注意：script标签里的代码将在呈现后进行调用。
         /// </summary>
         [HtmlAttributeName("mozjs")]
         public bool Mozjs { get; set; }
@@ -99,9 +102,9 @@ namespace Mozlite.Mvc.TagHelpers.Common
             }).Trim();
             output.Content.AppendHtml("function _(s) { d.push(s);}function r($model) {");
             Process(output.Content, source);
-            output.Content.AppendHtml("$this.html(d.join(''));")
-                .AppendHtml(scripts.ToString())
-                .AppendHtml("}});");
+            output.Content.AppendHtml("$this.html(d.join(''));");
+            output.Content.AppendHtml("if(Mozlite&&Mozlite.render)Mozlite.render($this);");
+            output.Content.AppendHtml(scripts.ToString()).AppendHtml("}});");
             output.Content.AppendHtml("</script>");
         }
 
