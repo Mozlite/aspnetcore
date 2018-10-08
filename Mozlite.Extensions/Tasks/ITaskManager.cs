@@ -45,13 +45,11 @@ namespace Mozlite.Extensions.Tasks
         Task<bool> SetArgumentAsync(int id, string argument);
 
         /// <summary>
-        /// 设置执行时间。
+        /// 设置完成状态。
         /// </summary>
-        /// <param name="id">当前服务Id。</param>
-        /// <param name="next">下一次执行时间。</param>
-        /// <param name="last">上一次执行时间。</param>
+        /// <param name="context">当前服务上下文。</param>
         /// <returns>返回设置结果。</returns>
-        Task<bool> SetExecuteDateAsync(int id, DateTime next, DateTime last);
+        Task<bool> SetCompletedAsync(TaskContext context);
 
         /// <summary>
         /// 保存错误日志。
@@ -59,13 +57,5 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="name">服务名称。</param>
         /// <param name="exception">错误实例。</param>
         void LogError(string name, Exception exception);
-
-        /// <summary>
-        /// 保存错误日志。
-        /// </summary>
-        /// <param name="id">服务ID。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="exception">错误实例。</param>
-        Task LogErrorAsync(int id, string name, Exception exception);
     }
 }

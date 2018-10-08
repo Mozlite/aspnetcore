@@ -74,7 +74,6 @@ namespace Mozlite.Extensions.Tasks
                     context.LastExecuted = task.LastExecuted;
                     context.NextExecuting = task.NextExecuting;
                     context.Argument.TaskContext = context;
-                    context.Argument.TaskManager = _taskManager;
                     contexts.Add(context);
                 }
                 return contexts;
@@ -99,41 +98,44 @@ namespace Mozlite.Extensions.Tasks
                     var contexts = await LoadContextsAsync();
                     foreach (var context in contexts)
                     {
-                        try
+                        if (context.NextExecuting <= DateTime.Now && !context.IsRunning)
                         {
-                            if (context.NextExecuting <= DateTime.Now && !context.IsRunning)
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+                            Task.Run(async () =>
                             {
-#pragma warning disable 4014
-                                Task.Run(async () =>
-#pragma warning restore 4014
+                                context.IsRunning = true;
+                                try
                                 {
-                                    context.IsRunning = true;
+                                    context.Argument.Error = null;
                                     //在服务运行后可以更改当前参数值
                                     await context.ExecuteAsync(context.Argument);
-                                    context.LastExecuted = DateTime.Now;
-                                    context.NextExecuting = context.Interval.Next();
-                                    await _taskManager.SetExecuteDateAsync(context.Id, context.NextExecuting,
-                                        // ReSharper disable once PossibleInvalidOperationException
-                                        context.LastExecuted.Value);
-                                    context.IsRunning = false;
-                                }, cancellationToken);
-                            }
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (context.Argument.IsStack)
+                                    {
+                                        context.Argument.Error = $"{ex.Message}\r\n{ex.StackTrace}";
+                                        _taskManager.LogError(context.Name, ex);
+                                    }
+                                    else
+                                    {
+                                        context.Argument.Error = ex.Message;
+                                    }
+                                }
+                                context.LastExecuted = DateTime.Now;
+                                context.NextExecuting = context.Interval.Next();
+                                await _taskManager.SetCompletedAsync(context);
+                                context.IsRunning = false;
+                            }, cancellationToken);
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
                         }
-                        catch (Exception ex)
-                        {
-                            _taskManager.LogError(context.Name, ex);
-                        }
-                        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+                        await Task.Delay(100, cancellationToken);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    _taskManager.LogError(null, ex);
                 }
-                finally
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
-                }
+                await Task.Delay(500, cancellationToken);
             }
         }
     }

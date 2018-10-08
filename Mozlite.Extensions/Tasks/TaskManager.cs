@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mozlite.Data;
@@ -107,15 +106,13 @@ namespace Mozlite.Extensions.Tasks
         }
 
         /// <summary>
-        /// 设置执行时间。
+        /// 设置完成状态。
         /// </summary>
-        /// <param name="id">当前服务Id。</param>
-        /// <param name="next">下一次执行时间。</param>
-        /// <param name="last">上一次执行时间。</param>
+        /// <param name="context">当前服务上下文。</param>
         /// <returns>返回设置结果。</returns>
-        public async Task<bool> SetExecuteDateAsync(int id, DateTime next, DateTime last)
+        public async Task<bool> SetCompletedAsync(TaskContext context)
         {
-            return await _db.UpdateAsync(t => t.Id == id, new { NextExecuting = next, LastExecuted = last });
+            return await _db.UpdateAsync(t => t.Id == context.Id, new { context.NextExecuting, context.LastExecuted, Argument = context.Argument.ToString() });
         }
 
         /// <summary>
@@ -125,23 +122,7 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="exception">错误实例。</param>
         public void LogError(string name, Exception exception)
         {
-            _logger.LogError(1, exception, Resources.TaskExecuteError, name, exception.Message);
-        }
-
-        /// <summary>
-        /// 保存错误日志。
-        /// </summary>
-        /// <param name="id">服务ID。</param>
-        /// <param name="name">名称。</param>
-        /// <param name="exception">错误实例。</param>
-        public async Task LogErrorAsync(int id, string name, Exception exception)
-        {
-            _logger.LogError(1, exception, Resources.TaskExecuteError, name, exception.Message);
-            var error = new StringBuilder();
-            error.AppendFormat(Resources.TaskExecuteError, name, exception.Message);
-            error.AppendLine().AppendLine("===========================================================");
-            error.AppendLine(exception.StackTrace);
-            await _db.UpdateAsync(x => x.Id == id, new { Error = error.ToString() });
+            _logger.LogError(exception, Resources.TaskExecuteError, name, exception.Message);
         }
     }
 }

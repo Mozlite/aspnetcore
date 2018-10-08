@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -78,28 +77,13 @@ namespace Mozlite.Extensions.Tasks
         public int GetInt32(string name, int defaultValue = 0) => (int?)this[name] ?? defaultValue;
 
         /// <summary>
-        /// 任务管理接口。
+        /// 获取布尔型参数。
         /// </summary>
-        public ITaskManager TaskManager { get; internal set; }
-
-        /// <summary>
-        /// 保存当前参数实例。
-        /// </summary>
-        /// <returns>返回保存结果。</returns>
-        public Task<bool> SaveAsync()
-        {
-            return TaskManager.SetArgumentAsync(TaskContext.Id, ToString());
-        }
-
-        /// <summary>
-        /// 保存错误日志。
-        /// </summary>
-        /// <param name="exception">错误实例。</param>
-        public Task LogErrorAsync(Exception exception)
-        {
-            return TaskManager.LogErrorAsync(TaskContext.Id, TaskContext.Name, exception);
-        }
-
+        /// <param name="name">参数名称。</param>
+        /// <param name="defaultValue">默认值。</param>
+        /// <returns>返回当前参数。</returns>
+        public bool GetBoolean(string name, bool defaultValue = false) => (bool?)this[name] ?? defaultValue;
+        
         /// <summary>
         /// 当前服务Id。
         /// </summary>
@@ -114,5 +98,10 @@ namespace Mozlite.Extensions.Tasks
         /// 错误消息。
         /// </summary>
         public string Error { get => this[nameof(Error)]?.ToString(); set => this[nameof(Error)] = value; }
+
+        /// <summary>
+        /// 是否保存堆栈信息。
+        /// </summary>
+        public bool IsStack { get => GetBoolean(nameof(IsStack)); set => this[nameof(IsStack)] = value; }
     }
 }
