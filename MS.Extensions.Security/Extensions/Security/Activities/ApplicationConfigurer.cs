@@ -13,7 +13,7 @@ namespace MS.Extensions.Security.Activities
         /// <summary>
         /// 优先级。
         /// </summary>
-        public int Priority { get; }
+        public int Priority => 0;
 
         /// <summary>
         /// 配置应用程序实例。

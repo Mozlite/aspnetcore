@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Messages;
 using MS.Extensions.Security;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace MS.Areas.Security.Pages.Account
 {
@@ -11,19 +11,16 @@ namespace MS.Areas.Security.Pages.Account
     {
         public bool IsEmailConfirmed { get; set; }
 
-        [TempData]
-        public string StatusMessage { get; set; }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
         public class InputModel
         {
-            [Required(ErrorMessage = "{0}不能为空！")]
+            //[Required(ErrorMessage = "{0}不能为空！")]
             [EmailAddress]
             [Display(Name = "电子邮件")]
             public string Email { get; set; }
-            
+
             [Display(Name = "电话号码")]
             public string PhoneNumber { get; set; }
 
@@ -31,7 +28,7 @@ namespace MS.Areas.Security.Pages.Account
             [Required(ErrorMessage = "{0}不能为空！")]
             public string UserName { get; set; }
         }
-        
+
         private readonly IUserManager _userManager;
         private readonly IMessageManager _emailSender;
 
@@ -50,7 +47,7 @@ namespace MS.Areas.Security.Pages.Account
             {
                 return NotFound("用户不存在！");
             }
-            
+
             Input = new InputModel
             {
                 Email = user.Email,
@@ -102,8 +99,7 @@ namespace MS.Areas.Security.Pages.Account
                 });
 
             await _userManager.SignInManager.RefreshSignInAsync(user);
-            StatusMessage = "你已经成功更新了用户资料。";
-            return RedirectToPage();
+            return RedirectToSuccessPage("你已经成功更新了用户资料。");
         }
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
@@ -118,7 +114,7 @@ namespace MS.Areas.Security.Pages.Account
             {
                 return NotFound("用户不存在！");
             }
-            
+
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
@@ -131,8 +127,7 @@ namespace MS.Areas.Security.Pages.Account
                 "确认电子邮件",
                 $"请确认激活电子邮件，<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>点击这里进行激活</a>.");
 
-            StatusMessage = "验证邮件已经发送，请打开邮箱进行验证。";
-            return RedirectToPage();
+            return RedirectToSuccessPage("验证邮件已经发送，请打开邮箱进行验证。");
         }
     }
 }

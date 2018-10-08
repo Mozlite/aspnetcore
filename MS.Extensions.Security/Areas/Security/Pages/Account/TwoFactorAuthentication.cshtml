@@ -4,7 +4,7 @@
     ViewData["Title"] = "二次登陆验证(2FA)";
     ViewData["Current"] = AccountMenu.TwoFactorAuthentication;
 }
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<moz:status-message-panel close="true"></moz:status-message-panel>
 <h4>@ViewData["Title"]</h4>
 @if (Model.Is2faEnabled)
 {

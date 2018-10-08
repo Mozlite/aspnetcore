@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MS.Extensions.Security;
+using System.Threading.Tasks;
 
 namespace MS.Areas.Security.Pages.Account
 {
@@ -15,9 +15,6 @@ namespace MS.Areas.Security.Pages.Account
 
         public bool IsMachineRemembered { get; set; }
 
-        [TempData]
-        public string StatusMessage { get; set; }
-        
         private readonly IUserManager _userManager;
 
         public TwoFactorAuthenticationModel(IUserManager userManager)
@@ -50,8 +47,7 @@ namespace MS.Areas.Security.Pages.Account
             }
 
             await _userManager.SignInManager.ForgetTwoFactorClientAsync();
-            StatusMessage = "已经忘记了登陆状态，下次你需要再进行登陆。";
-            return RedirectToPage();
+            return RedirectToSuccessPage("已经忘记了登陆状态，下次你需要再进行登陆。");
         }
     }
 }

@@ -1,0 +1,42 @@
+﻿@page
+@model AvatarModel
+@{
+    ViewData["Title"] = "更新头像";
+    ViewData["Current"] = AccountMenu.Avatar;
+}
+
+@inject User CurrentUser
+
+<div class="panel panel-primary nav-panel" data-collapsed="0">
+    <ul class="nav nav-tabs tab-right-border">
+        <li><a asp-page="./Index" asp-area="@SecuritySettings.ExtensionName">编辑资料</a></li>
+        <li><a asp-page="./ChangePassword" asp-area="@SecuritySettings.ExtensionName">修改密码</a></li>
+        <li class="active"><a asp-page="./Avatar" asp-area="@SecuritySettings.ExtensionName">更新头像</a></li>
+        <li><a asp-page="./Log" asp-area="@SecuritySettings.ExtensionName">活动日志</a></li>
+    </ul>
+    <div class="panel-body">
+        <form class="form-horizontal" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Input.UserId"/>
+            <div class="form-group">
+                <div class="col-sm-2 text-center">
+                    <input asp-for="Input.AvatarFile" onchange="uploadAvatar(this);" type="file" style="display: none;"/>
+                    <a href="javascript:;" onclick="$(this).parent().find('input').click();"><img src="@CurrentUser.Avatar" title="点击更新头像" class="avatar-preview"/></a>
+                    <span asp-validation-for="Input.AvatarFile" class="text-danger"></span>
+                </div>
+                <div class="col-sm-10">
+                    <ul style="list-style-type: decimal; font-size: 20px; line-height: 40px;">
+                        <li>点击头像，选择头像文件</li>
+                        <li>选择完将会自动上传并更新头像</li>
+                        <li>完成更新</li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    function uploadAvatar(file) {
+        $('.avatar-preview').attr('src', $(file).createObjectURL());
+        $(file).parents('form').submit();
+    }
+</script>

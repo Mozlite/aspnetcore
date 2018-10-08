@@ -3,7 +3,7 @@ using MS.Extensions.Security;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Mozlite.Extensions.Security.Activities;
+using MS.Extensions.Security.Actions;
 
 namespace MS.Areas.Security.Pages.Account
 {
@@ -14,9 +14,6 @@ namespace MS.Areas.Security.Pages.Account
     {
         [BindProperty]
         public InputModel Input { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
 
         public class InputModel
         {
@@ -72,6 +69,8 @@ namespace MS.Areas.Security.Pages.Account
                 return NotFound("用户不存在！");
             }
 
+            //将必须修改密码操作归零
+            user.AttachActionProvider(ChangePasswordActionProvider.Provider);
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
@@ -83,10 +82,8 @@ namespace MS.Areas.Security.Pages.Account
             }
 
             await _userManager.SignInManager.RefreshSignInAsync(user);
-            Logger.Info("修改了密码。");
-            StatusMessage = "你已经成功修改了密码。";
-
-            return RedirectToPage();
+            Log("修改了密码。");
+            return RedirectToSuccessPage("你已经成功修改了密码。");
         }
     }
 }

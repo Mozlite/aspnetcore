@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using MS.Extensions.Security;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Security.Activities;
-using MS.Extensions.Security;
 
 namespace MS.Areas.Security.Pages.Account
 {
@@ -18,9 +17,6 @@ namespace MS.Areas.Security.Pages.Account
         [TempData]
         public string[] RecoveryCodes { get; set; }
 
-        [TempData]
-        public string StatusMessage { get; set; }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -32,7 +28,7 @@ namespace MS.Areas.Security.Pages.Account
             [Display(Name = "验证码")]
             public string Code { get; set; }
         }
-        
+
         private readonly IUserManager _userManager;
         private readonly UrlEncoder _urlEncoder;
 
@@ -86,9 +82,9 @@ namespace MS.Areas.Security.Pages.Account
             }
 
             user.TwoFactorEnabled = true;
-            Logger.Info("激活二次登陆验证。", user.UserName);
+            Log("激活二次登陆验证。", user.UserName);
 
-            StatusMessage = "你已经成功绑定二次登陆验证。";
+            StatusMessage("你已经成功绑定二次登陆验证。");
 
             if (await _userManager.CountRecoveryCodesAsync(user) == 0)
             {
@@ -111,7 +107,7 @@ namespace MS.Areas.Security.Pages.Account
             }
 
             SharedKey = FormatKey(unformattedKey);
-            
+
             AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
         }
 

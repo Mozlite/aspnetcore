@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Security.Activities;
 using MS.Extensions.Security;
 
 namespace MS.Areas.Security.Pages.Account
@@ -11,9 +10,6 @@ namespace MS.Areas.Security.Pages.Account
     {
         [TempData]
         public string[] RecoveryCodes { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
         
         private readonly IUserManager _userManager;
 
@@ -54,9 +50,8 @@ namespace MS.Areas.Security.Pages.Account
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
             RecoveryCodes = recoveryCodes.ToArray();
 
-            Logger.Info("生成10个二次登陆验证码。");
-            StatusMessage = "你已经成功生成了10个二次登陆验证码。";
-            return RedirectToPage("./ShowRecoveryCodes");
+            Log("生成10个二次登陆验证码。");
+            return RedirectToSuccessPage("你已经成功生成了10个二次登陆验证码。", "./ShowRecoveryCodes");
         }
     }
 }

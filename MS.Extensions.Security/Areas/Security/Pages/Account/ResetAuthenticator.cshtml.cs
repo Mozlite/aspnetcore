@@ -1,15 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Security.Activities;
 using MS.Extensions.Security;
 
 namespace MS.Areas.Security.Pages.Account
 {
     public class ResetAuthenticatorModel : ModelBase
     {
-        [TempData]
-        public string StatusMessage { get; set; }
-
         private readonly IUserManager _userManager;
 
         public ResetAuthenticatorModel(IUserManager userManager)
@@ -38,12 +34,10 @@ namespace MS.Areas.Security.Pages.Account
 
             user.TwoFactorEnabled = false;
             await _userManager.ResetAuthenticatorKeyAsync(user);
-            Logger.Info("重置了验证密钥！");
+            Log("重置了验证密钥！");
 
             await _userManager.SignInManager.RefreshSignInAsync(user);
-            StatusMessage = "你已经重置了你的验证密钥，你需要重新使用设置验证密钥。";
-
-            return RedirectToPage("./EnableAuthenticator");
+            return RedirectToSuccessPage("你已经重置了你的验证密钥，你需要重新使用设置验证密钥。", "./EnableAuthenticator");
         }
     }
 }

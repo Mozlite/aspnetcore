@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Security.Activities;
 using MS.Extensions.Security;
 
 namespace MS.Areas.Security.Pages.Account
@@ -11,10 +10,7 @@ namespace MS.Areas.Security.Pages.Account
     {
         [BindProperty]
         public InputModel Input { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
-
+        
         public class InputModel
         {
 
@@ -77,9 +73,8 @@ namespace MS.Areas.Security.Pages.Account
             }
 
             await _userManager.SignInManager.RefreshSignInAsync(user);
-            StatusMessage = "你已经成功设置了密码。";
-            Logger.Info("设置了密码。");
-            return RedirectToPage();
+            Log("设置了密码。");
+            return RedirectToSuccessPage("你已经成功设置了密码。");
         }
     }
 }

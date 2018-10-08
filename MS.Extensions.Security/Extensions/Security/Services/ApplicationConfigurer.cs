@@ -7,7 +7,7 @@ namespace MS.Extensions.Security.Services
     /// <summary>
     /// 应用程序启动配置类。
     /// </summary>
-    public class AuthenticationConfigurer : IApplicationConfigurer
+    public class ApplicationConfigurer : IApplicationConfigurer
     {
         /// <summary>
         /// 优先级。

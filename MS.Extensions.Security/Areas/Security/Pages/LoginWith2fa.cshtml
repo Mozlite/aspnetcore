@@ -2,10 +2,8 @@
 @model LoginWith2faModel
 @{
     ViewData["Title"] = "二次验证";
+    Layout = "_Modal";
 }
-<h2>@ViewData["Title"]</h2>
-<hr />
-<p>你的登陆需要进行二次验证，请输入二次验证码进行验证。</p>
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
@@ -24,12 +22,10 @@
                     </label>
                 </div>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">登陆</button>
-            </div>
         </form>
     </div>
 </div>
+<p>你的登陆需要进行二次验证，请输入二次验证码进行验证。</p>
 <p>
     不能登陆访问设备，你可以通过复原编码进行登陆，
     <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">点击这里登陆</a>。

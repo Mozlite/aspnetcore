@@ -1,15 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Mozlite.Extensions.Security;
+using Mozlite.Extensions.Security.Permissions;
+using MS.Extensions.Security;
 
 namespace MS.Areas.Security.Pages.Admin
 {
+    [PermissionAuthorize(Security.Permissions.Users)]
     public class IndexModel : ModelBase
     {
-        [TempData]
-        public string StatusMessage { get; set; }
+        private readonly IUserManager _userManager;
 
-        public IActionResult Get()
+        public IndexModel(IUserManager userManager)
         {
-            return Page();
+            _userManager = userManager;
+        }
+
+        public UserQuery Model { get; private set; }
+
+        public void OnGet(UserQuery query)
+        {
+            query.MaxRoleLevel = CurrentRole.RoleLevel;
+            Model = _userManager.Load(query);
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                Log($"删除了账户{user.UserName}。");
+                return Success($"你已经成功删除了账户{user.UserName}!");
+            }
+            return Error(result.ToErrorString());
         }
     }
 }

@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Security.Activities;
 using MS.Extensions.Security;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using MS.Areas.Security.Models;
+using MS.Extensions.Security.Activities;
 
 namespace MS.Areas.Security.Pages
 {
@@ -18,9 +18,10 @@ namespace MS.Areas.Security.Pages
     public class LoginModel : ModelBase
     {
         private readonly IUserManager _userManager;
+        private readonly IActivityManager _activityManager;
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public SigninUser Input { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -29,24 +30,10 @@ namespace MS.Areas.Security.Pages
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public class InputModel
-        {
-            [Required(ErrorMessage = "用户名不能为空!")]
-            public string Name { get; set; }
-
-            [Required(ErrorMessage = "密码不能为空!")]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-
-            [Required(ErrorMessage = "验证码不能为空!")]
-            public string Code { get; set; }
-
-            public bool RememberMe { get; set; }
-        }
-
-        public LoginModel(IUserManager userManager)
+        public LoginModel(IUserManager userManager, IActivityManager activityManager)
         {
             _userManager = userManager;
+            _activityManager = activityManager;
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -72,30 +59,32 @@ namespace MS.Areas.Security.Pages
 
             if (ModelState.IsValid)
             {
+#if !DEBUG
                 if (!IsValidateCode("login", Input.Code))
                 {
                     ModelState.AddModelError("Input.Code", "验证码不正确！");
                     return Page();
                 }
+#endif
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _userManager.PasswordSignInAsync(Input.Name, Input.Password, Input.RememberMe,
-                    current =>
+                var result = await _userManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe,
+                    async user =>
                     {
-                        Logger.Info("登陆了应用程序。");
-                        return Task.CompletedTask;
+                        await _activityManager.CreateAsync(SecuritySettings.EventId, "成功登入系统.", user.UserId);
                     });
                 if (result.Succeeded)
                 {
+                    Response.Cookies.Delete("login");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
-                    Logger.Info("账号被锁定。");
+                    Log("账号被锁定。");
                     return RedirectToPage("./Lockout");
                 }
 

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace MS.Areas.Security.Pages.Account
 {
@@ -6,10 +6,7 @@ namespace MS.Areas.Security.Pages.Account
     {
         [TempData]
         public string[] RecoveryCodes { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
-
+        
         public IActionResult OnGet()
         {
             if (RecoveryCodes == null || RecoveryCodes.Length == 0)

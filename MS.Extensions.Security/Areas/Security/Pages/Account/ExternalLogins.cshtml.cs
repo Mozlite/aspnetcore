@@ -17,9 +17,6 @@ namespace MS.Areas.Security.Pages.Account
 
         public bool ShowRemoveButton { get; set; }
 
-        [TempData]
-        public string StatusMessage { get; set; }
-
         private readonly IUserManager _userManager;
 
         public ExternalLoginsModel(IUserManager userManager)
@@ -59,8 +56,7 @@ namespace MS.Areas.Security.Pages.Account
             }
 
             await _userManager.SignInManager.RefreshSignInAsync(user);
-            StatusMessage = "你已经成功移除了登陆。";
-            return RedirectToPage();
+            return RedirectToSuccessPage("你已经成功移除了登陆。");
         }
 
         public async Task<IActionResult> OnPostLinkLoginAsync(string provider)
@@ -97,8 +93,7 @@ namespace MS.Areas.Security.Pages.Account
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            StatusMessage = $"已经成功绑定了{info.ProviderDisplayName}登陆方式。";
-            return RedirectToPage();
+            return RedirectToSuccessPage($"已经成功绑定了{info.ProviderDisplayName}登陆方式。");
         }
     }
 }

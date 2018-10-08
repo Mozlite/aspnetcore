@@ -21,12 +21,12 @@ namespace MS.Areas.Security.Pages
         public class InputModel
         {
             [Required]
-            [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(7, ErrorMessage = "{0}的长度必须在{2}和{1}之间。", MinimumLength = 6)]
             [DataType(DataType.Text)]
-            [Display(Name = "Authenticator code")]
+            [Display(Name = "验证码")]
             public string TwoFactorCode { get; set; }
 
-            [Display(Name = "Remember this machine")]
+            [Display(Name = "记住这个设备信息")]
             public bool RememberMachine { get; set; }
         }
         

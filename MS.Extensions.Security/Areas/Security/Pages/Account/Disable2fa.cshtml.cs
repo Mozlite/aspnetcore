@@ -2,7 +2,6 @@
 using MS.Extensions.Security;
 using System;
 using System.Threading.Tasks;
-using Mozlite.Extensions.Security.Activities;
 
 namespace MS.Areas.Security.Pages.Account
 {
@@ -11,9 +10,6 @@ namespace MS.Areas.Security.Pages.Account
     /// </summary>
     public class Disable2faModel : ModelBase
     {
-        [TempData]
-        public string StatusMessage { get; set; }
-
         private readonly IUserManager _userManager;
 
         public Disable2faModel(IUserManager userManager)
@@ -51,9 +47,8 @@ namespace MS.Areas.Security.Pages.Account
                 throw new InvalidOperationException($"禁用'{user.UserName}'二次登陆验证发生了错误！");
             }
 
-            Logger.Info("禁用了二次登陆验证！");
-            StatusMessage = "二次登陆验证已经禁用。";
-            return RedirectToPage("./TwoFactorAuthentication");
+            Log("禁用了二次登陆验证！");
+            return RedirectToSuccessPage("二次登陆验证已经禁用。", "./TwoFactorAuthentication");
         }
     }
 }

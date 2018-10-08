@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Messages;
-using Mozlite.Extensions.Security.Activities;
 using MS.Extensions.Security;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace MS.Areas.Security.Pages
 {
@@ -43,7 +42,7 @@ namespace MS.Areas.Security.Pages
             [Compare("Password", ErrorMessage = "{0}和{1}不匹配！")]
             public string ConfirmPassword { get; set; }
         }
-        
+
         private readonly IUserManager _userManager;
         private readonly IMessageManager _emailSender;
 
@@ -55,13 +54,18 @@ namespace MS.Areas.Security.Pages
             _emailSender = emailSender;
         }
 
-        public void OnGet(string returnUrl = null)
+        public IActionResult OnGet(string returnUrl = null)
         {
+            if (!Settings.Registrable)
+                return NotFound();
             ReturnUrl = returnUrl;
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (!Settings.Registrable)
+                return NotFound();
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
@@ -73,8 +77,8 @@ namespace MS.Areas.Security.Pages
 
                 if (result.Succeeded)
                 {
-                    Logger.Info("注册了新用户。");
-                    
+                    Log("注册了新用户。");
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -97,6 +101,5 @@ namespace MS.Areas.Security.Pages
             // If we got this far, something failed, redisplay form
             return Page();
         }
-        
     }
 }

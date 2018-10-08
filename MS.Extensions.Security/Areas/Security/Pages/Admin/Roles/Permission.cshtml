@@ -1,0 +1,44 @@
+﻿@page
+@model PermissionModel
+@{
+    ViewBag.Title = "权限配置";
+    ViewBag.Current = "users.roles";
+    ViewBag.SubTitle = Model.Role.Name;
+    var current = false;
+}
+
+<form method="post">
+    <input type="hidden" name="RoleId" value="@Model.Role.RoleId" />
+    <div class="panel panel-primary nav-panel" data-collapsed="0">
+        <ul class="nav nav-tabs tab-right-border" role="tablist">
+            @foreach (var key in Model.Permissions.Keys)
+            {
+                <li class="nav-item" .class-active="!current">
+                    <a .class-active="!current" class="nav-link" id="@(key)-tab" data-toggle="tab" href="#@(key)" role="tab" aria-controls="home" aria-selected="true">@Model.Localizer[key]</a>
+                </li>
+                current = true;
+            }
+        </ul>
+        <div class="panel-body">
+            <div class="tab-content mb-3">
+                @foreach (var key in Model.Permissions.Keys)
+                {
+                    var model = Model.Permissions[key];
+                    <div .class-active="current" .class-in="current" class="tab-pane fade" id="@key" role="tabpanel" aria-labelledby="@(key)-tab">
+                        @foreach (var permission in model)
+                        {
+                            <div class="permission-item">
+                                <label>@permission.Text<small class="text-secondary ml-1">(@permission.Description)</small></label>
+                                <moz:permission-radioboxlist disabled="Model.Role.RoleLevel == int.MaxValue" roleid="Model.Role.RoleId" permissionid="permission.Id"></moz:permission-radioboxlist>
+                            </div>
+                        }
+                    </div>
+                    current = false;
+                }
+            </div>
+            <div .visible="Model.Role.RoleLevel < int.MaxValue" class="mb-3">
+                <button type="submit" js-submit="true" class="btn btn-primary">提交</button>
+            </div>
+        </div>
+    </div>
+</form>

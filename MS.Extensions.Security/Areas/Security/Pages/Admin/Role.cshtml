@@ -1,0 +1,16 @@
+﻿@page
+@model RoleModel
+@{
+    ViewBag.Title = "设置角色";
+    ViewBag.Current = "users.index";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <div class="form-group mb-0">
+        <label>@Model.Name</label>
+    </div>
+    <hr class="mt-0" />
+    <moz:role-checkboxlist max="Model.CurrentRole.RoleLevel" class="row" iclass="col-6" for="Input.RoleId"></moz:role-checkboxlist>
+    <input type="hidden" asp-for="Input.UserId" />
+</form>

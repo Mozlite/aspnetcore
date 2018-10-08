@@ -1,4 +1,5 @@
-﻿using Mozlite.Mvc.AdminMenus;
+﻿using Mozlite.Extensions.Security;
+using Mozlite.Mvc.AdminMenus;
 
 namespace MS.Areas.Security
 {
@@ -15,8 +16,10 @@ namespace MS.Areas.Security
         {
             root.AddMenu("users", item => item.Texted("用户管理", "fa fa-users")
                 .AddMenu("index", it => it.Texted("用户列表").Page("/Admin/Index", area: SecuritySettings.ExtensionName))
-                .AddMenu("roles", it => it.Texted("角色列表").Page("/Admin/Roles", area: SecuritySettings.ExtensionName))
-                .AddMenu("permissions", it => it.Texted("权限列表").Page("/Admin/Permissions", area: SecuritySettings.ExtensionName))
+                .AddMenu("roles", it => it.Texted("角色列表").Page("/Admin/Roles/Index", area: SecuritySettings.ExtensionName))
+                .AddMenu("permissions", it => it.Texted("权限列表").Page("/Admin/Permissions/Index", area: SecuritySettings.ExtensionName))
+                .AddMenu("logs", it => it.Texted("日志管理").Page("/Admin/Logs/Index", area: SecuritySettings.ExtensionName))
+                .AddMenu("settings", it => it.Texted("用户配置").Roled(DefaultRole.OwnerName).Page("/Admin/Settings", area: SecuritySettings.ExtensionName))
             );
         }
     }
