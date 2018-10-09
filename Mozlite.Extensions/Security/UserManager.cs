@@ -26,6 +26,20 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
     {
         private readonly IServiceProvider _serviceProvider;
+        /// <summary>
+        /// 获取当前接口。
+        /// </summary>
+        /// <typeparam name="TService">当前服务类型。</typeparam>
+        /// <returns>返回当前服务实例。</returns>
+        protected TService GetService<TService>() => _serviceProvider.GetService<TService>();
+
+        /// <summary>
+        /// 获取当前接口。
+        /// </summary>
+        /// <typeparam name="TService">当前服务类型。</typeparam>
+        /// <returns>返回当前服务实例。</returns>
+        protected TService GetRequiredService<TService>() => _serviceProvider.GetRequiredService<TService>();
+
         private SignInManager<TUser> _signInManager;
         /// <summary>
         /// 登陆管理实例。
@@ -313,7 +327,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回删除结果。</returns>
         public virtual IdentityResult Delete(int[] ids)
         {
-            if(DbContext.UserContext.Delete(x=>x.UserId.Included(ids)))
+            if (DbContext.UserContext.Delete(x => x.UserId.Included(ids)))
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
@@ -431,6 +445,8 @@ namespace Mozlite.Extensions.Security
             return base.CheckPasswordAsync(user, password);
         }
 
+        private const string TwoFactorTokenName = "TwoFactor";
+
         /// <summary>
         /// 二次登陆验证判定。
         /// </summary>
@@ -439,7 +455,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回判定结果。</returns>
         public virtual Task<bool> VerifyTwoFactorTokenAsync(TUser user, string verificationCode)
         {
-            return base.VerifyTwoFactorTokenAsync(user, Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+            return VerifyTwoFactorTokenAsync(user, Options.Tokens.AuthenticatorTokenProvider, verificationCode);
         }
 
         /// <summary>

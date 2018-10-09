@@ -324,6 +324,14 @@ namespace Mozlite.Extensions.Security
         Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user);
 
         /// <summary>
+        /// 生成二次验证密钥。
+        /// </summary>
+        /// <param name="user">用户实例对象。</param>
+        /// <param name="tokenProvider">标识提供者。</param>
+        /// <returns>返回生成的密钥。</returns>
+        Task<string> GenerateTwoFactorTokenAsync(TUser user, string tokenProvider);
+
+        /// <summary>
         /// 获取验证密钥。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
@@ -368,6 +376,86 @@ namespace Mozlite.Extensions.Security
         /// <param name="providerKey">提供者密钥。</param>
         /// <returns>返回移除结果。</returns>
         Task<IdentityResult> RemoveLoginAsync(TUser user, string loginProvider, string providerKey);
+
+        /// <summary>
+        /// 确认邮件地址。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="token">确认邮件标识。</param>
+        /// <returns>返回确认结果。</returns>
+        Task<IdentityResult> ConfirmEmailAsync(TUser user, string token);
+
+        /// <summary>
+        /// 生成修改电子邮件确认标识。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="newEmail">新电子邮件。</param>
+        /// <returns>返回生成的标识。</returns>
+        Task<string> GenerateChangeEmailTokenAsync(TUser user, string newEmail);
+
+        /// <summary>
+        /// 修改电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="newEmail">新电子邮件。</param>
+        /// <param name="token">确认标识。</param>
+        /// <returns>返回修改结果。</returns>
+        Task<IdentityResult> ChangeEmailAsync(TUser user, string newEmail, string token);
+
+        /// <summary>
+        /// 修改电话号码。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="phoneNumber">电话号码。</param>
+        /// <param name="token">确认标识。</param>
+        /// <returns>返回修改结果。</returns>
+        Task<IdentityResult> ChangePhoneNumberAsync(TUser user, string phoneNumber, string token);
+
+        /// <summary>
+        /// 生成修改电话号码确认标识。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="phoneNumber">新电话号码。</param>
+        /// <returns>返回生成的标识。</returns>
+        Task<string> GenerateChangePhoneNumberTokenAsync(TUser user, string phoneNumber);
+
+        /// <summary>
+        /// 验证修改电话号码标识。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="token">确认标识。</param>
+        /// <param name="phoneNumber">电话号码。</param>
+        /// <returns>返回验证结果。</returns>
+        Task<bool> VerifyChangePhoneNumberTokenAsync(TUser user, string token, string phoneNumber);
+
+        /// <summary>
+        /// 获取验证标识。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="tokenName">标识名称。</param>
+        /// <returns>返回验证标识。</returns>
+        Task<string> GetAuthenticationTokenAsync(TUser user, string loginProvider, string tokenName);
+
+        /// <summary>
+        /// 设置验证标识。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="tokenName">标识名称。</param>
+        /// <param name="tokenValue">标识值。</param>
+        /// <returns>返回操作结果。</returns>
+        Task<IdentityResult> SetAuthenticationTokenAsync(TUser user, string loginProvider, string tokenName,
+            string tokenValue);
+
+        /// <summary>
+        /// 移除验证标识。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="tokenName">标识名称。</param>
+        /// <returns>返回操作结果。</returns>
+        Task<IdentityResult> RemoveAuthenticationTokenAsync(TUser user, string loginProvider, string tokenName);
     }
 
     /// <summary>
