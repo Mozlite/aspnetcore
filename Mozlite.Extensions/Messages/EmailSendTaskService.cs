@@ -83,7 +83,13 @@ namespace Mozlite.Extensions.Messages
             await _messageManager.SetSuccessAsync(message.Id);
         }
 
-        private MailMessage CreateMessage(string from, Message message)
+        /// <summary>
+        /// 实例化一个电子邮件。
+        /// </summary>
+        /// <param name="from">发送地址。</param>
+        /// <param name="message">消息实例。</param>
+        /// <returns>返回邮件实例对象。</returns>
+        protected virtual MailMessage CreateMessage(string from, Message message)
         {
             var mail = new MailMessage(from, message.To, message.Title, message.Content);
             mail.BodyEncoding = Encoding.UTF8;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Messages
@@ -29,8 +30,9 @@ namespace Mozlite.Extensions.Messages
         /// <param name="emailAddress">电子邮件地址。</param>
         /// <param name="title">标题。</param>
         /// <param name="content">内容。</param>
+        /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        bool SendEmail(int userId, string emailAddress, string title, string content);
+        bool SendEmail(int userId, string emailAddress, string title, string content, Action<Message> action = null);
 
         /// <summary>
         /// 发送电子邮件。
@@ -39,8 +41,9 @@ namespace Mozlite.Extensions.Messages
         /// <param name="emailAddress">电子邮件地址。</param>
         /// <param name="title">标题。</param>
         /// <param name="content">内容。</param>
+        /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content);
+        Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content, Action<Message> action = null);
 
         /// <summary>
         /// 发送短信。
@@ -48,8 +51,10 @@ namespace Mozlite.Extensions.Messages
         /// <param name="userId">用户Id。</param>
         /// <param name="phoneNumber">电话号码。</param>
         /// <param name="message">消息。</param>
+        /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        bool SendSMS(int userId, string phoneNumber, string message);
+        // ReSharper disable once InconsistentNaming
+        bool SendSMS(int userId, string phoneNumber, string message, Action<Message> action = null);
 
         /// <summary>
         /// 发送短信。
@@ -57,8 +62,10 @@ namespace Mozlite.Extensions.Messages
         /// <param name="userId">用户Id。</param>
         /// <param name="phoneNumber">电话号码。</param>
         /// <param name="message">消息。</param>
+        /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        Task<bool> SendSMSAsync(int userId, string phoneNumber, string message);
+        // ReSharper disable once InconsistentNaming
+        Task<bool> SendSMSAsync(int userId, string phoneNumber, string message, Action<Message> action = null);
 
         /// <summary>
         /// 发送系统消息。
@@ -66,8 +73,9 @@ namespace Mozlite.Extensions.Messages
         /// <param name="userId">用户Id。</param>
         /// <param name="title">标题。</param>
         /// <param name="content">内容。</param>
+        /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        bool SendMessage(int userId, string title, string content);
+        bool SendMessage(int userId, string title, string content, Action<Message> action = null);
 
         /// <summary>
         /// 发送系统消息。
@@ -75,8 +83,9 @@ namespace Mozlite.Extensions.Messages
         /// <param name="userId">用户Id。</param>
         /// <param name="title">标题。</param>
         /// <param name="content">内容。</param>
+        /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        Task<bool> SendMessageAsync(int userId, string title, string content);
+        Task<bool> SendMessageAsync(int userId, string title, string content, Action<Message> action = null);
 
         /// <summary>
         /// 加载消息列表。

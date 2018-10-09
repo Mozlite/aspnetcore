@@ -7,7 +7,7 @@ namespace Mozlite.Extensions.Messages
     /// 信息实体类。
     /// </summary>
     [Table("core_Messages")]
-    public class Message
+    public class Message : ExtendBase
     {
         /// <summary>
         /// 信息Id。
@@ -61,5 +61,32 @@ namespace Mozlite.Extensions.Messages
         /// 发送/失败日期，或者已读日期。
         /// </summary>
         public DateTimeOffset? ConfirmDate { get; set; }
+
+        /// <summary>
+        /// 操作结果。
+        /// </summary>
+        public int Result { get; set; }
+
+        private string _hashkey;
+        /// <summary>
+        /// 唯一键验证。
+        /// </summary>
+        [Size(32)]
+        public string HashKey
+        {
+            get
+            {
+                if (_hashkey == null)
+                    _hashkey = Cores.Md5(GetHashString());
+                return _hashkey;
+            }
+            set => _hashkey = value;
+        }
+
+        /// <summary>
+        /// 获取用于计算唯一键的哈希组合字符串。
+        /// </summary>
+        /// <returns>返回组合字符串。</returns>
+        protected virtual string GetHashString() => $"{MessageType}:{To}:{Content}";
     }
 }

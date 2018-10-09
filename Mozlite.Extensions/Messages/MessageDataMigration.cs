@@ -24,6 +24,9 @@ namespace Mozlite.Extensions.Messages
                 .Column(x => x.TryTimes)
                 .Column(x => x.CreatedDate)
                 .Column(x => x.ConfirmDate)
+                .Column(x => x.HashKey)
+                .Column(x => x.Result)
+                .Column(x => x.ExtendProperties)
             );
         }
     }
