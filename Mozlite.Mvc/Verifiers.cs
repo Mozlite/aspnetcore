@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Mozlite.Mvc.Controllers
+namespace Mozlite.Mvc
 {
     /// <summary>
     /// 验证码。
@@ -19,6 +19,16 @@ namespace Mozlite.Mvc.Controllers
         {
             const string salt = "AmazingValidateCodeForMozlite!";
             return Cores.Md5(Cores.Sha1(salt + code.ToUpper()));
+        }
+
+        private static readonly Random _random = new Random();
+        /// <summary>
+        /// 随机生成六位数字。
+        /// </summary>
+        /// <returns>返回随机数。</returns>
+        public static string RandomNumbers()
+        {
+            return _random.Next(100000, 999999).ToString();
         }
 
         private const string Codes = "0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,P,Q,R,S,T,U,V,W,X,Y,Z";
