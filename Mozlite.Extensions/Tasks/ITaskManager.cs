@@ -42,7 +42,7 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="id">当前服务Id。</param>
         /// <param name="argument">参数。</param>
         /// <returns>返回设置结果。</returns>
-        Task<bool> SetArgumentAsync(int id, string argument);
+        Task<bool> SaveArgumentAsync(int id, Argument argument);
 
         /// <summary>
         /// 设置完成状态。

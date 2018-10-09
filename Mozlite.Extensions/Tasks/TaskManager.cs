@@ -100,9 +100,9 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="id">当前服务Id。</param>
         /// <param name="argument">参数。</param>
         /// <returns>返回设置结果。</returns>
-        public async Task<bool> SetArgumentAsync(int id, string argument)
+        public async Task<bool> SaveArgumentAsync(int id, Argument argument)
         {
-            return await _db.UpdateAsync(t => t.Id == id, new { Argument = argument });
+            return await _db.UpdateAsync(t => t.Id == id, new { Argument = argument.ToString() });
         }
 
         /// <summary>
