@@ -112,6 +112,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             input.MergeAttribute("value", value);
             if (isChecked)
                 input.MergeAttribute("checked", "checked");
+            input.TagRenderMode = TagRenderMode.SelfClosing;
             wrapper.InnerHtml.AppendHtml(input);
 
             var label = new TagBuilder("label");

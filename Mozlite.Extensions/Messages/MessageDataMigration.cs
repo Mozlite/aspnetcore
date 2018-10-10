@@ -28,6 +28,7 @@ namespace Mozlite.Extensions.Messages
                 .Column(x => x.Result)
                 .Column(x => x.ExtendProperties)
             );
+            builder.CreateIndex<Message>(x => x.HashKey);
         }
     }
 }

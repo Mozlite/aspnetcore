@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace Mozlite.Extensions.Messages
 {
@@ -45,6 +46,7 @@ namespace Mozlite.Extensions.Messages
         /// <summary>
         /// 尝试发送次数。
         /// </summary>
+        [NotUpdated]
         public int TryTimes { get; set; }
 
         /// <summary>
@@ -72,21 +74,30 @@ namespace Mozlite.Extensions.Messages
         /// 唯一键验证。
         /// </summary>
         [Size(32)]
+        [NotUpdated]
         public string HashKey
         {
-            get
-            {
-                if (_hashkey == null)
-                    _hashkey = Cores.Md5(GetHashString());
-                return _hashkey;
-            }
+            get => _hashkey ?? (_hashkey = Cores.Md5(GetHashString()));
             set => _hashkey = value;
         }
 
         /// <summary>
-        /// 获取用于计算唯一键的哈希组合字符串。
+        /// 获取用于计算唯一键的哈希组合字符串的哈希值。
         /// </summary>
-        /// <returns>返回组合字符串。</returns>
-        protected virtual string GetHashString() => $"{MessageType}:{To}:{Content}";
+        /// <returns>返回组合字符串的哈希值。</returns>
+        protected virtual string GetHashString()
+        {
+            var hashString = new StringBuilder()
+                .Append($"{UserId}:{To}:{MessageType}:{Title}:{Content}");
+
+            foreach (var extendKey in ExtendKeys)
+            {
+                hashString.Append(":")
+                    .Append(extendKey)
+                    .Append(this[extendKey]);
+            }
+
+            return hashString.ToString();
+        }
     }
 }

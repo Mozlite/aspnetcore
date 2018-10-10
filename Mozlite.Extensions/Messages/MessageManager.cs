@@ -25,14 +25,30 @@ namespace Mozlite.Extensions.Messages
         }
 
         /// <summary>
+        /// 更新列。
+        /// </summary>
+        /// <param name="id">当前Id。</param>
+        /// <param name="fields">更新匿名对象。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual bool Update(int id, object fields) => Context.Update(id, fields);
+
+        /// <summary>
+        /// 更新列。
+        /// </summary>
+        /// <param name="id">当前Id。</param>
+        /// <param name="fields">更新匿名对象。</param>
+        /// <returns>返回更新结果。</returns>
+        public virtual Task<bool> UpdateAsync(int id, object fields) => Context.UpdateAsync(id, fields);
+
+        /// <summary>
         /// 添加消息接口。
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual bool Create(Message message)
+        public virtual bool Save(Message message)
         {
-            if (Context.Any(x => x.HashKey == message.HashKey))
-                return true;
+            if (message.Id > 0)
+                return Context.Update(message);
             return Context.Create(message);
         }
 
@@ -41,11 +57,43 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual async Task<bool> CreateAsync(Message message)
+        public virtual Task<bool> SaveAsync(Message message)
         {
-            if (await Context.AnyAsync(x => x.HashKey == message.HashKey))
+            if (message.Id > 0)
+                return Context.UpdateAsync(message);
+            return Context.CreateAsync(message);
+        }
+
+        /// <summary>
+        /// 判断消息是否已经存在，用<see cref="Message.HashKey"/>判断。
+        /// </summary>
+        /// <param name="message">消息实例对象。</param>
+        /// <param name="expiredSeconds">过期时间（秒）。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual bool IsExisted(Message message, int expiredSeconds = 300)
+        {
+            if (message.Id > 0)
                 return true;
-            return await Context.CreateAsync(message);
+            var msg = Context.Find(x => x.HashKey == message.HashKey);
+            if (msg == null)
+                return false;
+            return msg.CreatedDate.AddSeconds(expiredSeconds) > DateTimeOffset.Now;
+        }
+
+        /// <summary>
+        /// 判断消息是否已经存在，用<see cref="Message.HashKey"/>判断。
+        /// </summary>
+        /// <param name="message">消息实例对象。</param>
+        /// <param name="expiredSeconds">过期时间（秒）。</param>
+        /// <returns>返回判断结果。</returns>
+        public virtual async Task<bool> IsExistedAsync(Message message, int expiredSeconds = 300)
+        {
+            if (message.Id > 0)
+                return true;
+            var msg = await Context.FindAsync(x => x.HashKey == message.HashKey);
+            if (msg == null)
+                return false;
+            return msg.CreatedDate.AddSeconds(expiredSeconds) > DateTimeOffset.Now;
         }
 
         /// <summary>
@@ -66,7 +114,7 @@ namespace Mozlite.Extensions.Messages
             message.MessageType = MessageType.Email;
             message.Content = content;
             action?.Invoke(message);
-            return Create(message);
+            return Save(message);
         }
 
         /// <summary>
@@ -87,7 +135,7 @@ namespace Mozlite.Extensions.Messages
             message.MessageType = MessageType.Email;
             message.Content = content;
             action?.Invoke(message);
-            return CreateAsync(message);
+            return SaveAsync(message);
         }
 
         /// <summary>
@@ -106,7 +154,7 @@ namespace Mozlite.Extensions.Messages
             msg.Title = message;
             msg.MessageType = MessageType.SMS;
             action?.Invoke(msg);
-            return Create(msg);
+            return Save(msg);
         }
 
         /// <summary>
@@ -125,7 +173,7 @@ namespace Mozlite.Extensions.Messages
             msg.Title = message;
             msg.MessageType = MessageType.SMS;
             action?.Invoke(msg);
-            return CreateAsync(msg);
+            return SaveAsync(msg);
         }
 
         /// <summary>
@@ -144,7 +192,7 @@ namespace Mozlite.Extensions.Messages
             message.MessageType = MessageType.Message;
             message.Content = content;
             action?.Invoke(message);
-            return Create(message);
+            return Save(message);
         }
 
         /// <summary>
@@ -163,7 +211,23 @@ namespace Mozlite.Extensions.Messages
             message.MessageType = MessageType.Message;
             message.Content = content;
             action?.Invoke(message);
-            return CreateAsync(message);
+            return SaveAsync(message);
+        }
+
+        /// <summary>
+        /// 加载消息列表。
+        /// </summary>
+        /// <param name="messageType">消息类型。</param>
+        /// <param name="status">状态。</param>
+        /// <returns>返回消息列表。</returns>
+        public virtual IEnumerable<Message> Load(MessageType messageType, MessageStatus? status = null)
+        {
+            var query = Context.AsQueryable();
+            query.Where(x => x.MessageType == messageType);
+            if (status != null)
+                query.Where(x => x.Status == status);
+            query.OrderBy(x => x.Id);
+            return query.AsEnumerable(100);
         }
 
         /// <summary>
@@ -180,6 +244,37 @@ namespace Mozlite.Extensions.Messages
                 query.Where(x => x.Status == status);
             query.OrderBy(x => x.Id);
             return query.AsEnumerableAsync(100);
+        }
+
+        /// <summary>
+        /// 加载消息列表。
+        /// </summary>
+        /// <param name="query">消息查询类型。</param>
+        /// <returns>返回消息列表。</returns>
+        public virtual TQuery Load<TQuery>(TQuery query) where TQuery : MessageQueryBase => Context.Load(query);
+
+        /// <summary>
+        /// 加载消息列表。
+        /// </summary>
+        /// <param name="query">消息查询类型。</param>
+        /// <returns>返回消息列表。</returns>
+        public virtual Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : MessageQueryBase => Context.LoadAsync(query);
+
+        /// <summary>
+        /// 设置失败状态。
+        /// </summary>
+        /// <param name="id">当前消息Id。</param>
+        /// <param name="maxTryTimes">最大失败次数。</param>
+        /// <returns>返回设置结果。</returns>
+        public virtual bool SetFailured(int id, int maxTryTimes)
+        {
+            return Context.BeginTransaction(db =>
+            {
+                db.Update(x => x.Id == id, x => new { TryTimes = x.TryTimes + 1 });
+                db.Update(x => x.Id == id && x.TryTimes > maxTryTimes,
+                    new { Status = MessageStatus.Failured, ConfirmDate = DateTimeOffset.Now });
+                return true;
+            });
         }
 
         /// <summary>
@@ -204,9 +299,13 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="id">当前消息Id。</param>
         /// <returns>返回设置结果。</returns>
-        public virtual Task<bool> SetSuccessAsync(int id)
-        {
-            return Context.UpdateAsync(x => x.Id == id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
-        }
+        public virtual bool SetSuccess(int id) => Update(id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
+
+        /// <summary>
+        /// 设置成功状态。
+        /// </summary>
+        /// <param name="id">当前消息Id。</param>
+        /// <returns>返回设置结果。</returns>
+        public virtual Task<bool> SetSuccessAsync(int id) => UpdateAsync(id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
     }
 }
