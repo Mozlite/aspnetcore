@@ -1,7 +1,8 @@
-﻿using System;
-using Mozlite.Extensions;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Mozlite.Extensions;
+using Mozlite.Mvc.Properties;
+using System;
 
 namespace Mozlite.Mvc.TagHelpers.Common
 {
@@ -43,7 +44,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
             {
                 var builder = new TagBuilder("option");
                 builder.MergeAttribute("value", i.ToString());
-                builder.InnerHtml.AppendHtml($"第{i}页");
+                builder.InnerHtml.AppendHtml(string.Format(Resources.NumberPage, i));
                 if (i == page)
                     builder.MergeAttribute("selected", "selected");
                 output.Content.AppendHtml(builder);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Mozlite.Mvc.Properties;
 using System;
 using System.Collections.Generic;
 
@@ -38,8 +39,8 @@ namespace Mozlite.Mvc.TagHelpers.Common
         {
             if (type.IsNullableType())
                 type = Nullable.GetUnderlyingType(type);
-            else
-                Text = null;
+            else if (DefaultText == null)
+                DefaultText = Resources.SelectDefaultText;
             foreach (Enum value in Enum.GetValues(type))
             {
                 yield return new SelectListItem

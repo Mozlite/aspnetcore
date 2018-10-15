@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
-using Mozlite.Mvc.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,18 +25,19 @@ namespace Mozlite.Mvc.TagHelpers
         /// 默认显示字符串：如“请选择”。
         /// </summary>
         [HtmlAttributeName("default-text")]
-        public string Text { get; set; }
+        public string DefaultText { get; set; }
+
+        /// <summary>
+        /// 默认值。
+        /// </summary>
+        [HtmlAttributeName("default-value")]
+        public object DefaultValue { get; set; }
 
         /// <summary>
         /// 值。
         /// </summary>
         [HtmlAttributeName("value")]
         public object Value { get; set; }
-
-        /// <summary>
-        /// 设置默认：“请选择”字符串。
-        /// </summary>
-        protected void SetDefault() => Text = Resources.SelectDefaultText;
 
         /// <summary>
         /// 异步访问并呈现当前标签实例。
@@ -48,8 +48,8 @@ namespace Mozlite.Mvc.TagHelpers
         {
             output.TagName = "select";
             var items = Init() ?? await InitAsync() ?? Enumerable.Empty<SelectListItem>();
-            if (!string.IsNullOrEmpty(Text))//添加默认选项
-                items = new[] { new SelectListItem { Text = Text, Value = "" } }.Concat(items);
+            if (!string.IsNullOrEmpty(DefaultText))//添加默认选项
+                items = new[] { new SelectListItem { Text = DefaultText, Value = DefaultValue?.ToString() } }.Concat(items).ToList();
             if (For != null)
             {
                 var htmlGenerator = HttpContext.RequestServices.GetRequiredService<IHtmlGenerator>();
@@ -58,7 +58,7 @@ namespace Mozlite.Mvc.TagHelpers
                 tagHelper.For = For;
                 tagHelper.Items = items;
                 tagHelper.Init(context);
-                tagHelper.Process(context, output);
+                await tagHelper.ProcessAsync(context, output);
             }
             else
             {
