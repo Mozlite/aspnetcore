@@ -39,6 +39,24 @@ namespace Mozlite.Data
         public int PS { get; set; } = 20;
 
         /// <summary>
+        /// 页码。
+        /// </summary>
+        public int Page
+        {
+            get => PI;
+            set => PI = value;
+        }
+
+        /// <summary>
+        /// 每页显示记录数。
+        /// </summary>
+        public int PageSize
+        {
+            get => PS;
+            set => PS = value;
+        }
+
+        /// <summary>
         /// 总记录数。
         /// </summary>
         public int Size => Models?.Size ?? 0;

@@ -46,7 +46,7 @@ namespace Mozlite.Utils
             format = format.Trim();
             source = regex.Replace(source, Separator, format.Length - 1);
             var dic = new Dictionary<char, string>();
-            for (int i = 0; i < format.Length - 1; i++)
+            for (var i = 0; i < format.Length - 1; i++)
             {
                 var index = source.IndexOf(Separator, StringComparison.Ordinal);
                 if (index == -1)

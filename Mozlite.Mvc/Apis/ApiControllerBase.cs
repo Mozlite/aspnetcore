@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Mozlite.Mvc.Logging;
 
 namespace Mozlite.Mvc.Apis
 {

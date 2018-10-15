@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Resources;
-using System.Reflection;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Resources;
 
 namespace Mozlite.Mvc
 {
@@ -122,13 +122,19 @@ namespace Mozlite.Mvc
         {
             var resourceManager = _localizers.GetOrAdd(type, x =>
             {
-                var assembly = x.GetTypeInfo().Assembly;
+                Assembly assembly;
+                if (type == NullLocalizer.InstanceType)
+                    assembly = Assembly.GetEntryAssembly();
+                else
+                    assembly = x.GetTypeInfo().Assembly;
                 var baseName = assembly.GetManifestResourceNames()
                     .SingleOrDefault();
+                if (baseName == null)
+                    return null;
                 baseName = baseName.Substring(0, baseName.Length - 10);
                 return new ResourceManager(baseName, assembly);
             });
-            return resourceManager.GetString(key) ?? key;
+            return resourceManager?.GetString(key) ?? key;
         }
 
         private class NullLocalizer
@@ -141,18 +147,7 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <param name="key">资源键。</param>
         /// <returns>返回当前本地化字符串。</returns>
-        public virtual string GetString(string key)
-        {
-            var resourceManager = _localizers.GetOrAdd(NullLocalizer.InstanceType, x =>
-            {
-                var assembly = Assembly.GetEntryAssembly();
-                var baseName = assembly.GetManifestResourceNames()
-                    .SingleOrDefault();
-                baseName = baseName.Substring(0, baseName.Length - 10);
-                return new ResourceManager(baseName, assembly);
-            });
-            return resourceManager.GetString(key) ?? key;
-        }
+        public virtual string GetString(string key) => GetString(NullLocalizer.InstanceType, key);
 
         /// <summary>
         /// 获取当前键的本地化字符串实例（网站程序集）。

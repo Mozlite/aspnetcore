@@ -34,7 +34,7 @@ namespace Mozlite.Extensions.Security
             where TUser : UserBase
         {
             var key = typeof(TUser);
-            if (httpContext.Items.TryGetValue(key, out object user) && user is TUser current)
+            if (httpContext.Items.TryGetValue(key, out var user) && user is TUser current)
                 return current;
             var userId = httpContext.User.GetUserId();
             if (userId > 0)
@@ -65,7 +65,7 @@ namespace Mozlite.Extensions.Security
             where TUser : UserBase
         {
             var key = typeof(TUser);
-            if (httpContext.Items.TryGetValue(key, out object user) && user is TUser current)
+            if (httpContext.Items.TryGetValue(key, out var user) && user is TUser current)
                 return current;
             var userId = httpContext.User.GetUserId();
             if (userId > 0)

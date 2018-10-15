@@ -331,7 +331,7 @@ namespace Mozlite.Data.Query
             var statements = new List<string>();
             if (expression.Body is NewExpression body)
             {
-                for (int i = 0; i < body.Members.Count; i++)
+                for (var i = 0; i < body.Members.Count; i++)
                 {
                     var field = SqlHelper.DelimitIdentifier(body.Members[i].Name);
                     field += " = ";

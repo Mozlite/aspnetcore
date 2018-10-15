@@ -268,7 +268,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
                 builder.InnerHtml.AppendHtml(CreateLink(1, "1"));
             if (startIndex > 2)
                 builder.InnerHtml.AppendHtml("<li class=\"page-item\"><span>…</span></li>");
-            for (int i = startIndex; i < endIndex; i++)
+            for (var i = startIndex; i < endIndex; i++)
             {
                 builder.InnerHtml.AppendHtml(CreateLink(i, i.ToString()));
             }

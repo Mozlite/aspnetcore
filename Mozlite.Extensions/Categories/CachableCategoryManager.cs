@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Categories
         public IEnumerable<TCategory> Categories => Fetch();
 
         /// <summary>
-        /// 初始化类<see cref="ObjectManager{TModel}"/>。
+        /// 初始化类<see cref="CachableCategoryManager{TModel}"/>。
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
         /// <param name="cache">缓存接口。</param>

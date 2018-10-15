@@ -30,7 +30,7 @@ namespace Mozlite.Extensions.Security.Permissions
             var permissionName = requirement?.Name;
             if (permissionName == null && context.Resource is ControllerActionDescriptor resource)
             {
-                if (resource.RouteValues.TryGetValue("area", out string area))
+                if (resource.RouteValues.TryGetValue("area", out var area))
                     permissionName = area + ".";
                 permissionName += $"{resource.ControllerName}.{resource.ActionName}";
             }

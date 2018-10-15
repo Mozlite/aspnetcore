@@ -67,7 +67,7 @@ namespace Mozlite
         public static byte[] GetBytes(string hexString)
         {
             var bytes = new byte[hexString.Length / 2];
-            for (int i = 0; i < bytes.Length; i++)
+            for (var i = 0; i < bytes.Length; i++)
             {
                 var hex = hexString.Substring(i * 2, 2);
                 bytes[i] = (byte)int.Parse(hex, NumberStyles.HexNumber);

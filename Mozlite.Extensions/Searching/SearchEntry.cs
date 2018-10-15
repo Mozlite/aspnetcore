@@ -17,7 +17,7 @@ namespace Mozlite.Extensions.Searching
         private readonly IDictionary<string, string> _entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         internal SearchEntry(DbDataReader reader)
         {
-            for (int i = 0; i < reader.FieldCount; i++)
+            for (var i = 0; i < reader.FieldCount; i++)
             {
                 var name = reader.GetName(i);
                 if (name.Equals("Id", StringComparison.OrdinalIgnoreCase))

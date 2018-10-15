@@ -167,7 +167,7 @@ namespace Mozlite.Extensions.Storages.Excels
                 //第一行标题
                 var row = new Row();
                 row.RowIndex = index;
-                for (int i = 0; i < data.Columns; i++)
+                for (var i = 0; i < data.Columns; i++)
                 {
                     var descriptor = descriptors[i];
                     var cell = new Cell();
@@ -185,7 +185,7 @@ namespace Mozlite.Extensions.Storages.Excels
                 {
                     row = new Row();
                     row.RowIndex = index;
-                    for (int i = 0; i < data.Columns; i++)
+                    for (var i = 0; i < data.Columns; i++)
                     {
                         var descriptor = descriptors[i];
                         var value = descriptor.Get(model);

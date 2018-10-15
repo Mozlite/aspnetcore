@@ -5,7 +5,7 @@ namespace Mozlite.Extensions.Security.DisallowNames
     /// <summary>
     /// 非法名称分页查询实例。
     /// </summary>
-    public class DisallowNameQuery : Mozlite.Data.QueryBase<DisallowName>
+    public class DisallowNameQuery : QueryBase<DisallowName>
     {
         /// <summary>
         /// 名称。
