@@ -19,7 +19,6 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取或设置用户名称。
         /// </summary>
         [Size(64)]
-        [NotUpdated]
         public string UserName { get; set; }
 
         /// <summary>

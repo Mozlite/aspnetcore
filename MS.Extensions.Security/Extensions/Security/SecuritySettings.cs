@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MS
+namespace MS.Extensions.Security
 {
     /// <summary>
     /// 安全配置。

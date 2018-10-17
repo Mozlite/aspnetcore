@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,11 +11,6 @@ using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Messages;
-using Mozlite.Mvc.TagHelpers.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mozlite.Mvc
 {
@@ -510,20 +509,5 @@ namespace Mozlite.Mvc
             }
         }
         #endregion
-    }
-
-    /// <summary>
-    /// 页面模型基类，在POST表单页面中使用，自动绑定到表单实例中。
-    /// </summary>
-    /// <typeparam name="TModel">模型实例类型。</typeparam>
-    public abstract class ModelBase<TModel> : ModelBase, IModelable
-    {
-        /// <summary>
-        /// 当前模型实例。
-        /// </summary>
-        [BindProperty]
-        public TModel Model { get; set; }
-
-        object IModelable.Model => Model;
     }
 }

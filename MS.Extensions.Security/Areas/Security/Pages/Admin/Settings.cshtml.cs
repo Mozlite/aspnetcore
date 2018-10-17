@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Settings;
 using Mozlite.Mvc.Logging;
+using MS.Extensions.Security;
 
 namespace MS.Areas.Security.Pages.Admin
 {
