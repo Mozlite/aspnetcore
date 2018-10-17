@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Mozlite.Extensions.Categories;
 using Newtonsoft.Json;
 
@@ -27,7 +28,7 @@ namespace Mozlite.Extensions.Groups
         /// <summary>
         /// 层次等级。
         /// </summary>
-        [NotUpdated]
+        [NotMapped]
         public int Level
         {
             get

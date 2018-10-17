@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
+using Mozlite.Extensions.Groups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,6 +94,50 @@ namespace Mozlite.Mvc.TagHelpers
         protected virtual Task<IEnumerable<SelectListItem>> InitAsync()
         {
             return Task.FromResult<IEnumerable<SelectListItem>>(null);
+        }
+
+        /// <summary>
+        /// 迭代循环列表。
+        /// </summary>
+        /// <typeparam name="TGroup">分组列表。</typeparam>
+        /// <param name="items">选项列表。</param>
+        /// <param name="groups">当前分组。</param>
+        /// <param name="filter">过滤器。</param>
+        /// <param name="func">获取值代理方法，默认为Id。</param>
+        protected void InitChildren<TGroup>(List<SelectListItem> items, IEnumerable<TGroup> groups,
+            Predicate<TGroup> filter = null, Func<TGroup, string> func = null)
+            where TGroup : GroupBase<TGroup>
+        {
+            if (filter != null)
+                groups = groups.Where(x => filter(x)).ToList();
+            foreach (var group in groups)
+            {
+                items.Add(new SelectListItem { Text = group.Name, Value = func?.Invoke(group) ?? group.Id.ToString() });
+                InitChildren(items, group.Items, filter, func, null);
+            }
+        }
+
+        private void InitChildren<TGroup>(List<SelectListItem> items, IEnumerable<TGroup> groups, Predicate<TGroup> filter, Func<TGroup, string> func, string header)
+            where TGroup : GroupBase<TGroup>
+        {
+            var index = 0;
+            if (filter != null)
+                groups = groups.Where(x => filter(x)).ToList();
+            var count = groups.Count();
+            if (count == 0)
+                return;
+            foreach (var group in groups)
+            {
+                index++;
+                var current = header;
+                if (index < count)
+                    current += "  ├─";
+                else
+                    current += "  └─";
+                items.Add(new SelectListItem { Text = $"{current} {group.Name}", Value = func?.Invoke(group) ?? group.Id.ToString() });
+                current = current.Replace("└─", " ").Replace("├─", index < count ? "│ " : "  ");
+                InitChildren(items, group.Items, filter, func, current);
+            }
         }
     }
 }
