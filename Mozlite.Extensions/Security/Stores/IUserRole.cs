@@ -1,12 +1,12 @@
 ﻿namespace Mozlite.Extensions.Security.Stores
 {
     /// <summary>
-    /// 用户用户组接口。
+    /// 用户角色接口。
     /// </summary>
     public interface IUserRole
     {
         /// <summary>
-        /// 用户组ID。
+        /// 角色ID。
         /// </summary>
         int RoleId { get; }
 

@@ -11,11 +11,11 @@ namespace Mozlite.Extensions.Security
     /// 服务配置基类。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">用户组类型。</typeparam>
+    /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserStore">用户存储。</typeparam>
-    /// <typeparam name="TRoleStore">用户组存储。</typeparam>
+    /// <typeparam name="TRoleStore">角色存储。</typeparam>
     /// <typeparam name="TUserManager">用户管理类。</typeparam>
-    /// <typeparam name="TRoleManager">用户组管理类。</typeparam>
+    /// <typeparam name="TRoleManager">角色管理类。</typeparam>
     public abstract class ServiceConfigurer<TUser, TRole, TUserStore, TRoleStore, TUserManager, TRoleManager>
         : IServiceConfigurer
         where TUser : UserBase

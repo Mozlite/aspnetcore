@@ -4,7 +4,7 @@ using System.Security.Claims;
 namespace Mozlite.Extensions.Security.Stores
 {
     /// <summary>
-    /// 用户组声明类。
+    /// 角色声明类。
     /// </summary>
     [Table("core_Roles_Claims")]
     public abstract class RoleClaimBase
@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Security.Stores
         public int Id { get; set; }
 
         /// <summary>
-        /// 用户组ID。
+        /// 角色ID。
         /// </summary>
         public int RoleId { get; set; }
 
@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Security.Stores
         public string ClaimValue { get; set; }
 
         /// <summary>
-        /// 将用户组声明转换为<see cref="Claim"/>对象。
+        /// 将角色声明转换为<see cref="Claim"/>对象。
         /// </summary>
         /// <returns>返回<see cref="Claim"/>实例对象。</returns>
         public virtual Claim ToClaim()

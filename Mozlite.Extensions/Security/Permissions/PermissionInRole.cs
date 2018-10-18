@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Mozlite.Extensions.Security.Permissions
 {
     /// <summary>
-    /// 用户组权限。
+    /// 角色权限。
     /// </summary>
     [Table("core_Permissions_In_Roles")]
     public class PermissionInRole
     {
         /// <summary>
-        /// 用户组Id。
+        /// 角色Id。
         /// </summary>
         [Key]
         public int RoleId { get; set; }

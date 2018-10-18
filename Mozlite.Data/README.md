@@ -51,7 +51,7 @@
 
 ```csharp
         /// <summary>
-        /// 添加默认用户组。
+        /// 添加默认角色。
         /// </summary>
         /// <param name="builder">数据迁移构建实例。</param>
         public void Up1(MigrationBuilder builder)

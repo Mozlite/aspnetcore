@@ -462,12 +462,12 @@ namespace Mozlite.Extensions.Security
     /// 用户管理接口。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TRole">用户组类型。</typeparam>
+    /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
+    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
+    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public interface IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
@@ -476,83 +476,83 @@ namespace Mozlite.Extensions.Security
         where TUserToken : UserTokenBase, new()
     {
         /// <summary>
-        /// 获取用户的所有用户组。
+        /// 获取用户的所有角色。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <returns>返回当前用户的所有用户组列表。</returns>
+        /// <returns>返回当前用户的所有角色列表。</returns>
         Task<IList<string>> GetRolesAsync(TUser user);
 
         /// <summary>
-        /// 获取用户组Id。
+        /// 获取角色Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户组Id集合。</returns>
+        /// <returns>返回角色Id集合。</returns>
         int[] GetRoleIds(int userId);
 
         /// <summary>
-        /// 获取用户组Id。
+        /// 获取角色Id。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户组Id集合。</returns>
+        /// <returns>返回角色Id集合。</returns>
         Task<int[]> GetRoleIdsAsync(int userId);
 
         /// <summary>
-        /// 获取用户组列表。
+        /// 获取角色列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户组Id集合。</returns>
+        /// <returns>返回角色Id集合。</returns>
         IEnumerable<TRole> GetRoles(int userId);
 
         /// <summary>
-        /// 获取用户组列表。
+        /// 获取角色列表。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <returns>返回用户组Id集合。</returns>
+        /// <returns>返回角色Id集合。</returns>
         Task<IEnumerable<TRole>> GetRolesAsync(int userId);
 
         /// <summary>
-        /// 获取最高级用户组实例。
+        /// 获取最高级角色实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回用户实例对象。</returns>
         TRole GetMaxRole(int userId);
 
         /// <summary>
-        /// 获取最高级用户组实例。
+        /// 获取最高级角色实例。
         /// </summary>
         /// <param name="userId">用户Id。</param>
         /// <returns>返回用户实例对象。</returns>
         Task<TRole> GetMaxRoleAsync(int userId);
 
         /// <summary>
-        /// 将用户添加到用户组中。
+        /// 将用户添加到角色中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">用户组Id列表。</param>
+        /// <param name="roleIds">角色Id列表。</param>
         /// <returns>返回添加结果。</returns>
         bool AddUserToRoles(int userId, int[] roleIds);
 
         /// <summary>
-        /// 将用户添加到用户组中。
+        /// 将用户添加到角色中。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">用户组Id列表。</param>
+        /// <param name="roleIds">角色Id列表。</param>
         /// <returns>返回添加结果。</returns>
         Task<bool> AddUserToRolesAsync(int userId, int[] roleIds);
 
         /// <summary>
-        /// 设置用户用户组。
+        /// 设置用户角色。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">用户组Id列表。</param>
+        /// <param name="roleIds">角色Id列表。</param>
         /// <returns>返回添加结果。</returns>
         bool SetUserToRoles(int userId, int[] roleIds);
 
         /// <summary>
-        /// 设置用户用户组。
+        /// 设置用户角色。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="roleIds">用户组Id列表。</param>
+        /// <param name="roleIds">角色Id列表。</param>
         /// <returns>返回设置结果。</returns>
         Task<bool> SetUserToRolesAsync(int userId, int[] roleIds);
     }

@@ -117,10 +117,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 获取当前用户的用户组名称。
+        /// 获取当前用户的角色名称。
         /// </summary>
         /// <param name="claims">当前用户接口实例。</param>
-        /// <returns>返回用户组名称，如果未登入则返回“Anonymous”。</returns>
+        /// <returns>返回角色名称，如果未登入则返回“Anonymous”。</returns>
         public static string GetRoleName(this ClaimsPrincipal claims)
         {
             return claims.FindFirstValue(ClaimTypes.Role);
@@ -130,7 +130,7 @@ namespace Mozlite.Extensions.Security
         /// 获取当前用户的用户名称。
         /// </summary>
         /// <param name="claims">当前用户接口实例。</param>
-        /// <returns>返回用户组名称，如果未登入则返回“Anonymous”。</returns>
+        /// <returns>返回角色名称，如果未登入则返回“Anonymous”。</returns>
         public static string[] GetRoleNames(this ClaimsPrincipal claims)
         {
             return claims.FindAll(ClaimTypes.Role).Select(x => x.Value).ToArray();
@@ -171,10 +171,10 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 用户组唯一键已经存在。
+        /// 角色唯一键已经存在。
         /// </summary>
         /// <param name="describer">错误描述实例。</param>
-        /// <param name="normalizedRoleName">用户组唯一键。</param>
+        /// <param name="normalizedRoleName">角色唯一键。</param>
         /// <returns>返回错误实例。</returns>
         public static IdentityError DuplicateNormalizedRoleName(this IdentityErrorDescriber describer, string normalizedRoleName)
         {

@@ -74,14 +74,14 @@ namespace Mozlite.Extensions.Security.Activities
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TUserActivity">用户活动状态类型。</typeparam>
-    /// <typeparam name="TRole">用户组类型。</typeparam>
+    /// <typeparam name="TRole">角色类型。</typeparam>
     public abstract class ActivityQueryBase<TUser, TRole, TUserActivity> : ActivityQueryBase<TUser, TUserActivity>
         where TUser : UserBase
         where TRole : RoleBase
         where TUserActivity : UserActivity
     {
         /// <summary>
-        /// 当前用户用户组等级。
+        /// 当前用户角色等级。
         /// </summary>
         public int MaxRoleLevel { get; set; }
 

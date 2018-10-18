@@ -13,9 +13,9 @@ namespace Mozlite.Extensions.Security.Stores
     /// <summary>
     /// 数据库存储类。
     /// </summary>
-    /// <typeparam name="TRole">用户组类型。</typeparam>
-    /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
-    /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
+    /// <typeparam name="TRole">角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public abstract class RoleStoreBase<TRole, TUserRole, TRoleClaim>
         : IdentityRoleStoreBase<TRole, TUserRole, TRoleClaim>,
         IRoleStoreBase<TRole, TUserRole, TRoleClaim>
@@ -24,12 +24,12 @@ namespace Mozlite.Extensions.Security.Stores
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
-        /// 用户组数据库操作接口。
+        /// 角色数据库操作接口。
         /// </summary>
         public IDbContext<TRole> RoleContext { get; }
 
         /// <summary>
-        /// 用户用户组数据库操作接口。
+        /// 用户角色数据库操作接口。
         /// </summary>
         public IDbContext<TUserRole> UserRoleContext { get; }
 
@@ -42,8 +42,8 @@ namespace Mozlite.Extensions.Security.Stores
         /// 初始化类<see cref="RoleStoreBase{TRole,TUserRole,TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
-        /// <param name="roleContext">用户组数据库操作接口。</param>
-        /// <param name="userRoleContext">用户用户组数据库操作接口。</param>
+        /// <param name="roleContext">角色数据库操作接口。</param>
+        /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
         protected RoleStoreBase(IdentityErrorDescriber describer,
             IDbContext<TRole> roleContext,
@@ -56,31 +56,31 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取当前最大用户组等级。
+        /// 获取当前最大角色等级。
         /// </summary>
-        /// <param name="role">当前用户组实例。</param>
-        /// <returns>返回最大用户组等级。</returns>
+        /// <param name="role">当前角色实例。</param>
+        /// <returns>返回最大角色等级。</returns>
         protected virtual Task<int> GetMaxRoleLevelAsync(TRole role)
         {
             return RoleContext.MaxAsync(x => x.RoleLevel, x => x.RoleLevel < int.MaxValue);
         }
 
         /// <summary>
-        /// 获取当前最大用户组等级。
+        /// 获取当前最大角色等级。
         /// </summary>
-        /// <param name="role">当前用户组实例。</param>
-        /// <returns>返回最大用户组等级。</returns>
+        /// <param name="role">当前角色实例。</param>
+        /// <returns>返回最大角色等级。</returns>
         protected virtual int GetMaxRoleLevel(TRole role)
         {
             return RoleContext.Max(x => x.RoleLevel, x => x.RoleLevel < int.MaxValue);
         }
 
         /// <summary>
-        /// 添加用户用户组。
+        /// 添加用户角色。
         /// </summary>
-        /// <param name="role">用户用户组实例。</param>
+        /// <param name="role">用户角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回用户组添加结果。</returns>
+        /// <returns>返回角色添加结果。</returns>
         public override async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -88,7 +88,7 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            role.RoleLevel = await GetMaxRoleLevelAsync(role) + 1;//获取当前用户组等级
+            role.RoleLevel = await GetMaxRoleLevelAsync(role) + 1;//获取当前角色等级
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (role is IRoleEventHandler<TRole> handler)
             {
@@ -108,11 +108,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 更新用户用户组。
+        /// 更新用户角色。
         /// </summary>
-        /// <param name="role">用户用户组实例。</param>
+        /// <param name="role">用户角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回用户组更新结果。</returns>
+        /// <returns>返回角色更新结果。</returns>
         public override async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -139,11 +139,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 删除用户用户组。
+        /// 删除用户角色。
         /// </summary>
-        /// <param name="role">用户用户组实例。</param>
+        /// <param name="role">用户角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回用户组删除结果。</returns>
+        /// <returns>返回角色删除结果。</returns>
         public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -170,9 +170,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 上移用户组。
+        /// 上移角色。
         /// </summary>
-        /// <param name="role">用户组实例。</param>
+        /// <param name="role">角色实例。</param>
         /// <returns>返回移动结果。</returns>
         public virtual bool MoveUp(TRole role)
         {
@@ -196,9 +196,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 下移用户组。
+        /// 下移角色。
         /// </summary>
-        /// <param name="role">用户组实例。</param>
+        /// <param name="role">角色实例。</param>
         /// <returns>返回移动结果。</returns>
         public virtual bool MoveDown(TRole role)
         {
@@ -222,9 +222,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 移动用户组分组条件表达式。
+        /// 移动角色分组条件表达式。
         /// </summary>
-        /// <param name="role">当前用户组。</param>
+        /// <param name="role">当前角色。</param>
         /// <returns>返回条件表达式。</returns>
         protected virtual Expression<Predicate<TRole>> MoveExpression(TRole role)
         {
@@ -232,9 +232,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 上移用户组。
+        /// 上移角色。
         /// </summary>
-        /// <param name="role">用户组实例。</param>
+        /// <param name="role">角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回移动结果。</returns>
         public virtual async Task<bool> MoveUpAsync(TRole role, CancellationToken cancellationToken = default)
@@ -259,9 +259,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 下移用户组。
+        /// 下移角色。
         /// </summary>
-        /// <param name="role">用户组实例。</param>
+        /// <param name="role">角色实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回移动结果。</returns>
         public virtual async Task<bool> MoveDownAsync(TRole role, CancellationToken cancellationToken = default)
@@ -286,10 +286,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 更新用户用户组。
+        /// 更新用户角色。
         /// </summary>
-        /// <param name="role">用户用户组实例。</param>
-        /// <returns>返回用户组更新结果。</returns>
+        /// <param name="role">用户角色实例。</param>
+        /// <returns>返回角色更新结果。</returns>
         public virtual IdentityResult Delete(TRole role)
         {
             if (role == null)
@@ -315,33 +315,33 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 通过ID获取用户组实例。
+        /// 通过ID获取角色实例。
         /// </summary>
-        /// <param name="id">用户组Id。</param>
+        /// <param name="id">角色Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回当前用户组实例对象。</returns>
+        /// <returns>返回当前角色实例对象。</returns>
         public override Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return RoleContext.FindAsync(id, cancellationToken);
         }
 
         /// <summary>
-        /// 通过用户组名称获取用户组实例。
+        /// 通过角色名称获取角色实例。
         /// </summary>
-        /// <param name="normalizedName">用户组名称。</param>
+        /// <param name="normalizedName">角色名称。</param>
         /// <param name="cancellationToken">取消标识。</param>
-        /// <returns>返回当前用户组实例对象。</returns>
+        /// <returns>返回当前角色实例对象。</returns>
         public override Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default)
         {
             return RoleContext.FindAsync(x => x.NormalizedName == normalizedName, cancellationToken);
         }
 
         /// <summary>
-        /// 获取用户组声明列表。
+        /// 获取角色声明列表。
         /// </summary>
-        /// <param name="role">用户组实例。</param>
+        /// <param name="role">角色实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户组的声明列表。</returns>
+        /// <returns>返回当前角色的声明列表。</returns>
         public override async Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default)
         {
             if (role == null)
@@ -353,9 +353,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 添加用户组声明。
+        /// 添加角色声明。
         /// </summary>
-        /// <param name="role">用户组实例对象。</param>
+        /// <param name="role">角色实例对象。</param>
         /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
@@ -372,9 +372,9 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 移除用户组声明。
+        /// 移除角色声明。
         /// </summary>
-        /// <param name="role">用户组实例对象。</param>
+        /// <param name="role">角色实例对象。</param>
         /// <param name="claim">声明实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
@@ -392,48 +392,48 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取所有用户组。
+        /// 获取所有角色。
         /// </summary>
-        /// <returns>返回用户组列表。</returns>
+        /// <returns>返回角色列表。</returns>
         public virtual IEnumerable<TRole> LoadRoles()
         {
             return RoleContext.Fetch();
         }
 
         /// <summary>
-        /// 获取所有用户组。
+        /// 获取所有角色。
         /// </summary>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户组列表。</returns>
+        /// <returns>返回角色列表。</returns>
         public virtual Task<IEnumerable<TRole>> LoadRolesAsync(CancellationToken cancellationToken = default)
         {
             return RoleContext.FetchAsync(cancellationToken: cancellationToken);
         }
 
         /// <summary>
-        /// 通过ID获取用户组实例。
+        /// 通过ID获取角色实例。
         /// </summary>
-        /// <param name="id">用户组Id。</param>
-        /// <returns>返回当前用户组实例对象。</returns>
+        /// <param name="id">角色Id。</param>
+        /// <returns>返回当前角色实例对象。</returns>
         public virtual TRole FindById(int id)
         {
             return RoleContext.Find(id);
         }
 
         /// <summary>
-        /// 通过用户组名称获取用户组实例。
+        /// 通过角色名称获取角色实例。
         /// </summary>
-        /// <param name="normalizedName">用户组名称。</param>
-        /// <returns>返回当前用户组实例对象。</returns>
+        /// <param name="normalizedName">角色名称。</param>
+        /// <returns>返回当前角色实例对象。</returns>
         public virtual TRole FindByName(string normalizedName)
         {
             return RoleContext.Find(x => x.NormalizedName == normalizedName);
         }
 
         /// <summary>
-        /// 添加用户组。
+        /// 添加角色。
         /// </summary>
-        /// <param name="role">用户组实例。</param>
+        /// <param name="role">角色实例。</param>
         /// <returns>返回添加结果。</returns>
         public virtual IdentityResult Create(TRole role)
         {
@@ -441,7 +441,7 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            role.RoleLevel = GetMaxRoleLevel(role) + 1;//获取当前用户组等级
+            role.RoleLevel = GetMaxRoleLevel(role) + 1;//获取当前角色等级
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (role is IRoleEventHandler<TRole> handler)
             {
@@ -461,10 +461,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 更新用户用户组。
+        /// 更新用户角色。
         /// </summary>
-        /// <param name="role">用户用户组实例。</param>
-        /// <returns>返回用户组更新结果。</returns>
+        /// <param name="role">用户角色实例。</param>
+        /// <returns>返回角色更新结果。</returns>
         public virtual IdentityResult Update(TRole role)
         {
             if (role == null)

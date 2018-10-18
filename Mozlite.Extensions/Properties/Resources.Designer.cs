@@ -196,7 +196,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户组唯一键&apos;{0}&apos;已经存在。 的本地化字符串。
+        ///   查找类似 角色唯一键&apos;{0}&apos;已经存在。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_DuplicateNormalizedRoleName {
             get {
@@ -205,7 +205,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户组名称&apos;{0}&apos;已经存在。 的本地化字符串。
+        ///   查找类似 角色名称&apos;{0}&apos;已经存在。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_DuplicateRoleName {
             get {
@@ -232,7 +232,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户组名称&apos;{0}&apos;无效。 的本地化字符串。
+        ///   查找类似 角色名称&apos;{0}&apos;无效。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_InvalidRoleName {
             get {
@@ -349,7 +349,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户组{0}不存在。 的本地化字符串。
+        ///   查找类似 角色{0}不存在。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_RoleNotFound {
             get {
@@ -367,7 +367,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户已经在用户组&apos;{0}&apos;中。 的本地化字符串。
+        ///   查找类似 用户已经在角色&apos;{0}&apos;中。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_UserAlreadyInRole {
             get {
@@ -412,7 +412,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户不在用户组&apos;{0}&apos;中。 的本地化字符串。
+        ///   查找类似 用户不在角色&apos;{0}&apos;中。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_UserNotInRole {
             get {
@@ -439,7 +439,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 管理员用户组权限不能被设置！ 的本地化字符串。
+        ///   查找类似 管理员角色权限不能被设置！ 的本地化字符串。
         /// </summary>
         internal static string PermissionSetCannotBeOwner {
             get {
