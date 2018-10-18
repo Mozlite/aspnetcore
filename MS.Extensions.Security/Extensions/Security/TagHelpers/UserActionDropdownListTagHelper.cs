@@ -28,7 +28,6 @@ namespace MS.Extensions.Security.TagHelpers
         /// <returns>返回选项列表。</returns>
         protected override IEnumerable<SelectListItem> Init()
         {
-            SetDefault();
             var actions = _factory.LoadProviders();
             foreach (var action in actions)
             {

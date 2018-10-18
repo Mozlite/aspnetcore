@@ -11,6 +11,6 @@
         <label>@Model.Name</label>
     </div>
     <hr class="mt-0" />
-    <moz:role-checkboxlist max="Model.CurrentRole.RoleLevel" class="row" iclass="col-6" for="Input.RoleId"></moz:role-checkboxlist>
+    <moz:role-checkboxlist max="Model.Role.RoleLevel" class="row" iclass="col-6" for="Input.RoleId"></moz:role-checkboxlist>
     <input type="hidden" asp-for="Input.UserId" />
 </form>

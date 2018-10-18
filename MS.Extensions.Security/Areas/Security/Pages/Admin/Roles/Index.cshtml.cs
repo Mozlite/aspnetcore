@@ -26,7 +26,7 @@ namespace MS.Areas.Security.Pages.Admin.Roles
         public void OnGet()
         {
             var roles = _roleManager.Load();
-            if (CurrentRole.NormalizedName != DefaultRole.OwnerName)
+            if (Role.NormalizedName != DefaultRole.OwnerName)
                 roles = roles.Where(x => !x.IsSystem);
             Roles = roles.OrderByDescending(x => x.RoleLevel).ToList();
         }

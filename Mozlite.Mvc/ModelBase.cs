@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Security;
+using Mozlite.Extensions.Security.Activities;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Messages;
 
@@ -49,6 +50,21 @@ namespace Mozlite.Mvc
             }
         }
         
+        /// <summary>
+        /// 添加操作日志。
+        /// </summary>
+        /// <param name="message">日志消息。</param>
+        /// <param name="args">格式化参数。</param>
+        protected void Log(string message, params object[] args)
+        {
+            Logger.Info(EventId, message, args);
+        }
+
+        /// <summary>
+        /// 事件ID。
+        /// </summary>
+        protected virtual int EventId => 1;
+
         private int _pageIndex = -1;
         /// <summary>
         /// 当前页码。

@@ -3,12 +3,12 @@
 @{
     ViewBag.Title = "权限配置";
     ViewBag.Current = "users.roles";
-    ViewBag.SubTitle = Model.Role.Name;
+    ViewBag.SubTitle = Model.Current.Name;
     var current = false;
 }
 
 <form method="post">
-    <input type="hidden" name="RoleId" value="@Model.Role.RoleId" />
+    <input type="hidden" name="RoleId" value="@Model.Current.RoleId" />
     <div class="panel panel-primary nav-panel" data-collapsed="0">
         <ul class="nav nav-tabs tab-right-border" role="tablist">
             @foreach (var key in Model.Permissions.Keys)
@@ -29,14 +29,14 @@
                         {
                             <div class="permission-item">
                                 <label>@permission.Text<small class="text-secondary ml-1">(@permission.Description)</small></label>
-                                <moz:permission-radioboxlist disabled="Model.Role.RoleLevel == int.MaxValue" roleid="Model.Role.RoleId" permissionid="permission.Id"></moz:permission-radioboxlist>
+                                <moz:permission-radioboxlist disabled="Model.Current.RoleLevel == int.MaxValue" roleid="Model.Current.RoleId" permissionid="permission.Id"></moz:permission-radioboxlist>
                             </div>
                         }
                     </div>
                     current = false;
                 }
             </div>
-            <div .visible="Model.Role.RoleLevel < int.MaxValue" class="mb-3">
+            <div .visible="Model.Current.RoleLevel < int.MaxValue" class="mb-3">
                 <button type="submit" js-submit="true" class="btn btn-primary">提交</button>
             </div>
         </div>

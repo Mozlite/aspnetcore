@@ -70,7 +70,7 @@ namespace MS.Areas.Security.Pages.Admin
                 Input.RoleId = Input.RoleId.Concat(roles).ToArray();
             var user = await _userManager.FindByIdAsync(Input.UserId);
             var role = await _roleManager.FindByIdAsync(user.RoleId);
-            if (role > CurrentRole) //没有权限
+            if (role > Role) //没有权限
                 return Error("不能设置比自己等级高的用户角色！");
             if (await _userManager.SetUserToRolesAsync(user.UserId, Input.RoleId))
             {

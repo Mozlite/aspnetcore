@@ -20,7 +20,7 @@ namespace MS.Areas.Security.Pages.Admin
 
         public void OnGet(UserQuery query)
         {
-            query.MaxRoleLevel = CurrentRole.RoleLevel;
+            query.MaxRoleLevel = Role.RoleLevel;
             Model = _userManager.Load(query);
         }
 
