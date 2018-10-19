@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Mozlite.Data;
+using Mozlite.Extensions.Storages.Properties;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Mozlite.Data;
-using Mozlite.Extensions.Storages.Properties;
 
 namespace Mozlite.Extensions.Storages
 {
@@ -154,6 +154,29 @@ namespace Mozlite.Extensions.Storages
         public virtual Task<MediaQuery> LoadAsync(MediaQuery query)
         {
             return _mfdb.LoadAsync(query);
+        }
+
+        /// <summary>
+        /// 删除文件。
+        /// </summary>
+        /// <param name="id">文件Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual Task<bool> DeleteAsync(Guid id)
+        {
+            return _mfdb.DeleteAsync(id);
+        }
+
+        /// <summary>
+        /// 删除文件。
+        /// </summary>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">对象Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual Task<bool> DeleteAsync(string extensionName, int? targetId = null)
+        {
+            if (targetId == null)
+                return _mfdb.DeleteAsync(x => x.ExtensionName == extensionName);
+            return _mfdb.DeleteAsync(x => x.ExtensionName == extensionName && x.TargetId == targetId);
         }
     }
 }

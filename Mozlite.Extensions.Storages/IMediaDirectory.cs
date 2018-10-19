@@ -42,5 +42,20 @@ namespace Mozlite.Extensions.Storages
         /// <param name="query">查询实例。</param>
         /// <returns>返回文件列表。</returns>
         Task<MediaQuery> LoadAsync(MediaQuery query);
+
+        /// <summary>
+        /// 删除文件。
+        /// </summary>
+        /// <param name="id">文件Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<bool> DeleteAsync(Guid id);
+
+        /// <summary>
+        /// 删除文件。
+        /// </summary>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">对象Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<bool> DeleteAsync(string extensionName, int? targetId =null);
     }
 }
