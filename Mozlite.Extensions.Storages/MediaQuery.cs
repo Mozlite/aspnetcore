@@ -34,6 +34,11 @@ namespace Mozlite.Extensions.Storages
         public DateTime? End { get; set; }
 
         /// <summary>
+        /// 扩展名称。
+        /// </summary>
+        public string ExtensionName { get; set; }
+
+        /// <summary>
         /// 初始化查询上下文。
         /// </summary>
         /// <param name="context">查询上下文。</param>
@@ -49,6 +54,8 @@ namespace Mozlite.Extensions.Storages
                 context.Where(x => x.CreatedDate >= Start);
             if (End != null)
                 context.Where(x => x.CreatedDate <= End);
+            if (ExtensionName != null)
+                context.Where(x => x.ExtensionName == ExtensionName);
         }
     }
 }
