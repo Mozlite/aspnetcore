@@ -2,6 +2,7 @@
 using Mozlite.Data;
 using Mozlite.Extensions.Storages.Properties;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -40,31 +41,45 @@ namespace Mozlite.Extensions.Storages
         /// 上传文件。
         /// </summary>
         /// <param name="file">表单文件。</param>
-        /// <param name="extensionName">扩展名称。</param>
-        /// <param name="targetId">目标Id。</param>
-        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
+        /// <param name="init">实例化媒体文件属性。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        public virtual async Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
+        public virtual async Task<MediaResult> UploadAsync(IFormFile file, Action<MediaFile> init, bool unique = true)
         {
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
             var tempFile = await _directory.SaveToTempAsync(file);
             var media = new MediaFile();
-            media.ExtensionName = extensionName;
             media.Extension = Path.GetExtension(file.FileName);
-            media.Name = file.FileName;
-            return await CreateAsync(tempFile, media, file.ContentType, targetId, uniqueMediaFile);
+            media.Name = Path.GetFileNameWithoutExtension(file.FileName);
+            init(media);
+            return await CreateAsync(tempFile, media, file.ContentType, unique);
         }
+
+        /// <summary>
+        /// 上传文件。
+        /// </summary>
+        /// <param name="file">表单文件。</param>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">目标Id。</param>
+        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
+        /// <returns>返回上传后的结果！</returns>
+        public virtual Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null,
+            bool uniqueMediaFile = true)
+            => UploadAsync(file, x =>
+            {
+                x.ExtensionName = extensionName;
+                x.TargetId = targetId;
+            }, uniqueMediaFile);
 
         /// <summary>
         /// 下载文件。
         /// </summary>
         /// <param name="url">文件URL地址。</param>
-        /// <param name="extensionName">扩展名称。</param>
-        /// <param name="targetId">目标Id。</param>
-        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
+        /// <param name="init">实例化媒体文件属性。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        public async Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null, bool uniqueMediaFile = true)
+        public virtual async Task<MediaResult> DownloadAsync(string url, Action<MediaFile> init, bool unique = true)
         {
             var uri = new Uri(url);
             using (var client = new HttpClient())
@@ -75,14 +90,29 @@ namespace Mozlite.Extensions.Storages
                 using (var stream = await client.GetStreamAsync(uri))
                     tempFile = await _directory.SaveToTempAsync(stream);
                 var media = new MediaFile();
-                media.ExtensionName = extensionName;
                 media.Extension = Path.GetExtension(uri.AbsolutePath);
-                media.Name = Path.GetFileName(uri.AbsolutePath);
-                return await CreateAsync(tempFile, media, media.Extension.GetContentType(), targetId, uniqueMediaFile);
+                media.Name = Path.GetFileNameWithoutExtension(uri.AbsolutePath);
+                init(media);
+                return await CreateAsync(tempFile, media, media.Extension.GetContentType(), unique);
             }
         }
 
-        private async Task<MediaResult> CreateAsync(FileInfo tempFile, MediaFile file, string contentType, int? targetId, bool uniqueMediaFile)
+        /// <summary>
+        /// 下载文件。
+        /// </summary>
+        /// <param name="url">文件URL地址。</param>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">目标Id。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
+        /// <returns>返回上传后的结果！</returns>
+        public Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null, bool unique = true)
+            => DownloadAsync(url, x =>
+            {
+                x.ExtensionName = extensionName;
+                x.TargetId = targetId;
+            }, unique);
+
+        private async Task<MediaResult> CreateAsync(FileInfo tempFile, MediaFile file, string contentType, bool unique)
         {
             var fileId = tempFile.ComputeHash();
             var storage = await _sfdb.FindAsync(fileId);
@@ -90,9 +120,9 @@ namespace Mozlite.Extensions.Storages
             {
                 //实体文件已经存在，删除临时目录下的文件
                 EnsureStoredFile(storage, tempFile);
-                if (uniqueMediaFile)//唯一文件存储
+                if (unique)//唯一文件存储
                 {
-                    var dbFile = await _mfdb.FindAsync(x => x.FileId == fileId);
+                    var dbFile = await _mfdb.FindAsync(x => x.ExtensionName == file.ExtensionName && x.TargetId == file.TargetId && x.FileId == fileId);
                     if (dbFile != null)
                         return new MediaResult(dbFile.Url);
                 }
@@ -107,7 +137,6 @@ namespace Mozlite.Extensions.Storages
                 if (await _sfdb.CreateAsync(storage))
                     EnsureStoredFile(storage, tempFile);
             }
-            file.TargetId = targetId;
             file.FileId = fileId;
             if (await _mfdb.CreateAsync(file)) return new MediaResult(file.Url);
             return new MediaResult(null, Resources.StoredFileFailured);
@@ -144,6 +173,28 @@ namespace Mozlite.Extensions.Storages
                 .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
             file.PhysicalPath = Path.Combine(_media, file.PhysicalPath);
             return file;
+        }
+
+        /// <summary>
+        /// 通过扩展名称和目标Id。
+        /// </summary>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">目标Id。</param>
+        /// <returns>返回媒体文件。</returns>
+        public virtual Task<MediaFile> FindAsync(string extensionName, int targetId)
+        {
+            return _mfdb.FindAsync(x => x.ExtensionName == extensionName && x.TargetId == targetId);
+        }
+
+        /// <summary>
+        /// 通过扩展名称和目标Id。
+        /// </summary>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">目标Id。</param>
+        /// <returns>返回媒体文件列表。</returns>
+        public virtual Task<IEnumerable<MediaFile>> FetchAsync(string extensionName, int targetId)
+        {
+            return _mfdb.FetchAsync(x => x.ExtensionName == extensionName && x.TargetId == targetId);
         }
 
         /// <summary>

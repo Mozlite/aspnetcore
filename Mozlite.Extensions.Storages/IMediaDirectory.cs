@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -13,11 +14,29 @@ namespace Mozlite.Extensions.Storages
         /// 上传文件。
         /// </summary>
         /// <param name="file">表单文件。</param>
+        /// <param name="init">实例化媒体文件属性。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
+        /// <returns>返回上传后的结果！</returns>
+        Task<MediaResult> UploadAsync(IFormFile file, Action<MediaFile> init, bool unique = true);
+
+        /// <summary>
+        /// 上传文件。
+        /// </summary>
+        /// <param name="file">表单文件。</param>
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
-        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool uniqueMediaFile = true);
+        Task<MediaResult> UploadAsync(IFormFile file, string extensionName, int? targetId = null, bool unique = true);
+
+        /// <summary>
+        /// 下载文件。
+        /// </summary>
+        /// <param name="url">文件URL地址。</param>
+        /// <param name="init">实例化媒体文件属性。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
+        /// <returns>返回上传后的结果！</returns>
+        Task<MediaResult> DownloadAsync(string url, Action<MediaFile> init, bool unique = true);
 
         /// <summary>
         /// 下载文件。
@@ -25,9 +44,9 @@ namespace Mozlite.Extensions.Storages
         /// <param name="url">文件URL地址。</param>
         /// <param name="extensionName">扩展名称。</param>
         /// <param name="targetId">目标Id。</param>
-        /// <param name="uniqueMediaFile">每一个文件和媒体存储文件一一对应。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
         /// <returns>返回上传后的结果！</returns>
-        Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null, bool uniqueMediaFile = true);
+        Task<MediaResult> DownloadAsync(string url, string extensionName, int? targetId = null, bool unique = true);
 
         /// <summary>
         /// 通过GUID获取存储文件实例。
@@ -35,6 +54,22 @@ namespace Mozlite.Extensions.Storages
         /// <param name="id">媒体文件Id。</param>
         /// <returns>返回存储文件实例。</returns>
         Task<StoredPhysicalFile> FindAsync(Guid id);
+
+        /// <summary>
+        /// 通过扩展名称和目标Id。
+        /// </summary>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">目标Id。</param>
+        /// <returns>返回媒体文件。</returns>
+        Task<MediaFile> FindAsync(string extensionName, int targetId);
+
+        /// <summary>
+        /// 通过扩展名称和目标Id。
+        /// </summary>
+        /// <param name="extensionName">扩展名称。</param>
+        /// <param name="targetId">目标Id。</param>
+        /// <returns>返回媒体文件列表。</returns>
+        Task<IEnumerable<MediaFile>> FetchAsync(string extensionName, int targetId);
 
         /// <summary>
         /// 加载文件。
