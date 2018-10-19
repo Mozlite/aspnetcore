@@ -131,11 +131,11 @@ namespace Mozlite.Mvc.TagHelpers
                 index++;
                 var current = header;
                 if (index < count)
-                    current += "  ├─";
+                    current += "  ├──";
                 else
-                    current += "  └─";
+                    current += "  └──";
                 items.Add(new SelectListItem { Text = $"{current} {group.Name}", Value = func?.Invoke(group) ?? group.Id.ToString() });
-                current = current.Replace("└─", " ").Replace("├─", index < count ? "│ " : "  ");
+                current = current.Replace("└──", "   ").Replace("├──", index < count ? "│   " : "    ");
                 InitChildren(items, group.Items, filter, func, current);
             }
         }
