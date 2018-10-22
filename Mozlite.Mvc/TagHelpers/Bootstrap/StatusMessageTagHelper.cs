@@ -64,7 +64,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
                 output.Render("script", builder =>
                 {
                     var json = JsonConvert.SerializeObject(new { message = message.Message, type });
-                    builder.InnerHtml.AppendHtml("$(function(){").AppendHtml($"$alert({json});").AppendHtml("});");
+                    builder.InnerHtml.AppendHtml("$(function(){").AppendHtml($"Mozlite.alert({json});").AppendHtml("});");
                 });
             else
                 output.Render("div", builer =>

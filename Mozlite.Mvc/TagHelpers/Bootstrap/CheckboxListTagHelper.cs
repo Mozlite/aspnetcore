@@ -33,7 +33,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         /// 每项选中样式类型。
         /// </summary>
         [HtmlAttributeName("istyle")]
-        public CheckedStyle CheckedStyle { get; set; }
+        public CheckedStyle CheckedStyle { get; set; } = CheckedStyle.Check;
 
         /// <summary>
         /// 设置属性模型。

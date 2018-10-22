@@ -1,4 +1,5 @@
 ﻿using Mozlite.Extensions.Properties;
+using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
 {
@@ -21,7 +22,7 @@ namespace Mozlite.Extensions.Security
         /// 网站所有者，最低权限角色名称。
         /// </summary>
         public const string MemberName = "SYS:MEMBER";
-        
+
         /// <summary>
         /// 网站所有者，最低权限角色。
         /// </summary>
@@ -48,5 +49,15 @@ namespace Mozlite.Extensions.Security
         /// 角色等级。
         /// </summary>
         public int RoleLevel { get; }
+
+        /// <summary>
+        /// 转化为角色实例。
+        /// </summary>
+        /// <returns>返回当前角色实例。</returns>
+        /// <typeparam name="TRole">角色类型。</typeparam>
+        public TRole As<TRole>() where TRole : RoleBase, new()
+        {
+            return new TRole { Name = Name, NormalizedName = NormalizedName, RoleLevel = RoleLevel };
+        }
     }
 }

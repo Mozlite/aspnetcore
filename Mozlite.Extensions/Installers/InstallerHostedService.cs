@@ -71,10 +71,20 @@ namespace Mozlite.Extensions.Installers
                 registration.Status = InstallerStatus.Expired;
 
             if (registration.Status == InstallerStatus.Initializing)
-                registration.Status = await _serviceProvider.GetRequiredService<IInstaller>().ExecuteAsync();
+            {
+                try
+                {
+                    using (var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                        registration.Status = await scope.ServiceProvider.GetRequiredService<IInstaller>().ExecuteAsync();
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(exception, "网站初始化失败！");
+                }
+            }
             await _installerManager.SaveRegistrationAsync(registration);
             Current = registration.Status;
-            if(Current == InstallerStatus.Failured)
+            if (Current == InstallerStatus.Failured)
                 _logger.LogInformation("启动网站失败。");
             else
                 _logger.LogInformation("启动网站完成。");

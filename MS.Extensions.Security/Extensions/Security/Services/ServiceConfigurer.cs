@@ -36,7 +36,9 @@ namespace MS.Extensions.Security.Services
                 //需要激活电子邮件
                 options.SignIn.RequireConfirmedEmail = false;
             })
-            .AddScoped(service => service.GetRequiredService<IUserManager>().GetUser());
+            .AddScoped(service => service.GetRequiredService<IUserManager>().GetUser() ?? _anonymous);
         }
+
+        private static readonly User _anonymous = new User { UserName = "Anonymous" };
     }
 }
