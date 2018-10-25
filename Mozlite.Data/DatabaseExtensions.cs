@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Mozlite.Data.Internal;
+using Mozlite.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Mozlite.Data.Internal;
 
 namespace Mozlite.Data
 {
@@ -214,6 +218,35 @@ namespace Mozlite.Data
             CancellationToken cancellationToken = default)
         {
             return db.SumAsync(column, expression, ConvertInt32, cancellationToken);
+        }
+
+        /// <summary>
+        /// 批量插入数据。
+        /// </summary>
+        /// <typeparam name="TModel">模型类型。</typeparam>
+        /// <param name="database">数据库操作接口。</param>
+        /// <param name="models">模型列表。</param>
+        public static Task ImportAsync<TModel>(this IDatabase database, IEnumerable<TModel> models)
+        {
+            var type = typeof(TModel).GetEntityType();
+            var properties = type.GetProperties().Where(x => x.IsCreatable()).ToList();
+            var table = new DataTable();
+            table.TableName = type.Table;
+            foreach (var property in properties)
+            {
+                table.Columns.Add(property.Name, Nullable.GetUnderlyingType(property.ClrType) ?? property.ClrType);
+            }
+            var values = new object[properties.Count];
+            foreach (var model in models)
+            {
+                for (var i = 0; i < values.Length; i++)
+                {
+                    values[i] = properties[i].Get(model);
+                }
+                table.Rows.Add(values);
+            }
+
+            return database.ImportAsync(table);
         }
     }
 }

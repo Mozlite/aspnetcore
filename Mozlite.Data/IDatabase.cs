@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mozlite.Data.Internal;
+using IDbTransaction = Mozlite.Data.Internal.IDbTransaction;
 
 namespace Mozlite.Data
 {
@@ -33,13 +35,12 @@ namespace Mozlite.Data
         /// <param name="timeout">等待命令执行所需的时间（以秒为单位）。默认值为 30 秒。</param>
         /// <returns>返回事务实例对象。</returns>
         bool BeginTransaction(Func<IDbTransaction, bool> executor, int timeout = 30);
-        
+
         /// <summary>
         /// 批量插入数据。
         /// </summary>
-        /// <typeparam name="TModel">模型类型。</typeparam>
-        /// <param name="models">模型列表。</param>
-        Task BulkInsertAsync<TModel>(IEnumerable<TModel> models);
+        /// <param name="table">模型列表。</param>
+        Task ImportAsync(DataTable table);
 
         /// <summary>
         /// 获取数据库版本信息。

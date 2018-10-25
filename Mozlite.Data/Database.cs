@@ -334,9 +334,8 @@ namespace Mozlite.Data
         /// <summary>
         /// 批量插入数据。
         /// </summary>
-        /// <typeparam name="TModel">模型类型。</typeparam>
-        /// <param name="models">模型列表。</param>
-        public abstract Task BulkInsertAsync<TModel>(IEnumerable<TModel> models);
+        /// <param name="table">模型列表。</param>
+        public abstract Task ImportAsync(DataTable table);
 
         /// <summary>
         /// 获取数据库版本信息。

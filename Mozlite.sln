@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Extensions.Storages
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MS.Extensions.Security", "MS.Extensions.Security\MS.Extensions.Security.csproj", "{A8AEA36B-76DA-4131-9E09-CB003F971A37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozlite.DataService", "Mozlite.DataService\Mozlite.DataService.csproj", "{D0F00E68-6234-4297-AB48-D98CF8CD64A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{A8AEA36B-76DA-4131-9E09-CB003F971A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8AEA36B-76DA-4131-9E09-CB003F971A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8AEA36B-76DA-4131-9E09-CB003F971A37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0F00E68-6234-4297-AB48-D98CF8CD64A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0F00E68-6234-4297-AB48-D98CF8CD64A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0F00E68-6234-4297-AB48-D98CF8CD64A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0F00E68-6234-4297-AB48-D98CF8CD64A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{5ED07115-5DD8-4EDA-867E-76D7D6A86AD6} = {A07144ED-071A-49A5-B2F3-A8BB3D573F00}
 		{C806925A-7C43-407C-9F84-979D9D90C18C} = {A07144ED-071A-49A5-B2F3-A8BB3D573F00}
 		{A8AEA36B-76DA-4131-9E09-CB003F971A37} = {AF72D1C2-C05F-4B45-B2ED-9001F1B908DA}
+		{D0F00E68-6234-4297-AB48-D98CF8CD64A5} = {AF72D1C2-C05F-4B45-B2ED-9001F1B908DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251F6AEA-87FC-4AE7-9351-4607AB4EB97D}
