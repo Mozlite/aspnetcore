@@ -49,11 +49,8 @@ namespace Mozlite.Mvc.Apis
             if (Anonymousable)//无需验证
                 return;
             if (application.ExpiredDate <= DateTime.Now)
-            {
-                context.Result = Error(ErrorCode.TokenExpired);
-                return;
-            }
-            if (!TryGetValue(context.HttpContext.Request, "token", out var token) ||
+                context.Result = Error(ErrorCode.InvalidToken);
+            else if (!TryGetValue(context.HttpContext.Request, "token", out var token) ||
                 !application.Token.Equals(token, StringComparison.OrdinalIgnoreCase))
                 context.Result = Error(ErrorCode.InvalidToken);
         }
