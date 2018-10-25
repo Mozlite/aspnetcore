@@ -1,23 +1,22 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
+using System;
 
 namespace Mozlite.Mvc.Apis
 {
     /// <summary>
     /// API特性。
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public class ApiAttribute : RouteAttribute, IAuthorizationFilter
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class ApiControllerAttribute : Microsoft.AspNetCore.Mvc.ApiControllerAttribute, IAuthorizationFilter
     {
         private const string AppId = "appid";
-
         private bool TryGetValue(HttpRequest request, string key, out StringValues value)
         {
-            if (request.Headers.TryGetValue(key, out value) ||request.Query.TryGetValue(key, out value))
+            if (request.Headers.TryGetValue($"x-{key}", out value) || request.Query.TryGetValue(key, out value))
                 return true;
             if (request.Method == "POST")
                 return request.Form.TryGetValue(key, out value);
@@ -54,23 +53,14 @@ namespace Mozlite.Mvc.Apis
                 context.Result = Error(ErrorCode.TokenExpired);
                 return;
             }
-            if (!TryGetValue(context.HttpContext.Request, "token", out var token) || !application.Token.Equals(token, StringComparison.OrdinalIgnoreCase))
-            {
+            if (!TryGetValue(context.HttpContext.Request, "token", out var token) ||
+                !application.Token.Equals(token, StringComparison.OrdinalIgnoreCase))
                 context.Result = Error(ErrorCode.InvalidToken);
-            }
         }
 
         /// <summary>
         /// 是否匿名就可访问。
         /// </summary>
         public bool Anonymousable { get; set; }
-
-        /// <summary>
-        /// 初始化类<see cref="ApiAttribute"/>。
-        /// </summary>
-        /// <param name="name">API名称。</param>
-        public ApiAttribute(string name) : base($"openapis/{name}")
-        {
-        }
     }
 }

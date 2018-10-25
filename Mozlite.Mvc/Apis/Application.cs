@@ -1,8 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Mozlite.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Mozlite.Extensions;
-using Mozlite.Extensions.Data;
 
 namespace Mozlite.Mvc.Apis
 {
@@ -10,19 +8,30 @@ namespace Mozlite.Mvc.Apis
     /// 应用程序。
     /// </summary>
     [Table("apis_Applications")]
-    public class Application : ExtendBase, IIdObject<Guid>
+    public class Application : ExtendBase
     {
         /// <summary>
         /// 应用程序Id。
         /// </summary>
-        [NotMapped]
-        public Guid AppId { get => Id; set => Id = value; }
+        [Identity]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// 应用程序Id。
+        /// </summary>
+        public Guid AppId { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// 应用程序名称。
         /// </summary>
         [Size(32)]
         public string Name { get; set; }
+
+        /// <summary>
+        /// 应用程序名称。
+        /// </summary>
+        [Size(256)]
+        public string Description { get; set; }
 
         /// <summary>
         /// 应用程序密钥(128位随机字符串)。
@@ -50,9 +59,38 @@ namespace Mozlite.Mvc.Apis
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
-        /// 获取或设置唯一Id。
+        /// 扩展名称。
         /// </summary>
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [Size(32)]
+        public string ExtensionName { get; set; }
+
+        /// <summary>
+        /// 关联Id。
+        /// </summary>
+        public int? TargetId { get; set; }
+        
+        private string[] _disabled;
+        /// <summary>
+        /// 禁用的API名称。
+        /// </summary>
+        [NotMapped]
+        public string[] Disabled
+        {
+            get
+            {
+                if (_disabled == null)
+                {
+                    var disabled = this[nameof(Disabled)];
+                    _disabled = disabled == null ? new string[0] : disabled.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+
+                return _disabled;
+            }
+            set
+            {
+                _disabled = value;
+                this[nameof(Disabled)] = string.Join(",", value);
+            }
+        }
     }
 }

@@ -1,14 +1,16 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Mozlite.Mvc.Apis
 {
     /// <summary>
     /// API基类。
     /// </summary>
-    public abstract class ApiControllerBase : Controller
+    [ApiController]
+    [Route("apis/[controller]")]
+    public abstract class ApiController : Controller, IApiService
     {
         #region result
         /// <summary>
@@ -93,59 +95,6 @@ namespace Mozlite.Mvc.Apis
             }
         }
 
-        private int _pageIndex = -1;
-        /// <summary>
-        /// 当前页码。
-        /// </summary>
-        protected virtual int PageIndex
-        {
-            get
-            {
-                if (_pageIndex == -1)
-                {
-                    string page;
-                    if (RouteData.Values.TryGetValue("pi", out var pobject))
-                        page = pobject.ToString();
-                    else
-                        page = Request.Query["pi"];
-                    if (!int.TryParse(page, out _pageIndex))
-                        _pageIndex = 1;
-                    if (_pageIndex < 1)
-                        _pageIndex = 1;
-                }
-                return _pageIndex;
-            }
-        }
-
-        private string _controllerName;
-        /// <summary>
-        /// 获取当前控制器名称。
-        /// </summary>
-        protected string ControllerName => _controllerName ?? (_controllerName = ControllerContext.ActionDescriptor.ControllerName);
-
-        private string _actionName;
-        /// <summary>
-        /// 获取当前试图名称。
-        /// </summary>
-        protected string ActionName => _actionName ?? (_actionName = ControllerContext.ActionDescriptor.ActionName);
-
-        private string _areaName;
-
-        /// <summary>
-        /// 获取当前区域名称。
-        /// </summary>
-        protected string AreaName
-        {
-            get
-            {
-                if (_actionName == null)
-                {
-                    ControllerContext.ActionDescriptor.RouteValues.TryGetValue("area", out _areaName);
-                }
-                return _areaName;
-            }
-        }
-
         /// <summary>
         /// 获取注册的服务对象。
         /// </summary>
@@ -167,10 +116,30 @@ namespace Mozlite.Mvc.Apis
         }
         #endregion
 
+        #region api
         private Application _application;
         /// <summary>
         /// 当前应用程序实例。
         /// </summary>
         protected Application Application => _application ?? (_application = HttpContext.Items[typeof(Application)] as Application);
+
+        private string _apiName;
+        /// <summary>
+        /// 应用程序名称。
+        /// </summary>
+        public virtual string ApiName
+        {
+            get
+            {
+                if (_apiName == null)
+                {
+                    _apiName = GetType().Name;
+                    _apiName = _apiName.Substring(0, _apiName.Length - 10).ToLower();
+                }
+
+                return _apiName;
+            }
+        }
+        #endregion
     }
 }
