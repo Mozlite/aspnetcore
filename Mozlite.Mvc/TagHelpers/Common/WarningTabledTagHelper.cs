@@ -11,10 +11,10 @@ namespace Mozlite.Mvc.TagHelpers.Common
     public class WarningTabledTagHelper : WarningTagHelper
     {
         /// <summary>
-        /// 列数。
+        /// 横跨列数。
         /// </summary>
-        [HtmlAttributeName("cols")]
-        public int Cols { get; set; } = 100;
+        [HtmlAttributeName("colspan")]
+        public int Colspan { get; set; } = 100;
 
         /// <summary>
         /// 异步访问并呈现当前标签实例。
@@ -28,10 +28,9 @@ namespace Mozlite.Mvc.TagHelpers.Common
                 var content = await output.GetChildContentAsync();
                 output.TagName = "tr";
                 var builder = new TagBuilder("td");
-                if (CssClass != null)
-                    builder.AddCssClass(CssClass);
-                if (Cols > 1)
-                    builder.MergeAttribute("colspan", Cols.ToString());
+                builder.AddCssClass("null-warning");
+                if (Colspan > 1)
+                    builder.MergeAttribute("colspan", Colspan.ToString());
                 builder.InnerHtml.AppendHtml("<i class=\"fa fa-warning\"></i> ");
                 if (!content.IsEmptyOrWhiteSpace)
                     builder.InnerHtml.AppendHtml(content);

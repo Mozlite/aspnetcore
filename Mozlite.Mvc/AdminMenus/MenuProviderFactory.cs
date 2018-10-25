@@ -84,5 +84,18 @@ namespace Mozlite.Mvc.AdminMenus
                 AddSubMenus(dic, it);
             }
         }
+
+        /// <summary>
+        /// 通过提供者名称获取菜单顶级实例对象。
+        /// </summary>
+        /// <param name="provider">提供者名称。</param>
+        /// <returns>返回当前提供者名称的菜单实例对象。</returns>
+        public IEnumerable<MenuItem> GetRoots(string provider)
+        {
+            return GetMenus(provider)
+                .Where(x => x.Level == 0)
+                .OrderByDescending(x => x.Priority)
+                .ToList();
+        }
     }
 }

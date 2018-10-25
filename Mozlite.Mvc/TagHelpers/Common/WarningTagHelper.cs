@@ -17,12 +17,6 @@ namespace Mozlite.Mvc.TagHelpers.Common
         public object Value { get; set; }
 
         /// <summary>
-        /// 样式。
-        /// </summary>
-        [HtmlAttributeName("class")]
-        public string CssClass { get; set; }
-
-        /// <summary>
         /// 是否显示。
         /// </summary>
         /// <returns>返回判断结果。</returns>
@@ -46,8 +40,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
             {
                 await output.RenderAsync("div", async builder =>
                 {
-                    if (CssClass != null)
-                        builder.AddCssClass(CssClass);
+                    builder.AddCssClass("null-warning");
                     builder.InnerHtml.AppendHtml("<i class=\"fa fa-warning\"></i> ");
                     var content = await output.GetChildContentAsync();
                     if (!content.IsEmptyOrWhiteSpace)
