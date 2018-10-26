@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Data
+﻿namespace Mozlite.Extensions
 {
     /// <summary>
     /// 缓存对象管理接口。

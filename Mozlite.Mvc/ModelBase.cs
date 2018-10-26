@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Data;
+using Mozlite.Extensions;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Activities;
 using Mozlite.Extensions.Security.Permissions;

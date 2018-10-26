@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Mozlite.Data;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
 
-namespace Mozlite.Extensions.Data
+namespace Mozlite.Extensions
 {
     /// <summary>
     /// 缓存对象管理基类。

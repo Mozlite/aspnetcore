@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Data
+﻿namespace Mozlite.Extensions
 {
     /// <summary>
     /// 数据库操作结果，负值表示成功，正直表示失败。

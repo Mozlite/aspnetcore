@@ -5,12 +5,12 @@ namespace Mozlite.Mvc.Apis.Client
     /// <summary>
     /// 令牌结果类型。
     /// </summary>
-    public class TokenClientResult : ClientResult<TokenClientResult.DataResult>
+    public class TokenClientResult : ClientResult<TokenClientResult.Result>
     {
         /// <summary>
         /// 返回数据结果类型。
         /// </summary>
-        public class DataResult
+        public class Result
         {
             /// <summary>
             /// 令牌字符串。

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Mozlite.Extensions.Properties;
 
-namespace Mozlite.Extensions.Data
+namespace Mozlite.Extensions
 {
     /// <summary>
     /// 数据库操作结果。

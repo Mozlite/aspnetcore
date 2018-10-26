@@ -1,7 +1,7 @@
 ﻿using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
 
-namespace Mozlite.Extensions.Data
+namespace Mozlite.Extensions
 {
     /// <summary>
     /// 数据迁移基类。

@@ -1,6 +1,4 @@
-﻿using Mozlite.Extensions.Data;
-
-namespace Mozlite.Extensions.Security
+﻿namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 错误枚举。

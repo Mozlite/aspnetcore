@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Mozlite.Data;
-using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Categories
 {

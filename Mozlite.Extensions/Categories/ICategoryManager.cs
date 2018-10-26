@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Categories
 {

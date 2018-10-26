@@ -1,6 +1,4 @@
-﻿using Mozlite.Extensions.Data;
-
-namespace Mozlite.Extensions.Categories
+﻿namespace Mozlite.Extensions.Categories
 {
     /// <summary>
     /// 分类基类。

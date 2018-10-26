@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data;
-using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Properties;
 using Mozlite.Extensions.Security.Stores;
 using System;

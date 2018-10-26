@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Messages;
@@ -11,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mozlite.Extensions;
 
 namespace Mozlite.Mvc
 {

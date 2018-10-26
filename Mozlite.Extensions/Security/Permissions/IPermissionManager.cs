@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mozlite.Extensions.Data;
 
 namespace Mozlite.Extensions.Security.Permissions
 {

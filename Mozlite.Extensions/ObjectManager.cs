@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mozlite.Data;
 
-namespace Mozlite.Extensions.Data
+namespace Mozlite.Extensions
 {
     /// <summary>
     /// 对象管理基类。
