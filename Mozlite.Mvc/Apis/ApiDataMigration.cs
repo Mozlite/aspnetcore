@@ -27,9 +27,16 @@ namespace Mozlite.Mvc.Apis
                 .Column(x => x.ExtendProperties)
             );
             builder.CreateIndex<Application>(x => x.AppId, true);
+
+            builder.CreateTable<Category>(table => table
+                .Column(x => x.Id)
+                .Column(x => x.Name)
+            );
+
             builder.CreateTable<ApiDescriptor>(table => table
                 .Column(x => x.Id)
                 .Column(x => x.Name)
+                .Column(x => x.CategoryId)
                 .Column(x => x.Description)
                 .Column(x => x.Disabled)
             );

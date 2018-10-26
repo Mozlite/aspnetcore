@@ -65,5 +65,19 @@ namespace Mozlite.Mvc.Apis
         /// <param name="expression">条件表达式。</param>
         /// <returns>返回应用程序实例对象列表。</returns>
         Task<IEnumerable<Application>> LoadAsync(Predicate<Application> expression = null);
+
+        /// <summary>
+        /// 加载API。
+        /// </summary>
+        /// <param name="categoryId">分类Id。</param>
+        /// <returns>返回当前类型的API列表。</returns>
+        IEnumerable<ApiDescriptor> LoadApis(int categoryId = 0);
+
+        /// <summary>
+        /// 加载API。
+        /// </summary>
+        /// <param name="categoryId">分类Id。</param>
+        /// <returns>返回当前类型的API列表。</returns>
+        Task<IEnumerable<ApiDescriptor>> LoadApisAsync(int categoryId = 0);
     }
 }

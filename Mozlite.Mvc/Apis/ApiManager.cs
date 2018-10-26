@@ -15,7 +15,7 @@ namespace Mozlite.Mvc.Apis
     public class ApiManager : IApiManager
     {
         private readonly IDbContext<Application> _context;
-        private readonly IDbContext<ApiDescriptor> _descriptor;
+        private readonly IDbContext<ApiDescriptor> _apis;
         private readonly IMemoryCache _cache;
         private readonly Type _cacheKey = typeof(Application);
         private readonly ISettingsManager _settingsManager;
@@ -24,14 +24,14 @@ namespace Mozlite.Mvc.Apis
         /// 初始化类<see cref="ApiManager"/>。
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
-        /// <param name="descriptor">API描述数据库操作接口。</param>
+        /// <param name="apis">API描述数据库操作接口。</param>
         /// <param name="services">API服务接口列表。</param>
         /// <param name="cache">缓存接口。</param>
         /// <param name="settingsManager">配置管理接口。</param>
-        public ApiManager(IDbContext<Application> context, IDbContext<ApiDescriptor> descriptor, IEnumerable<IApiService> services, IMemoryCache cache, ISettingsManager settingsManager)
+        public ApiManager(IDbContext<Application> context, IDbContext<ApiDescriptor> apis, IEnumerable<IApiService> services, IMemoryCache cache, ISettingsManager settingsManager)
         {
             _context = context;
-            _descriptor = descriptor;
+            _apis = apis;
             _cache = cache;
             _settingsManager = settingsManager;
             EnsureApiServices(services);
@@ -39,12 +39,12 @@ namespace Mozlite.Mvc.Apis
 
         private void EnsureApiServices(IEnumerable<IApiService> services)
         {
-            _descriptor.BeginTransaction(db =>
+            _apis.BeginTransaction(db =>
             {
                 db.Update(new { Disabled = true });
                 foreach (var service in services)
                 {
-                    if (db.Any(x => x.Name == service.ApiName))
+                    if (!db.Any(x => x.Name == service.ApiName))
                         db.Create(new ApiDescriptor { Name = service.ApiName });
                 }
 
@@ -171,6 +171,32 @@ namespace Mozlite.Mvc.Apis
             if (expression == null)
                 return applications.Values;
             return applications.Values.Where(x => expression(x)).ToList();
+        }
+
+        /// <summary>
+        /// 加载API。
+        /// </summary>
+        /// <param name="categoryId">分类Id。</param>
+        /// <returns>返回当前类型的API列表。</returns>
+        public virtual IEnumerable<ApiDescriptor> LoadApis(int categoryId = 0)
+        {
+            var query = _apis.AsQueryable().Select(x => new { x.Id, x.CategoryId, x.Name, x.Disabled });
+            if (categoryId > 0)
+                query = query.Where(x => x.CategoryId == categoryId);
+            return query.AsEnumerable();
+        }
+
+        /// <summary>
+        /// 加载API。
+        /// </summary>
+        /// <param name="categoryId">分类Id。</param>
+        /// <returns>返回当前类型的API列表。</returns>
+        public virtual Task<IEnumerable<ApiDescriptor>> LoadApisAsync(int categoryId = 0)
+        {
+            var query = _apis.AsQueryable().Select(x => new { x.Id, x.CategoryId, x.Name, x.Disabled });
+            if (categoryId > 0)
+                query = query.Where(x => x.CategoryId == categoryId);
+            return query.AsEnumerableAsync();
         }
 
         private IDictionary<Guid, Application> LoadCache() =>

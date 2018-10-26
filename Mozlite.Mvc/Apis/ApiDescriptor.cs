@@ -16,6 +16,11 @@ namespace Mozlite.Mvc.Apis
         public int Id { get; set; }
 
         /// <summary>
+        /// 分类Id。
+        /// </summary>
+        public int CategoryId { get; set; }
+
+        /// <summary>
         /// API名称。
         /// </summary>
         [Size(64)]
