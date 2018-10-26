@@ -16,6 +16,7 @@ namespace Mozlite.Mvc.AdminMenus
         internal MenuItem()
         {
         }
+
         /// <summary>
         /// 初始化类<see cref="MenuItem"/>。
         /// </summary>
@@ -63,7 +64,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// </returns>
         public IEnumerator<MenuItem> GetEnumerator()
         {
-            return _children.Values.GetEnumerator();
+            return _children.Values.OrderByDescending(x => x.Priority).GetEnumerator();
         }
 
         /// <summary>
