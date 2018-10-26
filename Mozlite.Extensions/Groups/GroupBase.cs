@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using Mozlite.Extensions.Categories;
+﻿using Mozlite.Extensions.Categories;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Mozlite.Extensions.Groups
 {
     /// <summary>
     /// 分组基类。
     /// </summary>
-    public abstract class GroupBase<TGroup> : CategoryBase
+    public abstract class GroupBase<TGroup> : CategoryBase, IParentable<TGroup>
         where TGroup : GroupBase<TGroup>
     {
-        private readonly List<TGroup> _groups = new List<TGroup>();
+        private readonly List<TGroup> _children = new List<TGroup>();
 
         /// <summary>
         /// 父级Id。
         /// </summary>
         public int ParentId { get; set; }
+
+        object IParentable.Parent => Parent;
+
+        List<object> IParentable.Children => Children.OfType<object>().ToList();
 
         /// <summary>
         /// 父级分组。
@@ -24,27 +28,22 @@ namespace Mozlite.Extensions.Groups
         [JsonIgnore]
         public TGroup Parent { get; private set; }
 
-        private int _level = -1;
         /// <summary>
         /// 层次等级。
         /// </summary>
-        [NotMapped]
         public int Level
         {
             get
             {
-                if (_level == -1)
+                var level = -1;
+                var current = this;
+                while (current != null && current.Id > 0)
                 {
-                    var current = this;
-                    while (current != null && current.Id > 0)
-                    {
-                        _level++;
-                        current = current.Parent;
-                    }
+                    level++;
+                    current = current.Parent;
                 }
-                return _level;
+                return level;
             }
-            set => _level = value;
         }
 
         /// <summary>
@@ -55,17 +54,26 @@ namespace Mozlite.Extensions.Groups
         {
             group.ParentId = Id;
             group.Parent = (TGroup)this;
-            _groups.Add(group);
+            _children.Add(group);
         }
+
+        /// <summary>
+        /// 索引获取当前模型实例对象。
+        /// </summary>
+        /// <param name="index">索引值。</param>
+        /// <returns>返回当前模型实例。</returns>
+        public TGroup this[int index] => _children[index];
 
         /// <summary>
         /// 包含分组集合。
         /// </summary>
-        public List<TGroup> Items => _groups;
+        public List<TGroup> Children => _children;
 
         /// <summary>
-        /// 子级数量。
+        /// 子级数量。 
         /// </summary>
-        public int Count => _groups.Count;
+        public int Count => _children.Count;
+
+        object IParentable.this[int index] => this[index];
     }
 }

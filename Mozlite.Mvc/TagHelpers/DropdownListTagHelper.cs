@@ -113,7 +113,7 @@ namespace Mozlite.Mvc.TagHelpers
             foreach (var group in groups)
             {
                 items.Add(new SelectListItem { Text = group.Name, Value = func?.Invoke(group) ?? group.Id.ToString() });
-                InitChildren(items, group.Items, filter, func, null);
+                InitChildren(items, group.Children, filter, func, null);
             }
         }
 
@@ -136,7 +136,7 @@ namespace Mozlite.Mvc.TagHelpers
                     current += "  └─";
                 items.Add(new SelectListItem { Text = $"{current} {group.Name}", Value = func?.Invoke(group) ?? group.Id.ToString() });
                 current = current.Replace("└─", " ").Replace("├─", index < count ? "│ " : "  ");
-                InitChildren(items, group.Items, filter, func, current);
+                InitChildren(items, group.Children, filter, func, current);
             }
         }
     }

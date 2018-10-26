@@ -26,8 +26,13 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 获取子项。
         /// </summary>
-        IEnumerable<object> Children { get; }
-        
+        List<object> Children { get; }
+
+        /// <summary>
+        /// 层次等级。
+        /// </summary>
+        int Level { get; }
+
         /// <summary>
         /// 包含子项数量。
         /// </summary>
@@ -55,7 +60,7 @@ namespace Mozlite.Extensions
         /// <summary>
         /// 获取子项。
         /// </summary>
-        new IEnumerable<TModel> Children { get; }
+        new List<TModel> Children { get; }
 
         /// <summary>
         /// 添加子集实例。
@@ -89,8 +94,7 @@ namespace Mozlite.Extensions
             dic[0] = new TModel();
             foreach (var category in models)
             {
-                TModel temp;
-                if (dic.TryGetValue(category.ParentId, out temp))
+                if (dic.TryGetValue(category.ParentId, out var temp))
                     temp.Add(category);
             }
             return dic[id];

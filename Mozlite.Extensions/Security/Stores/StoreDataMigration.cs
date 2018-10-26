@@ -1,5 +1,7 @@
 ﻿using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
+using Mozlite.Extensions.Security.DisallowNames;
+using Mozlite.Extensions.Security.Permissions;
 
 namespace Mozlite.Extensions.Security.Stores
 {
@@ -22,6 +24,12 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="builder">迁移构建实例对象。</param>
         public override void Create(MigrationBuilder builder)
         {
+            //禁用名称。
+            builder.CreateTable<DisallowName>(table => table
+                .Column(x => x.Id)
+                .Column(x => x.Name)
+                .UniqueConstraint(x => x.Name));
+            //用户
             builder.CreateTable<TUser>(table =>
             {
                 table.Column(x => x.UserId)
@@ -128,7 +136,7 @@ namespace Mozlite.Extensions.Security.Stores
         public override void Create(MigrationBuilder builder)
         {
             base.Create(builder);
-
+            //角色
             builder.CreateTable<TRole>(table => table
                 .Column(x => x.RoleId)
                 .Column(x => x.Name, nullable: false)
@@ -149,6 +157,22 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.ClaimValue)
                 .Column(x => x.RoleId)
                 .ForeignKey<TRole>(x => x.RoleId, onDelete: ReferentialAction.Cascade));
+
+            //权限
+            builder.CreateTable<Permission>(table => table
+                .Column(x => x.Id)
+                .Column(x => x.Category)
+                .Column(x => x.Name)
+                .Column(x => x.Text)
+                .Column(x => x.Description)
+                .Column(x => x.Order)
+                .UniqueConstraint(x => new { x.Category, x.Name }));
+
+            builder.CreateTable<PermissionInRole>(table => table
+                .Column(x => x.PermissionId)
+                .Column(x => x.RoleId)
+                .Column(x => x.Value)
+                .ForeignKey<Permission>(x => x.PermissionId, x => x.Id, onDelete: ReferentialAction.Cascade));
         }
 
         /// <summary>
