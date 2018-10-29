@@ -9,7 +9,7 @@ namespace Mozlite.Mvc.Apis
     /// API基类。
     /// </summary>
     [ApiController]
-    [Route("apis/[controller]")]
+    [Route("api/[controller]")]
     public abstract class ApiController : Controller, IApiService
     {
         #region result
