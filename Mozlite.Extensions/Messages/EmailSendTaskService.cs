@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Properties;
+using Mozlite.Extensions.Settings;
+using Mozlite.Extensions.Tasks;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Properties;
-using Mozlite.Extensions.Settings;
-using Mozlite.Extensions.Tasks;
 
 namespace Mozlite.Extensions.Messages
 {
@@ -62,6 +62,7 @@ namespace Mozlite.Extensions.Messages
                 try
                 {
                     await SendAsync(settings, message);
+                    await _messageManager.SetSuccessAsync(message.Id);
                 }
                 catch (Exception exception)
                 {
@@ -72,29 +73,40 @@ namespace Mozlite.Extensions.Messages
             }
         }
 
-        private async Task SendAsync(EmailSettings settings, Message message)
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="settings">网站配置。</param>
+        /// <param name="message">消息实例。</param>
+        /// <returns>返回发送任务。</returns>
+        protected virtual async Task SendAsync(EmailSettings settings, Message message)
         {
             using (var client = new SmtpClient(settings.SmtpServer, settings.SmtpPort))
             {
                 client.EnableSsl = settings.UseSsl;
+                client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(settings.SmtpUserName, settings.SmtpPassword);
-                await client.SendMailAsync(CreateMessage(settings.SmtpUserName, message));
+                var mail = new MailMessage();
+                mail.From = new MailAddress(settings.SmtpUserName);
+                mail.To.Add(message.To);
+                mail.Body = message.Content;
+                mail.Subject = message.Title;
+                mail.SubjectEncoding = Encoding.UTF8;
+                mail.BodyEncoding = Encoding.UTF8;
+                mail.IsBodyHtml = true;
+                Init(mail, message);
+                await client.SendMailAsync(mail);
             }
-            await _messageManager.SetSuccessAsync(message.Id);
         }
 
         /// <summary>
         /// 实例化一个电子邮件。
         /// </summary>
-        /// <param name="from">发送地址。</param>
+        /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
         /// <returns>返回邮件实例对象。</returns>
-        protected virtual MailMessage CreateMessage(string from, Message message)
+        protected virtual void Init(MailMessage mail, Message message)
         {
-            var mail = new MailMessage(from, message.To, message.Title, message.Content);
-            mail.BodyEncoding = Encoding.UTF8;
-            mail.IsBodyHtml = true;
-            return mail;
         }
     }
 }
