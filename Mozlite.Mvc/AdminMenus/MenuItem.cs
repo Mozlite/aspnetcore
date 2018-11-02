@@ -48,7 +48,9 @@ namespace Mozlite.Mvc.AdminMenus
         /// </summary>
         public int Priority { get; private set; }
 
-        private readonly IDictionary<string, MenuItem> _children = new Dictionary<string, MenuItem>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, MenuItem> _children =
+            new Dictionary<string, MenuItem>(StringComparer.OrdinalIgnoreCase);
+
         private string _controller;
         private string _action;
         private string _page;
@@ -119,7 +121,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// <summary>
         /// 标记颜色。
         /// </summary>
-        public string BadgeColor { get; private set; }
+        public string BadgeClassName { get; private set; }
 
         /// <summary>
         /// 标记字符串。
@@ -130,12 +132,12 @@ namespace Mozlite.Mvc.AdminMenus
         /// 设置标记示例。
         /// </summary>
         /// <param name="text">标记显示字符串。</param>
-        /// <param name="color">标记颜色。</param>
+        /// <param name="className">样式类型名称。</param>
         /// <returns>返回当前项目实例。</returns>
-        public MenuItem Badged(string text, BadgeColor color = AdminMenus.BadgeColor.Blue)
+        public MenuItem Badged(string text, string className = null)
         {
             BadgeText = text;
-            BadgeColor = "element-bg-color-" + color.ToString().ToLower();
+            BadgeClassName = className;
             return this;
         }
 
@@ -234,8 +236,9 @@ namespace Mozlite.Mvc.AdminMenus
         {
             Text = Text ?? item.Text;
             IconName = IconName ?? item.IconName;
-            BadgeColor = BadgeColor ?? item.BadgeColor;
+            BadgeClassName = BadgeClassName ?? item.BadgeClassName;
             BadgeText = BadgeText ?? item.BadgeText;
+            PermissionName = PermissionName ?? item.PermissionName;
             Priority = Math.Max(Priority, item.Priority);
             Level = Math.Max(Level, item.Level);
             if (Parent?.Name == null)
@@ -256,6 +259,32 @@ namespace Mozlite.Mvc.AdminMenus
                 }
             }
         }
+
+        /// <summary>
+        /// 依赖权限。
+        /// </summary>
+        /// <returns>返回当前实例。</returns>
+        public MenuItem Depended()
+        {
+            PermissionName = Name;
+            return this;
+        }
+
+        /// <summary>
+        /// 依赖权限。
+        /// </summary>
+        /// <param name="permissionName">权限名称。</param>
+        /// <returns>返回当前实例。</returns>
+        public MenuItem Depended(string permissionName)
+        {
+            PermissionName = permissionName;
+            return this;
+        }
+
+        /// <summary>
+        /// 权限名称。
+        /// </summary>
+        public string PermissionName { get; private set; }
 
         /// <summary>
         /// 配置当前菜单的角色。

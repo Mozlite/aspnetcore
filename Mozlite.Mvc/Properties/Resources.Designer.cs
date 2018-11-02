@@ -61,6 +61,15 @@ namespace Mozlite.Mvc.Properties {
         }
         
         /// <summary>
+        ///   查找类似 允许查看“{0}”菜单功能！ 的本地化字符串。
+        /// </summary>
+        internal static string AllowViewMenuPermission {
+            get {
+                return ResourceManager.GetString("AllowViewMenuPermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 MM月dd日 的本地化字符串。
         /// </summary>
         internal static string DateFormat {

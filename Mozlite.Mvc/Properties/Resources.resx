@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllowViewMenuPermission" xml:space="preserve">
+    <value>允许查看“{0}”菜单功能！</value>
+  </data>
   <data name="DateFormat" xml:space="preserve">
     <value>MM月dd日</value>
   </data>
