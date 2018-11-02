@@ -264,7 +264,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// 依赖权限。
         /// </summary>
         /// <returns>返回当前实例。</returns>
-        public MenuItem Depended()
+        public MenuItem Allow()
         {
             PermissionName = Name;
             return this;
@@ -275,7 +275,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// </summary>
         /// <param name="permissionName">权限名称。</param>
         /// <returns>返回当前实例。</returns>
-        public MenuItem Depended(string permissionName)
+        public MenuItem Allow(string permissionName)
         {
             PermissionName = permissionName;
             return this;
@@ -291,6 +291,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// </summary>
         /// <param name="roles">角色列表。</param>
         /// <returns>返回菜单项。</returns>
+        [Obsolete("使用Allow权限来替换！")]
         public MenuItem Roled(params string[] roles)
         {
             Roles = Roles.Concat(roles).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
@@ -300,6 +301,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// <summary>
         /// 角色列表。
         /// </summary>
+        [Obsolete("使用Allow权限来替换！")]
         public string[] Roles { get; private set; } = new string[0];
     }
 }
