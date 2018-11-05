@@ -21,7 +21,7 @@ namespace MS.Extensions
 
         private Role _role;
         /// <summary>
-        /// 当前用户用户组。
+        /// 当前用户角色。
         /// </summary>
         protected Role Role => _role ?? (_role = GetRequiredService<IRoleManager>().FindById(User.RoleId));
         #endregion

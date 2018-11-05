@@ -78,13 +78,14 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             {//包含子菜单，子菜单中没有一个有权限，则主菜单也没有权限
                 return null;
             }
-            li.AddCssClass($"id-{item.Name.Replace('.', '-')}");
+            li.AddCssClass("nav-item");
             var isCurrent = current.IsCurrent(item);
             if (isCurrent)
                 li.AddCssClass("active");
             var anchor = new TagBuilder("a");
             anchor.MergeAttribute("href", item.LinkUrl(_urlHelper));
             anchor.MergeAttribute("title", item.Text);
+            anchor.AddCssClass("nav-link");
             //图标
             if (!string.IsNullOrWhiteSpace(item.IconName))
             {
@@ -118,8 +119,6 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
         {
             var ihasSub = false;
             var iul = new TagBuilder("ul");
-            if (isCurrent)
-                iul.AddCssClass("visible");
             foreach (var it in items.OrderByDescending(x => x.Priority))
             {
                 var children = it.Where(IsAuthorized).ToList();

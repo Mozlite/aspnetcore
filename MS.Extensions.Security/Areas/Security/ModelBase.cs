@@ -6,7 +6,7 @@ namespace MS.Areas.Security
     /// <summary>
     /// 页面模型基类。
     /// </summary>
-    public abstract class ModelBase : MS.Extensions.ModelBase
+    public abstract class ModelBase : Extensions.ModelBase
     {
         private SecuritySettings _settings;
         /// <summary>

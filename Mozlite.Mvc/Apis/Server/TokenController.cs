@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -7,6 +8,7 @@ namespace Mozlite.Mvc.Apis.Server
     /// <summary>
     /// API控制器。
     /// </summary>
+    [Description("获取令牌API，通过验证后可以获得请求API令牌。")]
     public class TokenController : ApiController
     {
         /// <summary>

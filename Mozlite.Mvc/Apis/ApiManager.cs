@@ -4,7 +4,9 @@ using Mozlite.Extensions;
 using Mozlite.Extensions.Settings;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.Apis
@@ -44,8 +46,23 @@ namespace Mozlite.Mvc.Apis
                 db.Update(new { Disabled = true });
                 foreach (var service in services)
                 {
-                    if (!db.Any(x => x.Name == service.ApiName))
-                        db.Create(new ApiDescriptor { Name = service.ApiName });
+                    var description = service.GetType().GetCustomAttribute<DescriptionAttribute>()?.Description;
+                    var descriptor = db.Find(x => x.Name == service.ApiName);
+                    if (descriptor == null)
+                    {
+                        descriptor = new ApiDescriptor
+                        {
+                            Name = service.ApiName,
+                            Description = description
+                        };
+                        db.Create(descriptor);
+                    }
+                    else
+                    {
+                        descriptor.Disabled = false;
+                        descriptor.Description = description;
+                        db.Update(descriptor);
+                    }
                 }
 
                 return true;

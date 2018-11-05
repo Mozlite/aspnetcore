@@ -7,7 +7,7 @@ using Mozlite.Extensions.Security.Stores;
 namespace MS.Extensions.Security
 {
     /// <summary>
-    /// 用户组。
+    /// 角色。
     /// </summary>
     public class Role : RoleBase, IRoleEventHandler<Role>
     {

@@ -3,7 +3,7 @@
 namespace MS.Extensions.Security
 {
     /// <summary>
-    /// 用户组声明。
+    /// 角色声明。
     /// </summary>
     public class RoleClaim : RoleClaimBase
     {

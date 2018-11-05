@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Mozlite.Mvc.TagHelpers.Bootstrap;
+using Mozlite.Mvc.TagHelpers;
 
 namespace MS.Extensions.Security.TagHelpers
 {
     /// <summary>
-    /// 角色列表。
+    /// 角色下拉列表框。
     /// </summary>
-    [HtmlTargetElement("moz:role-checkboxlist")]
-    public class RoleCheckboxListTagHelper : CheckboxListTagHelper
+    [HtmlTargetElement("moz:role-dropdownlist")]
+    public class RoleDropdownListTagHelper : DropdownListTagHelper
     {
         private readonly IRoleManager _roleManager;
         /// <summary>
-        /// 初始化类<see cref="RoleCheckboxListTagHelper"/>。
+        /// 初始化类<see cref="RoleDropdownListTagHelper"/>。
         /// </summary>
         /// <param name="roleManager">角色管理接口。</param>
-        public RoleCheckboxListTagHelper(IRoleManager roleManager)
+        public RoleDropdownListTagHelper(IRoleManager roleManager)
         {
             _roleManager = roleManager;
         }
@@ -27,16 +28,16 @@ namespace MS.Extensions.Security.TagHelpers
         public int MaxRoleLevel { get; set; }
 
         /// <summary>
-        /// 附加复选项目列表，文本/值。
+        /// 初始化选项列表。
         /// </summary>
-        /// <param name="items">复选框项目列表实例。</param>
-        protected override void Init(IDictionary<string, string> items)
+        /// <returns>返回选项列表。</returns>
+        protected override IEnumerable<SelectListItem> Init()
         {
             foreach (var role in _roleManager.Load())
             {
                 if (MaxRoleLevel > 0 && role.RoleLevel >= MaxRoleLevel || role.IsSystem)
                     continue;
-                items.Add(role.Name, role.RoleId.ToString());
+                yield return new SelectListItem(role.Name, role.RoleId.ToString());
             }
         }
     }

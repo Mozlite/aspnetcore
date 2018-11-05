@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Extensions.Security.Permissions
 {
@@ -31,13 +30,11 @@ namespace Mozlite.Extensions.Security.Permissions
 
         private class PermissionAuthorizeAttributeImpl : Attribute, IAsyncAuthorizationFilter
         {
-            private readonly ILogger _logger;
             private readonly IAuthorizationService _authorizationService;
             private readonly OperationAuthorizationRequirement _requirement;
 
-            public PermissionAuthorizeAttributeImpl(ILogger<PermissionAuthorizeAttribute> logger, IAuthorizationService authorizationService, OperationAuthorizationRequirement requirement)
+            public PermissionAuthorizeAttributeImpl(IAuthorizationService authorizationService, OperationAuthorizationRequirement requirement)
             {
-                _logger = logger;
                 _authorizationService = authorizationService;
                 _requirement = requirement;
             }
