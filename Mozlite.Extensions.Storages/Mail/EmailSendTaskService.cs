@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Settings;
+using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages.Mail
 {
@@ -11,7 +13,10 @@ namespace Mozlite.Extensions.Storages.Mail
     [Suppress(typeof(Messages.EmailSendTaskService))]
     public class EmailSendTaskService : Messages.EmailSendTaskService
     {
-        private readonly IMediaDirectory _mediaDirectory;
+        /// <summary>
+        /// 媒体文件夹操作接口。
+        /// </summary>
+        protected IMediaDirectory MediaDirectory { get; }
 
         /// <summary>
         /// 初始化类<see cref="EmailSendTaskService"/>。
@@ -23,7 +28,7 @@ namespace Mozlite.Extensions.Storages.Mail
         public EmailSendTaskService(ISettingsManager settingsManager, IMessageManager messageManager, ILogger<EmailSendTaskService> logger, IMediaDirectory mediaDirectory)
             : base(settingsManager, messageManager, logger)
         {
-            _mediaDirectory = mediaDirectory;
+            MediaDirectory = mediaDirectory;
         }
 
         /// <summary>
@@ -32,12 +37,14 @@ namespace Mozlite.Extensions.Storages.Mail
         /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
         /// <returns>返回邮件实例对象。</returns>
-        protected override void Init(MailMessage mail, Message message)
+        protected override async Task InitAsync(MailMessage mail, Message message)
         {
-            var attachments = MailAttachment.GetAttachments(message);
+            var attachments = message.GetAttachments();
+            if (!attachments.Any())
+                return;
             foreach (var attachmentId in attachments)
             {
-                var file = _mediaDirectory.FindAsync(attachmentId).GetAwaiter().GetResult();
+                var file = await MediaDirectory.FindAsync(attachmentId);
                 if (file == null)
                     continue;
                 var attachment = new Attachment(file.PhysicalPath, file.ContentType);

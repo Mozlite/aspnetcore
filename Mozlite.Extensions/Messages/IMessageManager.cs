@@ -178,5 +178,19 @@ namespace Mozlite.Extensions.Messages
         /// <param name="id">当前消息Id。</param>
         /// <returns>返回设置结果。</returns>
         Task<bool> SetSuccessAsync(int id);
+
+        /// <summary>
+        /// 通过Id查询消息。
+        /// </summary>
+        /// <param name="id">消息id。</param>
+        /// <returns>返回消息实例。</returns>
+        Message Find(int id);
+
+        /// <summary>
+        /// 通过Id查询消息。
+        /// </summary>
+        /// <param name="id">消息id。</param>
+        /// <returns>返回消息实例。</returns>
+        Task<Message> FindAsync(int id);
     }
 }

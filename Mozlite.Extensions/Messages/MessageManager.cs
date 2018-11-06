@@ -307,5 +307,19 @@ namespace Mozlite.Extensions.Messages
         /// <param name="id">当前消息Id。</param>
         /// <returns>返回设置结果。</returns>
         public virtual Task<bool> SetSuccessAsync(int id) => UpdateAsync(id, new { Status = MessageStatus.Completed, ConfirmDate = DateTimeOffset.Now });
+
+        /// <summary>
+        /// 通过Id查询消息。
+        /// </summary>
+        /// <param name="id">消息id。</param>
+        /// <returns>返回消息实例。</returns>
+        public virtual Message Find(int id) => Context.Find(id);
+
+        /// <summary>
+        /// 通过Id查询消息。
+        /// </summary>
+        /// <param name="id">消息id。</param>
+        /// <returns>返回消息实例。</returns>
+        public virtual Task<Message> FindAsync(int id) => Context.FindAsync(id);
     }
 }

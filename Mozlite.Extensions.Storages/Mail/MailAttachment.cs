@@ -11,7 +11,12 @@ namespace Mozlite.Extensions.Storages.Mail
     {
         private const string ExtensionKey = "ex:MailAttachment_";
 
-        internal static IEnumerable<Guid> GetAttachments(Message message)
+        /// <summary>
+        /// 获取当前消息实例附件Id列表。
+        /// </summary>
+        /// <param name="message">消息实例。</param>
+        /// <returns>返回附件列表。</returns>
+        public static IEnumerable<Guid> GetAttachments(this Message message)
         {
             foreach (var extendKey in message.ExtendKeys)
             {

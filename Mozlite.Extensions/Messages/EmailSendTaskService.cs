@@ -94,7 +94,7 @@ namespace Mozlite.Extensions.Messages
                 mail.SubjectEncoding = Encoding.UTF8;
                 mail.BodyEncoding = Encoding.UTF8;
                 mail.IsBodyHtml = true;
-                Init(mail, message);
+                await InitAsync(mail, message);
                 await client.SendMailAsync(mail);
             }
         }
@@ -105,8 +105,6 @@ namespace Mozlite.Extensions.Messages
         /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
         /// <returns>返回邮件实例对象。</returns>
-        protected virtual void Init(MailMessage mail, Message message)
-        {
-        }
+        protected virtual Task InitAsync(MailMessage mail, Message message) => Task.CompletedTask;
     }
 }

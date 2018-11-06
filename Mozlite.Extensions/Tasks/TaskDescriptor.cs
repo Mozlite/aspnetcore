@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Html;
 
 namespace Mozlite.Extensions.Tasks
 {
@@ -51,7 +51,11 @@ namespace Mozlite.Extensions.Tasks
         /// </summary>
         public IHtmlContent ToHtmlInterval()
         {
-            TaskInterval interval = Interval;
+            TaskInterval interval;
+            if (string.IsNullOrEmpty(TaskArgument.Interval))
+                interval = Interval;
+            else
+                interval = TaskArgument.Interval;
             return interval.ToHtmlString();
         }
 
@@ -74,6 +78,12 @@ namespace Mozlite.Extensions.Tasks
         /// 参数。
         /// </summary>
         public string Argument { get; set; }
+
+        private Argument _argument;
+        /// <summary>
+        /// 参数实例。
+        /// </summary>
+        public Argument TaskArgument => _argument ?? (_argument = new Argument(Argument));
 
         /// <summary>
         /// 是否需要被删除。

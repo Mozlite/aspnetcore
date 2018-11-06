@@ -66,7 +66,7 @@ namespace Mozlite.Extensions.Tasks
                     if (!_services.TryGetValue(task.Type, out var service))
                         continue;
                     var context = new TaskContext();
-                    context.Argument = new Argument(task.Argument);
+                    context.Argument = task.TaskArgument;
                     context.Interval = !string.IsNullOrWhiteSpace(context.Argument.Interval) ? context.Argument.Interval : task.Interval;
                     context.Id = task.Id;
                     context.ExecuteAsync = service.ExecuteAsync;

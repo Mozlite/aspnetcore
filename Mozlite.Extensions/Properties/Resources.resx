@@ -266,4 +266,13 @@
   <data name="EmailTaskService_Description" xml:space="preserve">
     <value>发送队列在数据库中的电子邮件</value>
   </data>
+  <data name="MessageStatus_Completed" xml:space="preserve">
+    <value>成功发送</value>
+  </data>
+  <data name="MessageStatus_Failured" xml:space="preserve">
+    <value>发送失败</value>
+  </data>
+  <data name="MessageStatus_Pending" xml:space="preserve">
+    <value>等待发送</value>
+  </data>
 </root>
