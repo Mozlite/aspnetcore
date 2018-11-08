@@ -39,23 +39,9 @@ namespace Mozlite.Mvc
         {
             options.PageViewLocationFormats.Clear();
             options.AreaPageViewLocationFormats.Clear();
-            //网站试图路径：custom目录为后台修改网页代码后另存为的文件，有助于恢复原有文件
-            options.PageViewLocationFormats.Add("/custom/Pages/{1}/{0}" + RazorViewEngine.ViewExtension);
-            options.PageViewLocationFormats.Add("/custom/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.PageViewLocationFormats.Add("/Pages/{1}/{0}" + RazorViewEngine.ViewExtension);
             options.PageViewLocationFormats.Add("/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
             //区域试图路径：Extensions下面的路径，可以将每个区域改为扩展，这样会降低程序集的耦合度
-            options.AreaPageViewLocationFormats.Add("/custom/Extensions/" + assemblyName +
-                                                ".Extensions.{2}/Pages/{1}/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/custom/Extensions/" + assemblyName +
-                                                ".Extensions.{2}/Pages/Shared/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/custom/Extensions/{2}/Pages/{1}/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/custom/Extensions/{2}/Pages/Shared/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/custom/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.AreaPageViewLocationFormats.Add("/Extensions/" + assemblyName +
                                                 ".Extensions.{2}/Pages/{1}/{0}" +
                                                 RazorViewEngine.ViewExtension);
@@ -73,23 +59,9 @@ namespace Mozlite.Mvc
         {
             options.ViewLocationFormats.Clear();
             options.AreaViewLocationFormats.Clear();
-            //网站试图路径：custom目录为后台修改网页代码后另存为的文件，有助于恢复原有文件
-            options.ViewLocationFormats.Add("/custom/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
-            options.ViewLocationFormats.Add("/custom/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.ViewLocationFormats.Add("/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
             options.ViewLocationFormats.Add("/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
             //区域试图路径：Extensions下面的路径，可以将每个区域改为扩展，这样会降低程序集的耦合度
-            options.AreaViewLocationFormats.Add("/custom/Extensions/" + assemblyName +
-                                                ".Extensions.{2}/Views/{1}/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaViewLocationFormats.Add("/custom/Extensions/" + assemblyName +
-                                                ".Extensions.{2}/Views/Shared/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaViewLocationFormats.Add("/custom/Extensions/{2}/Views/{1}/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaViewLocationFormats.Add("/custom/Extensions/{2}/Views/Shared/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaViewLocationFormats.Add("/custom/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.AreaViewLocationFormats.Add("/Extensions/" + assemblyName +
                                                 ".Extensions.{2}/Views/{1}/{0}" +
                                                 RazorViewEngine.ViewExtension);

@@ -43,17 +43,17 @@ namespace MS.Extensions.Security
         public async Task<MediaResult> UploadAvatarAsync(IFormFile file, int id)
         {
             if (file.Length <= 0)
-                return new MediaResult("不能上传空文件！");
+                return "不能上传空文件！";
             if (!file.FileName.IsPictureFile())
-                return new MediaResult("头像只能为图片文件！");
+                return "头像只能为图片文件！";
             if (!await DbContext.UserContext.AnyAsync(id))
-                return new MediaResult("用户不存在！");
+                return "用户不存在！";
             var result = await _directory.UploadAsync(file, SecuritySettings.ExtensionName, id);
             if (result.Succeeded)
             {
                 if (await DbContext.UserContext.UpdateAsync(id, new { Avatar = result.Url, UpdatedDate = DateTimeOffset.Now }))
                     return result;
-                return new MediaResult("更新用户头像失败！");
+                return "更新用户头像失败！";
             }
             return result;
         }
