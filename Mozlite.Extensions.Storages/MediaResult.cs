@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="url">文件访问的URL地址。</param>
         /// <param name="message">错误消息。</param>
-        public MediaResult(string url, string message = null)
+        internal MediaResult(string url, string message = null)
         {
             Url = url;
             Message = message;
@@ -31,5 +31,11 @@
         /// 是否成功。
         /// </summary>
         public bool Succeeded { get; }
+
+        /// <summary>
+        /// 隐式将字符串转换为上传/下载结果实例。
+        /// </summary>
+        /// <param name="message">错误消息。</param>
+        public static implicit operator MediaResult(string message) => new MediaResult(null, message);
     }
 }
