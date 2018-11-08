@@ -61,7 +61,13 @@ namespace Mozlite.Mvc.Apis
         {
             return Msg;
         }
-        
+
+        /// <summary>
+        /// 隐式转换失败消息。
+        /// </summary>
+        /// <param name="msg">失败消息。</param>
+        public static implicit operator ApiResult(string msg) => new ApiResult(ErrorCode.Failured, msg);
+
         internal ApiResult Format(params object[] args)
         {
             if (Msg != null)

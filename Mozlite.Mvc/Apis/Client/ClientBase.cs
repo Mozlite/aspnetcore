@@ -71,15 +71,7 @@ namespace Mozlite.Mvc.Apis.Client
         /// 请求失败后延迟的秒数。
         /// </summary>
         protected virtual int Delay { get; } = 1;
-
-        private async Task<TokenClientResult> GetTokenAsync()
-        {
-            var result = await ExecuteAsync<TokenClientResult>("token", $"appSecret={AppSecret}", (client, url) => client.GetStringAsync(url));
-            if (result.Succeeded)
-                Token = result.Data.Token;
-            return result;
-        }
-
+        
         private async Task<TResult> ExecuteAsync<TResult>(string api, string queryString,
             Func<HttpClient, string, Task<string>> action)
             where TResult : ClientResult, new()
@@ -89,7 +81,10 @@ namespace Mozlite.Mvc.Apis.Client
             {
                 var token = await ExecuteAsync<TokenClientResult>(GetUrl("token", $"appSecret={AppSecret}"), (client, url) => client.GetStringAsync(url), 0);
                 if (token.Succeeded)
+                {
+                    Token = token.Data.Token;
                     return await ExecuteAsync<TResult>(api, queryString, action);
+                }
                 return new TResult { Code = token.Code, Msg = token.Msg };
             }
 

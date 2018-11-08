@@ -15,6 +15,7 @@ namespace Mozlite.Mvc.Apis
         {
             builder.CreateTable<Application>(table => table
                 .Column(x => x.Id)
+                .Column(x => x.UserId)
                 .Column(x => x.AppId)
                 .Column(x => x.AppSecret)
                 .Column(x => x.Name)
@@ -22,8 +23,6 @@ namespace Mozlite.Mvc.Apis
                 .Column(x => x.Token)
                 .Column(x => x.ExpiredDate)
                 .Column(x => x.CreatedDate)
-                .Column(x => x.ExtensionName)
-                .Column(x => x.TargetId)
                 .Column(x => x.ExtendProperties)
             );
             builder.CreateIndex<Application>(x => x.AppId, true);
@@ -41,6 +40,13 @@ namespace Mozlite.Mvc.Apis
                 .Column(x => x.Disabled)
             );
             builder.CreateIndex<ApiDescriptor>(x => x.Name, true);
+
+            builder.CreateTable<ApplicationService>(table => table
+                .Column(x => x.AppicationId)
+                .Column(x => x.ServiceId)
+                .ForeignKey<Application>(x => x.AppicationId, x => x.Id, onDelete: ReferentialAction.Cascade)
+                .ForeignKey<ApiDescriptor>(x => x.ServiceId, x => x.Id, onDelete: ReferentialAction.Cascade)
+            );
         }
     }
 }

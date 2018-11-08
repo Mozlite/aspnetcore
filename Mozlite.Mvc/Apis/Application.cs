@@ -17,6 +17,11 @@ namespace Mozlite.Mvc.Apis
         public int Id { get; set; }
 
         /// <summary>
+        /// 用户Id。
+        /// </summary>
+        public int UserId { get; set; }
+
+        /// <summary>
         /// 应用程序Id。
         /// </summary>
         public Guid AppId { get; set; } = Guid.NewGuid();
@@ -57,40 +62,5 @@ namespace Mozlite.Mvc.Apis
         /// </summary>
         [NotUpdated]
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
-
-        /// <summary>
-        /// 扩展名称。
-        /// </summary>
-        [Size(32)]
-        public string ExtensionName { get; set; }
-
-        /// <summary>
-        /// 关联Id。
-        /// </summary>
-        public int? TargetId { get; set; }
-        
-        private string[] _disabled;
-        /// <summary>
-        /// 禁用的API名称。
-        /// </summary>
-        [NotMapped]
-        public string[] Disabled
-        {
-            get
-            {
-                if (_disabled == null)
-                {
-                    var disabled = this[nameof(Disabled)];
-                    _disabled = disabled == null ? new string[0] : disabled.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                }
-
-                return _disabled;
-            }
-            set
-            {
-                _disabled = value;
-                this[nameof(Disabled)] = string.Join(",", value);
-            }
-        }
     }
 }

@@ -18,8 +18,6 @@ namespace Mozlite.Mvc.Apis
         {
             if (request.Headers.TryGetValue($"x-{key}", out value) || request.Query.TryGetValue(key, out value))
                 return true;
-            if (request.Method == "POST")
-                return request.Form.TryGetValue(key, out value);
             value = StringValues.Empty;
             return false;
         }
@@ -45,7 +43,7 @@ namespace Mozlite.Mvc.Apis
                 context.Result = Error(AppId);
                 return;
             }
-            context.HttpContext.Items[typeof(Application)] = application;
+            context.HttpContext.Items[typeof(CacheApplication)] = application;
             if (Anonymousable)//无需验证
                 return;
             if (application.ExpiredDate <= DateTime.Now)

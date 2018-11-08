@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Mozlite.Mvc.Apis.Server
 {
     /// <summary>
     /// API控制器。
     /// </summary>
+    [ApiController(Anonymousable = true)]
     [Description("获取令牌API，通过验证后可以获得请求API令牌。")]
     public class TokenController : ApiController
     {
@@ -22,7 +23,7 @@ namespace Mozlite.Mvc.Apis.Server
                 return NullParameter(nameof(appSecret));
             if (!Application.AppSecret.Equals(appSecret, StringComparison.OrdinalIgnoreCase))
                 return Error(ErrorCode.AuthorizeFailure);
-            if (Application.ExpiredDate <= DateTime.Now)
+            if (Application.ExpiredDate <= DateTime.Now || string.IsNullOrEmpty(Application.Token))
             {
                 var result = await GetRequiredService<IApiManager>().GenerateTokenAsync(Application);
                 if (!result)

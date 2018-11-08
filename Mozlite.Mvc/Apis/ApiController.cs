@@ -117,11 +117,11 @@ namespace Mozlite.Mvc.Apis
         #endregion
 
         #region api
-        private Application _application;
+        private CacheApplication _application;
         /// <summary>
         /// 当前应用程序实例。
         /// </summary>
-        protected Application Application => _application ?? (_application = HttpContext.Items[typeof(Application)] as Application);
+        protected CacheApplication Application => _application ?? (_application = HttpContext.Items[typeof(CacheApplication)] as CacheApplication);
 
         private string _apiName;
         /// <summary>
