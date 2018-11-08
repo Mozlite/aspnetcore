@@ -85,7 +85,7 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             var anchor = new TagBuilder("a");
             anchor.MergeAttribute("href", item.LinkUrl(_urlHelper));
             anchor.MergeAttribute("title", item.Text);
-            anchor.AddCssClass("nav-link");
+            anchor.AddCssClass($"nav-link level-{item.Level}");
             //图标
             if (!string.IsNullOrWhiteSpace(item.IconName))
             {
@@ -99,8 +99,8 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             span.AddCssClass("title");
             span.InnerHtml.Append(item.Text);
             anchor.InnerHtml.AppendHtml(span);
-            //badge
             if (!string.IsNullOrWhiteSpace(item.BadgeText))
+            //badge
             {
                 var badge = new TagBuilder("span");
                 badge.AddCssClass("badge");
@@ -111,11 +111,11 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             li.InnerHtml.AppendHtml(anchor);
             //子菜单
             if (items?.Count > 0)
-                CreateChildren(li, items, current, isCurrent);
+                CreateChildren(li, items, current);
             return li;
         }
 
-        private void CreateChildren(TagBuilder li, List<MenuItem> items, MenuItem current, bool isCurrent)
+        private void CreateChildren(TagBuilder li, List<MenuItem> items, MenuItem current)
         {
             var ihasSub = false;
             var iul = new TagBuilder("ul");
