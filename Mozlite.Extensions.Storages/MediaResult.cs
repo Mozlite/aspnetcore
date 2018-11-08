@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Storages
+namespace Mozlite.Extensions.Storages
 {
     /// <summary>
     /// 上传/下载结果。
@@ -33,9 +33,15 @@
         public bool Succeeded { get; }
 
         /// <summary>
+<<<<<<< HEAD
         /// 隐式将字符串转换为上传/下载结果实例。
         /// </summary>
         /// <param name="message">错误消息。</param>
+=======
+        /// 隐士将消息转化为上传和下载结果。
+        /// </summary>
+        /// <param name="message">错误消息地址.</param>
+>>>>>>> 2c25a49... 提交更改
         public static implicit operator MediaResult(string message) => new MediaResult(null, message);
     }
 }
