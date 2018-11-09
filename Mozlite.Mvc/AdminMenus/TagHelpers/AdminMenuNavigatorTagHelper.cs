@@ -53,7 +53,7 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             }
             links[Title] = null;
             links.Remove(Home);
-            output.Content.AppendHtml($"<li><i class=\"fa fa-home\"></i><a href=\"{Href}\">{Home}</a></li>");
+            output.Content.AppendHtml($"<li><a href=\"{Href}\">{Home}</a></li>");
             foreach (var link in links)
             {
                 output.Content.AppendHtml(CreateLink(link.Value, link.Key));

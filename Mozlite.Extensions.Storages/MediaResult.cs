@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Storages
+namespace Mozlite.Extensions.Storages
 {
     /// <summary>
     /// 上传/下载结果。

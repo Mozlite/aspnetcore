@@ -314,6 +314,32 @@ namespace Mozlite.Mvc
                 return RedirectToPage(pageOrUrl, pageHandler, new { area });
             return RedirectToPage();
         }
+
+        /// <summary>
+        /// 返回带状态消息页面结果。
+        /// </summary>
+        /// <param name="result">数据结果。</param>
+        /// <param name="args">参数。</param>
+        /// <returns>返回当前页面结果。</returns>
+        protected IActionResult Page(DataResult result, params object[] args)
+        {
+            if (result.Succeed())
+                return Page(StatusType.Success, result.ToString(args));
+            return Page(StatusType.Danger, result.ToString(args));
+        }
+
+        /// <summary>
+        /// 返回带状态消息页面结果。
+        /// </summary>
+        /// <param name="result">数据结果。</param>
+        /// <param name="args">参数。</param>
+        /// <returns>返回当前页面结果。</returns>
+        protected IActionResult RedirectToPage(DataResult result, params object[] args)
+        {
+            if (result.Succeed())
+                return RedirectToPage(StatusType.Success, result.ToString(args));
+            return RedirectToPage(StatusType.Danger, result.ToString(args));
+        }
         #endregion
 
         #region jsons

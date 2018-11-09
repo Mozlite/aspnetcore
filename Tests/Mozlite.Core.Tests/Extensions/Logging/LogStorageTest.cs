@@ -1,5 +1,5 @@
 ﻿using System;
-using Mozlite.Extensions.Logging;
+using Mozlite.Mvc.Logging;
 using Xunit;
 
 namespace Mozlite.Core.Tests.Extensions.Logging
@@ -21,7 +21,7 @@ namespace Mozlite.Core.Tests.Extensions.Logging
         public void Diff()
         {
             var storage = Storage.Create();
-            var log = new LogStorage(storage);
+            var log = LogContext.Create(storage);
             storage.Name = "正式名称";
             storage.IsChecked = false;
             var diff = log.Diff(storage);
