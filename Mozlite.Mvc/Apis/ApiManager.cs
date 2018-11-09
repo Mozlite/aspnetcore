@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data;
 using Mozlite.Extensions;
 using Mozlite.Extensions.Settings;
@@ -27,36 +30,38 @@ namespace Mozlite.Mvc.Apis
         /// <summary>
         /// 初始化类<see cref="ApiManager"/>。
         /// </summary>
-        /// <param name="context">数据库操作实例。</param>
-        /// <param name="cacheContext">缓存上下文。</param>
-        /// <param name="apis">API描述数据库操作接口。</param>
-        /// <param name="services">API服务接口列表。</param>
+        /// <param name="serviceProvider">服务提供者。</param>
         /// <param name="cache">缓存接口。</param>
         /// <param name="settingsManager">配置管理接口。</param>
-        public ApiManager(IDbContext<Application> context, IDbContext<CacheApplication> cacheContext, IDbContext<ApiDescriptor> apis, IEnumerable<IApiService> services, IMemoryCache cache, ISettingsManager settingsManager)
+        public ApiManager(IServiceProvider serviceProvider, IMemoryCache cache, ISettingsManager settingsManager)
         {
-            _context = context;
-            _cacheContext = cacheContext;
-            _apis = apis;
+            _context = serviceProvider.GetRequiredService<IDbContext<Application>>();
+            _cacheContext = serviceProvider.GetRequiredService<IDbContext<CacheApplication>>();
+            _apis = serviceProvider.GetRequiredService<IDbContext<ApiDescriptor>>();
             _cache = cache;
             _settingsManager = settingsManager;
-            EnsureApiServices(services);
+            EnsureApiServices(serviceProvider.GetRequiredService<IApiDescriptionGroupCollectionProvider>());
         }
 
-        private void EnsureApiServices(IEnumerable<IApiService> services)
+        private void EnsureApiServices(IApiDescriptionGroupCollectionProvider provider)
         {
+            var services = provider.ApiDescriptionGroups.Items
+                .SelectMany(x => x.Items)
+                .ToList();
             _apis.BeginTransaction(db =>
             {
                 db.Update(new { Disabled = true });
                 foreach (var service in services)
                 {
-                    var description = service.GetType().GetCustomAttribute<DescriptionAttribute>()?.Description;
-                    var descriptor = db.Find(x => x.Name == service.ApiName);
+                    var name = service.RelativePath.ToLower();
+                    var description = (service.ActionDescriptor as ControllerActionDescriptor)?.ControllerTypeInfo
+                        .GetCustomAttribute<DescriptionAttribute>()?.Description;
+                    var descriptor = db.Find(x => x.Name == name);
                     if (descriptor == null)
                     {
                         descriptor = new ApiDescriptor
                         {
-                            Name = service.ApiName,
+                            Name = name,
                             Description = description
                         };
                         db.Create(descriptor);
@@ -64,7 +69,8 @@ namespace Mozlite.Mvc.Apis
                     else
                     {
                         descriptor.Disabled = false;
-                        descriptor.Description = description;
+                        if (description != null)
+                            descriptor.Description = description;
                         db.Update(descriptor);
                     }
                 }
