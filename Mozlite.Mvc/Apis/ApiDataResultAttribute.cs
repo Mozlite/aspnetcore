@@ -14,8 +14,9 @@ namespace Mozlite.Mvc.Apis
         /// 初始化类<see cref="ApiDataResultAttribute"/>。
         /// </summary>
         /// <param name="dataType">数据类型。</param>
-        public ApiDataResultAttribute(Type dataType)
-            : this(Activator.CreateInstance(dataType))
+        /// <param name="description">描述。</param>
+        public ApiDataResultAttribute(Type dataType, string description)
+            : this(Activator.CreateInstance(dataType), description)
         {
 
         }
@@ -24,7 +25,9 @@ namespace Mozlite.Mvc.Apis
         /// 初始化类<see cref="ApiDataResultAttribute"/>。
         /// </summary>
         /// <param name="defaultValue">默认值。</param>
-        protected ApiDataResultAttribute(object defaultValue)
+        /// <param name="description">描述。</param>
+        protected ApiDataResultAttribute(object defaultValue, string description)
+            : base(description)
         {
             _defaultValue = defaultValue;
         }

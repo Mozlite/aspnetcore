@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace Mozlite.Mvc.Apis
@@ -19,6 +20,26 @@ namespace Mozlite.Mvc.Apis
         {
             return (api.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo.GetCustomAttribute<ApiResultAttribute>() ??
                  DefaultResult;
+        }
+
+        /// <summary>
+        /// 获取描述信息。
+        /// </summary>
+        /// <param name="api">当前API描述信息。</param>
+        /// <returns>返回API描述。</returns>
+        public static string GetDescription(this ApiDescription api)
+        {
+            return (api.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo.GetCustomAttribute<DescriptionAttribute>()?.Description;
+        }
+
+        /// <summary>
+        /// 获取描述信息。
+        /// </summary>
+        /// <param name="api">当前API描述信息。</param>
+        /// <returns>返回API描述。</returns>
+        public static string GetDescription(this ApiParameterDescription api)
+        {
+            return (api.ParameterDescriptor as ControllerParameterDescriptor)?.ParameterInfo.GetCustomAttribute<DescriptionAttribute>()?.Description;
         }
     }
 }

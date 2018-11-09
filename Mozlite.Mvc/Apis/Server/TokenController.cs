@@ -9,7 +9,6 @@ namespace Mozlite.Mvc.Apis.Server
     /// API控制器。
     /// </summary>
     [ApiController(Anonymousable = true)]
-    [Description("获取令牌API，通过验证后可以获得请求API令牌。")]
     public class TokenController : ApiController
     {
         /// <summary>
@@ -17,13 +16,14 @@ namespace Mozlite.Mvc.Apis.Server
         /// </summary>
         /// <param name="appSecret">应用程序密钥。</param>
         /// <returns>返回令牌验证结果。</returns>
-        public async Task<ApiResult> Index(string appSecret)
+        [DefaultResult]
+        public async Task<ApiResult> Index([Description("密钥")]string appSecret)
         {
             if (string.IsNullOrEmpty(appSecret))
                 return NullParameter(nameof(appSecret));
             if (!Application.AppSecret.Equals(appSecret, StringComparison.OrdinalIgnoreCase))
                 return Error(ErrorCode.AuthorizeFailure);
-            if (Application.ExpiredDate <= DateTime.Now || string.IsNullOrEmpty(Application.Token))
+            if (Application.ExpiredDate <= DateTimeOffset.Now || string.IsNullOrEmpty(Application.Token))
             {
                 var result = await GetRequiredService<IApiManager>().GenerateTokenAsync(Application);
                 if (!result)
@@ -33,6 +33,16 @@ namespace Mozlite.Mvc.Apis.Server
                 }
             }
             return Data(new { Application.ExpiredDate, Application.Token });
+        }
+
+        private class DefaultResultAttribute : ApiDataResultAttribute
+        {
+            public DefaultResultAttribute() : base(
+                new { ExpiredDate = DateTime.Now.AddDays(72), Token = Cores.GeneralKey(128) },
+                "获取令牌API，通过验证后可以获得请求API令牌。"
+                )
+            {
+            }
         }
     }
 }

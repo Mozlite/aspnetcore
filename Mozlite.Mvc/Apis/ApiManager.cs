@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data;
@@ -7,10 +6,8 @@ using Mozlite.Extensions;
 using Mozlite.Extensions.Settings;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.Apis
@@ -54,8 +51,7 @@ namespace Mozlite.Mvc.Apis
                 foreach (var service in services)
                 {
                     var name = service.RelativePath.ToLower();
-                    var description = (service.ActionDescriptor as ControllerActionDescriptor)?.ControllerTypeInfo
-                        .GetCustomAttribute<DescriptionAttribute>()?.Description;
+                    var description = service.GetDescription();
                     var descriptor = db.Find(x => x.Name == name);
                     if (descriptor == null)
                     {

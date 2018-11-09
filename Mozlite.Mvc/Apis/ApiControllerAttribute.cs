@@ -46,7 +46,7 @@ namespace Mozlite.Mvc.Apis
             context.HttpContext.Items[typeof(CacheApplication)] = application;
             if (Anonymousable)//无需验证
                 return;
-            if (application.ExpiredDate <= DateTime.Now)
+            if (string.IsNullOrEmpty(application.Token) || application.ExpiredDate <= DateTimeOffset.Now)
                 context.Result = Error(ErrorCode.InvalidToken);
             else if (!TryGetValue(context.HttpContext.Request, "token", out var token) ||
                 !application.Token.Equals(token, StringComparison.OrdinalIgnoreCase))
