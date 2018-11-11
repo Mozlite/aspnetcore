@@ -204,6 +204,51 @@ namespace Mozlite.Extensions
         }
 
         /// <summary>
+        /// 通过唯一键获取当前值。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回当前模型实例。</returns>
+        public override TModel Find(Expression<Predicate<TModel>> expression)
+        {
+            return Fetch(expression).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// 通过唯一键获取当前值。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回当前模型实例。</returns>
+        public override async Task<TModel> FindAsync(Expression<Predicate<TModel>> expression, CancellationToken cancellationToken = default)
+        {
+            var categories = await FetchAsync(expression, cancellationToken);
+            return categories.SingleOrDefault();
+        }
+
+        /// <summary>
+        /// 根据条件更新特定的实例。
+        /// </summary>
+        /// <param name="id">唯一Id。</param>
+        /// <param name="satement">更新对象。</param>
+        /// <returns>返回更新结果。</returns>
+        public override DataResult Update(TKey id, object satement)
+        {
+            return Refresh(base.Update(id, satement));
+        }
+
+        /// <summary>
+        /// 根据条件更新特定的实例。
+        /// </summary>
+        /// <param name="id">唯一Id。</param>
+        /// <param name="satement">更新对象。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回更新结果。</returns>
+        public override async Task<DataResult> UpdateAsync(TKey id, object satement, CancellationToken cancellationToken = default)
+        {
+            return Refresh(await base.UpdateAsync(id, satement, cancellationToken));
+        }
+
+        /// <summary>
         /// 根据条件获取列表。
         /// </summary>
         /// <param name="expression">条件表达式。</param>

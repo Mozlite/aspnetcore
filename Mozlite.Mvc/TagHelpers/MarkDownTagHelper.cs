@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Mozlite.Mvc.Properties;
 
 namespace Mozlite.Mvc.TagHelpers
 {
@@ -87,12 +89,24 @@ namespace Mozlite.Mvc.TagHelpers
                         left.AddCssClass("mozmd-left");
                         if(!actions.IsEmptyOrWhiteSpace)
                             left.InnerHtml.AppendHtml(actions.GetContent().Trim());
-                        left.InnerHtml.AppendHtml("<a class=\"mozmd-mode-preview\" title=\"预览\"><i class=\"fa fa-eye\"></i></a>");
+                        ProcessToolbar(left);
+                        left.AppendTag("a", a =>
+                        {
+                            a.AppendTag("i", x => x.AddCssClass("fa fa-eye"));
+                            a.MergeAttribute("title", Resources.Mozmd_ModePreview);
+                            a.AddCssClass("mozmd-mode-preview");
+                        });
                     });
                     toolbar.AppendTag("div", right =>
                     {
                         right.AddCssClass("mozmd-right");
-                        right.InnerHtml.AppendHtml("<a class=\"mozmd-fullscreen\" title=\"全屏显示\"><i class=\"fa fa-window-maximize\"></i></a>");
+                        ProcessRightToolbar(right);
+                        right.AppendTag("a", a =>
+                        {
+                            a.AppendTag("i", x => x.AddCssClass("fa fa-window-maximize"));
+                            a.MergeAttribute("title", Resources.Mozmd_FullScreen);
+                            a.AddCssClass("mozmd-fullscreen");
+                        });
                     });
                 });
                 builder.AppendTag("div", source =>
@@ -119,6 +133,30 @@ namespace Mozlite.Mvc.TagHelpers
                     });
                 }
             });
+        }
+
+        /// <summary>
+        /// 添加工具栏按钮。
+        /// </summary>
+        /// <param name="builder">Html内容构建实例。</param>
+        protected virtual void ProcessToolbar(TagBuilder builder){
+            builder.AddSyntax("header", "fa fa-header", Resources.Mozmd_Syntax_Header)
+                   .AddSyntax("bold", "fa fa-bold", Resources.Mozmd_Syntax_Bold)
+                   .AddSyntax("italic", "fa fa-italic", Resources.Mozmd_Syntax_Italic)
+                   .AddSyntax("ul", "fa fa-list-ul", Resources.Mozmd_Syntax_Ul)
+                   .AddSyntax("ol", "fa fa-list-ol", Resources.Mozmd_Syntax_Ol)
+                   .AddSyntax("link", "fa fa-link", Resources.Mozmd_Syntax_Link)
+                   .AddSyntax("quote", "fa fa-quote-right", Resources.Mozmd_Syntax_Quote)
+                   .AddSyntax("code", "fa fa-code", Resources.Mozmd_Syntax_Code);
+        }
+
+        /// <summary>
+        /// 添加工具栏右边按钮。
+        /// </summary>
+        /// <param name="builder">Html内容构建实例。</param>
+        protected virtual void ProcessRightToolbar(TagBuilder builder)
+        {
+
         }
     }
 }

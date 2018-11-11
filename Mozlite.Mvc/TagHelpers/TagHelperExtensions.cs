@@ -190,5 +190,23 @@ namespace Mozlite.Mvc.TagHelpers
             var currentClassValue = extractedClassValue ?? string.Empty;
             return currentClassValue.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
+
+        /// <summary>
+        /// 添加MarkDown编辑器按钮。
+        /// </summary>
+        /// <returns>返回当前工具栏标签实例。</returns>
+        /// <param name="builder">当前工具栏标签实例。</param>
+        /// <param name="key">功能键。</param>
+        /// <param name="icon">图标。</param>
+        /// <param name="title">标题。</param>
+        public static TagBuilder AddSyntax(this TagBuilder builder, string key, string icon, string title)
+        {
+            return builder.AppendTag("a", a =>
+            {
+                a.AppendTag("i", x => x.AddCssClass(icon));
+                a.MergeAttribute("title", title);
+                a.AddCssClass($"mozmd-syntax-{key}");
+            });
+        }
     }
 }

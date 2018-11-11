@@ -192,4 +192,34 @@
   <data name="YearDateFormat" xml:space="preserve">
     <value>yyyy年MM月dd日</value>
   </data>
+  <data name="Mozmd_ModePreview" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="Mozmd_FullScreen" xml:space="preserve">
+    <value>全屏显示</value>
+  </data>
+  <data name="Mozmd_Syntax_Header" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="Mozmd_Syntax_Bold" xml:space="preserve">
+    <value>加粗</value>
+  </data>
+  <data name="Mozmd_Syntax_Italic" xml:space="preserve">
+    <value>斜体</value>
+  </data>
+  <data name="Mozmd_Syntax_Code" xml:space="preserve">
+    <value>代码</value>
+  </data>
+  <data name="Mozmd_Syntax_Ul" xml:space="preserve">
+    <value>列表</value>
+  </data>
+  <data name="Mozmd_Syntax_Ol" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="Mozmd_Syntax_Link" xml:space="preserve">
+    <value>链接</value>
+  </data>
+  <data name="Mozmd_Syntax_Quote" xml:space="preserve">
+    <value>引用</value>
+  </data>
 </root>

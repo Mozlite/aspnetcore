@@ -334,7 +334,7 @@ namespace Mozlite.Mvc
         /// <param name="result">数据结果。</param>
         /// <param name="args">参数。</param>
         /// <returns>返回当前页面结果。</returns>
-        protected IActionResult RedirectToPage(DataResult result, params object[] args)
+        protected IActionResult RedirectToResult(DataResult result, params object[] args)
         {
             if (result.Succeed())
                 return RedirectToPage(StatusType.Success, result.ToString(args));
@@ -504,7 +504,7 @@ namespace Mozlite.Mvc
         /// <returns>返回错误实例。</returns>
         protected IActionResult ModelError(string key, string message, params object[] args)
         {
-            if (!key.StartsWith("Model."))
+            if (!key.StartsWith("Model.", StringComparison.OrdinalIgnoreCase))
                 key = $"Model.{key}";
             ModelState.AddModelError(key, string.Format(message, args));
             return Error();

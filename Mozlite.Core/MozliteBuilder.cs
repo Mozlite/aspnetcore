@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite
@@ -7,10 +8,16 @@ namespace Mozlite
     {
         private readonly IServiceCollection _services;
 
-        public MozliteBuilder(IServiceCollection services)
+        public MozliteBuilder(IServiceCollection services, IConfiguration configuration)
         {
             _services = services;
+            Configuration = configuration;
         }
+
+        /// <summary>
+        /// 配置接口。
+        /// </summary>
+        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// 添加服务。

@@ -26,7 +26,7 @@ namespace Mozlite
             services.TryAddSingleton(typeof(IServiceAccessor<>), typeof(ServiceAccessor<>));
             var exportedTypes = GetExportedTypes();
             TryAddContainer(services, exportedTypes, configuration);
-            return new MozliteBuilder(services);
+            return new MozliteBuilder(services, configuration);
         }
 
         private static void TryAddContainer(IServiceCollection services, IEnumerable<Type> exportedTypes, IConfiguration configuration)

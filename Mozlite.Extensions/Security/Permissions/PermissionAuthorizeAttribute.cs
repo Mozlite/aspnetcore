@@ -41,10 +41,16 @@ namespace Mozlite.Extensions.Security.Permissions
 
             public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
+                if (!context.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    context.Result = new ChallengeResult();
+                    return;
+                }
                 var result = await _authorizationService.AuthorizeAsync(context.HttpContext.User,
                      context.ActionDescriptor, _requirement);
-                if (!result.Succeeded)
-                    context.Result = new ChallengeResult();
+                if (result.Succeeded)
+                    return;
+                context.Result = new ForbidResult();
             }
         }
     }

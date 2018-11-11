@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data.Internal;
 using Mozlite.Data.Migrations;
@@ -23,11 +22,11 @@ namespace Mozlite.Data.SqlServer
         /// <param name="builder">服务集合。</param>
         /// <param name="configuration">配置实例。</param>
         /// <returns>返回服务集合实例。</returns>
-        public static IMozliteBuilder AddSqlServer(this IMozliteBuilder builder, IConfiguration configuration)
+        public static IMozliteBuilder AddSqlServer(this IMozliteBuilder builder)
         {
             return builder.AddSqlServer(options =>
             {
-                var section = configuration.GetSection("Data");
+                var section = builder.Configuration.GetSection("Data");
                 foreach (var current in section.GetChildren())
                 {
                     switch (current.Key.ToLower())
