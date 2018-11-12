@@ -4,11 +4,12 @@
     ViewData["Title"] = "管理社会登陆信息";
     ViewData["Current"] = AccountMenu.ExternalLogins;
 }
-
-<moz:status-message-panel close="true"></moz:status-message-panel>
 @if (Model.CurrentLogins?.Count > 0)
 {
-    <h4>注册登陆</h4>
+    <div class="account-title">
+        <h4>注册登录</h4>
+    </div>
+
     <table class="table">
         <tbody>
             @foreach (var login in Model.CurrentLogins)
@@ -22,7 +23,7 @@
                                 <div>
                                     <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
                                     <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
-                                    <button type="submit" class="btn btn-default" title="移除@(login.LoginProvider)登陆方式">移除</button>
+                                    <button type="submit" class="btn btn-outline-secondary" title="移除@(login.LoginProvider)登陆方式">移除</button>
                                 </div>
                             </form>
                         }
@@ -38,14 +39,13 @@
 }
 @if (Model.OtherLogins?.Count > 0)
 {
-    <h4>添加其他登陆方式</h4>
-    <hr />
+    <div class="account-title"><h4>添加其他登陆方式</h4></div>
     <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
         <div id="socialLoginList">
             <p>
                 @foreach (var provider in Model.OtherLogins)
                 {
-                    <button id="link-login-button" type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="绑定@(provider.DisplayName)登陆方式">@provider.DisplayName</button>
+                    <button id="link-login-button" type="submit" class="btn btn-outline-secondary" name="provider" value="@provider.Name" title="绑定@(provider.DisplayName)登陆方式">@provider.DisplayName</button>
                 }
             </p>
         </div>

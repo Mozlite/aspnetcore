@@ -1,5 +1,6 @@
 ﻿using Mozlite.Data.Migrations;
 using Mozlite.Data.Migrations.Builders;
+using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Extensions.Security.Stores
@@ -11,8 +12,8 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登入类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class StoreExDataMigration<TUser, TUserClaim, TUserLogin, TUserToken> : StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserExBase, new()
+    public abstract class StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken> : Mozlite.Extensions.Security.Stores.StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken>
+        where TUser : UserBase, new()
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
@@ -48,10 +49,10 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
     /// <typeparam name="TUserRole">用户所在组类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class StoreExDataMigration<TUser, TRole, TUserClaim, TRoleClaim, TUserLogin, TUserRole, TUserToken> :
-        StoreExDataMigration<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserExBase, new()
-        where TRole : RoleExBase, new()
+    public abstract class StoreDataMigration<TUser, TRole, TUserClaim, TRoleClaim, TUserLogin, TUserRole, TUserToken> :
+        StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken>
+        where TUser : UserBase, new()
+        where TRole : RoleBase, new()
         where TUserClaim : UserClaimBase, new()
         where TRoleClaim : RoleClaimBase, new()
         where TUserRole : IUserRole, new()
@@ -87,6 +88,22 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
                 .Column(x => x.ClaimValue)
                 .Column(x => x.RoleId)
                 .ForeignKey<TRole>(x => x.RoleId, onDelete: ReferentialAction.Cascade));
+
+            //权限
+            builder.CreateTable<Permission>(table => table
+                .Column(x => x.Id)
+                .Column(x => x.Category)
+                .Column(x => x.Name)
+                .Column(x => x.Text)
+                .Column(x => x.Description)
+                .Column(x => x.Order)
+                .UniqueConstraint(x => new { x.Category, x.Name }));
+
+            builder.CreateTable<PermissionInRole>(table => table
+                .Column(x => x.PermissionId)
+                .Column(x => x.RoleId)
+                .Column(x => x.Value)
+                .ForeignKey<Permission>(x => x.PermissionId, x => x.Id, onDelete: ReferentialAction.Cascade));
         }
 
         /// <summary>

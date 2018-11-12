@@ -7,7 +7,7 @@ namespace Mozlite.Extensions.Extensions.Security.Activities
     /// 用户活动数据迁移。
     /// </summary>
     /// <typeparam name="TUserActivity">用户活动类型。</typeparam>
-    public abstract class UserActivityDataMigration<TUserActivity> : Mozlite.Extensions.Security.Activities.UserActivityDataMigration<TUserActivity>
+    public abstract class UserActivityDataMigration<TUserActivity> : Mozlite.Extensions.Security.Activities.ActivityDataMigration<TUserActivity>
         where TUserActivity : UserActivity
     {
         /// <summary>

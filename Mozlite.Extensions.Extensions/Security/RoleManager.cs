@@ -17,7 +17,7 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class RoleManager<TRole, TUserRole, TRoleClaim>
         : Mozlite.Extensions.Security.RoleManager<TRole, TUserRole, TRoleClaim>, IRoleManager<TRole, TUserRole, TRoleClaim>
-        where TRole : RoleExBase
+        where TRole : Stores.RoleBase
         where TUserRole : IUserRole
         where TRoleClaim : RoleClaimBase, new()
     {
@@ -29,7 +29,7 @@ namespace Mozlite.Extensions.Extensions.Security
         protected SiteContextBase Site => _siteContextAccessor.SiteContext;
 
 
-        private readonly IRoleExStoreBase<TRole, TUserRole, TRoleClaim> _store;
+        private readonly Stores.IRoleStoreBase<TRole, TUserRole, TRoleClaim> _store;
         /// <summary>
         /// 获取缓存键。
         /// </summary>
@@ -157,7 +157,7 @@ namespace Mozlite.Extensions.Extensions.Security
         protected RoleManager(IRoleStore<TRole> store, IEnumerable<IRoleValidator<TRole>> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger, IMemoryCache cache, ISiteContextAccessorBase siteContextAccessor)
             : base(store, roleValidators, keyNormalizer, errors, logger, cache)
         {
-            _store = store as IRoleExStoreBase<TRole, TUserRole, TRoleClaim>;
+            _store = store as Stores.IRoleStoreBase<TRole, TUserRole, TRoleClaim>;
             _siteContextAccessor = siteContextAccessor;
         }
     }

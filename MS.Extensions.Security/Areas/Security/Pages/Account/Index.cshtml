@@ -5,43 +5,36 @@
     ViewData["Current"] = AccountMenu.Index;
 }
 
-<div class="panel panel-primary nav-panel" data-collapsed="0">
-    <ul class="nav nav-tabs tab-right-border">
-        <li class="active"><a asp-page="./Index" asp-area="@SecuritySettings.ExtensionName">编辑资料</a></li>
-        <li><a asp-page="./ChangePassword" asp-area="@SecuritySettings.ExtensionName">修改密码</a></li>
-        <li><a asp-page="./Avatar" asp-area="@SecuritySettings.ExtensionName">更新头像</a></li>
-        <li><a asp-page="./Log" asp-area="@SecuritySettings.ExtensionName">活动日志</a></li>
-    </ul>
-    <div class="panel-body">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.UserName"></label>
-                <input asp-for="Input.UserName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                @*@if (Model.IsEmailConfirmed)
-                    {
-                        <div class="input-group">
-                            <input asp-for="Input.Email" class="form-control" />
-                            <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
-                        </div>
-                    }
-                    else
-                    {
-                        <input asp-for="Input.Email" class="form-control" />
-                        <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">发送激活邮件</button>
-                    }*@
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.PhoneNumber"></label>
-                <input asp-for="Input.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="btn btn-default">保存</button>
-        </form>
-    </div>
+<div class="account-title">
+    <h4>@ViewData["Title"]</h4>
 </div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Input.UserName"></label>
+        <input asp-for="Input.UserName" class="form-control max-250" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Input.Email"></label>
+        @if (Model.IsEmailConfirmed)
+        {
+            <div class="input-group">
+                <input asp-for="Input.Email" class="form-control max-250" />
+                <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+            </div>
+        }
+        else
+        {
+            <input asp-for="Input.Email" class="form-control max-250" />
+            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">发送激活邮件</button>
+        }
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Input.PhoneNumber"></label>
+        <input asp-for="Input.PhoneNumber" class="form-control max-250" />
+        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-outline-secondary">保存</button>
+</form>

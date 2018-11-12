@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Mozlite.Data.Properties;
+using Mozlite.Extensions;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
-using Mozlite.Data.Properties;
-using Mozlite.Extensions;
 
 namespace Mozlite.Data
 {
@@ -86,7 +87,7 @@ namespace Mozlite.Data
         {
             return type.IsClass && type.Name.IndexOf("f__AnonymousType", StringComparison.Ordinal) != -1;
         }
-        
+
         /// <summary>
         /// 获取唯一的主键属性值，如果主键不值一个属性，则会抛出错误。
         /// </summary>
@@ -95,9 +96,27 @@ namespace Mozlite.Data
         public static IProperty SingleKey(this IEntityType entityType)
         {
             var key = entityType.PrimaryKey.Properties;
-            if(key.Count>1)
+            if (key.Count > 1)
                 throw new IndexOutOfRangeException(string.Format(Resources.PrimaryKeyIsNotSingleField, entityType.ClrType, string.Join(", ", key)));
             return key.Single();
+        }
+
+        /// <summary>
+        /// 将对象转换为键值对字典实例。
+        /// </summary>
+        /// <param name="parameters">参数（字典实例或者匿名对象）。</param>
+        /// <param name="stringComparer">属性字符串对比实例。</param>
+        /// <returns>返回键值对字典实例。</returns>
+        public static IDictionary<string, object> ToDictionary(this object parameters, StringComparer stringComparer = null)
+        {
+            if (parameters is IDictionary<string, object> dic)
+                return dic;
+            return parameters
+                .GetType()
+                .GetProperties()
+                .Where(x => x.CanRead)
+                .Select(x => new KeyValuePair<string, object>(x.Name, x.GetValue(parameters)))
+                .ToDictionary(stringComparer ?? StringComparer.OrdinalIgnoreCase);
         }
     }
 }

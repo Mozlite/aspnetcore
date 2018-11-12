@@ -1,6 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Mozlite.Extensions.Installers;
+using Mozlite.Mvc;
+using System;
 
 namespace Mozlite.Extensions.Extensions
 {
@@ -33,7 +34,7 @@ namespace Mozlite.Extensions.Extensions
         /// <summary>
         /// 获取当前网站上下文。
         /// </summary>
-        public TSiteContext SiteContext => GetRequestSiteContext() ?? GetThreadSiteContext();
+        public TSiteContext SiteContext => GetSiteContext(_contextAccessor.HttpContext) ?? GetThreadSiteContext();
 
         /// <summary>
         /// 设置当前上下文实例。
@@ -58,9 +59,19 @@ namespace Mozlite.Extensions.Extensions
             return _context;
         }
 
-        private TSiteContext GetRequestSiteContext()
+        private TSiteContext GetSiteContext(HttpContext context)
         {
-            return _contextAccessor.HttpContext?.Items[typeof(SiteContextBase)] as TSiteContext;
+            return context.GetOrCreate(typeof(SiteContextBase), () =>
+              {
+                  var domain = context.Request.GetDomain();
+                  var siteDomain = _siteManager.GetDomain(domain);
+                  if (siteDomain == null || siteDomain.Disabled)
+                      return null;
+                  var site = _siteManager.GetSite<TSite>(siteDomain.SiteId);
+                  if (site == null)
+                      return null;
+                  return new TSiteContext { Domain = siteDomain, Site = site };
+              });
         }
 
         /// <summary>

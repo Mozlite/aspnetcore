@@ -1,15 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Messages;
 using MS.Extensions.Security;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace MS.Areas.Security.Pages
 {
-    [AllowAnonymous]
     public class ForgotPasswordModel : ModelBase
     {
         [BindProperty]
@@ -21,7 +20,7 @@ namespace MS.Areas.Security.Pages
             [EmailAddress]
             public string Email { get; set; }
         }
-        
+
         private readonly UserManager<User> _userManager;
         private readonly IMessageManager _emailSender;
 
@@ -46,9 +45,9 @@ namespace MS.Areas.Security.Pages
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
+                    "/ResetPassword",
                     pageHandler: null,
-                    values: new { code },
+                    values: new { code, area = SecuritySettings.ExtensionName },
                     protocol: Request.Scheme);
 
                 await _emailSender.SendEmailAsync(

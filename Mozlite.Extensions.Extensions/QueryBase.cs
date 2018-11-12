@@ -1,6 +1,6 @@
 ﻿using Mozlite.Data;
 
-namespace Mozlite.Extensions.Extensions.Data
+namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 分页查询实例。

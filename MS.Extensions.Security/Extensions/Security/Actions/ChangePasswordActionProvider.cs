@@ -10,7 +10,10 @@ namespace MS.Extensions.Security.Actions
     /// </summary>
     public class ChangePasswordActionProvider : ActionProvider
     {
-        internal const int Provider = 1;
+        /// <summary>
+        /// 修改密码提供者。
+        /// </summary>
+        public const int Provider = 1;
 
         /// <summary>
         /// 操作唯一码。

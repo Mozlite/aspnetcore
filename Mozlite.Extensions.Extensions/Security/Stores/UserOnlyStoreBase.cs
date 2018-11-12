@@ -13,21 +13,21 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class UserExOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> : UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserExBase
+    public abstract class UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> : Mozlite.Extensions.Security.Stores.UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
     {
         /// <summary>
-        /// 初始化类<see cref="UserExOnlyStoreBase{TUser,TRole, TUserLogin, TUserToken}"/>。
+        /// 初始化类<see cref="UserOnlyStoreBase{TUser,TRole, TUserLogin, TUserToken}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="userContext">用户数据库接口。</param>
         /// <param name="userClaimContext">用户声明数据库接口。</param>
         /// <param name="userLoginContext">用户登陆数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
-        protected UserExOnlyStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext)
+        protected UserOnlyStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext)
             : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext)
         {
         }

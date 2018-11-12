@@ -1,4 +1,5 @@
-﻿using Mozlite.Mvc.AdminMenus;
+﻿using Mozlite.Extensions.Security;
+using Mozlite.Mvc.AdminMenus;
 using MS.Extensions.Security;
 
 namespace MS.Areas.Security

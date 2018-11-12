@@ -17,7 +17,7 @@ namespace MS.Areas.Security.Pages.Account
 
         public class InputModel
         {
-            [Required(ErrorMessage = "{0}不能为空！")]
+            [Required]//(ErrorMessage = "{0}不能为空！")]
             [DataType(DataType.Password)]
             [Display(Name = "原始密码")]
             public string OldPassword { get; set; }

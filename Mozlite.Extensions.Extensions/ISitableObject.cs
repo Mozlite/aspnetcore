@@ -1,6 +1,4 @@
-﻿using Mozlite.Extensions.Data;
-
-namespace Mozlite.Extensions.Extensions.Data
+﻿namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 唯一Id对象接口。

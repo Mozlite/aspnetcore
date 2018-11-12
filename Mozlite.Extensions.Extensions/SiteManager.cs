@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
 using Mozlite.Data.Internal;
-using Mozlite.Extensions.Data;
 using Mozlite.Extensions.Installers;
 using Mozlite.Mvc;
 using Newtonsoft.Json;

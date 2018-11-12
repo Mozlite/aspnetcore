@@ -17,8 +17,8 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public abstract class UserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        : Mozlite.Extensions.Security.UserManager<TUser, TUserClaim, TUserLogin, TUserToken>, IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserExBase
+        : Mozlite.Extensions.Security.UserManager<TUser, TUserClaim, TUserLogin, TUserToken>, IUserManager<TUser>
+        where TUser : Stores.UserBase, new()
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
@@ -82,9 +82,9 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : Mozlite.Extensions.Security.UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
-            IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        where TUser : UserExBase
-        where TRole : RoleExBase
+            IUserManager<TUser, TRole>
+        where TUser : Stores.UserBase, new()
+        where TRole : Stores.RoleBase, new()
         where TUserClaim : UserClaimBase, new()
         where TUserRole : UserRoleBase, new()
         where TUserLogin : UserLoginBase, new()

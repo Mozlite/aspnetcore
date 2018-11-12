@@ -15,10 +15,10 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
     /// <typeparam name="TRole">用户组类型。</typeparam>
     /// <typeparam name="TUserRole">用户用户组类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
-    public abstract class RoleExStoreBase<TRole, TUserRole, TRoleClaim>
-        : RoleStoreBase<TRole, TUserRole, TRoleClaim>,
-        IRoleExStoreBase<TRole, TUserRole, TRoleClaim>
-        where TRole : RoleExBase
+    public abstract class RoleStoreBase<TRole, TUserRole, TRoleClaim>
+        : Mozlite.Extensions.Security.Stores.RoleStoreBase<TRole, TUserRole, TRoleClaim>,
+        IRoleStoreBase<TRole, TUserRole, TRoleClaim>
+        where TRole : RoleBase
         where TUserRole : IUserRole
         where TRoleClaim : RoleClaimBase, new()
     {
@@ -53,13 +53,13 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 初始化类<see cref="RoleExStoreBase{TRole,TUserRole,TRoleClaim}"/>。
+        /// 初始化类<see cref="RoleStoreBase{TRole,TUserRole,TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="roleContext">用户组数据库操作接口。</param>
         /// <param name="userRoleContext">用户用户组数据库操作接口。</param>
         /// <param name="roleClaimContext">用户声明数据库操作接口。</param>
-        protected RoleExStoreBase(IdentityErrorDescriber describer, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext)
+        protected RoleStoreBase(IdentityErrorDescriber describer, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext)
             : base(describer, roleContext, userRoleContext, roleClaimContext)
         {
         }

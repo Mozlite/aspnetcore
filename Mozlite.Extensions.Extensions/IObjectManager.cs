@@ -1,14 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mozlite.Extensions.Extensions.Data
+namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
-    /// 缓存对象管理接口。
+    /// 对象管理接口。
     /// </summary>
     /// <typeparam name="TModel">模型类型。</typeparam>
     /// <typeparam name="TKey">唯一键类型。</typeparam>
-    public interface ICachableObjectManager<TModel, TKey> : Mozlite.Extensions.Data.ICachableObjectManager<TModel, TKey>
+    public interface IObjectManager<TModel, TKey> : Mozlite.Extensions.IObjectManager<TModel, TKey>
         where TModel : ISitableObject<TKey>
     {
         /// <summary>
@@ -29,10 +29,11 @@ namespace Mozlite.Extensions.Extensions.Data
     }
 
     /// <summary>
-    /// 缓存对象管理接口。
+    /// 对象管理接口。
     /// </summary>
     /// <typeparam name="TModel">模型类型。</typeparam>
-    public interface ICachableObjectManager<TModel> : ICachableObjectManager<TModel, int> where TModel : ISitableObject
+    public interface IObjectManager<TModel> : IObjectManager<TModel, int>
+        where TModel : ISitableObject
     {
     }
 }

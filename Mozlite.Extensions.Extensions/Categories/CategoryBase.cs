@@ -1,6 +1,4 @@
-﻿using Mozlite.Extensions.Extensions.Data;
-
-namespace Mozlite.Extensions.Extensions.Categories
+﻿namespace Mozlite.Extensions.Extensions.Categories
 {
     /// <summary>
     /// 分类Id。

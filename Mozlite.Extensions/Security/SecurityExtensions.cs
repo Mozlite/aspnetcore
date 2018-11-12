@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
+using Mozlite.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -33,16 +34,13 @@ namespace Mozlite.Extensions.Security
         public static TUser GetUser<TUser>(this HttpContext httpContext)
             where TUser : UserBase
         {
-            var key = typeof(TUser);
-            if (httpContext.Items.TryGetValue(key, out var user) && user is TUser current)
-                return current;
-            var userId = httpContext.User.GetUserId();
-            if (userId > 0)
-                current = httpContext.RequestServices.GetRequiredService<IDbContext<TUser>>().Find(userId);
-            else
-                current = null;
-            httpContext.Items[key] = current;
-            return current;
+            return httpContext.GetOrCreate(() =>
+            {
+                var userId = httpContext.User.GetUserId();
+                if (userId > 0)
+                    return httpContext.RequestServices.GetRequiredService<IDbContext<TUser>>().Find(userId);
+                return null;
+            });
         }
 
         /// <summary>
@@ -61,19 +59,16 @@ namespace Mozlite.Extensions.Security
         /// </summary>
         /// <param name="httpContext">当前HTTP上下文。</param>
         /// <returns>返回当前用户实例。</returns>
-        public static async Task<TUser> GetUserAsync<TUser>(this HttpContext httpContext)
+        public static Task<TUser> GetUserAsync<TUser>(this HttpContext httpContext)
             where TUser : UserBase
         {
-            var key = typeof(TUser);
-            if (httpContext.Items.TryGetValue(key, out var user) && user is TUser current)
-                return current;
-            var userId = httpContext.User.GetUserId();
-            if (userId > 0)
-                current = await httpContext.RequestServices.GetRequiredService<IDbContext<TUser>>().FindAsync(userId);
-            else
-                current = null;
-            httpContext.Items[key] = current;
-            return current;
+            return httpContext.GetOrCreateAsync(async () =>
+            {
+                var userId = httpContext.User.GetUserId();
+                if (userId > 0)
+                    return await httpContext.RequestServices.GetRequiredService<IDbContext<TUser>>().FindAsync(userId);
+                return null;
+            });
         }
 
         /// <summary>

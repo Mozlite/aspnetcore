@@ -1,20 +1,19 @@
 ﻿using System;
-using Mozlite.Data;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Extensions.Data;
+using Mozlite.Data;
 
-namespace Mozlite.Extensions.Extensions.Data
+namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 缓存对象管理基类。
     /// </summary>
     /// <typeparam name="TModel">模型类型。</typeparam>
     /// <typeparam name="TKey">模型主键类型。</typeparam>
-    public abstract class CachableObjectManager<TModel, TKey> : Mozlite.Extensions.Data.CachableObjectManager<TModel, TKey>, ICachableObjectManager<TModel, TKey>
+    public abstract class CachableObjectManager<TModel, TKey> : Mozlite.Extensions.CachableObjectManager<TModel, TKey>, ICachableObjectManager<TModel, TKey>
         where TModel : ISitableObject<TKey>
     {
         private readonly IMemoryCache _cache;
@@ -112,7 +111,7 @@ namespace Mozlite.Extensions.Extensions.Data
         /// </summary>
         /// <param name="query">查询实例。</param>
         /// <returns>返回分页实例列表。</returns>
-        TQuery Mozlite.Extensions.Data.IObjectManager<TModel, TKey>.Load<TQuery>(TQuery query)
+        TQuery Mozlite.Extensions.IObjectManager<TModel, TKey>.Load<TQuery>(TQuery query)
         {
             return Context.Load(query);
         }
@@ -123,7 +122,7 @@ namespace Mozlite.Extensions.Extensions.Data
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回分页实例列表。</returns>
-        Task<TQuery> Mozlite.Extensions.Data.IObjectManager<TModel, TKey>.LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken)
+        Task<TQuery> Mozlite.Extensions.IObjectManager<TModel, TKey>.LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken)
         {
             return Context.LoadAsync(query, cancellationToken: cancellationToken);
         }

@@ -9,8 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Security\Permissions\**" />
     <Compile Remove="Tasks\**" />
+    <EmbeddedResource Remove="Security\Permissions\**" />
     <EmbeddedResource Remove="Tasks\**" />
+    <None Remove="Security\Permissions\**" />
     <None Remove="Tasks\**" />
   </ItemGroup>
 
@@ -33,10 +36,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Security\Permissions\" />
   </ItemGroup>
 
 </Project>

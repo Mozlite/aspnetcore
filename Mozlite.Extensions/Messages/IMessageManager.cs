@@ -10,6 +10,23 @@ namespace Mozlite.Extensions.Messages
     public interface IMessageManager : ISingletonService
     {
         /// <summary>
+        /// 获取资源，一般为内容。
+        /// </summary>
+        /// <param name="resourceKey">资源见。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <returns></returns>
+        string GetTemplate(string resourceKey, object replacement = null);
+
+        /// <summary>
+        /// 获取资源，一般为内容。
+        /// </summary>
+        /// <typeparam name="TResource">资源类型。</typeparam>
+        /// <param name="resourceKey">资源见。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <returns></returns>
+        string GetTemplate<TResource>(string resourceKey, object replacement = null);
+
+        /// <summary>
         /// 更新列。
         /// </summary>
         /// <param name="id">当前Id。</param>

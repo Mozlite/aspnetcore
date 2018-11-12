@@ -31,13 +31,13 @@ namespace MS.Areas.Security.Pages
             /// <summary>
             /// 用户名称。
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "{0}不能为空！")]
             public string UserName { get; set; }
 
             /// <summary>
             /// 登陆名称。
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "{0}不能为空！")]
             public string LoginName { get; set; }
 
             [EmailAddress]

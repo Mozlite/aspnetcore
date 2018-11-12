@@ -95,18 +95,13 @@ namespace Mozlite.Mvc
         public static IApplicationBuilder UseMozliteMvc(this IApplicationBuilder app, IConfiguration configuration)
         {
             //配置程序集
-            var services = app.ApplicationServices.GetService<IEnumerable<IApplicationConfigurer>>()
-                .OrderByDescending(x => x.Priority)
-                .ToArray();
-            foreach (var service in services)
-                service.Configure(app, configuration);
+            app.UseMozlite(configuration);
             //MVC
-            app.UseMvc(builder =>
-                builder
-                    .MapLowerCaseRoute("dashboard-area-default", RouteSettings.Dashboard + "/{area}/{controller:regex(^admin.*)=Admin}/{action=Index}/{id?}")
-                    .MapLowerCaseRoute("dashboard-default", RouteSettings.Dashboard + "/{controller:regex(^admin.*)=Admin}/{action=Index}/{id?}")
-                    .MapLowerCaseRoute("area-default", "{area:exists}/{controller}/{action=Index}/{id?}")
-                    .MapLowerCaseRoute("default", "{controller=Home}/{action=Index}/{id?}"));
+            app.UseMvc(builder => builder
+                .MapLowerCaseRoute("dashboard-area-default", RouteSettings.Dashboard + "/{area}/{controller:regex(^admin.*)=Admin}/{action=Index}/{id?}")
+                .MapLowerCaseRoute("dashboard-default", RouteSettings.Dashboard + "/{controller:regex(^admin.*)=Admin}/{action=Index}/{id?}")
+                .MapLowerCaseRoute("area-default", "{area:exists}/{controller}/{action=Index}/{id?}")
+                .MapLowerCaseRoute("default", "{controller=Home}/{action=Index}/{id?}"));
             return app;
         }
 
@@ -137,7 +132,7 @@ namespace Mozlite.Mvc
             var supportedCultures = builder.Configuration.GetSupportedCultures().Keys.Select(x => new CultureInfo(x)).ToArray();
             return builder.AddServices(services =>
             {
-                services.AddLocalization(options=>options.ResourcesPath = "Resources");
+                services.AddLocalization(options => options.ResourcesPath = "Resources");
                 services.Configure<RequestLocalizationOptions>(options =>
                 {
                     options.DefaultRequestCulture = new RequestCulture(defaultLanguage);

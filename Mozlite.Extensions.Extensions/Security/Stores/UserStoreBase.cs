@@ -16,10 +16,10 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
-    public abstract class UserExStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        where TUser : UserExBase
-        where TRole : RoleExBase
+    public abstract class UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        : Mozlite.Extensions.Security.Stores.UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
+        where TUser : UserBase
+        where TRole : RoleBase
         where TUserClaim : UserClaimBase, new()
         where TUserRole : UserRoleBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -56,7 +56,7 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 初始化类<see cref="UserStoreBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
+        /// 初始化类<see cref="Mozlite.Extensions.Security.Stores.UserStoreBase{TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>。
         /// </summary>
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="userContext">用户数据库接口。</param>
@@ -67,7 +67,7 @@ namespace Mozlite.Extensions.Extensions.Security.Stores
         /// <param name="userRoleContext">用户用户组数据库操作接口。</param>
         /// <param name="roleClaimContext">用户组声明数据库操作接口。</param>
         /// <param name="roleManager">用户组管理接口。</param>
-        protected UserExStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext, Mozlite.Extensions.Security.IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) 
+        protected UserStoreBase(IdentityErrorDescriber describer, IDbContext<TUser> userContext, IDbContext<TUserClaim> userClaimContext, IDbContext<TUserLogin> userLoginContext, IDbContext<TUserToken> userTokenContext, IDbContext<TRole> roleContext, IDbContext<TUserRole> userRoleContext, IDbContext<TRoleClaim> roleClaimContext, Mozlite.Extensions.Security.IRoleManager<TRole, TUserRole, TRoleClaim> roleManager) 
             : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext, roleContext, userRoleContext, roleClaimContext, roleManager)
         {
         }

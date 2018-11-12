@@ -8,7 +8,7 @@ namespace Mozlite.Extensions.Extensions.Security.Activities
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TUserActivity">用户活动状态类型。</typeparam>
-    public abstract class UserActivityQueryBase<TUser, TUserActivity> : Mozlite.Extensions.Security.Activities.UserActivityQueryBase<TUser, TUserActivity>, ISitable
+    public abstract class UserActivityQueryBase<TUser, TUserActivity> : Mozlite.Extensions.Security.Activities.ActivityQueryBase<TUser, TUserActivity>, ISitable
         where TUser : UserBase
         where TUserActivity : UserActivity
     {

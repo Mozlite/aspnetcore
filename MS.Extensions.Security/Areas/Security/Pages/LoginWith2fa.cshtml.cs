@@ -20,7 +20,7 @@ namespace MS.Areas.Security.Pages
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "{0}不能为空！")]
             [StringLength(7, ErrorMessage = "{0}的长度必须在{2}和{1}之间。", MinimumLength = 6)]
             [DataType(DataType.Text)]
             [Display(Name = "验证码")]

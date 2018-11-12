@@ -1,4 +1,5 @@
 ﻿using Mozlite.Data;
+using Mozlite.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Mozlite.Extensions.Messages
     /// </summary>
     public class MessageManager : IMessageManager
     {
+        private readonly ILocalizer _localizer;
+
         /// <summary>
         /// 数据库操作接口实例。
         /// </summary>
@@ -19,9 +22,51 @@ namespace Mozlite.Extensions.Messages
         /// 初始化类<see cref="MessageManager"/>。
         /// </summary>
         /// <param name="context">数据库操作接口。</param>
-        public MessageManager(IDbContext<Message> context)
+        /// <param name="localizer">本地化接口。</param>
+        public MessageManager(IDbContext<Message> context, ILocalizer localizer)
         {
+            _localizer = localizer;
             Context = context;
+        }
+
+        /// <summary>
+        /// 获取资源，一般为内容。
+        /// </summary>
+        /// <param name="resourceKey">资源见。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <returns></returns>
+        public virtual string GetTemplate(string resourceKey, object replacement = null)
+        {
+            resourceKey = _localizer.GetString(resourceKey);
+            if (replacement != null)
+                resourceKey = ReplaceTemplate(resourceKey, replacement);
+            return resourceKey;
+        }
+
+        /// <summary>
+        /// 获取资源，一般为内容。
+        /// </summary>
+        /// <typeparam name="TResource">资源类型。</typeparam>
+        /// <param name="resourceKey">资源见。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <returns></returns>
+        public virtual string GetTemplate<TResource>(string resourceKey, object replacement = null)
+        {
+            resourceKey = _localizer.GetString(typeof(TResource), resourceKey);
+            if (replacement != null)
+                resourceKey = ReplaceTemplate(resourceKey, replacement);
+            return resourceKey;
+        }
+
+        private string ReplaceTemplate(string resourceKey, object fields)
+        {
+            var replacements = fields.ToDictionary(StringComparer.OrdinalIgnoreCase);
+            foreach (var replacement in replacements)
+            {
+                resourceKey = resourceKey.Replace("{" + replacement.Key.ToLower() + "}", replacement.Value?.ToString());
+            }
+
+            return resourceKey;
         }
 
         /// <summary>

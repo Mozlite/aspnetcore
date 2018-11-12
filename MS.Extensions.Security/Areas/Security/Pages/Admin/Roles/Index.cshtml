@@ -5,22 +5,21 @@
     ViewBag.Current = "users.roles";
     var i = 0;
     var count = Model.Roles.Count;
+    ViewBag.Description = "<i class=\"fa fa-info-circle\"></i> 角色等级越高，权限也越高，高级角色能够修改低级角色得信息！";
 }
 
-<div class="alert alert-info"><i class="fa fa-info-circle"></i> 角色等级越高，权限也越高，高级角色能够修改低级角色得信息！</div>
-
 <div class="filter">
-    <div class="right"><a js-modal="click" asp-page="/admin/roles/edit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> 添加角色</a></div>
+    <div class="right"><a js-modal="click" asp-page="/admin/roles/edit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus"></i> 添加角色</a></div>
 </div>
 
 <div class="table-responsive">
-    <table class="table table-striped table-bordered data-view" js-actionbar="#action-bar">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>角色名称</th>
             </tr>
         </thead>
-        <tbody class="data-content">
+        <tbody>
             @foreach (var role in Model.Roles)
             {
                 i++;

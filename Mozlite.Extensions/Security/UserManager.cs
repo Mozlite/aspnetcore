@@ -19,8 +19,8 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public abstract class UserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        : UserManager<TUser>, IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserBase
+        : UserManager<TUser>, IUserManager<TUser>
+        where TUser : UserBase, new()
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
         where TUserToken : UserTokenBase, new()
@@ -490,9 +490,9 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
         : UserManager<TUser, TUserClaim, TUserLogin, TUserToken>,
-            IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        where TUser : UserBase
-        where TRole : RoleBase
+            IUserManager<TUser, TRole>
+        where TUser : UserBase, new()
+        where TRole : RoleBase, new()
         where TUserClaim : UserClaimBase, new()
         where TUserRole : UserRoleBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -630,5 +630,41 @@ namespace Mozlite.Extensions.Security
             return _store.SetUserToRolesAsync(userId, roleIds);
         }
 
+        /// <summary>
+        /// 添加所有者账号。
+        /// </summary>
+        /// <param name="userName">用户名。</param>
+        /// <param name="loginName">登录名称。</param>
+        /// <param name="password">密码。</param>
+        /// <param name="init">实例化用户方法。</param>
+        /// <returns>返回添加结果。</returns>
+        public virtual async Task<bool> CreateOwnerAsync(string userName, string loginName, string password, Action<TUser> init = null)
+        {
+            var user = Activator.CreateInstance(typeof(TUser)) as TUser;
+            user.UserName = userName;
+            user.NormalizedUserName = loginName;
+            user.PasswordHash = password;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
+            user.CreatedIP = "127.0.0.1";
+            user.CreatedDate = DateTimeOffset.Now;
+            user.RoleId = 1;
+            user.RoleName = DefaultRole.Owner.Name;
+            user.NormalizedUserName = NormalizeKey(user.NormalizedUserName);
+            user.PasswordHash = HashPassword(user);
+            return await _store.UserContext.BeginTransactionAsync(async db =>
+            {
+                var rdb = db.As<TRole>();
+                var owner = DefaultRole.Owner.As<TRole>();
+                var member = DefaultRole.Member.As<TRole>();
+                await rdb.CreateAsync(owner);
+                await rdb.CreateAsync(member);
+                await db.CreateAsync(user);
+                var urdb = db.As<TUserRole>();
+                await urdb.CreateAsync(new TUserRole { UserId = user.UserId, RoleId = owner.RoleId });
+                await urdb.CreateAsync(new TUserRole { UserId = user.UserId, RoleId = member.RoleId });
+                return true;
+            });
+        }
     }
 }

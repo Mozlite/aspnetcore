@@ -3,7 +3,6 @@ using Mozlite.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Mozlite.Extensions.Extensions.Data;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Extensions.Categories

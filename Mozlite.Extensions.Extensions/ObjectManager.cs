@@ -1,12 +1,11 @@
 ﻿using System;
-using Mozlite.Data;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
-using Mozlite.Extensions.Data;
-using System.Collections.Generic;
+using Mozlite.Data;
 
-namespace Mozlite.Extensions.Extensions.Data
+namespace Mozlite.Extensions.Extensions
 {
     /// <summary>
     /// 对象管理基类。
@@ -335,7 +334,7 @@ namespace Mozlite.Extensions.Extensions.Data
         /// </summary>
         /// <param name="query">查询实例。</param>
         /// <returns>返回分页实例列表。</returns>
-        TQuery Mozlite.Extensions.Data.IObjectManager<TModel, TKey>.Load<TQuery>(TQuery query)
+        TQuery Mozlite.Extensions.IObjectManager<TModel, TKey>.Load<TQuery>(TQuery query)
         {
             return Context.Load(query);
         }
@@ -346,7 +345,7 @@ namespace Mozlite.Extensions.Extensions.Data
         /// <param name="query">查询实例。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回分页实例列表。</returns>
-        Task<TQuery> Mozlite.Extensions.Data.IObjectManager<TModel, TKey>.LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken)
+        Task<TQuery> Mozlite.Extensions.IObjectManager<TModel, TKey>.LoadAsync<TQuery>(TQuery query, CancellationToken cancellationToken)
         {
             return Context.LoadAsync(query, cancellationToken: cancellationToken);
         }

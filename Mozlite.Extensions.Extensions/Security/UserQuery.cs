@@ -9,7 +9,7 @@ namespace Mozlite.Extensions.Extensions.Security
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     public abstract class UserQuery<TUser> : Mozlite.Extensions.Security.UserQuery<TUser>, ISitable
-        where TUser : UserExBase, ISitable
+        where TUser : Stores.UserBase, ISitable
     {
         /// <summary>
         /// 获取当前站Id。
@@ -34,8 +34,8 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TRole">用户组类型。</typeparam>
     public abstract class UserQuery<TUser, TRole> : UserQuery<TUser>
-        where TUser : UserExBase, ISitable
-        where TRole : RoleBase, ISitable
+        where TUser : Stores.UserBase, ISitable
+        where TRole : Stores.RoleBase, ISitable
     {
         /// <summary>
         /// 当前用户用户组等级。

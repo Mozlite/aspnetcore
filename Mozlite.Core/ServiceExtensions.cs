@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mozlite.Mvc;
 
 namespace Mozlite
 {
@@ -117,6 +119,22 @@ namespace Mozlite
                 assemblies.Add(Assembly.Load(new AssemblyName(library.Name)));
             }
             return assemblies;
+        }
+
+        /// <summary>
+        /// 使用配置。
+        /// </summary>
+        /// <param name="app">应用程序构建实例接口。</param>
+        /// <param name="configuration">配置实例接口。</param>
+        /// <returns>应用程序构建实例接口。</returns>
+        public static IApplicationBuilder UseMozlite(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            var services = app.ApplicationServices.GetService<IEnumerable<IApplicationConfigurer>>()
+                .OrderByDescending(x => x.Priority)
+                .ToArray();
+            foreach (var service in services)
+                service.Configure(app, configuration);
+            return app;
         }
     }
 }

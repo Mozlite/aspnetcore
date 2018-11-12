@@ -3,68 +3,67 @@
 @{
     ViewData["Title"] = "用户登陆";
 }
-<h2>@ViewData["Title"]</h2>
-<hr/>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input asp-for="Input.UserName" class="form-control" />
-                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label>密码</label>
-                    <input asp-for="Input.Password" class="form-control" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label>验证码</label>
-                    <input asp-for="Input.Code" class="form-control" />
-                    <moz:verifier key="login" size="16" height="32" length="6"></moz:verifier>
-                    <span asp-validation-for="Input.Code" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="Input.RememberMe" />
-                            记住登陆状态
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">登陆</button>
-                </div>
-                <div class="form-group">
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">忘记密码?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">注册新用户</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
-    {
-        <div class="col-md-6 col-md-offset-2">
+<div class="container mozskin-main mt-4">
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
             <section>
-                <h4>使用其他登陆方式登陆</h4>
-                <hr />
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input asp-for="Input.UserName" class="form-control" />
+                        <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>验证码</label>
+                        <div class="input-group input-append">
+                            <input asp-for="Input.Code" class="form-control" />
+                            <div class="input-group-append"><moz:verifier class="form-control" key="login" size="16" height="32" length="6"></moz:verifier></div>
+                        </div>
+                        <span asp-validation-for="Input.Code" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <moz:checkbox for="Input.RememberMe">记住登陆状态</moz:checkbox>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">登陆</button>
+                    </div>
+                    <div class="form-group">
                         <p>
-                            @foreach (var provider in Model.ExternalLogins)
-                            {
-                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="使用你的@(provider.DisplayName)账号登陆">@provider.DisplayName</button>
-                            }
+                            <a id="forgot-password" asp-page="./ForgotPassword">忘记密码?</a>
+                        </p>
+                        <p .visible="@Model.Settings.Registrable">
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">注册新用户</a>
                         </p>
                     </div>
                 </form>
             </section>
         </div>
-    }
+        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+        {
+            <div class="col-md-6 col-md-offset-2">
+                <section>
+                    <h4>使用其他登陆方式登陆</h4>
+                    <hr />
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="使用你的@(provider.DisplayName)账号登陆">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        }
+    </div>
 </div>

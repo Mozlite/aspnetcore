@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Mozlite.Extensions.Security.Stores;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Security
 {
@@ -10,14 +10,8 @@ namespace Mozlite.Extensions.Security
     /// 用户管理接口。
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
-    /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
-    /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public interface IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserBase
-        where TUserClaim : UserClaimBase, new()
-        where TUserLogin : UserLoginBase, new()
-        where TUserToken : UserTokenBase, new()
+    public interface IUserManager<TUser>
+        where TUser : UserBase, new()
     {
         /// <summary>
         /// 登陆管理实例。
@@ -463,17 +457,9 @@ namespace Mozlite.Extensions.Security
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TRole">角色类型。</typeparam>
-    /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
-    /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public interface IUserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : IUserManager<TUser, TUserClaim, TUserLogin, TUserToken>
-        where TUser : UserBase
-        where TUserClaim : UserClaimBase, new()
-        where TUserLogin : UserLoginBase, new()
-        where TUserToken : UserTokenBase, new()
+    public interface IUserManager<TUser, TRole>
+        : IUserManager<TUser>
+        where TUser : UserBase, new()
     {
         /// <summary>
         /// 获取用户的所有角色。
@@ -555,5 +541,15 @@ namespace Mozlite.Extensions.Security
         /// <param name="roleIds">角色Id列表。</param>
         /// <returns>返回设置结果。</returns>
         Task<bool> SetUserToRolesAsync(int userId, int[] roleIds);
+
+        /// <summary>
+        /// 添加所有者账号。
+        /// </summary>
+        /// <param name="userName">用户名。</param>
+        /// <param name="loginName">登录名称。</param>
+        /// <param name="password">密码。</param>
+        /// <param name="init">实例化用户方法。</param>
+        /// <returns>返回添加结果。</returns>
+        Task<bool> CreateOwnerAsync(string userName, string loginName, string password, Action<TUser> init = null);
     }
 }

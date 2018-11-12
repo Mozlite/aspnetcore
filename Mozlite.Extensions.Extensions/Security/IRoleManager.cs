@@ -13,7 +13,7 @@ namespace Mozlite.Extensions.Extensions.Security
     /// <typeparam name="TRoleClaim">用户组声明类型。</typeparam>
     public interface IRoleManager<TRole, TUserRole, TRoleClaim>
         : Mozlite.Extensions.Security.IRoleManager<TRole, TUserRole, TRoleClaim>
-        where TRole : RoleExBase
+        where TRole : Stores.RoleBase
         where TUserRole : IUserRole
         where TRoleClaim : RoleClaimBase, new()
     {

@@ -210,5 +210,47 @@ namespace Mozlite.Extensions.Extensions.Settings
         {
             _cache.Remove(GetCacheKey(key, out _));
         }
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        public virtual bool DeleteSettings<TSiteSettings>() =>
+            DeleteSettings(typeof(TSiteSettings).FullName);
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        public virtual bool DeleteSettings(string key)
+        {
+            if (_db.Delete(key))
+            {
+                Refresh(key);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <typeparam name="TSiteSettings">网站配置类型。</typeparam>
+        public virtual Task<bool> DeleteSettingsAsync<TSiteSettings>() =>
+            DeleteSettingsAsync(typeof(TSiteSettings).FullName);
+
+        /// <summary>
+        /// 删除网站配置实例。
+        /// </summary>
+        /// <param name="key">配置唯一键。</param>
+        public virtual async Task<bool> DeleteSettingsAsync(string key)
+        {
+            if (await _db.DeleteAsync(key))
+            {
+                Refresh(key);
+                return true;
+            }
+            return false;
+        }
     }
 }

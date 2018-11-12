@@ -19,7 +19,7 @@ namespace MS.Areas.Security.Pages
         public class InputModel
         {
             [BindProperty]
-            [Required]
+            [Required(ErrorMessage = "{0}²»ÄÜÎª¿Õ£¡")]
             [DataType(DataType.Text)]
             [Display(Name = "Recovery Code")]
             public string RecoveryCode { get; set; }
