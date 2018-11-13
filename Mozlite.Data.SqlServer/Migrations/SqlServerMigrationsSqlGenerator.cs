@@ -335,7 +335,7 @@ namespace Mozlite.Data.SqlServer.Migrations
         protected override string GenerateSqlDelete(IEntityType entityType, Expression @where)
         {
             var builder = new IndentedStringBuilder();
-            builder.Append("DELETE FROM ").Append(entityType.Name);
+            builder.Append("DELETE FROM ").Append(entityType.Table);
             var visitor = _visitorFactory.Create();
             visitor.Visit(where);
             builder.AppendEx(visitor.ToString(), " WHERE {0}");

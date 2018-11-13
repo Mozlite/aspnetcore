@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +8,10 @@ using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Activities;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Mvc.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mozlite.Mvc
 {
@@ -32,7 +32,7 @@ namespace Mozlite.Mvc
         /// 本地化接口。
         /// </summary>
         public ILocalizer Localizer => _localizer ?? (_localizer = GetRequiredService<ILocalizer>());
-        
+
         private ILogger _logger;
         /// <summary>
         /// 日志接口。
@@ -49,7 +49,7 @@ namespace Mozlite.Mvc
                 return _logger;
             }
         }
-        
+
         /// <summary>
         /// 添加操作日志。
         /// </summary>
