@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Mozlite.Mvc.Properties;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.TagHelpers
 {
@@ -10,6 +12,7 @@ namespace Mozlite.Mvc.TagHelpers
     /// MarkDown编辑器。
     /// </summary>
     [HtmlTargetElement("moz:markdown")]
+    [HtmlTargetElement("moz:markdown", Attributes = UploadValuesPrefix + "*")]
     public class MarkDownTagHelper : ViewContextableTagHelperBase
     {
         /// <summary>
@@ -48,6 +51,27 @@ namespace Mozlite.Mvc.TagHelpers
         [HtmlAttributeName("upload")]
         public string UploadUrl { get; set; }
 
+        private const string UploadValuesPrefix = "upload-";
+        private const string UploadValuesDictionaryName = "upload-data";
+        private IDictionary<string, object> _uploadData;
+        /// <summary>
+        /// 样式列表。
+        /// </summary>
+        [HtmlAttributeName(UploadValuesDictionaryName, DictionaryAttributePrefix = UploadValuesPrefix)]
+        public IDictionary<string, object> UploadData
+        {
+            get
+            {
+                if (_uploadData == null)
+                {
+                    _uploadData = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                }
+
+                return _uploadData;
+            }
+            set => _uploadData = value;
+        }
+
         /// <summary>
         /// 初始化当前标签上下文。
         /// </summary>
@@ -79,7 +103,13 @@ namespace Mozlite.Mvc.TagHelpers
             output.Render("div", builder =>
             {
                 if (UploadUrl != null)
-                    builder.MergeAttribute("upload-url", UploadUrl);
+                {
+                    builder.MergeAttribute("js-upload-url", UploadUrl);
+                    foreach (var uploadData in UploadData)
+                    {
+                        builder.MergeAttribute("js-upload-data-" + uploadData.Key.ToLower(), uploadData.Value?.ToString());
+                    }
+                }
                 builder.AddCssClass("mozmd-editor");
                 builder.AppendTag("div", toolbar =>
                 {
@@ -87,7 +117,7 @@ namespace Mozlite.Mvc.TagHelpers
                     toolbar.AppendTag("div", left =>
                     {
                         left.AddCssClass("mozmd-left");
-                        if(!actions.IsEmptyOrWhiteSpace)
+                        if (!actions.IsEmptyOrWhiteSpace)
                             left.InnerHtml.AppendHtml(actions.GetContent().Trim());
                         ProcessToolbar(left);
                         left.AppendTag("a", a =>
@@ -117,7 +147,7 @@ namespace Mozlite.Mvc.TagHelpers
                 });
                 builder.AppendTag("div", source =>
                 {
-                    source.AddCssClass("mozmd-preview customScrollBar overlay");
+                    source.AddCssClass("mozmd-preview customScrollBar overlay txt");
                 });
                 builder.AppendTag("textarea", x =>
                 {
@@ -139,7 +169,8 @@ namespace Mozlite.Mvc.TagHelpers
         /// 添加工具栏按钮。
         /// </summary>
         /// <param name="builder">Html内容构建实例。</param>
-        protected virtual void ProcessToolbar(TagBuilder builder){
+        protected virtual void ProcessToolbar(TagBuilder builder)
+        {
             builder.AddSyntax("header", "fa fa-header", Resources.Mozmd_Syntax_Header)
                    .AddSyntax("bold", "fa fa-bold", Resources.Mozmd_Syntax_Bold)
                    .AddSyntax("italic", "fa fa-italic", Resources.Mozmd_Syntax_Italic)

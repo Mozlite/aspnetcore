@@ -52,6 +52,8 @@ namespace Mozlite.Mvc.TagHelpers.Common
                 output.SuppressOutput();
                 return;
             }
+
+            output.TagName = "form";
             base.Process(context, output);
             output.Attributes.SetAttribute("id", AntiforgeryId);
         }
