@@ -129,7 +129,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 头像。
         /// </summary>
         [Size(256)]
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = "/images/avatar.png";
 
         /// <summary>
         /// 显示角色Id。
