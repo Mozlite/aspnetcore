@@ -31,7 +31,7 @@ namespace Mozlite.Data.SqlServer
             using (var bulkCopy = new SqlBulkCopy(Options.ConnectionString))
             {
                 bulkCopy.BatchSize = table.Rows.Count;
-                bulkCopy.DestinationTableName = table.TableName;
+                bulkCopy.DestinationTableName = ReplacePrefixed(table.TableName);
                 foreach (DataColumn property in table.Columns)
                 {
                     bulkCopy.ColumnMappings.Add(property.ColumnName, property.ColumnName);

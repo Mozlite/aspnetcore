@@ -6,6 +6,11 @@
     public enum ErrorCode
     {
         /// <summary>
+        /// 发送的数据无效。
+        /// </summary>
+        InvalidPostData = -7,
+
+        /// <summary>
         /// 令牌无效。
         /// </summary>
         InvalidToken = -6,

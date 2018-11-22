@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Mozlite.Data.Internal;
@@ -27,5 +28,11 @@ namespace Mozlite.Data
         /// <param name="timeout">等待命令执行所需的时间（以秒为单位）。默认值为 30 秒。</param>
         /// <returns>返回事务实例对象。</returns>
         bool BeginTransaction(Func<IDbTransactionContext<TModel>, bool> executor, int timeout = 30);
+
+        /// <summary>
+        /// 批量插入数据。
+        /// </summary>
+        /// <param name="table">模型列表。</param>
+        Task ImportAsync(DataTable table);
     }
 }

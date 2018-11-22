@@ -222,4 +222,7 @@
   <data name="Mozmd_Syntax_Quote" xml:space="preserve">
     <value>引用</value>
   </data>
+  <data name="ErrorCode_InvalidPostData" xml:space="preserve">
+    <value>POST的数据无效！</value>
+  </data>
 </root>

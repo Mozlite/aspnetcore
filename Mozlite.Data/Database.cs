@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Mozlite.Data.Internal;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -94,6 +93,16 @@ namespace Mozlite.Data
             }
         }
 
+        /// <summary>
+        /// 替换表格前缀。
+        /// </summary>
+        /// <param name="commandText">当前SQL语句。</param>
+        /// <returns>返回替换后的语句。</returns>
+        protected string ReplacePrefixed(string commandText)
+        {
+            return commandText.Replace("$pre:$", string.Empty).Replace("$pre:", Options.Prefix);
+        }
+
         private DbCommand GetCommand(DbConnection connection,
             CommandType commandType,
             string commandText,
@@ -101,7 +110,7 @@ namespace Mozlite.Data
         {
             var command = _factory.CreateCommand();
             command.Connection = connection;
-            command.CommandText = commandText.ReplacePrefix(Options.Prefix);
+            command.CommandText = ReplacePrefixed(commandText);
             command.CommandType = commandType;
             command.Parameters.Clear();
             if (parameters != null)
@@ -298,7 +307,7 @@ namespace Mozlite.Data
                         command.CommandTimeout = timeout;
                         command.Connection = connection;
                         command.Transaction = transaction;
-                        var current = new Transaction(command, Options.Prefix, AttachParameters, LogError);
+                        var current = new Transaction(command, ReplacePrefixed, AttachParameters, LogError);
                         if (executor(current))
                         {
                             transaction.Commit();
@@ -349,7 +358,7 @@ namespace Mozlite.Data
                         command.CommandTimeout = timeout;
                         command.Connection = connection;
                         command.Transaction = transaction;
-                        var current = new Transaction(command, Options.Prefix, AttachParameters, LogError);
+                        var current = new Transaction(command, ReplacePrefixed, AttachParameters, LogError);
                         if (await executor(current))
                         {
                             transaction.Commit();
@@ -371,14 +380,14 @@ namespace Mozlite.Data
         class Transaction : Internal.IDbTransaction
         {
             private readonly DbCommand _command;
-            private readonly string _prefix;
+            private readonly Func<string, string> _replacePrefixed;
             private readonly Action<DbParameterCollection, object> _attachParameters;
             private readonly Action<DbCommand, Exception> _logError;
 
-            public Transaction(DbCommand command, string prefix, Action<DbParameterCollection, object> attachParameters, Action<DbCommand, Exception> logError)
+            public Transaction(DbCommand command, Func<string, string> replacePrefixed, Action<DbParameterCollection, object> attachParameters, Action<DbCommand, Exception> logError)
             {
                 _command = command;
-                _prefix = prefix;
+                _replacePrefixed = replacePrefixed;
                 _attachParameters = attachParameters;
                 _logError = logError;
             }
@@ -391,7 +400,7 @@ namespace Mozlite.Data
 
             private void SetCommand(CommandType commandType, string commandText, object parameters)
             {
-                _command.CommandText = commandText.ReplacePrefix(_prefix);
+                _command.CommandText = _replacePrefixed(commandText);
                 _command.CommandType = commandType;
                 _command.Parameters.Clear();
                 if (parameters != null)

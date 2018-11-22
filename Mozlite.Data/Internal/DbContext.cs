@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -59,6 +60,15 @@ namespace Mozlite.Data.Internal
                 _db.BeginTransaction(
                     transaction =>
                         executor(new DbTransactionContext<TModel>(transaction, Logger, SqlHelper, SqlGenerator, _visitorFactory)), timeout);
+        }
+
+        /// <summary>
+        /// 批量插入数据。
+        /// </summary>
+        /// <param name="table">模型列表。</param>
+        public Task ImportAsync(DataTable table)
+        {
+            return _db.ImportAsync(table);
         }
     }
 }
