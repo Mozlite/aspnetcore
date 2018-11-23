@@ -295,6 +295,15 @@ namespace Mozlite.Mvc.Properties {
         }
         
         /// <summary>
+        ///   查找类似 图片 的本地化字符串。
+        /// </summary>
+        internal static string Mozmd_Syntax_Image {
+            get {
+                return ResourceManager.GetString("Mozmd_Syntax_Image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 斜体 的本地化字符串。
         /// </summary>
         internal static string Mozmd_Syntax_Italic {

@@ -177,6 +177,7 @@ namespace Mozlite.Mvc.TagHelpers
                    .AddSyntax("ul", "fa fa-list-ul", Resources.Mozmd_Syntax_Ul)
                    .AddSyntax("ol", "fa fa-list-ol", Resources.Mozmd_Syntax_Ol)
                    .AddSyntax("link", "fa fa-link", Resources.Mozmd_Syntax_Link)
+                   .AddSyntax("image", "fa fa-image", Resources.Mozmd_Syntax_Image)
                    .AddSyntax("quote", "fa fa-quote-right", Resources.Mozmd_Syntax_Quote)
                    .AddSyntax("code", "fa fa-code", Resources.Mozmd_Syntax_Code);
         }

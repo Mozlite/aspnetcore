@@ -225,4 +225,7 @@
   <data name="ErrorCode_InvalidPostData" xml:space="preserve">
     <value>POST的数据无效！</value>
   </data>
+  <data name="Mozmd_Syntax_Image" xml:space="preserve">
+    <value>图片</value>
+  </data>
 </root>
