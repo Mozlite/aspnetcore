@@ -38,9 +38,11 @@ namespace Mozlite.Mvc.TagHelpers.Common
         private IEnumerable<SelectListItem> GetEnumItems(Type type)
         {
             if (type.IsNullableType())
+            {
+                if (DefaultText == null)
+                    DefaultText = Resources.SelectDefaultText;
                 type = Nullable.GetUnderlyingType(type);
-            else if (DefaultText == null)
-                DefaultText = Resources.SelectDefaultText;
+            }
             foreach (Enum value in Enum.GetValues(type))
             {
                 yield return new SelectListItem

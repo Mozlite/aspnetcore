@@ -482,34 +482,7 @@ namespace Mozlite.Mvc
                 return Json(StatusType.Success, result.ToString(args));
             return Json(StatusType.Danger, result.ToString(args));
         }
-
-        /// <summary>
-        /// 模型错误。
-        /// </summary>
-        /// <param name="message">错误消息。</param>
-        /// <param name="args">参数。</param>
-        /// <returns>返回错误实例。</returns>
-        protected IActionResult ModelError(string message, params object[] args)
-        {
-            ModelState.AddModelError("", string.Format(message, args));
-            return Error();
-        }
-
-        /// <summary>
-        /// 模型错误。
-        /// </summary>
-        /// <param name="key">属性名称。</param>
-        /// <param name="message">错误消息。</param>
-        /// <param name="args">参数。</param>
-        /// <returns>返回错误实例。</returns>
-        protected IActionResult ModelError(string key, string message, params object[] args)
-        {
-            if (!key.StartsWith("Model.", StringComparison.OrdinalIgnoreCase))
-                key = $"Model.{key}";
-            ModelState.AddModelError(key, string.Format(message, args));
-            return Error();
-        }
-
+        
         /// <summary>
         /// 返回JSON试图结果。
         /// </summary>
