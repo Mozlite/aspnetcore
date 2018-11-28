@@ -1,5 +1,4 @@
 ﻿using Mozlite.Data;
-using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ namespace Mozlite.Extensions.Installers
         /// <returns>返回保存结果。</returns>
         public async Task<bool> SaveRegistrationAsync(Registration registration)
         {
-            var lisence = new Lisence { Registration = Cores.Encrypto(JsonConvert.SerializeObject(registration)) };
+            var lisence = new Lisence { Registration = Cores.Encrypto(registration.ToJsonString()) };
             if (await _context.AnyAsync())
                 return await _context.UpdateAsync(lisence);
             return await _context.CreateAsync(lisence);
@@ -46,7 +45,7 @@ namespace Mozlite.Extensions.Installers
                 {
                     var code = registions.First().Registration;
                     code = Cores.Decrypto(code.Trim());
-                    return JsonConvert.DeserializeObject<Registration>(code);
+                    return Cores.FromJsonString<Registration>(code);
                 }
                 catch
                 {

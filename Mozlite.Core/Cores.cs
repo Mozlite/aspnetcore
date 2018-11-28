@@ -1,15 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Properties;
-using System.Globalization;
+using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite
 {
@@ -406,5 +407,46 @@ namespace Mozlite
         /// 当前程序的版本。
         /// </summary>
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
+
+        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(),
+            DateFormatString = "yyyy-MM-dd HH:mm:ss",
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
+        /// <summary>
+        /// 将对象格式化成JSON字符串。
+        /// </summary>
+        /// <param name="instance">对象实例。</param>
+        /// <param name="settings">JSON序列化配置。</param>
+        /// <returns>返回格式化后的字符串。</returns>
+        public static string ToJsonString(this object instance, JsonSerializerSettings settings = null)
+        {
+            if (instance == null)
+                return null;
+            settings = settings ?? _jsonSerializerSettings;
+            return JsonConvert.SerializeObject(instance, settings);
+        }
+
+        /// <summary>
+        /// 将JSON字符串反序列化对象。
+        /// </summary>
+        /// <typeparam name="TModel">模型类型。</typeparam>
+        /// <param name="json">JSON字符串。</param>
+        /// <param name="settings">JSON序列化配置实例。</param>
+        /// <returns>返回实例对象。</returns>
+        public static TModel FromJsonString<TModel>(string json, JsonSerializerSettings settings = null)
+        {
+            try
+            {
+                settings = settings ?? _jsonSerializerSettings;
+                return JsonConvert.DeserializeObject<TModel>(json, settings);
+            }
+            catch
+            {
+                return default;
+            }
+        }
     }
 }

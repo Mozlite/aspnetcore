@@ -10,7 +10,7 @@ namespace Mozlite.Mvc.Apis
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class ApiController : Controller, IApiService
+    public abstract class ApiController : Controller
     {
         #region result
         /// <summary>
@@ -63,6 +63,13 @@ namespace Mozlite.Mvc.Apis
         /// <param name="data">数据实例对象。</param>
         /// <returns>返回数据实例对象。</returns>
         protected ApiDataResult Data(object data) => new ApiDataResult(data);
+
+        /// <summary>
+        /// 未找到相关信息。
+        /// </summary>
+        /// <param name="name">信息名称。</param>
+        /// <returns>返回API结果。</returns>
+        protected ApiResult NotFound(string name) => new ApiResult(ErrorCode.NotFound, name);
         #endregion
 
         #region commons
@@ -122,24 +129,6 @@ namespace Mozlite.Mvc.Apis
         /// 当前应用程序实例。
         /// </summary>
         protected CacheApplication Application => _application ?? (_application = HttpContext.Items[typeof(CacheApplication)] as CacheApplication);
-
-        private string _apiName;
-        /// <summary>
-        /// 应用程序名称。
-        /// </summary>
-        public virtual string ApiName
-        {
-            get
-            {
-                if (_apiName == null)
-                {
-                    _apiName = GetType().Name;
-                    _apiName = _apiName.Substring(0, _apiName.Length - 10).ToLower();
-                }
-
-                return _apiName;
-            }
-        }
         #endregion
     }
 }

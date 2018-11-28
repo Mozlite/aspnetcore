@@ -6,6 +6,11 @@
     public enum ErrorCode
     {
         /// <summary>
+        /// 未找到。
+        /// </summary>
+        NotFound = -8,
+
+        /// <summary>
         /// 发送的数据无效。
         /// </summary>
         InvalidPostData = -7,

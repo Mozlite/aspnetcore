@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
-using Newtonsoft.Json;
 
 namespace Mozlite.Extensions.Storages.Caching
 {
@@ -230,7 +229,7 @@ namespace Mozlite.Extensions.Storages.Caching
                     ExpiredDate = context.ExpiredDate
                 };
                 _db.Create(cache);
-                StorageHelper.SaveText(GetFilePath(cacheKey, true), JsonConvert.SerializeObject(instance));
+                StorageHelper.SaveText(GetFilePath(cacheKey, true), instance.ToJsonString());
                 return instance;
             }
             var path = GetFilePath(cache.CacheKey);
@@ -239,7 +238,7 @@ namespace Mozlite.Extensions.Storages.Caching
                 Remove(cache.CacheKey);
                 return GetOrCreate(key, dependency, action);
             }
-            return JsonConvert.DeserializeObject<TCache>(StorageHelper.ReadText(path));
+            return Cores.FromJsonString<TCache>(StorageHelper.ReadText(path));
         }
 
         /// <summary>
@@ -277,7 +276,7 @@ namespace Mozlite.Extensions.Storages.Caching
                     ExpiredDate = context.ExpiredDate
                 };
                 await _db.CreateAsync(cache);
-                await StorageHelper.SaveTextAsync(GetFilePath(cacheKey, true), JsonConvert.SerializeObject(instance));
+                await StorageHelper.SaveTextAsync(GetFilePath(cacheKey, true), instance.ToJsonString());
                 return instance;
             }
             var path = GetFilePath(cache.CacheKey);
@@ -286,7 +285,7 @@ namespace Mozlite.Extensions.Storages.Caching
                 await RemoveAsync(cache.CacheKey);
                 return await GetOrCreateAsync(key, dependency, action);
             }
-            return JsonConvert.DeserializeObject<TCache>(await StorageHelper.ReadTextAsync(path));
+            return Cores.FromJsonString<TCache>(await StorageHelper.ReadTextAsync(path));
         }
 
         /// <summary>

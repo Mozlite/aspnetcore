@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.Apis.Server
@@ -16,8 +15,8 @@ namespace Mozlite.Mvc.Apis.Server
         /// </summary>
         /// <param name="appSecret">应用程序密钥。</param>
         /// <returns>返回令牌验证结果。</returns>
-        [DefaultResult]
-        public async Task<ApiResult> Index([Description("密钥")]string appSecret)
+        [Result]
+        public async Task<ApiResult> Index([ApiParameter("密钥")]string appSecret)
         {
             if (string.IsNullOrEmpty(appSecret))
                 return NullParameter(nameof(appSecret));
@@ -35,9 +34,9 @@ namespace Mozlite.Mvc.Apis.Server
             return Data(new { Application.ExpiredDate, Application.Token });
         }
 
-        private class DefaultResultAttribute : ApiDataResultAttribute
+        private class ResultAttribute : ApiDataResultAttribute
         {
-            public DefaultResultAttribute() : base(
+            public ResultAttribute() : base(
                 new { ExpiredDate = DateTime.Now.AddDays(72), Token = Cores.GeneralKey(128) },
                 "获取令牌API，通过验证后可以获得请求API令牌。"
                 )

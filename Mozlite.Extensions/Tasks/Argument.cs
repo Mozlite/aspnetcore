@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Html;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +19,7 @@ namespace Mozlite.Extensions.Tasks
         {
             if (string.IsNullOrWhiteSpace(arguments))
                 return;
-            var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(arguments);
+            var data = Cores.FromJsonString<Dictionary<string, object>>(arguments);
             foreach (var o in data)
             {
                 _arguments[o.Key] = o.Value;
@@ -51,7 +50,7 @@ namespace Mozlite.Extensions.Tasks
         /// </returns>
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(_arguments);
+            return _arguments.ToJsonString();
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="defaultValue">默认值。</param>
         /// <returns>返回当前参数。</returns>
         public bool GetBoolean(string name, bool defaultValue = false) => (bool?)this[name] ?? defaultValue;
-        
+
         /// <summary>
         /// 当前服务Id。
         /// </summary>

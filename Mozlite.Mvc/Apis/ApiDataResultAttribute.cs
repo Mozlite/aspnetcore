@@ -33,9 +33,12 @@ namespace Mozlite.Mvc.Apis
         }
 
         /// <summary>
-        /// 获取实例。
+        /// 获取当前实例返回的JSON字符串。
         /// </summary>
-        /// <returns>返回当前实例。</returns>
-        protected override ApiResult Init() => new ApiDataResult(_defaultValue);
+        /// <returns>当前实例返回的JSON字符串。</returns>
+        public override string ToString()
+        {
+            return _defaultValue.ToJsonString();
+        }
     }
 }

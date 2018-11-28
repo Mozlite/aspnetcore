@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Settings
@@ -59,7 +58,7 @@ namespace Mozlite.Extensions.Settings
                 var settings = Context.Find(x => x.SettingKey == key)?.SettingValue;
                 if (settings == null)
                     return new TSiteSettings();
-                return JsonConvert.DeserializeObject<TSiteSettings>(settings);
+                return Cores.FromJsonString<TSiteSettings>(settings);
             });
         }
 
@@ -102,7 +101,7 @@ namespace Mozlite.Extensions.Settings
                 var settings = await Context.FindAsync(x => x.SettingKey == key);
                 if (settings?.SettingValue == null)
                     return new TSiteSettings();
-                return JsonConvert.DeserializeObject<TSiteSettings>(settings.SettingValue);
+                return Cores.FromJsonString<TSiteSettings>(settings.SettingValue);
             });
         }
 
@@ -134,7 +133,7 @@ namespace Mozlite.Extensions.Settings
         /// <param name="settings">网站配置实例。</param>
         public virtual Task<bool> SaveSettingsAsync<TSiteSettings>(string key, TSiteSettings settings)
         {
-            return SaveSettingsAsync(key, JsonConvert.SerializeObject(settings));
+            return SaveSettingsAsync(key, settings.ToJsonString());
         }
 
         /// <summary>
@@ -179,7 +178,7 @@ namespace Mozlite.Extensions.Settings
         /// <param name="settings">网站配置实例。</param>
         public virtual bool SaveSettings<TSiteSettings>(string key, TSiteSettings settings)
         {
-            return SaveSettings(key, JsonConvert.SerializeObject(settings));
+            return SaveSettings(key, settings.ToJsonString());
         }
 
         /// <summary>

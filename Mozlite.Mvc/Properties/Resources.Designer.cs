@@ -133,6 +133,15 @@ namespace Mozlite.Mvc.Properties {
         }
         
         /// <summary>
+        ///   查找类似 未找到{0}！ 的本地化字符串。
+        /// </summary>
+        internal static string ErrorCode_NotFound {
+            get {
+                return ResourceManager.GetString("ErrorCode_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 参数“{0}”不能为空! 的本地化字符串。
         /// </summary>
         internal static string ErrorCode_NullParameter {

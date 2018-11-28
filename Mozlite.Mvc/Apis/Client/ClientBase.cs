@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Mozlite.Mvc.Properties;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Mozlite.Mvc.Properties;
-using Newtonsoft.Json;
 
 namespace Mozlite.Mvc.Apis.Client
 {
@@ -71,7 +70,7 @@ namespace Mozlite.Mvc.Apis.Client
         /// 请求失败后延迟的秒数。
         /// </summary>
         protected virtual int Delay { get; } = 1;
-        
+
         private async Task<TResult> ExecuteAsync<TResult>(string api, string queryString,
             Func<HttpClient, string, Task<string>> action)
             where TResult : ClientResult, new()
@@ -106,7 +105,7 @@ namespace Mozlite.Mvc.Apis.Client
                     result = await action(client, url);
                     if (string.IsNullOrEmpty(result))
                         return new TResult { Code = (int)ErrorCode.Failured, Msg = Resources.ErrorCode_Failured };
-                    return JsonConvert.DeserializeObject<TResult>(result);
+                    return Cores.FromJsonString<TResult>(result);
                 }
                 catch (Exception exception)
                 {

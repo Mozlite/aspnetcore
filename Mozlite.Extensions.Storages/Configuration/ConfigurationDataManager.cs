@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
 
 namespace Mozlite.Extensions.Storages.Configuration
 {
@@ -32,7 +31,7 @@ namespace Mozlite.Extensions.Storages.Configuration
         {
             _cache = cache;
         }
-        
+
         /// <summary>
         /// 加载配置。   
         /// </summary>
@@ -57,7 +56,7 @@ namespace Mozlite.Extensions.Storages.Configuration
                 return default;
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var sr = new StreamReader(fs, Encoding.UTF8))
-                return JsonConvert.DeserializeObject<TConfiguration>(sr.ReadToEnd());
+                return Cores.FromJsonString<TConfiguration>(sr.ReadToEnd());
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace Mozlite.Extensions.Storages.Configuration
                 return default;
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var sr = new StreamReader(fs, Encoding.UTF8))
-                return JsonConvert.DeserializeObject<TConfiguration>(await sr.ReadToEndAsync());
+                return Cores.FromJsonString<TConfiguration>(await sr.ReadToEndAsync());
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace Mozlite.Extensions.Storages.Configuration
             var path = GetPath(name);
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             using (var sw = new StreamWriter(fs, Encoding.UTF8))
-                sw.Write(JsonConvert.SerializeObject(configuration));
+                sw.Write(configuration.ToJsonString());
             _cache.Remove(GetCacheKey(name));
         }
 
@@ -111,7 +110,7 @@ namespace Mozlite.Extensions.Storages.Configuration
             var path = GetPath(name);
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             using (var sw = new StreamWriter(fs, Encoding.UTF8))
-                await sw.WriteAsync(JsonConvert.SerializeObject(configuration));
+                await sw.WriteAsync(configuration.ToJsonString());
             _cache.Remove(GetCacheKey(name));
         }
     }

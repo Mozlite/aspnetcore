@@ -462,12 +462,12 @@ namespace Mozlite.Mvc
                 }
                 return Json(type, message, dic);
             }
-            return new JsonResult(new JsonMesssage(type, message));
+            return Json(new JsonMesssage(type, message));
         }
 
         private IActionResult Json<TData>(StatusType type, string message, TData data)
         {
-            return new JsonResult(new JsonMesssage<TData>(type, message, data));
+            return Json(new JsonMesssage<TData>(type, message, data));
         }
 
         /// <summary>
@@ -492,6 +492,16 @@ namespace Mozlite.Mvc
         {
             var errors = result.Errors.Select(x => x.Description).ToList();
             return Json(StatusType.Danger, string.Join(", ", errors));
+        }
+
+        /// <summary>
+        /// 返回JSON对象。
+        /// </summary>
+        /// <param name="data">对象实例。</param>
+        /// <returns>返回JSON试图结果。</returns>
+        protected IActionResult Json(object data)
+        {
+            return new JsonResult(data);
         }
         #endregion
 

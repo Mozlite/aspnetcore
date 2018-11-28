@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
 
 namespace Mozlite.Extensions
 {
@@ -17,12 +17,8 @@ namespace Mozlite.Extensions
         [JsonIgnore]
         public string ExtendProperties
         {
-            get => JsonConvert.SerializeObject(_extendProperties);
-            set
-            {
-                if (value != null)
-                    _extendProperties = JsonConvert.DeserializeObject<Dictionary<string, string>>(value);
-            }
+            get => _extendProperties.ToJsonString();
+            set => _extendProperties = Cores.FromJsonString<Dictionary<string, string>>(value);
         }
 
         /// <summary>

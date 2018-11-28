@@ -228,4 +228,7 @@
   <data name="Mozmd_Syntax_Image" xml:space="preserve">
     <value>图片</value>
   </data>
+  <data name="ErrorCode_NotFound" xml:space="preserve">
+    <value>未找到{0}！</value>
+  </data>
 </root>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -79,14 +78,7 @@ namespace Mozlite.Mvc
             var json = await request.ReadStringAsync();
             if (string.IsNullOrWhiteSpace(json))
                 return default;
-            try
-            {
-                return JsonConvert.DeserializeObject<TModel>(json);
-            }
-            catch
-            {
-                return default;
-            }
+            return Cores.FromJsonString<TModel>(json);
         }
 
         /// <summary>

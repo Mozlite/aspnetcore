@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using Mozlite.Mvc.Messages;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -63,8 +62,8 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
             if (IsModal)
                 output.Render("script", builder =>
                 {
-                    var json = JsonConvert.SerializeObject(new { message = message.Message, type });
-                    builder.InnerHtml.AppendHtml("$(function(){").AppendHtml($"Mozlite.alert({json});").AppendHtml("});");
+                    var json = new { message = message.Message, type };
+                    builder.InnerHtml.AppendHtml("$(function(){").AppendHtml($"Mozlite.alert({json.ToJsonString()});").AppendHtml("});");
                 });
             else
                 output.Render("div", builer =>
