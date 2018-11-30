@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Mozlite.Data.Migrations.Builders;
+﻿using Mozlite.Data.Migrations.Builders;
 using Mozlite.Data.Migrations.Operations;
 using Mozlite.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Mozlite.Data.Migrations
 {
@@ -74,6 +74,33 @@ namespace Mozlite.Data.Migrations
             Operations.Add(operation);
 
             return new OperationBuilder<AddColumnOperation>(operation);
+        }
+
+        /// <summary>
+        /// 添加列。
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型。</typeparam>
+        /// <param name="name">列名称。</param>
+        /// <param name="type">字段类型。</param>
+        /// <param name="identity">是否为自增长列。</param>
+        /// <param name="unicode">是否为Unicode编码。</param>
+        /// <param name="nullable">是否为空。</param>
+        /// <param name="defaultValue">默认值。</param>
+        /// <param name="defaultValueSql">默认值SQL字符串。</param>
+        /// <param name="computedColumnSql">计算列的SQL字符串。</param>
+        /// <returns>返回操作实例。</returns>
+        public virtual OperationBuilder<AddColumnOperation> AddColumn<TEntity>(
+            string name,
+            string type,
+            bool nullable = true,
+            bool identity = false,
+            bool? unicode = null,
+            object defaultValue = null,
+            string defaultValueSql = null,
+            string computedColumnSql = null)
+        {
+            return AddColumn(typeof(TEntity).GetTableName(), name, type, nullable, identity, unicode, defaultValue,
+                defaultValueSql, computedColumnSql);
         }
 
         /// <summary>
@@ -601,7 +628,7 @@ namespace Mozlite.Data.Migrations
 
             return new OperationBuilder<DropPrimaryKeyOperation>(operation);
         }
-        
+
         /// <summary>
         /// 删除表格。
         /// </summary>
@@ -753,7 +780,7 @@ namespace Mozlite.Data.Migrations
 
             return new OperationBuilder<RenameIndexOperation>(operation);
         }
-        
+
         /// <summary>
         /// 拼接架构和名称。
         /// </summary>
@@ -789,7 +816,7 @@ namespace Mozlite.Data.Migrations
 
             return new OperationBuilder<RenameTableOperation>(operation);
         }
-        
+
         /// <summary>
         /// SQL语句。
         /// </summary>
