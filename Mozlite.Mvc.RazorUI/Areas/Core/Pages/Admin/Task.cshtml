@@ -1,0 +1,34 @@
+﻿@page
+@model TaskModel
+@{
+    ViewData["Title"] = "后台服务";
+    ViewBag.Current = "sys.tasks";
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered data-view">
+        <thead>
+            <tr>
+                <th>服务名称</th>
+                <th>运行时间</th>
+            </tr>
+        </thead>
+        <tbody class="data-content">
+            @foreach (var task in Model.Tasks)
+            {
+                <tr>
+                    <td>
+                        <b>@task.Name</b>
+                        @*<div class="data-action  pull-right">
+                                <a js-action="modal" title="编辑" asp-page="./send" asp-route-id="@task.Id"><i class="fa fa-pencil"></i></a>
+                            </div>*@
+                        <div class="text-secondary">
+                            @Html.Raw(task.Description)<span>(@(task.ToHtmlInterval())执行)</span>
+                        </div>
+                    </td>
+                    <td>上一次执行：@task.LastExecuted?.ToString("yyyy-MM-dd HH:mm:ss")<br />下一次执行：@task.NextExecuting.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

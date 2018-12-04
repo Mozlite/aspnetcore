@@ -1,0 +1,44 @@
+﻿@page
+@model EditModel
+@{
+    ViewBag.Title = "应用信息";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <input type="hidden" asp-for="Input.UserId" />
+    <div class="form-group">
+        <label>名称</label>
+        <input class="form-control" asp-for="Input.Name" />
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>AppId</label>
+        <input class="form-control" asp-for="Input.AppId" readonly="readonly" />
+    </div>
+    <div class="form-group">
+        <label>密钥</label>
+        <div class="input-group">
+            <input class="form-control" asp-for="Input.AppSecret" readonly="readonly" />
+            <div class="input-group-append">
+                <a id="refresher" class="btn btn-secondary" asp-page-handler="General" js-action="post" title="重新生成密钥！"><i class="fa fa-refresh"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+        <textarea rows="3" class="form-control" asp-for="Input.Description"></textarea>
+    </div>
+</form>
+
+<script type="text/javascript">
+    Mozlite.queue(context => {
+        $('#refresher', context).exec(current => {
+            current.on('success',
+                (c, d) => {
+                    $('#Input_AppSecret', context).val(d.data.appSecret);
+                });
+        });
+    });
+</script>

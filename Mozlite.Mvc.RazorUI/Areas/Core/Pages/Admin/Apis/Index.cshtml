@@ -1,0 +1,63 @@
+﻿@page
+@using Mozlite.Mvc.Apis
+@model IndexModel
+@{
+    ViewData["Title"] = "API列表";
+    ViewBag.Current = "app.apis";
+    ViewBag.Description = "<i class=\"fa fa-info-circle\"></i> 所有API必须带有appid参数（标题头中使用x-appid），需要验证的API还需要带有token（标题头中使用x-token）。使用POST方法时直接将JSON字符串写入到提交实体中！";
+}
+
+<table class="table table-striped table-bordered data-view">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>方法</th>
+            <th>描述</th>
+        </tr>
+    </thead>
+    <tbody class="data-content">
+        @foreach (var apis in Model.ApiDescriptions.GroupBy(x => x.RelativePath))
+        {
+            var rows = apis.Count();
+            var index = 0;
+            foreach (var api in apis)
+            {
+                index++;
+                var description = api.GetResult();
+                <tr>
+                    @if (index == 1 && rows > 0)
+                    {
+                        <td rowspan="@rows">@api.RelativePath.ToLower()</td>
+                    }
+                    <td>@(api.HttpMethod ?? "GET")</td>
+                    <td>
+                        <div>@description.Description</div>
+                        <div>
+                            <b class="d-block">参数</b>
+                            @if (api.ParameterDescriptions.Count > 0)
+                            {
+                                <ul style="list-style: none; padding: 0;">
+                                    @foreach (var parameter in api.ParameterDescriptions)
+                                    {
+                                        <li><em>@(parameter.Name)：</em>@(parameter.GetDescription())</li>
+                                    }
+                                </ul>
+                            }
+                            else if (api.HttpMethod == "POST")
+                            {
+                                var parameter = api.GetParameter();
+                                <code>@parameter</code>
+                            }
+                        </div>
+                        <div>
+                            <b class="d-block">返回值</b>
+                            <code>
+                                @description
+                            </code>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,12 @@
+﻿@page
+@model AppModel
+@{
+    ViewBag.Title = Model.Application.Name + "的API列表";
+    Layout = "_Modal";
+    ViewBag.ClassName = "modal-lg";
+}
+
+<form method="post">
+    <moz:apis-checkboxlist for="Input.APIs" iclass="col-6" class="row"></moz:apis-checkboxlist>
+    <input type="hidden" asp-for="Input.AppId" />
+</form>

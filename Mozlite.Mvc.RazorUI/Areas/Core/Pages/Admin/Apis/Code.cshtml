@@ -1,0 +1,34 @@
+﻿@page
+@using Mozlite.Mvc.Apis
+@model CodeModel
+@{
+    ViewBag.Title = "状态编码";
+    ViewBag.Current = "app.code";
+    ViewBag.Description = "默认的状态编码，项目开发时可以使用正值进行编写！";
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered data-view">
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>编码</th>
+                <th>描述</th>
+            </tr>
+        </thead>
+        <tbody class="data-content">
+            @foreach (ErrorCode code in Enum.GetValues(typeof(ErrorCode)))
+            {
+                <tr>
+                    <td>
+                        @code
+                    </td>
+                    <td>@((int)code)</td>
+                    <td>
+                        @Model.Localizer[code, "Name"]
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
