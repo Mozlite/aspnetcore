@@ -659,7 +659,6 @@ namespace Mozlite.Data.Migrations
             MigrationCommandListBuilder builder)
         {
             Check.NotEmpty(name, nameof(name));
-            Check.NotNull(clrType, nameof(clrType));
             Check.NotNull(builder, nameof(builder));
 
             builder
