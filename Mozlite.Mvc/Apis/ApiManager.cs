@@ -268,6 +268,74 @@ namespace Mozlite.Mvc.Apis
                 .AsEnumerableAsync();
         }
 
+        /// <summary>
+        /// 删除应用程序。
+        /// </summary>
+        /// <param name="ids">应用程序Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual DataResult DeleteApplications(int[] ids)
+        {
+            return Result(_context.Delete(x => x.Id.Included(ids)), DataAction.Deleted);
+        }
+
+        /// <summary>
+        /// 删除应用程序。
+        /// </summary>
+        /// <param name="ids">应用程序Id。</param>
+        /// <returns>返回删除结果。</returns>
+        public virtual async Task<DataResult> DeleteApplicationsAsync(int[] ids)
+        {
+            return Result(await _context.DeleteAsync(x => x.Id.Included(ids)), DataAction.Deleted);
+        }
+
+        /// <summary>
+        /// 将API设置到应用中。
+        /// </summary>
+        /// <param name="appid">应用程序Id。</param>
+        /// <param name="apis">API的Id列表。</param>
+        /// <returns>返回保存结果。</returns>
+        public virtual DataResult AddApis(int appid, int[] apis)
+        {
+            return Result(_context.BeginTransaction(db =>
+            {
+                var asdb = db.As<ApplicationService>();
+                asdb.Delete(x => x.AppicationId == appid);
+                if (apis?.Length > 0)
+                {
+                    foreach (var api in apis)
+                    {
+                        asdb.Create(new ApplicationService { AppicationId = appid, ServiceId = api });
+                    }
+                }
+
+                return true;
+            }), DataAction.Updated);
+        }
+
+        /// <summary>
+        /// 将API设置到应用中。
+        /// </summary>
+        /// <param name="appid">应用程序Id。</param>
+        /// <param name="apis">API的Id列表。</param>
+        /// <returns>返回保存结果。</returns>
+        public virtual async Task<DataResult> AddApisAsync(int appid, int[] apis)
+        {
+            return Result(await _context.BeginTransactionAsync(async db =>
+            {
+                var asdb = db.As<ApplicationService>();
+                await asdb.DeleteAsync(x => x.AppicationId == appid);
+                if (apis?.Length > 0)
+                {
+                    foreach (var api in apis)
+                    {
+                        await asdb.CreateAsync(new ApplicationService { AppicationId = appid, ServiceId = api });
+                    }
+                }
+
+                return true;
+            }), DataAction.Updated);
+        }
+
         private IDictionary<Guid, CacheApplication> LoadCache() =>
             _cache.GetOrCreate(_cacheKey, ctx =>
             {

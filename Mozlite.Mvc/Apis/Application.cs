@@ -24,6 +24,7 @@ namespace Mozlite.Mvc.Apis
         /// <summary>
         /// 应用程序Id。
         /// </summary>
+        [NotUpdated]
         public Guid AppId { get; set; } = Guid.NewGuid();
 
         /// <summary>

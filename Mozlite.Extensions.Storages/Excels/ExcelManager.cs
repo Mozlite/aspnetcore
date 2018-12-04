@@ -34,7 +34,7 @@ namespace Mozlite.Extensions.Storages.Excels
         /// <returns>返回Excel内容。</returns>
         public IEnumerable<TModel> Load<TModel>(string path) where TModel : class, new()
         {
-            var model = new ExcelObject<TModel>();
+            var model = new ExcelEnumerable<TModel>();
             using (var document = SpreadsheetDocument.Open(path, false))
             {
                 var sheet = document.WorkbookPart
@@ -65,7 +65,7 @@ namespace Mozlite.Extensions.Storages.Excels
             return models;
         }
 
-        private void Load<TModel>(ExcelObject<TModel> models, SharedStringTable shared, SheetData sheet) where TModel : class, new()
+        private void Load<TModel>(ExcelEnumerable<TModel> models, SharedStringTable shared, SheetData sheet) where TModel : class, new()
         {
             var isFirst = true;
             var dic = new Dictionary<string, Action<object, string>>();
@@ -149,7 +149,7 @@ namespace Mozlite.Extensions.Storages.Excels
         /// <param name="path">路径。</param>
         public void Save<TModel>(IEnumerable<TModel> models, string path) where TModel : class, new()
         {
-            var data = models as ExcelObject<TModel> ?? new ExcelObject<TModel>(models);
+            var data = models as ExcelEnumerable<TModel> ?? new ExcelEnumerable<TModel>(models);
             using (var document = SpreadsheetDocument.Create(path, SpreadsheetDocumentType.Workbook))
             {
                 var index = 1U;
@@ -257,7 +257,7 @@ namespace Mozlite.Extensions.Storages.Excels
         /// <summary>
         /// 需要先写入样式，可以得到没列样式Id。
         /// </summary>
-        private void WriteStylesheet<TModel>(WorkbookPart workbookPart, ExcelObject<TModel> models) where TModel : class, new()
+        private void WriteStylesheet<TModel>(WorkbookPart workbookPart, ExcelEnumerable<TModel> models) where TModel : class, new()
         {
             var stylesheet = new Stylesheet();
             stylesheet.Fonts = new Fonts();//第一个默认
@@ -328,7 +328,7 @@ namespace Mozlite.Extensions.Storages.Excels
             if (!fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
                 fileName += extension;
             var storageDirectory = _serviceProvider.GetRequiredService<IStorageDirectory>();
-            var excels = new ExcelObject<TModel>(models);
+            var excels = new ExcelEnumerable<TModel>(models);
             var path = storageDirectory.GetTempPath(Guid.NewGuid().ToString("N"));
             Save(excels, path);
             var result = new PhysicalFileResult(path, extension.GetContentType());

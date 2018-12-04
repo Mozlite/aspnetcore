@@ -9,7 +9,7 @@ namespace Mozlite.Extensions.Storages.Excels
     /// Excel数据。
     /// </summary>
     /// <typeparam name="TModel">实例类型。</typeparam>
-    public class ExcelObject<TModel> : IEnumerable<TModel>
+    public class ExcelEnumerable<TModel> : IEnumerable<TModel>
         where TModel : class, new()
     {
         /// <summary>
@@ -24,9 +24,9 @@ namespace Mozlite.Extensions.Storages.Excels
 
         private readonly List<ExcelColumnDescriptor> _descriptors = new List<ExcelColumnDescriptor>();
         /// <summary>
-        /// 初始化类<see cref="ExcelObject{TModel}"/>。
+        /// 初始化类<see cref="ExcelEnumerable{TModel}"/>。
         /// </summary>
-        public ExcelObject()
+        public ExcelEnumerable()
         {
             SheetName = typeof(TModel).GetCustomAttribute<ExcelSheetAttribute>()?.SheetName ?? "sheet1";
             EntityType = typeof(TModel).GetEntityType();
@@ -43,10 +43,10 @@ namespace Mozlite.Extensions.Storages.Excels
         }
 
         /// <summary>
-        /// 初始化类<see cref="ExcelObject{TModel}"/>。
+        /// 初始化类<see cref="ExcelEnumerable{TModel}"/>。
         /// </summary>
         /// <param name="models">列表实例。</param>
-        public ExcelObject(IEnumerable<TModel> models)
+        public ExcelEnumerable(IEnumerable<TModel> models)
             : this()
         {
             _models.AddRange(models);

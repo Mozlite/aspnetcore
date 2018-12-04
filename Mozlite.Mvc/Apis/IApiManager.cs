@@ -108,5 +108,35 @@ namespace Mozlite.Mvc.Apis
         /// <param name="applicationId">应用程序Id。</param>
         /// <returns>返回当前应用程序的API列表。</returns>
         Task<IEnumerable<ApiDescriptor>> LoadApplicationApisAsync(int applicationId);
+
+        /// <summary>
+        /// 删除应用程序。
+        /// </summary>
+        /// <param name="ids">应用程序Id。</param>
+        /// <returns>返回删除结果。</returns>
+        DataResult DeleteApplications(int[] ids);
+
+        /// <summary>
+        /// 删除应用程序。
+        /// </summary>
+        /// <param name="ids">应用程序Id。</param>
+        /// <returns>返回删除结果。</returns>
+        Task<DataResult> DeleteApplicationsAsync(int[] ids);
+
+        /// <summary>
+        /// 将API设置到应用中。
+        /// </summary>
+        /// <param name="appid">应用程序Id。</param>
+        /// <param name="apis">API的Id列表。</param>
+        /// <returns>返回保存结果。</returns>
+        DataResult AddApis(int appid, int[] apis);
+
+        /// <summary>
+        /// 将API设置到应用中。
+        /// </summary>
+        /// <param name="appid">应用程序Id。</param>
+        /// <param name="apis">API的Id列表。</param>
+        /// <returns>返回保存结果。</returns>
+        Task<DataResult> AddApisAsync(int appid, int[] apis);
     }
 }

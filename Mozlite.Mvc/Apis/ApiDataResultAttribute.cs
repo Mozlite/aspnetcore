@@ -38,7 +38,7 @@ namespace Mozlite.Mvc.Apis
         /// <returns>当前实例返回的JSON字符串。</returns>
         public override string ToString()
         {
-            return _defaultValue.ToJsonString();
+            return new ApiDataResult(_defaultValue).ToJsonString();
         }
     }
 }
