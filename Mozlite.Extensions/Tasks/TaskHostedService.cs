@@ -58,7 +58,7 @@ namespace Mozlite.Extensions.Tasks
 
         private async Task LoadContextsAsync()
         {
-            if (_updatedDate.AddMinutes(1) < DateTime.Now)
+            if (_updatedDate.AddMinutes(1) >= DateTime.Now)
                 return;
             var tasks = await _taskManager.LoadTasksAsync();
             foreach (var task in tasks)
