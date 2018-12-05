@@ -44,7 +44,7 @@ namespace Mozlite.Extensions.Tasks
         /// </summary>
         public Argument Argument
         {
-            get => _argument;
+            get => _argument ?? new Argument();
             set
             {
                 _argument = value;

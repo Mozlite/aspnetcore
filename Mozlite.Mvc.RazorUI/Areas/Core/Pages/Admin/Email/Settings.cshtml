@@ -1,0 +1,40 @@
+﻿@page
+@model SettingsModel
+@{
+    ViewBag.Title = "邮件配置";
+    ViewBag.Current = "sys.emailsettings";
+}
+
+<form method="post">
+    <div class="form-group">
+        <label>激活邮件系统</label>
+        <moz:checkbox for="Input.Enabled"></moz:checkbox>
+    </div>
+    <div class="form-group">
+        <label>SMTP服务器</label>
+        <input asp-for="Input.SmtpServer" class="form-control col-md-4 col-sm-8" />
+    </div>
+    <div class="form-group">
+        <label>SMTP端口</label>
+        <input asp-for="Input.SmtpPort" class="form-control col-md-4 col-sm-8" />
+    </div>
+    <div class="form-group">
+        <label>SMTP用户名</label>
+        <input asp-for="Input.SmtpUserName" class="form-control col-md-4 col-sm-8" />
+    </div>
+    <div class="form-group">
+        <label>SMTP密码</label>
+        <input value="@Model?.Input.SmtpPassword" asp-for="Input.SmtpPassword" type="password" class="form-control col-md-4 col-sm-8" />
+    </div>
+    <div class="form-group">
+        <label>是否使用SSL</label>
+        <moz:checkbox for="Input.UseSsl"></moz:checkbox>
+    </div>
+    <div class="form-group">
+        <label>最多尝试发送次数</label>
+        <input asp-for="Input.MaxTryTimes" class="form-control col-md-4 col-sm-8" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-outline-secondary">提交</button>
+    </div>
+</form>

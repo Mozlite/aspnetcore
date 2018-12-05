@@ -15,6 +15,8 @@ namespace Mozlite.Mvc.RazorUI
         {
             root.AddMenu("sys", menu => menu.Texted("系统管理", "fa fa-cogs")
                 .AddMenu("tasks", it => it.Texted("后台服务").Page("/Admin/Task", area: RazorUISettings.ExtensionName).Allow(Permissions.Administrator))
+                .AddMenu("email", it => it.Texted("邮件管理").Page("/Admin/Email/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Email))
+                .AddMenu("emailsettings", it => it.Texted("邮件配置").Page("/Admin/Email/Settings", area: RazorUISettings.ExtensionName).Allow(Permissions.EmailSettings))
             );
 
             root.AddMenu("app", menu => menu.Texted("API管理", "fa fa-sitemap")

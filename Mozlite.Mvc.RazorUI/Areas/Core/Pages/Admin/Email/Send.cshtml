@@ -1,0 +1,31 @@
+﻿@page
+@model SendModel
+@{
+    Layout = "_Modal";
+    ViewBag.Title = "发送邮件";
+    ViewBag.DialogClass = "modal-lg";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <div class="form-group">
+        <label>邮件地址</label>
+        <input class="form-control" asp-for="Input.To" />
+        <span class="text-danger" asp-validation-for="Input.To"></span>
+    </div>
+    <div class="form-group">
+        <label>标题</label>
+        <input class="form-control" asp-for="Input.Title" />
+        <span class="text-danger" asp-validation-for="Input.Title"></span>
+    </div>
+    <div class="form-group">
+        <label>内容</label>
+        <moz:markdown md-for="Input.Source" html-for="Input.Content"></moz:markdown>
+        <span class="text-danger" asp-validation-for="Input.Content"></span>
+    </div>
+</form>
+
+@section footer
+{
+    <button type="submit" class="btn btn-primary"><i class="fa fa-send-o"></i> 发送</button>
+}
