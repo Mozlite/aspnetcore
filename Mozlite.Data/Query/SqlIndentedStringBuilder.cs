@@ -11,28 +11,19 @@ namespace Mozlite.Data.Query
     /// </summary>
     public class SqlIndentedStringBuilder : IndentedStringBuilder
     {
-        private readonly List<string> _parameterNames = new List<string>();
-        /// <summary>
-        /// 添加一个参数。
-        /// </summary>
-        /// <param name="parameter">参数名称。</param>
-        /// <returns>返回SQL构建实例。</returns>
-        public SqlIndentedStringBuilder AddParameter(string parameter)
+        private readonly string _sql;
+        private readonly List<string> _parameterNames;
+
+        internal SqlIndentedStringBuilder(string sql, List<string> parameterNames)
         {
-            _parameterNames.Add(parameter);
-            return this;
+            _sql = sql;
+            _parameterNames = parameterNames;
         }
 
         /// <summary>
-        /// 添加一个参数。
+        /// 初始化类<see cref="SqlIndentedStringBuilder"/>。
         /// </summary>
-        /// <param name="parameters">参数列表。</param>
-        /// <returns>返回SQL构建实例。</returns>
-        public SqlIndentedStringBuilder AddParameters(IEnumerable<string> parameters)
-        {
-            _parameterNames.AddRange(parameters);
-            return this;
-        }
+        public SqlIndentedStringBuilder() { }
 
         /// <summary>
         /// 参数。
@@ -46,7 +37,7 @@ namespace Mozlite.Data.Query
         {
             if (instance is IDictionary<string, object> parameters)
                 Parameters = parameters;
-            else
+            else if (_parameterNames != null)
             {//匿名类型
                 Parameters = new Dictionary<string, object>();
                 var entityType = instance.GetType().GetEntityType();
@@ -96,5 +87,14 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <param name="builder">SQL构建实例对象。</param>
         public static implicit operator string(SqlIndentedStringBuilder builder) => builder.ToString();
+
+        /// <summary>
+        /// 获取当前字符串实例。
+        /// </summary>
+        /// <returns>返回当前字符串内容实例。</returns>
+        public override string ToString()
+        {
+            return _sql ?? base.ToString();
+        }
     }
 }

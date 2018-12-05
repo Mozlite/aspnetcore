@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Extensions;
+﻿using Mozlite.Extensions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -20,7 +20,6 @@ namespace Mozlite.Data.Query
         /// SQL辅助接口。
         /// </summary>
         protected ISqlHelper SqlHelper { get; }
-        private readonly IMemoryCache _cache;
         private readonly IExpressionVisitorFactory _visitorFactory;
         /// <summary>
         /// 唯一主键参数实例。
@@ -43,32 +42,27 @@ namespace Mozlite.Data.Query
         /// <summary>
         /// 初始化类<see cref="QuerySqlGenerator"/>。
         /// </summary>
-        /// <param name="cache">缓存接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="visitorFactory">表达式工厂接口。</param>
-        protected QuerySqlGenerator(IMemoryCache cache, ISqlHelper sqlHelper, IExpressionVisitorFactory visitorFactory)
+        protected QuerySqlGenerator(ISqlHelper sqlHelper, IExpressionVisitorFactory visitorFactory)
         {
             SqlHelper = sqlHelper;
-            _cache = cache;
             _visitorFactory = visitorFactory;
         }
 
-        /// <summary>
-        /// 从缓存中获取<see cref="SqlIndentedStringBuilder"/>实例。
-        /// </summary>
-        /// <param name="entityType">实体对象。</param>
-        /// <param name="key">缓存键。</param>
-        /// <param name="action">操作SQL语句。</param>
-        /// <returns>返回SQL构建实例。</returns>
-        protected SqlIndentedStringBuilder GetOrCreate(IEntityType entityType, string key, Action<SqlIndentedStringBuilder> action)
+        private readonly ConcurrentDictionary<Type, CacheEntry> _creations = new ConcurrentDictionary<Type, CacheEntry>();
+        private readonly ConcurrentDictionary<Type, CacheEntry> _updates = new ConcurrentDictionary<Type, CacheEntry>();
+        private class CacheEntry
         {
-            return _cache.GetOrCreate(new Tuple<Type, string>(entityType.ClrType, key), ctx =>
+            public CacheEntry(string sql, List<string> parameters)
             {
-                ctx.SetAbsoluteExpiration(Cores.DefaultCacheExpiration);
-                var builder = new SqlIndentedStringBuilder();
-                action(builder);
-                return builder;
-            });
+                Sql = sql;
+                Parameters = parameters;
+            }
+
+            public string Sql { get; }
+
+            public List<string> Parameters { get; }
         }
 
         /// <summary>
@@ -76,50 +70,60 @@ namespace Mozlite.Data.Query
         /// </summary>
         /// <param name="entityType">模型实例。</param>
         /// <returns>返回SQL构建实例。</returns>
-        public virtual SqlIndentedStringBuilder Create(IEntityType entityType) => GetOrCreate(entityType, nameof(Create), builder =>
-         {
-             var names = entityType.GetProperties()
-                 .Where(property => property.IsCreatable())
-                 .Select(property => property.Name)
-                 .ToList();
-             builder.Append("INSERT INTO");
-             builder.Append(" ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
-             builder.Append("(").JoinAppend(names.Select(SqlHelper.DelimitIdentifier)).Append(")");
-             builder.Append("VALUES(")
-                 .JoinAppend(names.Select(SqlHelper.Parameterized))
-                 .Append(")").AppendLine(SqlHelper.StatementTerminator);
-             if (entityType.Identity != null)
-                 builder.Append(SelectIdentity());
-             builder.AddParameters(names);
-         });
+        public virtual SqlIndentedStringBuilder Create(IEntityType entityType)
+        {
+            var entry = _creations.GetOrAdd(entityType.ClrType, key =>
+            {
+                var names = entityType.GetProperties()
+                    .Where(property => property.IsCreatable())
+                    .Select(property => property.Name)
+                    .ToList();
+                var builder = new SqlIndentedStringBuilder();
+                builder.Append("INSERT INTO");
+                builder.Append(" ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+                builder.Append("(").JoinAppend(names.Select(SqlHelper.DelimitIdentifier)).Append(")");
+                builder.Append("VALUES(")
+                    .JoinAppend(names.Select(SqlHelper.Parameterized))
+                    .Append(")").AppendLine(SqlHelper.StatementTerminator);
+                if (entityType.Identity != null)
+                    builder.Append(SelectIdentity());
+                return new CacheEntry(builder.ToString(), names);
+            });
+            return new SqlIndentedStringBuilder(entry.Sql, entry.Parameters);
+        }
 
         /// <summary>
         /// 更新实例。
         /// </summary>
         /// <param name="entityType">模型实例。</param>
         /// <returns>返回SQL构建实例。</returns>
-        public virtual SqlIndentedStringBuilder Update(IEntityType entityType) => GetOrCreate(entityType, nameof(Update), builder =>
-          {
-              var names = entityType.GetProperties()
-                  .Where(property => property.IsUpdatable())
-                  .Select(property => property.Name)
-                  .ToList();
-              builder.Append("UPDATE ").Append(SqlHelper.DelimitIdentifier(entityType.Table)).Append(" SET ");
-              builder.JoinAppend(names.Select(name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}")).AppendLine();
-              if (entityType.PrimaryKey != null)
-              {
-                  var primaryKeys = entityType.PrimaryKey.Properties
-                      .Select(p => p.Name)
-                      .ToList();
-                  builder.Append("WHERE ")
-                      .JoinAppend(
-                          primaryKeys.Select(
-                              name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}"), " AND ")
-                      .Append(SqlHelper.StatementTerminator);
-                  names.AddRange(primaryKeys);
-              }
-              builder.AddParameters(names);
-          });
+        public virtual SqlIndentedStringBuilder Update(IEntityType entityType)
+        {
+            var entry = _updates.GetOrAdd(entityType.ClrType, key =>
+            {
+                var names = entityType.GetProperties()
+                    .Where(property => property.IsUpdatable())
+                    .Select(property => property.Name)
+                    .ToList();
+                var builder = new SqlIndentedStringBuilder();
+                builder.Append("UPDATE ").Append(SqlHelper.DelimitIdentifier(entityType.Table)).Append(" SET ");
+                builder.JoinAppend(names.Select(name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}")).AppendLine();
+                if (entityType.PrimaryKey != null)
+                {
+                    var primaryKeys = entityType.PrimaryKey.Properties
+                        .Select(p => p.Name)
+                        .ToList();
+                    builder.Append("WHERE ")
+                        .JoinAppend(
+                            primaryKeys.Select(
+                                name => $"{SqlHelper.DelimitIdentifier(name)}={SqlHelper.Parameterized(name)}"), " AND ")
+                        .Append(SqlHelper.StatementTerminator);
+                    names.AddRange(primaryKeys);
+                }
+                return new CacheEntry(builder.ToString(), names);
+            });
+            return new SqlIndentedStringBuilder(entry.Sql, entry.Parameters);
+        }
 
         /// <summary>
         /// 通过唯一主键更新实例。
