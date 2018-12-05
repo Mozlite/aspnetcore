@@ -556,7 +556,7 @@ namespace Mozlite.Data.Internal
         public virtual async Task<bool> AnyAsync(Expression<Predicate<TModel>> expression = null, CancellationToken cancellationToken = default)
         {
             var sql = SqlGenerator.Any(EntityType, expression);
-            return await ExecuteScalarAsync(sql.ToString(), cancellationToken: cancellationToken) != null;
+            return await ExecuteScalarAsync(sql, cancellationToken: cancellationToken) != null;
         }
 
         /// <summary>
@@ -723,7 +723,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回执行结果。</returns>
         protected object ScalarSql(SqlIndentedStringBuilder sql)
         {
-            return ExecuteScalar(sql.ToString(), sql.Parameters);
+            return ExecuteScalar(sql, sql.Parameters);
         }
 
         /// <summary>
@@ -734,7 +734,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回执行结果。</returns>
         protected Task<object> ScalarSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
         {
-            return ExecuteScalarAsync(sql.ToString(), sql.Parameters, cancellationToken: cancellationToken);
+            return ExecuteScalarAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -744,7 +744,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回执行结果。</returns>
         protected bool ExecuteSql(SqlIndentedStringBuilder sql)
         {
-            return ExecuteNonQuery(sql.ToString(), sql.Parameters);
+            return ExecuteNonQuery(sql, sql.Parameters);
         }
 
         /// <summary>
@@ -755,7 +755,7 @@ namespace Mozlite.Data.Internal
         /// <returns>返回执行结果。</returns>
         protected Task<bool> ExecuteSqlAsync(SqlIndentedStringBuilder sql, CancellationToken cancellationToken = default)
         {
-            return ExecuteNonQueryAsync(sql.ToString(), sql.Parameters, cancellationToken: cancellationToken);
+            return ExecuteNonQueryAsync(sql, sql.Parameters, cancellationToken: cancellationToken);
         }
         #endregion
     }

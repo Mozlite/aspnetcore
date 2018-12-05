@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq.Expressions;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data.Query;
+﻿using Mozlite.Data.Query;
 using Mozlite.Extensions;
+using System;
+using System.Linq.Expressions;
 
 namespace Mozlite.Data.SqlServer.Query
 {
@@ -37,7 +36,10 @@ namespace Mozlite.Data.SqlServer.Query
         public override SqlIndentedStringBuilder Any(IEntityType entityType)
         {
             var builder = new SqlIndentedStringBuilder();
-            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table))
+                .Append(" ")
+                .Append(WithNolock())
+                .Append(" ");
             AppendWherePrimaryKey(builder, entityType);
             return builder;
         }
@@ -51,7 +53,10 @@ namespace Mozlite.Data.SqlServer.Query
         public override SqlIndentedStringBuilder Any(IEntityType entityType, Expression expression)
         {
             var builder = new SqlIndentedStringBuilder();
-            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table));
+            builder.Append("SELECT TOP(1) 1 FROM ").Append(SqlHelper.DelimitIdentifier(entityType.Table))
+                .Append(" ")
+                .Append(WithNolock())
+                .Append(" ");
             builder.AppendEx(Visit(expression), " WHERE {0}").Append(SqlHelper.StatementTerminator);
             return builder;
         }
@@ -76,7 +81,7 @@ namespace Mozlite.Data.SqlServer.Query
             builder.AppendLine($"SELECT @CurrentOrder = ISNULL({column}, 0) FROM {table} WHERE {primaryKey} = {PrimaryKeyParameter};");
             builder.AppendLine("DECLARE @AffectId int;");
             builder.AppendLine("DECLARE @AffectOrder int;");
-            builder.Append($"SELECT TOP(1) @AffectId = {primaryKey}, @AffectOrder = ISNULL({column}, 0) FROM {table} WHERE {column} {direction} @CurrentOrder")
+            builder.Append($"SELECT TOP(1) @AffectId = {primaryKey}, @AffectOrder = ISNULL({column}, 0) FROM {table} {WithNolock()} WHERE {column} {direction} @CurrentOrder")
                 .AppendEx(where, " AND {0}").Append($" ORDER BY {column}").AppendLine(direction == "<" ? " DESC;" : ";");
             builder.AppendLine($@"IF @AffectId IS NOT NULL AND @AffectId > 0 BEGIN
 	BEGIN TRANSACTION;
@@ -163,11 +168,10 @@ END");
         /// <summary>
         /// 初始化类<see cref="SqlServerQuerySqlGenerator"/>。
         /// </summary>
-        /// <param name="cache">缓存接口。</param>
         /// <param name="sqlHelper">SQL辅助接口。</param>
         /// <param name="visitorFactory">表达式工厂接口。</param>
-        public SqlServerQuerySqlGenerator(IMemoryCache cache, ISqlHelper sqlHelper, IExpressionVisitorFactory visitorFactory)
-            : base(cache, sqlHelper, visitorFactory)
+        public SqlServerQuerySqlGenerator(ISqlHelper sqlHelper, IExpressionVisitorFactory visitorFactory)
+            : base(sqlHelper, visitorFactory)
         {
         }
     }
