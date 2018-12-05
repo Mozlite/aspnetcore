@@ -34,7 +34,7 @@ namespace Mozlite.Extensions.Tasks
         /// <param name="id">服务Id。</param>
         /// <param name="interval">时间间隔。</param>
         /// <returns>返回设置结果。</returns>
-        bool SetInterval(int id, TaskInterval interval);
+        bool SetInterval(int id, string interval);
 
         /// <summary>
         /// 设置参数。
