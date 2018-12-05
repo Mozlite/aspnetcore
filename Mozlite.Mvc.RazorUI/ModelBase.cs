@@ -14,6 +14,11 @@ namespace Mozlite.Mvc.RazorUI
     [Authorize]
     public abstract class ModelBase : Mvc.ModelBase
     {
+        /// <summary>
+        /// 事件ID。
+        /// </summary>
+        protected override int EventId => RazorUISettings.EventId;
+
         #region storages
         /// <summary>
         /// 导出Excel。

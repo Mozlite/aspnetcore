@@ -40,6 +40,14 @@ namespace Mozlite.Extensions.Tasks
         /// 设置参数。
         /// </summary>
         /// <param name="id">当前服务Id。</param>
+        /// <param name="interval">时间间隔。</param>
+        /// <returns>返回设置结果。</returns>
+        Task<bool> SaveArgumentIntervalAsync(int id, string interval);
+
+        /// <summary>
+        /// 设置参数。
+        /// </summary>
+        /// <param name="id">当前服务Id。</param>
         /// <param name="argument">参数。</param>
         /// <returns>返回设置结果。</returns>
         Task<bool> SaveArgumentAsync(int id, Argument argument);
