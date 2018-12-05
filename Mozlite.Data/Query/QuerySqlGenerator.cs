@@ -12,6 +12,7 @@ namespace Mozlite.Data.Query
     /// </summary>
     public abstract class QuerySqlGenerator : IQuerySqlGenerator
     {
+        private readonly IExpressionVisitorFactory _visitorFactory;
         /// <summary>
         /// 唯一主键参数名称。
         /// </summary>
@@ -20,7 +21,6 @@ namespace Mozlite.Data.Query
         /// SQL辅助接口。
         /// </summary>
         protected ISqlHelper SqlHelper { get; }
-        private readonly IExpressionVisitorFactory _visitorFactory;
         /// <summary>
         /// 唯一主键参数实例。
         /// </summary>

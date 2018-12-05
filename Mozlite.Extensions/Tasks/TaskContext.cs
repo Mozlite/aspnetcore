@@ -38,10 +38,24 @@ namespace Mozlite.Extensions.Tasks
         /// </summary>
         public TaskInterval Interval { get; set; }
 
+        private Argument _argument;
         /// <summary>
         /// 参数。
         /// </summary>
-        public Argument Argument { get; set; }
+        public Argument Argument
+        {
+            get => _argument;
+            set
+            {
+                _argument = value;
+                if (value != null)
+                {
+                    _argument.TaskContext = this;
+                    if (!string.IsNullOrEmpty(_argument.Interval))
+                        Interval = _argument.Interval;
+                }
+            }
+        }
 
         /// <summary>
         /// 执行方法。

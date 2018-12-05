@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,23 +12,29 @@ namespace Mozlite.Extensions.Tasks
     /// </summary>
     public class TaskHostedService : HostedService
     {
-        private readonly Dictionary<string, ITaskService> _services;
+        private readonly IEnumerable<ITaskService> _services;
         private readonly ITaskManager _taskManager;
-        private readonly IMemoryCache _cache;
-        private readonly ILogger<TaskHostedService> _logger;
+        private readonly ConcurrentDictionary<string, TaskContext> _contexts = new ConcurrentDictionary<string, TaskContext>(StringComparer.OrdinalIgnoreCase);
+        private DateTime _updatedDate = DateTime.MinValue;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// 初始化<see cref="TaskHostedService"/>。
         /// </summary>
         /// <param name="services">后台服务列表。</param>
         /// <param name="taskManager">后台服务管理。</param>
-        /// <param name="cache">缓存接口。</param>
         /// <param name="logger">日志接口。</param>
-        public TaskHostedService(IEnumerable<ITaskService> services, ITaskManager taskManager, IMemoryCache cache, ILogger<TaskHostedService> logger)
+        public TaskHostedService(IEnumerable<ITaskService> services, ITaskManager taskManager, ILogger<TaskHostedService> logger)
         {
-            _services = services.ToDictionary(x => x.GetType().DisplayName(), StringComparer.OrdinalIgnoreCase);
+            _services = services;
+            foreach (var service in services)
+            {
+                var context = new TaskContext();
+                context.ExecuteAsync = service.ExecuteAsync;
+                context.Interval = service.Interval;
+                _contexts.TryAdd(service.GetType().DisplayName(), context);
+            }
             _taskManager = taskManager;
-            _cache = cache;
             _logger = logger;
         }
 
@@ -51,33 +56,25 @@ namespace Mozlite.Extensions.Tasks
             return base.StopAsync(cancellationToken);
         }
 
-        private async Task<IEnumerable<TaskContext>> LoadContextsAsync()
+        private async Task LoadContextsAsync()
         {
-            return await _cache.GetOrCreateAsync(typeof(TaskHostedService), async ctx =>
+            if (_updatedDate.AddMinutes(1) < DateTime.Now)
+                return;
+            var tasks = await _taskManager.LoadTasksAsync();
+            foreach (var task in tasks)
             {
-                ctx.SetAbsoluteExpiration(TimeSpan.FromMinutes(5));//五分钟重新获取一次数据库配置
-                var contexts = new List<TaskContext>();
-                var tasks = await _taskManager.LoadTasksAsync();
-                if (!tasks.Any())
-                    return contexts;
-
-                foreach (var task in tasks)
+                if (!_contexts.TryGetValue(task.Type, out var context))
+                    continue;
+                context.Argument = task.TaskArgument;
+                context.Id = task.Id;
+                context.Name = task.Name;
+                if (!context.IsRunning)
                 {
-                    if (!_services.TryGetValue(task.Type, out var service))
-                        continue;
-                    var context = new TaskContext();
-                    context.Argument = task.TaskArgument;
-                    context.Interval = !string.IsNullOrWhiteSpace(context.Argument.Interval) ? context.Argument.Interval : task.Interval;
-                    context.Id = task.Id;
-                    context.ExecuteAsync = service.ExecuteAsync;
-                    context.Name = task.Name;
                     context.LastExecuted = task.LastExecuted;
                     context.NextExecuting = task.NextExecuting;
-                    context.Argument.TaskContext = context;
-                    contexts.Add(context);
                 }
-                return contexts;
-            });
+            }
+            _updatedDate = DateTime.Now;
         }
 
         /// <summary>
@@ -89,14 +86,14 @@ namespace Mozlite.Extensions.Tasks
             //等待数据迁移
             await cancellationToken.WaitInstalledAsync();
             //将后台服务添加到数据库中
-            await _taskManager.EnsuredTaskServicesAsync(_services.Values);
+            await _taskManager.EnsuredTaskServicesAsync(_services);
             //开启后台服务线程，执行后台服务
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    var contexts = await LoadContextsAsync();
-                    foreach (var context in contexts)
+                    await LoadContextsAsync();
+                    foreach (var context in _contexts.Values)
                     {
                         if (context.NextExecuting <= DateTime.Now && !context.IsRunning)
                         {
