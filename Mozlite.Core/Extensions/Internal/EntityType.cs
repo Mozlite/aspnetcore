@@ -19,11 +19,11 @@ namespace Mozlite.Extensions.Internal
         public EntityType(Type type)
         {
             _properties = new SortedDictionary<string, Property>(StringComparer.OrdinalIgnoreCase);
-            foreach (var info in type.GetProperties(BindingFlags.Instance|BindingFlags.Public))
+            foreach (var info in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (info.CanRead && info.CanWrite)
                 {
-                    _properties.Add(info.Name, new Property(info, this));
+                    _properties[info.Name] = new Property(info, this);
                 }
             }
             ClrType = type;
