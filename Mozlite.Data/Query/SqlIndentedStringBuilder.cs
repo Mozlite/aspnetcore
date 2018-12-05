@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Mozlite.Extensions;
+﻿using Mozlite.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Mozlite.Data.Query
@@ -11,8 +11,7 @@ namespace Mozlite.Data.Query
     /// </summary>
     public class SqlIndentedStringBuilder : IndentedStringBuilder
     {
-        private readonly List<string> _parameters = new List<string>();
-
+        private readonly List<string> _parameterNames = new List<string>();
         /// <summary>
         /// 添加一个参数。
         /// </summary>
@@ -20,7 +19,7 @@ namespace Mozlite.Data.Query
         /// <returns>返回SQL构建实例。</returns>
         public SqlIndentedStringBuilder AddParameter(string parameter)
         {
-            _parameters.Add(parameter);
+            _parameterNames.Add(parameter);
             return this;
         }
 
@@ -31,7 +30,7 @@ namespace Mozlite.Data.Query
         /// <returns>返回SQL构建实例。</returns>
         public SqlIndentedStringBuilder AddParameters(IEnumerable<string> parameters)
         {
-            _parameters.AddRange(parameters.Distinct(StringComparer.OrdinalIgnoreCase));
+            _parameterNames.AddRange(parameters);
             return this;
         }
 
@@ -51,7 +50,8 @@ namespace Mozlite.Data.Query
             {//匿名类型
                 Parameters = new Dictionary<string, object>();
                 var entityType = instance.GetType().GetEntityType();
-                foreach (var parameterName in _parameters)
+                var parameterNames = _parameterNames.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                foreach (var parameterName in parameterNames)
                 {
                     Parameters.Add(parameterName, entityType.FindProperty(parameterName).Get(instance));
                 }
