@@ -50,7 +50,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
                 Content = message.Content,
                 To = message.To,
                 Id = id,
-                Source = message["Source"] ?? message.Content
+                Source = message.Source ?? message.Content
             };
         }
 
@@ -67,7 +67,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
                 message.Title = Input.Title;
                 message.Content = Input.Content;
                 message.To = Input.To;
-                message["Source"] = Input.Source;
+                message.Source = Input.Source;
                 var hashKey = message.HashKey;
                 message.HashKey = null;
                 if (hashKey == message.HashKey ||
@@ -83,7 +83,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
             };
             message.Title = Input.Title;
             message.Content = Input.Content;
-            message["Source"] = Input.Source;
+            message.Source = Input.Source;
             message.To = Input.To;
             if (_messageManager.Save(message))
                 return Success("你已经成功发送邮件！");

@@ -18,35 +18,6 @@ namespace Mozlite.Mvc.RazorUI
         /// 事件ID。
         /// </summary>
         protected override int EventId => RazorUISettings.EventId;
-
-        #region storages
-        /// <summary>
-        /// 导出Excel。
-        /// </summary>
-        /// <typeparam name="TModel">模型类型。</typeparam>
-        /// <param name="models">模型实例列表。</param>
-        /// <param name="fileName">导出文件名称。</param>
-        /// <returns>返回试图结果。</returns>
-        protected IActionResult Excel<TModel>(IEnumerable<TModel> models, string fileName = null)
-            where TModel : class, new()
-        {
-            if (fileName == null)
-                fileName = Guid.NewGuid().ToString("N");
-            return GetRequiredService<IExcelManager>().Export(models, fileName);
-        }
-
-        /// <summary>
-        /// 返回上传/下载结果。
-        /// </summary>
-        /// <returns>返回JSON对象。</returns>
-        /// <param name="result">上传/下载结果。</param>
-        protected IActionResult Json(MediaResult result)
-        {
-            if (result.Succeeded)
-                return Success(new { result.Url });
-            return Error(result.Message);
-        }
-        #endregion
     }
 
     /// <summary>

@@ -51,7 +51,7 @@ namespace Mozlite.Mvc.TagHelpers
             var items = Init() ?? await InitAsync() ?? Enumerable.Empty<SelectListItem>();
             items = items.ToList();
             if (!string.IsNullOrEmpty(DefaultText))//添加默认选项
-                items = new[] { new SelectListItem { Text = DefaultText, Value = DefaultValue?.ToString() } }.Concat(items).ToList();
+                items = new[] { new SelectListItem { Text = DefaultText, Value = DefaultValue?.ToString() ?? "" } }.Concat(items).ToList();
             if (For != null)
             {
                 var htmlGenerator = HttpContext.RequestServices.GetRequiredService<IHtmlGenerator>();

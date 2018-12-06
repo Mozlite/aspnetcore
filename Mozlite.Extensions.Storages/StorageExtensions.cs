@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -80,13 +82,68 @@ namespace Mozlite.Extensions.Storages
         /// <returns>返回判断结果。</returns>
         public static bool IsPictureFile(this string fileName)
         {
-            if (fileName == null)
-                return false;
             var extension = Path.GetExtension(fileName);
-            if (extension == null)
-                return false;
-            extension = $",{extension.Trim().ToLower()},";
-            return _images.Contains(extension);
+            return extension.IsPicture();
+        }
+
+        //按比例缩放 
+        private static void GetDrawSize(int srcWidth, int srcHeight, int destWidth, int destHeight, out int width, out int height)
+        {
+            if (srcHeight > destHeight || srcWidth > destWidth)
+            {
+                if ((srcWidth * destHeight) > (srcHeight * destWidth))
+                {
+                    width = destWidth;
+                    height = (destWidth * srcHeight) / srcWidth;
+                }
+                else
+                {
+                    height = destHeight;
+                    width = (srcWidth * destHeight) / srcHeight;
+                }
+            }
+            else
+            {
+                width = srcWidth;
+                height = srcHeight;
+            }
+        }
+
+        /// <summary>
+        /// 缩放图片。
+        /// </summary>
+        /// <param name="info">图片文件实例，一般在临时文件夹中。</param>
+        /// <param name="width">宽度。</param>
+        /// <param name="height">高度。</param>
+        /// <param name="path">保存路径，未指定将保存在<paramref name="info"/>得文件夹中。</param>
+        /// <returns>返回缩略图文件实例。</returns>
+        public static FileInfo Resize(this FileInfo info, int width, int height, string path = null)
+        {
+            if (path == null)
+                path = info.DirectoryName;
+            else if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, Guid.NewGuid() + ".png");
+            var image = Image.FromFile(info.FullName);
+            GetDrawSize(image.Width, image.Height, width, height, out var dw, out var dh);
+            using (var bitmap = new Bitmap(dw, dh))
+            {
+                using (var graphics = Graphics.FromImage(bitmap))
+                {
+                    graphics.Clear(Color.Transparent);
+                    //设置画布的描绘质量         
+                    graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                    graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    graphics.DrawImage(image,
+                        new Rectangle((width - dw) / 2, (height - dh) / 2, dw, dh), 0, 0,
+                        image.Width,
+                        image.Height, GraphicsUnit.Pixel);
+                }
+                bitmap.Save(path, ImageFormat.Png);
+            }
+            image.Dispose();
+            return new FileInfo(path);
         }
     }
 }

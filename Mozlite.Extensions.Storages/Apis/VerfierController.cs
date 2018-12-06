@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mozlite.Mvc.Controllers
+namespace Mozlite.Extensions.Storages.Apis
 {
     /// <summary>
     /// 验证码。
     /// </summary>
-    public class VerfierController : ControllerBase
+    public class VerfierController : Controller
     {
         /// <summary>
         /// 验证码。

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Mozlite.Mvc
+namespace Mozlite.Extensions.Storages.Apis
 {
     /// <summary>
     /// 验证码。

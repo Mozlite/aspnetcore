@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Mozlite.Mvc.Controllers
+namespace Mozlite.Mvc.Apis.Server
 {
     /// <summary>
     /// 自动刷新功能。

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages
@@ -49,11 +50,7 @@ namespace Mozlite.Extensions.Storages
             if (file == null || file.Length == 0)
                 return new MediaResult(null, Resources.FormFileInvalid);
             var tempFile = await _directory.SaveToTempAsync(file);
-            var media = new MediaFile();
-            media.Extension = Path.GetExtension(file.FileName);
-            media.Name = Path.GetFileNameWithoutExtension(file.FileName);
-            init(media);
-            return await CreateAsync(tempFile, media, file.ContentType, unique);
+            return await SaveAsync(tempFile, file.FileName, init, unique);
         }
 
         /// <summary>
@@ -89,11 +86,7 @@ namespace Mozlite.Extensions.Storages
                 client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                 using (var stream = await client.GetStreamAsync(uri))
                     tempFile = await _directory.SaveToTempAsync(stream);
-                var media = new MediaFile();
-                media.Extension = Path.GetExtension(uri.AbsolutePath);
-                media.Name = Path.GetFileNameWithoutExtension(uri.AbsolutePath);
-                init(media);
-                return await CreateAsync(tempFile, media, media.Extension.GetContentType(), unique);
+                return await SaveAsync(tempFile, uri.AbsolutePath, init, unique);
             }
         }
 
@@ -111,6 +104,23 @@ namespace Mozlite.Extensions.Storages
                 x.ExtensionName = extensionName;
                 x.TargetId = targetId;
             }, unique);
+
+        /// <summary>
+        /// 将临时文件存储到系统中。
+        /// </summary>
+        /// <param name="tempFile">临时文件实例。</param>
+        /// <param name="fileName">文件名称，用于解析扩展名和文件名。</param>
+        /// <param name="init">实例化媒体文件属性。</param>
+        /// <param name="unique">每一个文件和媒体存储文件一一对应。</param>
+        /// <returns>返回上传后的结果！</returns>
+        public Task<MediaResult> SaveAsync(FileInfo tempFile, string fileName, Action<MediaFile> init, bool unique = true)
+        {
+            var media = new MediaFile();
+            media.Extension = Path.GetExtension(fileName);
+            media.Name = Path.GetFileNameWithoutExtension(fileName);
+            init(media);
+            return CreateAsync(tempFile, media, media.Extension.GetContentType(), unique);
+        }
 
         private async Task<MediaResult> CreateAsync(FileInfo tempFile, MediaFile file, string contentType, bool unique)
         {

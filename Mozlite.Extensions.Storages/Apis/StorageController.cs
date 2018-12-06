@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mozlite.Extensions.Storages.Controllers
+namespace Mozlite.Extensions.Storages.Apis
 {
     /// <summary>
     /// 存储控制器。
