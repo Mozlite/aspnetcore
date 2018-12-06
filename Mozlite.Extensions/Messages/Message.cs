@@ -82,6 +82,16 @@ namespace Mozlite.Extensions.Messages
         }
 
         /// <summary>
+        /// 源代码。
+        /// </summary>
+        [NotMapped]
+        public string Source
+        {
+            get => this[nameof(Source)];
+            set => this[nameof(Source)] = value;
+        }
+
+        /// <summary>
         /// 获取用于计算唯一键的哈希组合字符串的哈希值。
         /// </summary>
         /// <returns>返回组合字符串的哈希值。</returns>
