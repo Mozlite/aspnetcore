@@ -27,13 +27,6 @@ namespace Mozlite.Extensions.Tasks
         public TaskHostedService(IEnumerable<ITaskService> services, ITaskManager taskManager, ILogger<TaskHostedService> logger)
         {
             _services = services;
-            foreach (var service in services)
-            {
-                var context = new TaskContext();
-                context.ExecuteAsync = service.ExecuteAsync;
-                context.Interval = service.Interval;
-                _contexts.TryAdd(service.GetType().DisplayName(), context);
-            }
             _taskManager = taskManager;
             _logger = logger;
         }
@@ -54,6 +47,18 @@ namespace Mozlite.Extensions.Tasks
         {
             _logger.LogInformation("关闭后台任务执行...");
             return base.StopAsync(cancellationToken);
+        }
+
+        private async Task EnsuredTaskServicesAsync()
+        {
+            foreach (var service in _services)
+            {
+                var context = new TaskContext();
+                context.ExecuteAsync = service.ExecuteAsync;
+                context.Interval = service.Interval;
+                _contexts.TryAdd(service.GetType().DisplayName(), context);
+            }
+            await _taskManager.EnsuredTaskServicesAsync(_services);
         }
 
         private async Task LoadContextsAsync()
@@ -86,7 +91,7 @@ namespace Mozlite.Extensions.Tasks
             //等待数据迁移
             await cancellationToken.WaitInstalledAsync();
             //将后台服务添加到数据库中
-            await _taskManager.EnsuredTaskServicesAsync(_services);
+            await EnsuredTaskServicesAsync();
             //开启后台服务线程，执行后台服务
             while (!cancellationToken.IsCancellationRequested)
             {
