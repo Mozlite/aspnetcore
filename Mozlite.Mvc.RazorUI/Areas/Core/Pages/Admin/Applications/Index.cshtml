@@ -20,6 +20,8 @@
             <tr>
                 <th class="checkbox-only"><moz:checkbox class="moz-checkall"></moz:checkbox></th>
                 <th>应用名称</th>
+                <th>Token</th>
+                <th>过期时间</th>
             </tr>
         </thead>
         <tbody class="data-content">
@@ -29,7 +31,7 @@
                     <td class="checkbox-only"><moz:checkbox value="@app.Id"></moz:checkbox></td>
                     <td>
                         <div>
-                            <b>@app.Name</b> 
+                            <b>@app.Name</b>
                             <div class="data-action">
                                 <a title="API列表" asp-page="./Apis" asp-route-id="@app.Id"><i class="fa fa-link"></i> APIs</a>
                                 <a js-modal="click" asp-page="./Edit" asp-route-id="@app.Id"><i class="fa fa-pencil"></i> 编辑</a>
@@ -37,11 +39,14 @@
                             </div>
                         </div>
                         <div class="text-secondary">@Html.Raw(app.Description)</div>
-                        <div><b>AppId：</b>@app.AppId</div>
-                        <div><b>密钥：</b>@app.AppSecret</div>
+                        <div><i>AppId：</i>@app.AppId</div>
+                        <div><i>密钥：</i>@app.AppSecret</div>
                     </td>
+                    <td class="text-middle">@app.Token</td>
+                    <td class="text-middle"><moz:datetimeoffset date="@app.ExpiredDate"></moz:datetimeoffset></td>
                 </tr>
             }
+            <moz:warning-tabled colspan="4" attach="Model.Apps">还没有添加任何应用程序！</moz:warning-tabled>
         </tbody>
     </table>
 </div>

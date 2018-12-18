@@ -8,18 +8,15 @@ namespace Mozlite.Mvc.Apis
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter)]
     public class ApiParameterAttribute : Attribute
     {
-        /// <summary>
-        /// 描述信息。
-        /// </summary>
-        public string Description { get; }
-        private readonly object _defaultValue;
+        private readonly string _description;
+
         /// <summary>
         /// 初始化类<see cref="ApiParameterAttribute"/>。
         /// </summary>
         /// <param name="description">描述信息。</param>
         public ApiParameterAttribute(string description)
         {
-            Description = description;
+            _description = description;
         }
 
         /// <summary>
@@ -27,8 +24,8 @@ namespace Mozlite.Mvc.Apis
         /// </summary>
         /// <param name="defaultValue">默认值。</param>
         protected ApiParameterAttribute(object defaultValue)
+            : this(defaultValue?.ToJsonString())
         {
-            _defaultValue = defaultValue;
         }
 
         /// <summary>
@@ -37,7 +34,7 @@ namespace Mozlite.Mvc.Apis
         /// <returns>当前实例返回的JSON字符串。</returns>
         public override string ToString()
         {
-            return _defaultValue.ToJsonString();
+            return _description;
         }
     }
 }

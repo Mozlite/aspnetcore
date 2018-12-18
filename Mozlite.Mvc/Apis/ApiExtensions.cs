@@ -39,7 +39,7 @@ namespace Mozlite.Mvc.Apis
         /// <returns>返回API描述。</returns>
         public static string GetDescription(this ApiParameterDescription api)
         {
-            return (api.ParameterDescriptor as ControllerParameterDescriptor)?.ParameterInfo.GetCustomAttribute<ApiParameterAttribute>()?.Description;
+            return (api.ParameterDescriptor as ControllerParameterDescriptor)?.ParameterInfo.GetCustomAttribute<ApiParameterAttribute>()?.ToString();
         }
 
         /// <summary>

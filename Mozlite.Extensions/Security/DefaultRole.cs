@@ -51,6 +51,11 @@ namespace Mozlite.Extensions.Security
         public int RoleLevel { get; }
 
         /// <summary>
+        /// 管理员角色值。
+        /// </summary>
+        public const int SystemRoleLevel = 2000000000;
+
+        /// <summary>
         /// 转化为角色实例。
         /// </summary>
         /// <returns>返回当前角色实例。</returns>

@@ -54,33 +54,7 @@ namespace Mozlite.Mvc
                 || domain.StartsWith("localhost:")
                 || domain.StartsWith("127.0.0.1:");
         }
-
-        /// <summary>
-        /// 读取发送的字符串。
-        /// </summary>
-        /// <param name="request">当前请求。</param>
-        /// <returns>返回当前请求的字符串。</returns>
-        public static Task<string> ReadStringAsync(this HttpRequest request)
-        {
-            using (var reader = new StreamReader(request.Body, Encoding.UTF8))
-            {
-                return reader.ReadToEndAsync();
-            }
-        }
-
-        /// <summary>
-        /// 读取发送的字符串。
-        /// </summary>
-        /// <param name="request">当前请求。</param>
-        /// <returns>返回当前请求的字符串。</returns>
-        public static async Task<TModel> ReadAsync<TModel>(this HttpRequest request)
-        {
-            var json = await request.ReadStringAsync();
-            if (string.IsNullOrWhiteSpace(json))
-                return default;
-            return Cores.FromJsonString<TModel>(json);
-        }
-
+        
         /// <summary>
         /// 获取或添加当前请求上下文实例。
         /// </summary>

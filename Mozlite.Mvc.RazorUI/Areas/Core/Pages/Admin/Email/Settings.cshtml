@@ -7,8 +7,7 @@
 
 <form method="post">
     <div class="form-group">
-        <label>激活邮件系统</label>
-        <moz:checkbox for="Input.Enabled"></moz:checkbox>
+        <moz:checkbox for="Input.Enabled">激活邮件系统</moz:checkbox>
     </div>
     <div class="form-group">
         <label>SMTP服务器</label>
@@ -27,8 +26,7 @@
         <input value="@Model?.Input.SmtpPassword" asp-for="Input.SmtpPassword" type="password" class="form-control col-md-4 col-sm-8" />
     </div>
     <div class="form-group">
-        <label>是否使用SSL</label>
-        <moz:checkbox for="Input.UseSsl"></moz:checkbox>
+        <moz:checkbox for="Input.UseSsl">使用SSL</moz:checkbox>
     </div>
     <div class="form-group">
         <label>最多尝试发送次数</label>

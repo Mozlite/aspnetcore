@@ -62,7 +62,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回最大角色等级。</returns>
         protected virtual Task<int> GetMaxRoleLevelAsync(TRole role)
         {
-            return RoleContext.MaxAsync(x => x.RoleLevel, x => x.RoleLevel < int.MaxValue);
+            return RoleContext.MaxAsync(x => x.RoleLevel, x => x.RoleLevel < DefaultRole.SystemRoleLevel);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回最大角色等级。</returns>
         protected virtual int GetMaxRoleLevel(TRole role)
         {
-            return RoleContext.Max(x => x.RoleLevel, x => x.RoleLevel < int.MaxValue);
+            return RoleContext.Max(x => x.RoleLevel, x => x.RoleLevel < DefaultRole.SystemRoleLevel);
         }
 
         /// <summary>

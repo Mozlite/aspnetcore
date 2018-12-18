@@ -231,7 +231,7 @@ namespace Mozlite.Extensions.Security
             var result = await IsDuplicatedAsync(role);
             if (!result.Succeeded)
                 return result;
-            return FromResult(await base.UpdateAsync(role), role);
+            return FromResult(await _store.UpdateAsync(role), role);
         }
 
         /// <summary>
