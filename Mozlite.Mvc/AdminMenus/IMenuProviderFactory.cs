@@ -28,5 +28,11 @@ namespace Mozlite.Mvc.AdminMenus
         /// <param name="provider">提供者名称。</param>
         /// <returns>返回当前提供者名称的菜单实例对象。</returns>
         IEnumerable<MenuItem> GetRoots(string provider);
+
+        /// <summary>
+        /// 属性菜单。
+        /// </summary>
+        /// <param name="provider">菜单提供者。</param>
+        void Refresh(string provider);
     }
 }

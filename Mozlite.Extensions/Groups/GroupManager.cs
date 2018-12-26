@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
+using Mozlite.Extensions.Categories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
-using Mozlite.Extensions.Categories;
 
 namespace Mozlite.Extensions.Groups
 {
@@ -33,7 +33,8 @@ namespace Mozlite.Extensions.Groups
         /// <returns>返回判断结果。</returns>
         public override bool IsDuplicated(TGroup category)
         {
-            return Fetch().Any(x => x.ParentId == category.ParentId && x.Id != category.Id && x.Name == category.Name);
+            var groups = Fetch(x => x.ParentId == category.ParentId && x.Id != category.Id && x.Name == category.Name);
+            return groups.Any();
         }
 
         /// <summary>
@@ -44,8 +45,8 @@ namespace Mozlite.Extensions.Groups
         /// <returns>返回判断结果。</returns>
         public override async Task<bool> IsDuplicatedAsync(TGroup category, CancellationToken cancellationToken = default)
         {
-            var groups = await FetchAsync(cancellationToken: cancellationToken);
-            return groups.Any(x => x.ParentId == category.ParentId && x.Id != category.Id && x.Name == category.Name);
+            var groups = await FetchAsync(x => x.ParentId == category.ParentId && x.Id != category.Id && x.Name == category.Name, cancellationToken);
+            return groups.Any();
         }
 
         /// <summary>

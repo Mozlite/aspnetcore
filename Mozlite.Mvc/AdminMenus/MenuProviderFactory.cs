@@ -97,5 +97,14 @@ namespace Mozlite.Mvc.AdminMenus
                 .OrderByDescending(x => x.Priority)
                 .ToList();
         }
+
+        /// <summary>
+        /// 属性菜单。
+        /// </summary>
+        /// <param name="provider">菜单提供者。</param>
+        public void Refresh(string provider)
+        {
+            _cache.Remove($"memus[{provider}]");
+        }
     }
 }
