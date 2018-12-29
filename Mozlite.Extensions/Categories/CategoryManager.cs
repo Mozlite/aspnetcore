@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Mozlite.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions.Categories
 {
@@ -40,10 +39,5 @@ namespace Mozlite.Extensions.Categories
         protected CategoryManager(IDbContext<TCategory> context) : base(context)
         {
         }
-
-        /// <summary>
-        /// 当前分类实例。
-        /// </summary>
-        public virtual IEnumerable<TCategory> Categories => Fetch();
     }
 }

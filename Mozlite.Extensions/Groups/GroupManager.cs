@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
-using Mozlite.Extensions.Categories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,7 @@ namespace Mozlite.Extensions.Groups
     /// 初始化类<see cref="GroupManager{TGroup}"/>。
     /// </summary>
     /// <typeparam name="TGroup">分组类型。</typeparam>
-    public abstract class GroupManager<TGroup> : CachableCategoryManager<TGroup>, IGroupManager<TGroup> where TGroup : GroupBase<TGroup>
+    public abstract class GroupManager<TGroup> : CachableObjectManager<TGroup>, IGroupManager<TGroup> where TGroup : GroupBase<TGroup>
     {
         /// <summary>
         /// 初始化类<see cref="GroupManager{TCategory}"/>。

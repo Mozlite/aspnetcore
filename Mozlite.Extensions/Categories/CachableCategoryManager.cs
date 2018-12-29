@@ -1,9 +1,8 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Mozlite.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Categories
 {
@@ -11,8 +10,7 @@ namespace Mozlite.Extensions.Categories
     /// 缓存分类管理实现类基类。
     /// </summary>
     /// <typeparam name="TCategory">分类类型。</typeparam>
-    public abstract class CachableCategoryManager<TCategory> : CachableObjectManager<TCategory>,
-        ICachableCategoryManager<TCategory>
+    public abstract class CachableCategoryManager<TCategory> : CachableObjectManager<TCategory>, ICachableCategoryManager<TCategory>
         where TCategory : CategoryBase
     {
         /// <summary>
@@ -37,18 +35,13 @@ namespace Mozlite.Extensions.Categories
             var categories = await FetchAsync(cancellationToken: cancellationToken);
             return categories.Any(x => x.Id != category.Id && x.Name == category.Name);
         }
-        
-        /// <summary>
-        /// 当前分类实例。
-        /// </summary>
-        public IEnumerable<TCategory> Categories => Fetch();
 
         /// <summary>
         /// 初始化类<see cref="CachableCategoryManager{TModel}"/>。
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
         /// <param name="cache">缓存接口。</param>
-        protected CachableCategoryManager(IDbContext<TCategory> context, IMemoryCache cache) 
+        protected CachableCategoryManager(IDbContext<TCategory> context, IMemoryCache cache)
             : base(context, cache)
         {
         }

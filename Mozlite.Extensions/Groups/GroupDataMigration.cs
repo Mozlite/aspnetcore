@@ -1,5 +1,5 @@
 ﻿using Mozlite.Data.Migrations;
-using Mozlite.Extensions.Categories;
+using Mozlite.Data.Migrations.Builders;
 
 namespace Mozlite.Extensions.Groups
 {
@@ -7,7 +7,8 @@ namespace Mozlite.Extensions.Groups
     /// 分组数据迁移基类。
     /// </summary>
     /// <typeparam name="TGroup">分组类型。</typeparam>
-    public abstract class GroupDataMigration<TGroup> : CategoryDataMigration<TGroup> where TGroup : GroupBase<TGroup>
+    public abstract class GroupDataMigration<TGroup> : DataMigration
+        where TGroup : GroupBase<TGroup>
     {
         /// <summary>
         /// 当模型建立时候构建的表格实例。
@@ -24,5 +25,11 @@ namespace Mozlite.Extensions.Groups
                 table.UniqueConstraint(x => new { x.ParentId, x.Name });
             });
         }
+
+        /// <summary>
+        /// 编辑表格其他属性列。
+        /// </summary>
+        /// <param name="table">当前表格构建实例对象。</param>
+        protected virtual void Create(CreateTableBuilder<TGroup> table) { }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions
 {
@@ -67,12 +67,28 @@ namespace Mozlite.Extensions
         /// </summary>
         /// <param name="result">数据库操作结果。</param>
         /// <returns>数据库操作结果。</returns>
-        protected virtual DataResult Refresh(DataResult result)
+        protected DataResult Refresh(DataResult result)
         {
             if (result) Refresh();
             return result;
         }
-        
+
+        /// <summary>
+        /// 如果结果正确返回<paramref name="succeed"/>，否则返回失败项。
+        /// </summary>
+        /// <param name="result">执行结果。</param>
+        /// <param name="succeed">执行成功返回的值。</param>
+        /// <returns>返回执行结果实例对象。</returns>
+        protected DataResult Refresh(bool result, DataAction succeed)
+        {
+            if (result)
+            {
+                Refresh();
+                return succeed;
+            }
+            return -(int)succeed;
+        }
+
         /// <summary>
         /// 通过唯一Id删除对象实例。
         /// </summary>
