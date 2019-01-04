@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Hosting;
 using Mozlite.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Mozlite
 {
@@ -26,7 +26,7 @@ namespace Mozlite
         public static IMozliteBuilder AddMozlite(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddSingleton(typeof(IServiceAccessor<>), typeof(ServiceAccessor<>));
-            var exportedTypes = GetExportedTypes();
+            var exportedTypes = GetExportedTypes(configuration);
             TryAddContainer(services, exportedTypes, configuration);
             return new MozliteBuilder(services, configuration);
         }
@@ -79,9 +79,9 @@ namespace Mozlite
             }
         }
 
-        private static IEnumerable<Type> GetExportedTypes()
+        private static IEnumerable<Type> GetExportedTypes(IConfiguration configuration)
         {
-            var types = GetServices().ToList();
+            var types = GetServices(configuration).ToList();
             var susppendServices = types.Select(type => type.GetTypeInfo())
                 .Where(type => type.IsDefined(typeof(SuppressAttribute)))
                 .ToList();
@@ -96,9 +96,9 @@ namespace Mozlite
                 .ToList();
         }
 
-        private static IEnumerable<Type> GetServices()
+        private static IEnumerable<Type> GetServices(IConfiguration configuration)
         {
-            var types = GetAssemblies()
+            var types = GetAssemblies(configuration)
                 .SelectMany(assembly => assembly.GetTypes())
                 .ToList();
             foreach (var type in types)
@@ -109,12 +109,18 @@ namespace Mozlite
             }
         }
 
-        private static IEnumerable<Assembly> GetAssemblies()
+        private static IEnumerable<string> GetExcludeAssemblies(IConfiguration configuration)
+        {
+            return configuration.GetSection("Excludes").AsList() ?? Enumerable.Empty<string>();
+        }
+
+        private static IEnumerable<Assembly> GetAssemblies(IConfiguration configuration)
         {
             var assemblies = new List<Assembly>();
+            var excludes = GetExcludeAssemblies(configuration);
             foreach (var library in DependencyContext.Default.RuntimeLibraries)
             {
-                if (library.Serviceable)
+                if (library.Serviceable || excludes.Contains(library.Name, StringComparer.OrdinalIgnoreCase))
                     continue;
                 assemblies.Add(Assembly.Load(new AssemblyName(library.Name)));
             }
@@ -135,6 +141,16 @@ namespace Mozlite
             foreach (var service in services)
                 service.Configure(app, configuration);
             return app;
+        }
+
+        /// <summary>
+        /// 获取配置节点的字符串列表。
+        /// </summary>
+        /// <param name="section">配置节点。</param>
+        /// <returns>返回当前配置的字符串列表。</returns>
+        public static List<string> AsList(this IConfigurationSection section)
+        {
+            return section?.AsEnumerable().Where(x => x.Value != null).Select(x => x.Value).ToList();
         }
     }
 }

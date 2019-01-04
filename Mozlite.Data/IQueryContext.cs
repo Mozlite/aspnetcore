@@ -89,7 +89,22 @@ namespace Mozlite.Data
         /// </summary>
         /// <returns>返回当前查询实例对象。</returns>
         IQueryContext<TModel> Select();
-        
+
+        /// <summary>
+        /// 设置选择列。
+        /// </summary>
+        /// <typeparam name="TEntity">模型类型。</typeparam>
+        /// <param name="fields">不包含的列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryContext<TModel> Exclude<TEntity>(Expression<Func<TEntity, object>> fields);
+
+        /// <summary>
+        /// 设置选择列。
+        /// </summary>
+        /// <param name="fields">不包含的列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryContext<TModel> Exclude(Expression<Func<TModel, object>> fields);
+
         /// <summary>
         /// 设置选择列(不重复)。
         /// </summary>

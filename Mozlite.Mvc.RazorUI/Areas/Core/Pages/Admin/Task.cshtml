@@ -19,25 +19,45 @@
                 <tr>
                     <td>
                         <b>@task.Name</b>
-                        @*<div class="data-action  pull-right">
-                                <a js-action="modal" title="编辑" asp-page="./send" asp-route-id="@task.Id"><i class="fa fa-pencil"></i></a>
-                            </div>*@
                         <div class="text-secondary">
                             @Html.Raw(task.Description)<span>(@(task.ToHtmlInterval())执行)</span>
                         </div>
                     </td>
                     <td>
-                        上一次执行：@task.LastExecuted?.ToString("yyyy-MM-dd HH:mm:ss")<br />
+                        上一次执行：<span class="last-@task.Id">@task.LastExecuted?.ToString("yyyy-MM-dd HH:mm:ss")</span><br />
                         下一次执行：
                         @if (task.NextExecuting < DateTime.Now)
                         {
-                            <span class="text-success"><i class="fa fa-spinner fa-spin"></i> 运行中...</span>
+                            <span class="current-@task.Id text-success"><i class="fa fa-spinner fa-spin"></i> 运行中...</span>
                         }
                         else
-                        {@task.NextExecuting.ToString("yyyy-MM-dd HH:mm:ss")}
+                        {<span class="current-@task.Id">@task.NextExecuting.ToString("yyyy-MM-dd HH:mm:ss")</span>}
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@section footer{
+    <script type="text/javascript">
+        $(function render() {
+            Mozlite.ajax('@Url.Page("./Task")', {},
+                c => {
+                    c.data.forEach(d => {
+                        $('.last-' + d.id).html(d.lastExecuted);
+                        if (d.nextExecuting) {
+                            $('.current-' + d.id).removeClass('text-success').html(d.nextExecuting);
+                        } else {
+                            $('.current-' + d.id).addClass('text-success')
+                                .html('<i class="fa fa-spinner fa-spin"></i> 运行中...');
+                        }
+                    });
+                    setTimeout(render, 2 * 1000);
+                    return true;
+                }, e => {
+                    setTimeout(render, 2 * 1000);
+                });
+        });
+    </script>
+}

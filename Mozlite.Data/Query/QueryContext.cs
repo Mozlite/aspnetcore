@@ -363,6 +363,44 @@ namespace Mozlite.Data.Query
         /// <summary>
         /// 设置选择列。
         /// </summary>
+        /// <typeparam name="TEntity">模型类型。</typeparam>
+        /// <param name="fields">不包含的列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
+        public virtual IQueryable<TModel> Exclude<TEntity>(Expression<Func<TEntity, object>> fields)
+        {
+            var excludes = fields.GetPropertyNames();
+            var includes = Entity.GetProperties()
+                .Where(x => !x.PropertyInfo.IsDefined(typeof(NotMappedAttribute)) && !excludes.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
+                .Select(p => Delimit(p.Name));
+            _fields.AddRange(includes);
+            return this;
+        }
+
+        /// <summary>
+        /// 设置选择列。
+        /// </summary>
+        /// <param name="fields">不包含的列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
+        public virtual IQueryable<TModel> Exclude(Expression<Func<TModel, object>> fields) => Exclude<TModel>(fields);
+
+        /// <summary>
+        /// 设置选择列。
+        /// </summary>
+        /// <typeparam name="TEntity">模型类型。</typeparam>
+        /// <param name="fields">不包含的列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryContext<TModel> IQueryContext<TModel>.Exclude<TEntity>(Expression<Func<TEntity, object>> fields) => Exclude(fields);
+
+        /// <summary>
+        /// 设置选择列。
+        /// </summary>
+        /// <param name="fields">不包含的列表达式。</param>
+        /// <returns>返回当前查询实例对象。</returns>
+        IQueryContext<TModel> IQueryContext<TModel>.Exclude(Expression<Func<TModel, object>> fields) => Exclude(fields);
+
+        /// <summary>
+        /// 设置选择列。
+        /// </summary>
         /// <returns>返回当前查询实例对象。</returns>
         public IQueryable<TModel> Select()
         {
