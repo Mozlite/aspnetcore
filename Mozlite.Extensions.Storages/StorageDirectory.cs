@@ -37,9 +37,11 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="path">当前相对路径。</param>
         /// <returns>返回当前路径的物理路径。</returns>
-        public string GetPhysicalPath(string path)
+        public string GetPhysicalPath(string path = null)
         {
-            path = path?.Trim(' ', '~', '/', '\\');
+            if (path == null)
+                return _root;
+            path = path.Trim(' ', '~', '/', '\\');
             return Path.Combine(_root, path);
         }
 
@@ -48,8 +50,10 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="fileName">文件名称。</param>
         /// <returns>返回当前临时文件物理路径。</returns>
-        public string GetTempPath(string fileName)
+        public string GetTempPath(string fileName = null)
         {
+            if (fileName == null)
+                return _temp;
             return Path.Combine(_temp, fileName);
         }
 

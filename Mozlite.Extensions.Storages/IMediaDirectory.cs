@@ -103,5 +103,14 @@ namespace Mozlite.Extensions.Storages
         /// <param name="targetId">对象Id。</param>
         /// <returns>返回删除结果。</returns>
         Task<bool> DeleteAsync(string extensionName, int? targetId =null);
+
+        /// <summary>
+        /// 通过GUID获取存储图片文件实例缩略图。
+        /// </summary>
+        /// <param name="id">媒体文件Id。</param>
+        /// <param name="width">宽度。</param>
+        /// <param name="height">高度。</param>
+        /// <returns>返回存储缩略图实例。</returns>
+        Task<StoredPhysicalFile> FindThumbAsync(Guid id, int width, int height);
     }
 }

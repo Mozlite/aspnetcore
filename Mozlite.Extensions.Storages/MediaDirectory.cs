@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages
@@ -22,6 +21,7 @@ namespace Mozlite.Extensions.Storages
         private const string UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
         private readonly string _media;
+        private readonly string _thumbs;
 
         /// <summary>
         /// 初始化类<see cref="MediaDirectory"/>。
@@ -36,6 +36,8 @@ namespace Mozlite.Extensions.Storages
             _sfdb = sfdb;
             //媒体文件夹。
             _media = directory.GetPhysicalPath("media");
+            //缩略图文件夹
+            _thumbs = directory.GetPhysicalPath("media/thumbs");
         }
 
         /// <summary>
@@ -238,6 +240,37 @@ namespace Mozlite.Extensions.Storages
             if (targetId == null)
                 return _mfdb.DeleteAsync(x => x.ExtensionName == extensionName);
             return _mfdb.DeleteAsync(x => x.ExtensionName == extensionName && x.TargetId == targetId);
+        }
+
+        /// <summary>
+        /// 通过GUID获取存储图片文件实例缩略图。
+        /// </summary>
+        /// <param name="id">媒体文件Id。</param>
+        /// <param name="width">宽度。</param>
+        /// <param name="height">高度。</param>
+        /// <returns>返回存储缩略图实例。</returns>
+        public async Task<StoredPhysicalFile> FindThumbAsync(Guid id, int width, int height)
+        {
+            var file = await _sfdb.AsQueryable().InnerJoin<MediaFile>((sf, mf) => sf.FileId == mf.FileId)
+                .Where<MediaFile>(x => x.Id == id)
+                .Select<MediaFile>(x => x.Name)
+                .Select(x => new { x.FileId, x.ContentType })
+                .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
+            var thumbFile = new FileInfo(Path.Combine(_thumbs, file.PhysicalPath).Replace(".moz", $".{width}x{height}.moz"));
+            if (!thumbFile.Exists)
+            {
+                var storedFile = new FileInfo(Path.Combine(_media, file.PhysicalPath));
+                if (storedFile.Exists)
+                {
+                    storedFile = storedFile.Resize(width, height, _directory.GetTempPath());
+                    if (!Directory.Exists(thumbFile.DirectoryName))
+                        Directory.CreateDirectory(thumbFile.DirectoryName);
+                    storedFile.MoveTo(thumbFile.FullName);
+                }
+            }
+
+            file.PhysicalPath = thumbFile.FullName;
+            return file;
         }
     }
 }

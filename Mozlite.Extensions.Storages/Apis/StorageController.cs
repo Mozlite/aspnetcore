@@ -58,6 +58,25 @@ namespace Mozlite.Extensions.Storages.Apis
         }
 
         /// <summary>
+        /// 访问缩略图片文件。
+        /// </summary>
+        /// <param name="width">宽度。</param>
+        /// <param name="height">高度。</param>
+        /// <param name="name">文件名称。</param>
+        /// <returns>返回文件结果。</returns>
+        [Route("s-medias/{width:int}x{height:int}/{name}")]
+        public async Task<IActionResult> Index(int width, int height, string name)
+        {
+            name = Path.GetFileNameWithoutExtension(name);
+            if (!Guid.TryParse(name, out var id))
+                return NotFound();
+            var file = await _mediaFileProvider.FindThumbAsync(id, width, height);
+            if (file == null || !System.IO.File.Exists(file.PhysicalPath))
+                return NotFound();
+            return PhysicalFile(file.PhysicalPath, "image/png");
+        }
+
+        /// <summary>
         /// 访问媒体文件。
         /// </summary>
         /// <param name="name">文件名称。</param>

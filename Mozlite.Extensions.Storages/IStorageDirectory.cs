@@ -21,7 +21,7 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="fileName">文件名称。</param>
         /// <returns>返回当前临时文件物理路径。</returns>
-        string GetTempPath(string fileName);
+        string GetTempPath(string fileName = null);
 
         /// <summary>
         /// 获取当前路径文件的操作提供者接口实例。
