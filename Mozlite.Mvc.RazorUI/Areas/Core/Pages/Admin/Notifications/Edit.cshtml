@@ -1,0 +1,19 @@
+﻿@page
+@model EditModel
+@{
+    ViewBag.Title = "通知类型";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <div class="form-group">
+        <label>名称</label>
+        <input class="form-control" asp-for="Input.Name" />
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>图标<small class="text-danger">(可以使用样式图标)</small></label>
+        <input class="form-control" asp-for="Input.IconUrl" />
+    </div>
+</form>
