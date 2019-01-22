@@ -4,17 +4,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions;
+using Mozlite.Extensions.Messages.Notifications;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Activities;
 using Mozlite.Extensions.Security.Permissions;
+using Mozlite.Extensions.Storages;
+using Mozlite.Extensions.Storages.Apis;
+using Mozlite.Extensions.Storages.Excels;
 using Mozlite.Mvc.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mozlite.Extensions.Storages;
-using Mozlite.Extensions.Storages.Apis;
-using Mozlite.Extensions.Storages.Excels;
 
 namespace Mozlite.Mvc
 {
@@ -40,28 +41,14 @@ namespace Mozlite.Mvc
         /// <summary>
         /// 日志接口。
         /// </summary>
-        protected virtual ILogger Logger
-        {
-            get
-            {
-                if (_logger == null)
-                {
-                    _logger = GetRequiredService<ILoggerFactory>()
-                        .CreateLogger(GetType());
-                }
-                return _logger;
-            }
-        }
+        protected virtual ILogger Logger => _logger ?? (_logger = GetRequiredService<ILoggerFactory>().CreateLogger(GetType()));
 
         /// <summary>
         /// 添加操作日志。
         /// </summary>
         /// <param name="message">日志消息。</param>
         /// <param name="args">格式化参数。</param>
-        protected void Log(string message, params object[] args)
-        {
-            Logger.Info(EventId, message, args);
-        }
+        protected void Log(string message, params object[] args) => Logger.Info(EventId, message, args);
 
         /// <summary>
         /// 事件ID。
@@ -111,20 +98,20 @@ namespace Mozlite.Mvc
         /// </summary>
         /// <typeparam name="TService">服务类型或者接口。</typeparam>
         /// <returns>返回当前服务的实例对象。</returns>
-        protected TService GetService<TService>()
-        {
-            return HttpContext.RequestServices.GetService<TService>();
-        }
+        protected TService GetService<TService>() => HttpContext.RequestServices.GetService<TService>();
 
         /// <summary>
         /// 获取已经注册的服务对象。
         /// </summary>
         /// <typeparam name="TService">服务类型或者接口。</typeparam>
         /// <returns>返回当前服务的实例对象。</returns>
-        protected TService GetRequiredService<TService>()
-        {
-            return HttpContext.RequestServices.GetRequiredService<TService>();
-        }
+        protected TService GetRequiredService<TService>() => HttpContext.RequestServices.GetRequiredService<TService>();
+
+        private INotifier _notifier;
+        /// <summary>
+        /// 通知接口实例。
+        /// </summary>
+        protected INotifier Notifier => _notifier ?? (_notifier = GetRequiredService<INotifier>());
         #endregion
 
         #region users
@@ -485,7 +472,7 @@ namespace Mozlite.Mvc
                 return Json(StatusType.Success, result.ToString(args));
             return Json(StatusType.Danger, result.ToString(args));
         }
-        
+
         /// <summary>
         /// 返回JSON试图结果。
         /// </summary>
