@@ -40,5 +40,17 @@ namespace Mozlite.Extensions.Messages.Notifications
         /// 通知状态。
         /// </summary>
         public NotificationStatus Status { get; set; } = NotificationStatus.New;
+
+        /// <summary>
+        /// 类型名称。
+        /// </summary>
+        [NotMapped]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 图标地址。
+        /// </summary>
+        [NotMapped]
+        public string IconUrl { get; set; }
     }
 }
