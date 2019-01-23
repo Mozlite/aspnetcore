@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Mozlite.Data;
 using Mozlite.Extensions.Security;
+using Mozlite.Extensions.Settings;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Messages.Notifications
@@ -12,15 +14,18 @@ namespace Mozlite.Extensions.Messages.Notifications
     public class NotificationManager : ObjectManager<Notification>, INotificationManager
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISettingsManager _settingsManager;
 
         /// <summary>
         /// 初始化类<see cref="NotificationManager"/>。
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
         /// <param name="httpContextAccessor">Http上下文访问接口。</param>
-        public NotificationManager(IDbContext<Notification> context, IHttpContextAccessor httpContextAccessor) : base(context)
+        /// <param name="settingsManager">配置管理接口。</param>
+        public NotificationManager(IDbContext<Notification> context, IHttpContextAccessor httpContextAccessor, ISettingsManager settingsManager) : base(context)
         {
             _httpContextAccessor = httpContextAccessor;
+            _settingsManager = settingsManager;
         }
 
         /// <summary>
@@ -33,9 +38,18 @@ namespace Mozlite.Extensions.Messages.Notifications
         /// </summary>
         /// <param name="size">通知记录数。</param>
         /// <returns>返回通知列表。</returns>
-        public virtual IEnumerable<Notification> Load(int size)
+        public virtual IEnumerable<Notification> Load(int size = 0)
         {
-            return Context.AsQueryable().WithNolock().Where(x => x.UserId == UserId).AsEnumerable(size);
+            if (size == 0)
+                size = _settingsManager.GetSettings<NotificationSettings>().MaxSize;
+            return Context.AsQueryable()
+                .WithNolock()
+                .InnerJoin<NotificationType>((n, t) => n.TypeId == t.Id)
+                .Select()
+                .Select<NotificationType>(x => new { x.IconUrl, x.Name })
+                .OrderByDescending(x => x.CreatedDate)
+                .Where(x => x.UserId == UserId)
+                .AsEnumerable(size);
         }
 
         /// <summary>
@@ -43,9 +57,18 @@ namespace Mozlite.Extensions.Messages.Notifications
         /// </summary>
         /// <param name="size">通知记录数。</param>
         /// <returns>返回通知列表。</returns>
-        public virtual Task<IEnumerable<Notification>> LoadAsync(int size)
+        public virtual async Task<IEnumerable<Notification>> LoadAsync(int size = 0)
         {
-            return Context.AsQueryable().WithNolock().Where(x => x.UserId == UserId).AsEnumerableAsync(size);
+            if (size == 0)
+                size = (await _settingsManager.GetSettingsAsync<NotificationSettings>()).MaxSize;
+            return await Context.AsQueryable()
+                .WithNolock()
+                .InnerJoin<NotificationType>((n, t) => n.TypeId == t.Id)
+                .Select()
+                .Select<NotificationType>(x => new { x.IconUrl, x.Name })
+                .OrderByDescending(x => x.CreatedDate)
+                .Where(x => x.UserId == UserId)
+                .AsEnumerableAsync(size);
         }
 
         /// <summary>
@@ -152,6 +175,22 @@ namespace Mozlite.Extensions.Messages.Notifications
         public virtual Task<bool> SetStatusAsync(int[] ids, NotificationStatus status)
         {
             return Context.UpdateAsync(x => x.Id.Included(ids), new { status });
+        }
+
+        /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public override void Clear()
+        {
+            Context.Delete(x => x.UserId == UserId);
+        }
+
+        /// <summary>
+        /// 清空所有数据。
+        /// </summary>
+        public override Task ClearAsync(CancellationToken cancellationToken = default)
+        {
+            return Context.DeleteAsync(x => x.UserId == UserId, cancellationToken);
         }
     }
 }

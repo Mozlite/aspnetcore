@@ -13,14 +13,14 @@ namespace Mozlite.Extensions.Messages.Notifications
         /// </summary>
         /// <param name="size">通知记录数。</param>
         /// <returns>返回通知列表。</returns>
-        IEnumerable<Notification> Load(int size);
+        IEnumerable<Notification> Load(int size = 0);
 
         /// <summary>
         /// 加载当前用户最新得通知。
         /// </summary>
         /// <param name="size">通知记录数。</param>
         /// <returns>返回通知列表。</returns>
-        Task<IEnumerable<Notification>> LoadAsync(int size);
+        Task<IEnumerable<Notification>> LoadAsync(int size = 0);
 
         /// <summary>
         /// 获取当前用户得通知数量。
