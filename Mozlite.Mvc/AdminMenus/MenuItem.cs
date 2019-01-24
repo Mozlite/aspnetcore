@@ -149,7 +149,7 @@ namespace Mozlite.Mvc.AdminMenus
         /// <summary>
         /// 链接地址。
         /// </summary>
-        public string LinkUrl(IUrlHelper urlHelper, string defaultUrl = "javascript:;")
+        public string LinkUrl(IUrlHelper urlHelper, string defaultUrl = "#")
         {
             if (_href != null) return _href;
             if (_page != null)

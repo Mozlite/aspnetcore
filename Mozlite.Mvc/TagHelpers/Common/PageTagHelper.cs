@@ -293,7 +293,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
             if (Data.PI == pageIndex)
             {
                 li.AddCssClass("active");
-                anchor.MergeAttribute("href", "javascript:;", true);
+                anchor.MergeAttribute("href", "#", true);
             }
             anchor.InnerHtml.AppendHtml(innerHtml);
             li.InnerHtml.AppendHtml(anchor);
