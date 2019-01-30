@@ -12,6 +12,7 @@ using Mozlite.Extensions.Storages;
 using Mozlite.Extensions.Storages.Apis;
 using Mozlite.Extensions.Storages.Excels;
 using Mozlite.Mvc.Messages;
+using Mozlite.Mvc.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,64 @@ namespace Mozlite.Mvc
         /// <param name="message">日志消息。</param>
         /// <param name="args">格式化参数。</param>
         protected void Log(string message, params object[] args) => Logger.Info(EventId, message, args);
+
+        /// <summary>
+        /// 添加操作日志。
+        /// </summary>
+        /// <param name="result">操作结果。</param>
+        /// <param name="name">操作对象名称。</param>
+        /// <param name="value">操作对象值。</param>
+        /// <returns>返回操作结果。</returns>
+        protected IActionResult LogResult(DataResult result, string name, string value = null)
+        {
+            if (result)
+            {
+                string message;
+                var code = (DataAction)result.Code;
+                if (code == DataAction.Created)
+                    message = Resources.LogAction_Add + name;
+                else if (code == DataAction.Deleted)
+                    message = Resources.LogAction_Remove + name;
+                else if (code == DataAction.Updated)
+                    message = Resources.LogAction_Modify + name;
+                else
+                    throw new NotSupportedException($"不支持“{result}”操作日志！");
+                if (value != null)
+                    message += ":" + value;
+                Logger.Info(EventId, message);
+            }
+            return Json(result, name);
+        }
+
+        /// <summary>
+        /// 添加操作日志。
+        /// </summary>
+        /// <param name="result">操作结果。</param>
+        /// <param name="name">操作对象名称。</param>
+        /// <param name="value">操作对象值。</param>
+        /// <returns>返回操作结果。</returns>
+        protected IActionResult LogResult(DataResult result, string name, int[] value)
+        {
+            string message = null;
+            if (value != null && value.Length > 0)
+                message = ":" + string.Join(",", value);
+            return LogResult(result, name, message);
+        }
+
+        /// <summary>
+        /// 添加操作日志。
+        /// </summary>
+        /// <param name="result">操作结果。</param>
+        /// <param name="name">操作对象名称。</param>
+        /// <param name="value">操作对象值。</param>
+        /// <returns>返回操作结果。</returns>
+        protected IActionResult LogResult<TValue>(DataResult result, string name, IEnumerable<TValue> value)
+        {
+            string message = null;
+            if (value != null && value.Any())
+                message = ":" + string.Join(",", value);
+            return LogResult(result, name, message);
+        }
 
         /// <summary>
         /// 事件ID。

@@ -53,12 +53,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
             }
 
             var result = _typeManager.Delete(ids);
-            if (result)
-            {
-                Log("删除了通知类型：{0}。", string.Join(",", ids));
-            }
-
-            return Json(result, "通知类型");
+            return LogResult(result, "通知类型", ids);
         }
     }
 }

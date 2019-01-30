@@ -28,15 +28,9 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Applications
                 ModelState.AddModelError("Input.Name", "名称不能为空！");
                 return Error();
             }
-            
-            var action = Input.Id > 0 ? "更新" : "添加";
-            var result = await _apiManager.SaveAsync(Input);
-            if (result)
-            {
-                Log("{1}了应用：{0}。", action, Input.Name);
-            }
 
-            return Json(result, Input.Name);
+            var result = await _apiManager.SaveAsync(Input);
+            return LogResult(result, "应用", Input.Name);
         }
 
         public IActionResult OnPostGeneral()
