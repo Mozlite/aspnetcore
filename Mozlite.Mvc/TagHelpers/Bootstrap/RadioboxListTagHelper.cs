@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Collections.Generic;
 
 namespace Mozlite.Mvc.TagHelpers.Bootstrap
 {
@@ -41,6 +42,26 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
         public bool Disabled { get; set; }
 
         /// <summary>
+        /// 设置属性模型。
+        /// </summary>
+        [HtmlAttributeName("for")]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// 初始化当前标签上下文。
+        /// </summary>
+        /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
+        public override void Init(TagHelperContext context)
+        {
+            if (string.IsNullOrEmpty(Name) && For != null)
+            {
+                Name = ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(For.Name);
+                if (Value == null)
+                    Value = For.Model?.ToString();
+            }
+        }
+
+        /// <summary>
         /// 访问并呈现当前标签实例。
         /// </summary>
         /// <param name="context">当前HTML标签上下文，包含当前HTML相关信息。</param>
@@ -73,7 +94,7 @@ namespace Mozlite.Mvc.TagHelpers.Bootstrap
                 wrapper.AddCssClass(ItemClass);
             if (isChecked)
                 wrapper.AddCssClass("checked");
-            if(Disabled)
+            if (Disabled)
                 wrapper.AddCssClass("disabled");
             wrapper.AddCssClass("checked-style-" + CheckedStyle.ToString().ToLower());
 
