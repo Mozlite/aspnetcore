@@ -19,17 +19,9 @@ namespace Mozlite.Extensions.Messages.SMS
         /// </summary>
         /// <param name="context">数据库操作实例。</param>
         /// <param name="clients">客户端列表。</param>
-        /// <param name="settingManager">配置管理接口。</param>
-        public SmsManager(IDbContext<Note> context, IEnumerable<ISmsClient> clients, ISmsSettingManager settingManager) : base(context)
+        public SmsManager(IDbContext<Note> context, IEnumerable<ISmsClient> clients) : base(context)
         {
             _clients = new ConcurrentDictionary<string, ISmsClient>(clients.ToDictionary(x => x.Name), StringComparer.OrdinalIgnoreCase);
-            var settings = settingManager.Fetch().ToDictionary(x => x.Client, StringComparer.OrdinalIgnoreCase);
-            foreach (var client in clients)
-            {
-                if (settings.ContainsKey(client.Name))
-                    continue;
-                settingManager.Save(new SmsSettings { Client = client.Name });
-            }
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Mozlite.Data;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions.Messages.SMS
 {
@@ -29,7 +29,14 @@ namespace Mozlite.Extensions.Messages.SMS
         public virtual SmsSettings Find(string name)
         {
             var settings = Fetch();
-            return settings.SingleOrDefault(x => x.Client.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var setting = settings.SingleOrDefault(x => x.Client.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (setting == null)
+            {
+                setting = new SmsSettings { Client = name };
+                Save(setting);
+            }
+
+            return setting;
         }
 
         /// <summary>
@@ -40,7 +47,14 @@ namespace Mozlite.Extensions.Messages.SMS
         public virtual async Task<SmsSettings> FindAsync(string name)
         {
             var settings = await FetchAsync();
-            return settings.SingleOrDefault(x => x.Client.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var setting = settings.SingleOrDefault(x => x.Client.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (setting == null)
+            {
+                setting = new SmsSettings { Client = name };
+                await SaveAsync(setting);
+            }
+
+            return setting;
         }
 
         /// <summary>
