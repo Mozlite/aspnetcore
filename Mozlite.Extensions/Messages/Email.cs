@@ -7,20 +7,15 @@ namespace Mozlite.Extensions.Messages
     /// <summary>
     /// 信息实体类。
     /// </summary>
-    [Table("core_Messages")]
-    public class Message : ExtendBase
+    [Table("core_Emails")]
+    public class Email : ExtendBase
     {
         /// <summary>
         /// 信息Id。
         /// </summary>
         [Identity]
         public int Id { get; set; }
-
-        /// <summary>
-        /// 信息类型。
-        /// </summary>
-        public MessageType MessageType { get; set; }
-
+        
         /// <summary>
         /// 标题，如果是短信则表示内容。
         /// </summary>
@@ -98,7 +93,7 @@ namespace Mozlite.Extensions.Messages
         protected virtual string GetHashString()
         {
             var hashString = new StringBuilder()
-                .Append($"{UserId}:{To}:{MessageType}:{Title}:{Content}");
+                .Append($"{UserId}:{To}:{Title}:{Content}");
 
             foreach (var extendKey in ExtendKeys)
             {

@@ -37,7 +37,7 @@ namespace Mozlite.Extensions.Storages.Mail
         /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
         /// <returns>返回邮件实例对象。</returns>
-        protected override async Task InitAsync(MailMessage mail, Message message)
+        protected override async Task InitAsync(MailMessage mail, Email message)
         {
             var attachments = message.GetAttachments();
             if (!attachments.Any())

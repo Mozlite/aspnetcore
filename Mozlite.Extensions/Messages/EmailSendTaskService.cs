@@ -55,7 +55,7 @@ namespace Mozlite.Extensions.Messages
         {
             var settings = await _settingsManager.GetSettingsAsync<EmailSettings>();
             if (!settings.Enabled) return;
-            var messages = await _messageManager.LoadAsync(MessageType.Email, MessageStatus.Pending);
+            var messages = await _messageManager.LoadAsync(MessageStatus.Pending);
             if (!messages.Any()) return;
             foreach (var message in messages)
             {
@@ -79,7 +79,7 @@ namespace Mozlite.Extensions.Messages
         /// <param name="settings">网站配置。</param>
         /// <param name="message">消息实例。</param>
         /// <returns>返回发送任务。</returns>
-        protected virtual async Task SendAsync(EmailSettings settings, Message message)
+        protected virtual async Task SendAsync(EmailSettings settings, Email message)
         {
             using (var client = new SmtpClient(settings.SmtpServer, settings.SmtpPort))
             {
@@ -105,6 +105,6 @@ namespace Mozlite.Extensions.Messages
         /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
         /// <returns>返回邮件实例对象。</returns>
-        protected virtual Task InitAsync(MailMessage mail, Message message) => Task.CompletedTask;
+        protected virtual Task InitAsync(MailMessage mail, Email message) => Task.CompletedTask;
     }
 }

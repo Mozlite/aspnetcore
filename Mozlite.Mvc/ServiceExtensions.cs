@@ -39,30 +39,21 @@ namespace Mozlite.Mvc
                     {//网站的程序集名称，约定扩展程序集名称必须为“网站程序集名称.Extensions.当前扩展区域名称”
                         var assemblyName = Assembly.GetEntryAssembly().GetName().Name;
                         ViewLocation(options, assemblyName);
-                        PageLocation(options, assemblyName);
+                        PageLocation(options);
                     })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
                 action?.Invoke(mvc);
             });
         }
 
-        private static void PageLocation(RazorViewEngineOptions options, string assemblyName)
+        private static void PageLocation(RazorViewEngineOptions options)
         {
             options.PageViewLocationFormats.Clear();
             options.AreaPageViewLocationFormats.Clear();
             options.PageViewLocationFormats.Add("/Pages/{1}/{0}" + RazorViewEngine.ViewExtension);
             options.PageViewLocationFormats.Add("/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
-            //区域试图路径：Extensions下面的路径，可以将每个区域改为扩展，这样会降低程序集的耦合度
-            options.AreaPageViewLocationFormats.Add("/Extensions/" + assemblyName +
-                                                ".Extensions.{2}/Pages/{1}/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/Extensions/" + assemblyName +
-                                                ".Extensions.{2}/Pages/Shared/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/Extensions/{2}/Pages/{1}/{0}" +
-                                                RazorViewEngine.ViewExtension);
-            options.AreaPageViewLocationFormats.Add("/Extensions/{2}/Pages/Shared/{0}" +
-                                                RazorViewEngine.ViewExtension);
+            options.AreaPageViewLocationFormats.Add("/Areas/{2}/Pages/{1}/{0}" + RazorViewEngine.ViewExtension);
+            options.AreaPageViewLocationFormats.Add("/Areas/{2}/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.AreaPageViewLocationFormats.Add("/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
         }
 

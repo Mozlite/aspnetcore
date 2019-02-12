@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Storages.Mail
         /// </summary>
         /// <param name="message">消息实例。</param>
         /// <returns>返回附件列表。</returns>
-        public static IEnumerable<Guid> GetAttachments(this Message message)
+        public static IEnumerable<Guid> GetAttachments(this Email message)
         {
             foreach (var extendKey in message.ExtendKeys)
             {
@@ -34,7 +34,7 @@ namespace Mozlite.Extensions.Storages.Mail
         /// </summary>
         /// <param name="message">消息实例。</param>
         /// <param name="file">媒体文件实例。</param>
-        public static void AddAttachment(this Message message, MediaFile file)
+        public static void AddAttachment(this Email message, MediaFile file)
         {
             message[$"{ExtensionKey}{file.Id:N}"] = file.Name;
         }

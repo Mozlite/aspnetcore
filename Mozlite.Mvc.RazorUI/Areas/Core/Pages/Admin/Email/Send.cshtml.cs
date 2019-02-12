@@ -43,7 +43,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
 
         public void OnGet(int id)
         {
-            var message = _messageManager.Find(id) ?? new Message();
+            var message = _messageManager.Find(id) ?? new Mozlite.Extensions.Messages.Email();
             Input = new InputModel
             {
                 Title = message.Title,
@@ -58,7 +58,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
         {
             if (!ModelState.IsValid)
                 return Error();
-            Message message;
+            Mozlite.Extensions.Messages.Email message;
             if (Input.Id > 0)
             {
                 message = _messageManager.Find(Input.Id);
@@ -78,10 +78,9 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
                 return Error("发送邮件失败！");
             }
 
-            message = new Message
+            message = new Mozlite.Extensions.Messages.Email
             {
                 UserId = UserId,
-                MessageType = MessageType.Email,
             };
             message.Title = Input.Title;
             message.Content = Input.Content;

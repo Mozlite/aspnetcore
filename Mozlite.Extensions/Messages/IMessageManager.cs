@@ -47,30 +47,30 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <returns>返回添加结果。</returns>
-        bool Save(Message message);
+        bool Save(Email message);
 
         /// <summary>
         /// 添加消息接口。
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <returns>返回添加结果。</returns>
-        Task<bool> SaveAsync(Message message);
+        Task<bool> SaveAsync(Email message);
 
         /// <summary>
-        /// 判断消息是否已经存在，用<see cref="Message.HashKey"/>判断。
+        /// 判断消息是否已经存在，用<see cref="Email.HashKey"/>判断。
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <param name="expiredSeconds">过期时间（秒）。</param>
         /// <returns>返回判断结果。</returns>
-        bool IsExisted(Message message, int expiredSeconds = 300);
+        bool IsExisted(Email message, int expiredSeconds = 300);
 
         /// <summary>
-        /// 判断消息是否已经存在，用<see cref="Message.HashKey"/>判断。
+        /// 判断消息是否已经存在，用<see cref="Email.HashKey"/>判断。
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <param name="expiredSeconds">过期时间（秒）。</param>
         /// <returns>返回判断结果。</returns>
-        Task<bool> IsExistedAsync(Message message, int expiredSeconds = 300);
+        Task<bool> IsExistedAsync(Email message, int expiredSeconds = 300);
 
         /// <summary>
         /// 发送电子邮件。
@@ -81,7 +81,7 @@ namespace Mozlite.Extensions.Messages
         /// <param name="content">内容。</param>
         /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        bool SendEmail(int userId, string emailAddress, string title, string content, Action<Message> action = null);
+        bool SendEmail(int userId, string emailAddress, string title, string content, Action<Email> action = null);
 
         /// <summary>
         /// 发送电子邮件。
@@ -92,79 +92,35 @@ namespace Mozlite.Extensions.Messages
         /// <param name="content">内容。</param>
         /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content, Action<Message> action = null);
-
+        Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content, Action<Email> action = null);
+        
         /// <summary>
-        /// 发送短信。
+        /// 加载消息列表。
         /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="phoneNumber">电话号码。</param>
-        /// <param name="message">消息。</param>
-        /// <param name="action">实例化方法。</param>
-        /// <returns>返回发送结果。</returns>
-        // ReSharper disable once InconsistentNaming
-        bool SendSMS(int userId, string phoneNumber, string message, Action<Message> action = null);
-
-        /// <summary>
-        /// 发送短信。
-        /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="phoneNumber">电话号码。</param>
-        /// <param name="message">消息。</param>
-        /// <param name="action">实例化方法。</param>
-        /// <returns>返回发送结果。</returns>
-        // ReSharper disable once InconsistentNaming
-        Task<bool> SendSMSAsync(int userId, string phoneNumber, string message, Action<Message> action = null);
-
-        /// <summary>
-        /// 发送系统消息。
-        /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="title">标题。</param>
-        /// <param name="content">内容。</param>
-        /// <param name="action">实例化方法。</param>
-        /// <returns>返回发送结果。</returns>
-        bool SendMessage(int userId, string title, string content, Action<Message> action = null);
-
-        /// <summary>
-        /// 发送系统消息。
-        /// </summary>
-        /// <param name="userId">用户Id。</param>
-        /// <param name="title">标题。</param>
-        /// <param name="content">内容。</param>
-        /// <param name="action">实例化方法。</param>
-        /// <returns>返回发送结果。</returns>
-        Task<bool> SendMessageAsync(int userId, string title, string content, Action<Message> action = null);
+        /// <param name="status">状态。</param>
+        /// <returns>返回消息列表。</returns>
+        IEnumerable<Email> Load(MessageStatus? status = null);
 
         /// <summary>
         /// 加载消息列表。
         /// </summary>
-        /// <param name="messageType">消息类型。</param>
         /// <param name="status">状态。</param>
         /// <returns>返回消息列表。</returns>
-        IEnumerable<Message> Load(MessageType messageType, MessageStatus? status = null);
-
-        /// <summary>
-        /// 加载消息列表。
-        /// </summary>
-        /// <param name="messageType">消息类型。</param>
-        /// <param name="status">状态。</param>
-        /// <returns>返回消息列表。</returns>
-        Task<IEnumerable<Message>> LoadAsync(MessageType messageType, MessageStatus? status = null);
+        Task<IEnumerable<Email>> LoadAsync(MessageStatus? status = null);
 
         /// <summary>
         /// 加载消息列表。
         /// </summary>
         /// <param name="query">消息查询类型。</param>
         /// <returns>返回消息列表。</returns>
-        TQuery Load<TQuery>(TQuery query) where TQuery : MessageQueryBase;
+        TQuery Load<TQuery>(TQuery query) where TQuery : EmailQuery;
 
         /// <summary>
         /// 加载消息列表。
         /// </summary>
         /// <param name="query">消息查询类型。</param>
         /// <returns>返回消息列表。</returns>
-        Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : MessageQueryBase;
+        Task<TQuery> LoadAsync<TQuery>(TQuery query) where TQuery : EmailQuery;
 
         /// <summary>
         /// 设置失败状态。
@@ -201,13 +157,13 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="id">消息id。</param>
         /// <returns>返回消息实例。</returns>
-        Message Find(int id);
+        Email Find(int id);
 
         /// <summary>
         /// 通过Id查询消息。
         /// </summary>
         /// <param name="id">消息id。</param>
         /// <returns>返回消息实例。</returns>
-        Task<Message> FindAsync(int id);
+        Task<Email> FindAsync(int id);
     }
 }
