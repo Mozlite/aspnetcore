@@ -5,7 +5,7 @@ namespace Mozlite.Extensions.Messages.SMS
     /// <summary>
     /// 短信配置管理接口。
     /// </summary>
-    public interface ISmsSettingManager : ICachableObjectManager<SmsSettings>, IScopedService
+    public interface ISmsSettingManager : ICachableObjectManager<SmsSettings>, ISingletonService
     {
         /// <summary>
         /// 通过名称查询配置。
