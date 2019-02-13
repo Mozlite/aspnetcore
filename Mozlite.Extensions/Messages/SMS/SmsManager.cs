@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Mozlite.Data;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mozlite.Data;
 
 namespace Mozlite.Extensions.Messages.SMS
 {
@@ -53,7 +53,7 @@ namespace Mozlite.Extensions.Messages.SMS
                         .Where(x => x.HashKey == note.HashKey)
                         .OrderByDescending(x => x.CreatedDate)
                         .FirstOrDefault();
-                    if (smsClient.IsDuplicated(note, prev))
+                    if (prev != null && smsClient.IsDuplicated(note, prev))
                         continue;
                     db.Create(note);
                 }
@@ -91,7 +91,7 @@ namespace Mozlite.Extensions.Messages.SMS
                         .Where(x => x.HashKey == note.HashKey)
                         .OrderByDescending(x => x.CreatedDate)
                         .FirstOrDefaultAsync();
-                    if (smsClient.IsDuplicated(note, prev))
+                    if (prev != null && smsClient.IsDuplicated(note, prev))
                         continue;
                     await db.CreateAsync(note);
                 }
