@@ -55,6 +55,7 @@ namespace Mozlite.Mvc
             options.AreaPageViewLocationFormats.Add("/Areas/{2}/Pages/{1}/{0}" + RazorViewEngine.ViewExtension);
             options.AreaPageViewLocationFormats.Add("/Areas/{2}/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.AreaPageViewLocationFormats.Add("/Pages/Shared/{0}" + RazorViewEngine.ViewExtension);
+            options.AreaPageViewLocationFormats.Add("/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
         }
 
         private static void ViewLocation(RazorViewEngineOptions options, string assemblyName)
