@@ -14,15 +14,12 @@ namespace Mozlite.Mvc.Tests
     {
         static Tests()
         {
-            _serviceProvider = Cores.BuildServiceProvider(current => current.AddServices(services =>
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonFile("appsettings.json");
+            var configuration = builder.Build();
+            _serviceProvider = Cores.BuildServiceProvider(configuration, current => current.AddServices(services =>
              {
-                 services.TryAddSingleton(typeof(IConfiguration), x =>
-                 {
-                     var builder = new ConfigurationBuilder();
-                     builder.AddJsonFile("appsettings.json");
-                     return builder.Build();
-                 });
-
+                 services.TryAddSingleton(typeof(IConfiguration), x => configuration);
                  services.TryAddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
                  services.TryAddSingleton(typeof(ILoggerFactory), typeof(NullLoggerFactory));
              }));
