@@ -15,6 +15,7 @@ using Mozlite.Mvc.Messages;
 using Mozlite.Mvc.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -598,6 +599,20 @@ namespace Mozlite.Mvc
             if (fileName == null)
                 fileName = Guid.NewGuid().ToString("N");
             return GetRequiredService<IExcelManager>().Export(models, fileName);
+        }
+
+        /// <summary>
+        /// 导出Excel。
+        /// </summary>
+        /// <param name="models">模型实例列表。</param>
+        /// <param name="fileName">导出文件名称。</param>
+        /// <param name="sheetName">工作表名称。</param>
+        /// <returns>返回试图结果。</returns>
+        protected IActionResult Excel(DataTable models, string fileName = null, string sheetName = "sheet1")
+        {
+            if (fileName == null)
+                fileName = Guid.NewGuid().ToString("N");
+            return GetRequiredService<IExcelManager>().Export(models, fileName, sheetName);
         }
 
         /// <summary>

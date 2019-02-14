@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages.Excels
 {
@@ -259,6 +260,51 @@ namespace Mozlite.Extensions.Storages.Excels
         /// </summary>
         private void WriteStylesheet<TModel>(WorkbookPart workbookPart, ExcelEnumerable<TModel> models) where TModel : class, new()
         {
+            WriteStylesheet(workbookPart, stylesheet =>
+            {
+                var fontIndex = 1U;//默认字体啥都没有
+                var formatId = 1U;//格式Id
+                var numberId = 1U;//数值格式
+                foreach (var descriptor in models.Descriptors)
+                {
+                    descriptor.CellFormat.FormatId = formatId++;
+                    stylesheet.CellFormats.AppendChild(descriptor.CellFormat);
+                    descriptor.HeadCellFormat.FormatId = formatId++;
+                    stylesheet.CellFormats.AppendChild(descriptor.HeadCellFormat);
+
+                    if (descriptor.Font != null)
+                    {
+                        stylesheet.Fonts.AppendChild(descriptor.Font);
+                        descriptor.CellFormat.FontId = fontIndex;
+                        descriptor.CellFormat.ApplyFont = true;
+                        fontIndex++;
+                    }
+
+                    if (descriptor.HeadFont != null)
+                    {
+                        stylesheet.Fonts.AppendChild(descriptor.HeadFont);
+                        descriptor.HeadCellFormat.FontId = fontIndex;
+                        descriptor.HeadCellFormat.ApplyFont = true;
+                        fontIndex++;
+                    }
+
+                    if (descriptor.NumberingFormat != null)
+                    {
+                        stylesheet.NumberingFormats.AppendChild(descriptor.NumberingFormat);
+                        descriptor.NumberingFormat.NumberFormatId = numberId;
+                        descriptor.CellFormat.NumberFormatId = numberId;
+                        descriptor.CellFormat.ApplyNumberFormat = true;
+                        numberId++;
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 需要先写入样式，可以得到没列样式Id。
+        /// </summary>
+        private void WriteStylesheet(WorkbookPart workbookPart, Action<Stylesheet> action)
+        {
             var stylesheet = new Stylesheet();
             stylesheet.Fonts = new Fonts();//第一个默认
             stylesheet.Fonts.AppendChild(new Font());
@@ -268,43 +314,7 @@ namespace Mozlite.Extensions.Storages.Excels
             stylesheet.Borders = new Borders();
             stylesheet.CellStyleFormats = new CellStyleFormats();
             stylesheet.Fills = new Fills();
-
-            var fontIndex = 1U;//默认字体啥都没有
-            var formatId = 1U;//格式Id
-            var numberId = 1U;//数值格式
-            foreach (var descriptor in models.Descriptors)
-            {
-                descriptor.CellFormat.FormatId = formatId++;
-                stylesheet.CellFormats.AppendChild(descriptor.CellFormat);
-                descriptor.HeadCellFormat.FormatId = formatId++;
-                stylesheet.CellFormats.AppendChild(descriptor.HeadCellFormat);
-
-                if (descriptor.Font != null)
-                {
-                    stylesheet.Fonts.AppendChild(descriptor.Font);
-                    descriptor.CellFormat.FontId = fontIndex;
-                    descriptor.CellFormat.ApplyFont = true;
-                    fontIndex++;
-                }
-
-                if (descriptor.HeadFont != null)
-                {
-                    stylesheet.Fonts.AppendChild(descriptor.HeadFont);
-                    descriptor.HeadCellFormat.FontId = fontIndex;
-                    descriptor.HeadCellFormat.ApplyFont = true;
-                    fontIndex++;
-                }
-
-                if (descriptor.NumberingFormat != null)
-                {
-                    stylesheet.NumberingFormats.AppendChild(descriptor.NumberingFormat);
-                    descriptor.NumberingFormat.NumberFormatId = numberId;
-                    descriptor.CellFormat.NumberFormatId = numberId;
-                    descriptor.CellFormat.ApplyNumberFormat = true;
-                    numberId++;
-                }
-            }
-
+            action?.Invoke(stylesheet);
             stylesheet.CellFormats.Count = (uint)stylesheet.CellFormats.ChildElements.Count;
             stylesheet.Fonts.Count = (uint)stylesheet.Fonts.ChildElements.Count;
             stylesheet.NumberingFormats.Count = (uint)stylesheet.NumberingFormats.ChildElements.Count;
@@ -335,5 +345,138 @@ namespace Mozlite.Extensions.Storages.Excels
             result.FileDownloadName = fileName;
             return result;
         }
+
+        /// <summary>
+        /// 导出列表。
+        /// </summary>
+        /// <param name="models">模型数据表格。</param>
+        /// <param name="fileName">文件名称。</param>
+        /// <param name="sheetName">工作表名称。</param>
+        /// <returns>返回物理路径试图结果。</returns>
+        public PhysicalFileResult Export(DataTable models, string fileName, string sheetName = "sheet1")
+        {
+            const string extension = ".xlsx";
+            if (!fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+                fileName += extension;
+            var storageDirectory = _serviceProvider.GetRequiredService<IStorageDirectory>();
+            var path = storageDirectory.GetTempPath(Guid.NewGuid().ToString("N"));
+            Save(path, models, sheetName);
+            var result = new PhysicalFileResult(path, extension.GetContentType());
+            result.FileDownloadName = fileName;
+            return result;
+        }
+
+        /// <summary>
+        /// 将对象保存到文件中。
+        /// </summary>
+        /// <param name="path">路径。</param>
+        /// <param name="models">模型数据表格。</param>
+        /// <param name="sheetName">工作表名称。</param>
+        public void Save(string path, DataTable models, string sheetName = "sheet1")
+        {
+            using (var document = SpreadsheetDocument.Create(path, SpreadsheetDocumentType.Workbook))
+            {
+                var index = 1U;
+                var workbookPart = document.AddWorkbookPart();
+                //写入样式
+                WriteStylesheet(workbookPart, null);
+                //工作表
+                var workSheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                var writer = OpenXmlWriter.Create(workSheetPart);
+                writer.WriteStartElement(new Worksheet());
+                writer.WriteStartElement(new SheetData());
+                //字段定义
+                var sharedStrings = new List<string>();
+                //第一行标题
+                var row = new Row();
+                row.RowIndex = index;
+                for (var i = 0; i < models.Columns.Count; i++)
+                {
+                    var descriptor = models.Columns[i];
+                    var cell = new Cell();
+                    cell.StyleIndex = 11;
+                    cell.DataType = CellValues.String;
+                    cell.CellValue = new CellValue(descriptor.ColumnName);
+                    cell.CellReference = $"{(char)('A' + i)}{index}";
+                    row.AppendChild(cell);
+                }
+                writer.WriteElement(row);
+
+                index++;
+                //写入数据
+                foreach (DataRow model in models.Rows)
+                {
+                    row = new Row();
+                    row.RowIndex = index;
+                    for (var i = 0; i < models.Columns.Count; i++)
+                    {
+                        var descriptor = models.Columns[i];
+                        var value = model[descriptor.ColumnName];
+                        if (value == null)
+                            continue;
+                        var type = CellValues.Error;
+                        if (value is DateTime date)
+                            value = date.ToOADate();
+                        else if (value is DateTimeOffset dateTimeOffset)
+                            value = dateTimeOffset.DateTime.ToOADate();
+                        else if (value is bool bValue)
+                        {
+                            value = bValue ? 1 : 0;
+                            type = CellValues.Boolean;
+                        }
+                        else if (!value.GetType().IsValueType)
+                        {
+                            type = CellValues.SharedString;
+                            var current = value.ToString();
+                            var si = sharedStrings.IndexOf(current);
+                            if (si == -1)
+                            {
+                                si = sharedStrings.Count;
+                                sharedStrings.Add(current);
+                            }
+                            value = si;
+                        }
+
+                        var cell = new Cell();
+                        cell.StyleIndex = 10;
+                        if (type != CellValues.Error)
+                            cell.DataType = type;
+                        cell.CellReference = $"{(char)('A' + i)}{index}";
+                        cell.CellValue = new CellValue(value.ToString());
+                        row.AppendChild(cell);
+                    }
+                    writer.WriteElement(row);
+                    index++;
+                }
+
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+                writer.Close();
+                //工作区
+                writer = OpenXmlWriter.Create(document.WorkbookPart);
+                writer.WriteStartElement(new Workbook());
+                writer.WriteStartElement(new Sheets());
+                writer.WriteElement(new Sheet
+                {
+                    Name = sheetName,
+                    SheetId = 1,
+                    Id = document.WorkbookPart.GetIdOfPart(workSheetPart)
+                });
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+                writer.Close();
+
+                //写入字符串
+                var shared = workbookPart.AddNewPart<SharedStringTablePart>();
+                var table = new SharedStringTable();
+                foreach (var sharedString in sharedStrings)
+                {
+                    table.AppendChild(new SharedStringItem(new Text(sharedString)));
+                }
+                table.Save(shared);
+            }
+        }
+
+
     }
 }

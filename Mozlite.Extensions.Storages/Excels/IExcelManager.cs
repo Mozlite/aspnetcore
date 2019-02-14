@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages.Excels
 {
@@ -44,5 +45,22 @@ namespace Mozlite.Extensions.Storages.Excels
         /// <returns>返回物理路径试图结果。</returns>
         PhysicalFileResult Export<TModel>(IEnumerable<TModel> models, string fileName)
             where TModel : class, new();
+
+        /// <summary>
+        /// 将对象保存到文件中。
+        /// </summary>
+        /// <param name="path">路径。</param>
+        /// <param name="models">模型数据表格。</param>
+        /// <param name="sheetName">工作表名称。</param>
+        void Save(string path, DataTable models, string sheetName = "sheet1");
+
+        /// <summary>
+        /// 导出列表。
+        /// </summary>
+        /// <param name="models">模型数据表格。</param>
+        /// <param name="fileName">文件名称。</param>
+        /// <param name="sheetName">工作表名称。</param>
+        /// <returns>返回物理路径试图结果。</returns>
+        PhysicalFileResult Export(DataTable models, string fileName, string sheetName = "sheet1");
     }
 }
