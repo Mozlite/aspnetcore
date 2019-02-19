@@ -80,15 +80,9 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             if (linkUrl != null)
             {
                 var anchor = new TagBuilder("a");
+                anchor.MergeAttribute("href", linkUrl.Item1);
                 if (linkUrl.Item2 && linkUrl.Item1 != "#")
-                {
                     anchor.MergeAttribute("js-ajax", "true");
-                    anchor.MergeAttribute("href", "#" + linkUrl.Item1);
-                }
-                else
-                {
-                    anchor.MergeAttribute("href", linkUrl.Item1);
-                }
                 anchor.InnerHtml.AppendHtml(text);
                 builder.InnerHtml.AppendHtml(anchor);
             }

@@ -84,15 +84,9 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
                 li.AddCssClass("active");
             var anchor = new TagBuilder("a");
             var url = item.LinkUrl(_urlHelper);
+            anchor.MergeAttribute("href", url);
             if (item.IsAjax && url != "#")
-            {
                 anchor.MergeAttribute("js-ajax", "true");
-                anchor.MergeAttribute("href", "#" + url);
-            }
-            else
-            {
-                anchor.MergeAttribute("href", url);
-            }
             anchor.MergeAttribute("title", item.Text);
             anchor.AddCssClass($"nav-link level-{item.Level}");
             //图标
