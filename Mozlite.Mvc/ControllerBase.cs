@@ -114,31 +114,7 @@ namespace Mozlite.Mvc
         /// 事件ID。
         /// </summary>
         protected virtual int EventId => 1;
-
-        private int _pageIndex = -1;
-        /// <summary>
-        /// 当前页码。
-        /// </summary>
-        protected virtual int PageIndex
-        {
-            get
-            {
-                if (_pageIndex == -1)
-                {
-                    string page;
-                    if (RouteData.Values.TryGetValue("pi", out var pobject))
-                        page = pobject.ToString();
-                    else
-                        page = Request.Query["pi"];
-                    if (!int.TryParse(page, out _pageIndex))
-                        _pageIndex = 1;
-                    if (_pageIndex < 1)
-                        _pageIndex = 1;
-                }
-                return _pageIndex;
-            }
-        }
-
+        
         private string _controllerName;
         /// <summary>
         /// 获取当前控制器名称。
@@ -448,42 +424,7 @@ namespace Mozlite.Mvc
             return Json(StatusType.Danger, string.Join(", ", errors));
         }
         #endregion
-
-        #region pages
-        /// <summary>
-        /// 设置标题，关键词，和描述。
-        /// </summary>
-        /// <param name="title">标题。</param>
-        /// <param name="description">描述。</param>
-        /// <param name="keywords">关键词。</param>
-        protected void SetMeta(string title, string description, params object[] keywords)
-        {
-            ViewBag.Title = title;
-            ViewBag.Keywords = keywords.JoinSplit(",");
-            ViewBag.Description = description;
-        }
-
-        /// <summary>
-        /// 设置标题和描述。
-        /// </summary>
-        /// <param name="title">标题。</param>
-        /// <param name="description">描述。</param>
-        protected void SetMeta(string title, string description)
-        {
-            ViewBag.Title = title;
-            ViewBag.Description = description;
-        }
-
-        /// <summary>
-        /// 设置标题。
-        /// </summary>
-        /// <param name="title">标题。</param>
-        protected void SetMeta(string title)
-        {
-            ViewBag.Title = title;
-        }
-        #endregion
-
+        
         #region urls
         /// <summary>
         /// 获取当前Action对应的地址。

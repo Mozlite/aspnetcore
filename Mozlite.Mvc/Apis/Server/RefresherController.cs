@@ -7,7 +7,7 @@ namespace Mozlite.Mvc.Apis.Server
     /// <summary>
     /// 自动刷新功能。
     /// </summary>
-    public class RefresherController : ControllerBase
+    public class RefresherController : Mvc.ControllerBase
     {
         /// <summary>
         /// 验证码。

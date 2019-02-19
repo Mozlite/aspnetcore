@@ -115,30 +115,6 @@ namespace Mozlite.Mvc
         /// </summary>
         protected virtual int EventId => 1;
 
-        private int _pageIndex = -1;
-        /// <summary>
-        /// 当前页码。
-        /// </summary>
-        public virtual int PageIndex
-        {
-            get
-            {
-                if (_pageIndex == -1)
-                {
-                    string page;
-                    if (RouteData.Values.TryGetValue("pi", out var pobject))
-                        page = pobject.ToString();
-                    else
-                        page = Request.Query["pi"];
-                    if (!int.TryParse(page, out _pageIndex))
-                        _pageIndex = 1;
-                    if (_pageIndex < 1)
-                        _pageIndex = 1;
-                }
-                return _pageIndex;
-            }
-        }
-
         /// <summary>
         /// 判断验证码。
         /// </summary>
