@@ -287,21 +287,18 @@ namespace Mozlite.Mvc.AdminMenus
         public string PermissionName { get; private set; }
 
         /// <summary>
-        /// 配置当前菜单的角色。
+        /// 是否为AJAX链接。
         /// </summary>
-        /// <param name="roles">角色列表。</param>
-        /// <returns>返回菜单项。</returns>
-        [Obsolete("使用Allow权限来替换！")]
-        public MenuItem Roled(params string[] roles)
-        {
-            Roles = Roles.Concat(roles).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
-            return this;
-        }
+        public bool IsAjax { get; private set; }
 
         /// <summary>
-        /// 角色列表。
+        /// 设置使用AJAX获取当前链接。
         /// </summary>
-        [Obsolete("使用Allow权限来替换！")]
-        public string[] Roles { get; private set; } = new string[0];
+        /// <returns>返回当前菜单项目。</returns>
+        public MenuItem Ajaxed()
+        {
+            IsAjax = true;
+            return this;
+        }
     }
 }

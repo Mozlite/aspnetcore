@@ -44,12 +44,12 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             var navigators = LoadNavigators(current).OrderBy(n => n.Level).ToList();
             if (navigators.Count == 0)
                 return;
-            var links = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var links = new Dictionary<string, Tuple<string, bool>>(StringComparer.OrdinalIgnoreCase);
             foreach (var navigator in navigators)
             {
                 if (navigator.LinkUrl(urlHelper, null) == null || current.Name == navigator.Name && navigator.Text == Title)
                     continue;
-                links[navigator.Text] = navigator.LinkUrl(urlHelper, null);
+                links[navigator.Text] = new Tuple<string, bool>(navigator.LinkUrl(urlHelper, null), navigator.IsAjax);
             }
             links[Title] = null;
             links.Remove(Home);
@@ -74,15 +74,17 @@ namespace Mozlite.Mvc.AdminMenus.TagHelpers
             }
         }
 
-        private TagBuilder CreateLink(string linkUrl, string text)
+        private TagBuilder CreateLink(Tuple<string, bool> linkUrl, string text)
         {
             var builder = new TagBuilder("li");
             if (linkUrl != null)
             {
-                var achor = new TagBuilder("a");
-                achor.MergeAttribute("href", linkUrl);
-                achor.InnerHtml.AppendHtml(text);
-                builder.InnerHtml.AppendHtml(achor);
+                var anchor = new TagBuilder("a");
+                anchor.MergeAttribute("href", linkUrl.Item1);
+                if (linkUrl.Item2 && linkUrl.Item1 != "#")
+                    anchor.MergeAttribute("js-ajax", "true");
+                anchor.InnerHtml.AppendHtml(text);
+                builder.InnerHtml.AppendHtml(anchor);
             }
             else
                 builder.InnerHtml.AppendHtml(text);

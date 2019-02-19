@@ -10,7 +10,7 @@ namespace Mozlite.Mvc.Apis
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class ApiController : Controller
+    public abstract class ApiControllerBase : Controller
     {
         #region result
         /// <summary>

@@ -8,7 +8,7 @@ namespace Mozlite.Mvc.Apis.Server
     /// API控制器。
     /// </summary>
     [ApiController(Anonymousable = true)]
-    public class TokenController : ApiController
+    public class TokenController : ApiControllerBase
     {
         /// <summary>
         /// 验证API，生成令牌。
