@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using Mozlite.Extensions.Messages.Notifications;
+using Mozlite.Extensions.Storages.Apis;
 
 namespace Mozlite.Mvc.Apis
 {
@@ -59,5 +61,25 @@ namespace Mozlite.Mvc.Apis
         {
             return HttpContext.RequestServices.GetRequiredService<TService>();
         }
+        
+        /// <summary>
+        /// 判断验证码。
+        /// </summary>
+        /// <param name="key">当前唯一键。</param>
+        /// <param name="code">验证码。</param>
+        /// <returns>返回判断结果。</returns>
+        protected virtual bool IsValidateCode(string key, string code)
+        {
+            if (string.IsNullOrEmpty(code) || !Request.Cookies.TryGetValue(key, out var value))
+                return false;
+            code = Verifiers.Hashed(code);
+            return string.Equals(value, code, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private INotifier _notifier;
+        /// <summary>
+        /// 通知接口实例。
+        /// </summary>
+        protected INotifier Notifier => _notifier ?? (_notifier = GetRequiredService<INotifier>());
     }
 }
