@@ -12,6 +12,7 @@ namespace Mozlite.Extensions.Messages.SMS
         /// <summary>
         /// 获取或设置唯一Id。
         /// </summary>
+        [Identity]
         public int Id { get; set; }
 
         /// <summary>
