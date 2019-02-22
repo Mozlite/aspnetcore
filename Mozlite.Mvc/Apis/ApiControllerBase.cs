@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Mozlite.Mvc.Apis
+﻿namespace Mozlite.Mvc.Apis
 {
     /// <summary>
     /// API基类。
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
     public abstract class ApiControllerBase : ControllerBase
     {
         #region result

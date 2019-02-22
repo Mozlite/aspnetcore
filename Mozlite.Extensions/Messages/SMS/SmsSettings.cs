@@ -9,6 +9,11 @@ namespace Mozlite.Extensions.Messages.SMS
     public class SmsSettings : ExtendBase, IIdObject
     {
         /// <summary>
+        /// 是否启用。
+        /// </summary>
+        public bool Enabled { get; set; }
+
+        /// <summary>
         /// 最多发送次数。
         /// </summary>
         public const int MaxTimes = 5;

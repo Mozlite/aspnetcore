@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mozlite.Extensions.Security.Stores;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,19 +13,11 @@ namespace Mozlite.Extensions.Messages
         /// <summary>
         /// 获取资源，一般为内容。
         /// </summary>
-        /// <param name="resourceKey">资源见。</param>
+        /// <param name="resourceKey">资源键。</param>
         /// <param name="replacement">替换对象，使用匿名类型实例。</param>
-        /// <returns></returns>
-        string GetTemplate(string resourceKey, object replacement = null);
-
-        /// <summary>
-        /// 获取资源，一般为内容。
-        /// </summary>
-        /// <typeparam name="TResource">资源类型。</typeparam>
-        /// <param name="resourceKey">资源见。</param>
-        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
-        /// <returns></returns>
-        string GetTemplate<TResource>(string resourceKey, object replacement = null);
+        /// <param name="resourceType">资源所在程序集的类型。</param>
+        /// <returns>返回模板文本字符串。</returns>
+        string GetTemplate(string resourceKey, object replacement = null, Type resourceType = null);
 
         /// <summary>
         /// 更新列。
@@ -93,7 +86,29 @@ namespace Mozlite.Extensions.Messages
         /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
         Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content, Action<Email> action = null);
-        
+
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="resourceType">资源所在程序集的类型。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        bool SendEmail(UserBase user, string resourceKey, object replacement = null, Type resourceType = null, Action<Email> action = null);
+
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="resourceType">资源所在程序集的类型。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        Task<bool> SendEmailAsync(UserBase user, string resourceKey, object replacement = null, Type resourceType = null, Action<Email> action = null);
+
         /// <summary>
         /// 加载消息列表。
         /// </summary>

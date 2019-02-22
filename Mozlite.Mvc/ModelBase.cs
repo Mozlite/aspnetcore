@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Mozlite.Extensions.Messages;
+using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Mvc
 {
@@ -602,6 +604,30 @@ namespace Mozlite.Mvc
                 return Success(new { result.Url });
             return Error(result.Message);
         }
+        #endregion
+
+        #region email
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        protected bool SendEmail(UserBase user, string resourceKey, object replacement = null, Action<Email> action = null) =>
+            GetRequiredService<IMessageManager>().SendEmail(user, resourceKey, replacement, GetType(), action);
+
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        protected Task<bool> SendEmailAsync(UserBase user, string resourceKey, object replacement = null, Action<Email> action = null) =>
+            GetRequiredService<IMessageManager>().SendEmailAsync(user, resourceKey, replacement, GetType(), action);
         #endregion
     }
 }

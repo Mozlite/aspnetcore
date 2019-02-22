@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions;
+using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Messages.Notifications;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Activities;
 using Mozlite.Extensions.Security.Permissions;
+using Mozlite.Extensions.Security.Stores;
 using Mozlite.Extensions.Storages;
 using Mozlite.Extensions.Storages.Apis;
 using Mozlite.Extensions.Storages.Excels;
@@ -114,7 +116,7 @@ namespace Mozlite.Mvc
         /// 事件ID。
         /// </summary>
         protected virtual int EventId => 1;
-        
+
         private string _controllerName;
         /// <summary>
         /// 获取当前控制器名称。
@@ -424,7 +426,7 @@ namespace Mozlite.Mvc
             return Json(StatusType.Danger, string.Join(", ", errors));
         }
         #endregion
-        
+
         #region urls
         /// <summary>
         /// 获取当前Action对应的地址。
@@ -567,6 +569,30 @@ namespace Mozlite.Mvc
                 return Success(new { result.Url });
             return Error(result.Message);
         }
+        #endregion
+
+        #region email
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        protected bool SendEmail(UserBase user, string resourceKey, object replacement = null, Action<Email> action = null) =>
+            GetRequiredService<IMessageManager>().SendEmail(user, resourceKey, replacement, GetType(), action);
+
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        protected Task<bool> SendEmailAsync(UserBase user, string resourceKey, object replacement = null, Action<Email> action = null) =>
+            GetRequiredService<IMessageManager>().SendEmailAsync(user, resourceKey, replacement, GetType(), action);
         #endregion
     }
 }

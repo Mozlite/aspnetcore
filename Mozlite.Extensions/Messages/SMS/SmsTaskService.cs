@@ -6,14 +6,14 @@ namespace Mozlite.Extensions.Messages.SMS
     /// <summary>
     /// 短信发送后台服务。
     /// </summary>
-    public class SmsTaskService : TaskService
+    public abstract class SmsTaskService : TaskService
     {
         private readonly ISmsManager _smsManager;
         /// <summary>
         /// 初始化类<see cref="SmsTaskService"/>。
         /// </summary>
         /// <param name="smsManager">短信管理接口。</param>
-        public SmsTaskService(ISmsManager smsManager)
+        protected SmsTaskService(ISmsManager smsManager)
         {
             _smsManager = smsManager;
         }

@@ -1,4 +1,5 @@
 ﻿using Mozlite.Data;
+using Mozlite.Extensions.Security.Stores;
 using Mozlite.Mvc;
 using System;
 using System.Collections.Generic;
@@ -32,27 +33,13 @@ namespace Mozlite.Extensions.Messages
         /// <summary>
         /// 获取资源，一般为内容。
         /// </summary>
-        /// <param name="resourceKey">资源见。</param>
+        /// <param name="resourceKey">资源键。</param>
         /// <param name="replacement">替换对象，使用匿名类型实例。</param>
-        /// <returns></returns>
-        public virtual string GetTemplate(string resourceKey, object replacement = null)
+        /// <param name="resourceType">资源所在程序集的类型。</param>
+        /// <returns>返回模板文本字符串。</returns>
+        public virtual string GetTemplate(string resourceKey, object replacement = null, Type resourceType = null)
         {
-            resourceKey = _localizer.GetString(resourceKey);
-            if (replacement != null)
-                resourceKey = ReplaceTemplate(resourceKey, replacement);
-            return resourceKey;
-        }
-
-        /// <summary>
-        /// 获取资源，一般为内容。
-        /// </summary>
-        /// <typeparam name="TResource">资源类型。</typeparam>
-        /// <param name="resourceKey">资源见。</param>
-        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
-        /// <returns></returns>
-        public virtual string GetTemplate<TResource>(string resourceKey, object replacement = null)
-        {
-            resourceKey = _localizer.GetString(typeof(TResource), resourceKey);
+            resourceKey = resourceType == null ? _localizer.GetString(resourceKey) : _localizer.GetString(resourceType, resourceKey);
             if (replacement != null)
                 resourceKey = ReplaceTemplate(resourceKey, replacement);
             return resourceKey;
@@ -63,7 +50,7 @@ namespace Mozlite.Extensions.Messages
             var replacements = fields.ToDictionary(StringComparer.OrdinalIgnoreCase);
             foreach (var replacement in replacements)
             {
-                resourceKey = resourceKey.Replace("{" + replacement.Key.ToLower() + "}", replacement.Value?.ToString());
+                resourceKey = resourceKey.Replace("{" + Cores.ToHtmlCase(replacement.Key) + "}", replacement.Value?.ToString());
             }
 
             return resourceKey;
@@ -179,6 +166,38 @@ namespace Mozlite.Extensions.Messages
             message.Content = content;
             action?.Invoke(message);
             return SaveAsync(message);
+        }
+
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="resourceType">资源所在程序集的类型。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        public bool SendEmail(UserBase user, string resourceKey, object replacement = null, Type resourceType = null, Action<Email> action = null)
+        {
+            var title = GetTemplate(resourceKey + "_Title", replacement, resourceType);
+            var content = GetTemplate(resourceKey + "_Content", replacement, resourceType);
+            return SendEmail(user.UserId, user.Email, title, content, action);
+        }
+
+        /// <summary>
+        /// 发送电子邮件。
+        /// </summary>
+        /// <param name="user">用户实例。</param>
+        /// <param name="resourceKey">资源键：<paramref name="resourceKey"/>_{Title}，<paramref name="resourceKey"/>_{Content}。</param>
+        /// <param name="replacement">替换对象，使用匿名类型实例。</param>
+        /// <param name="resourceType">资源所在程序集的类型。</param>
+        /// <param name="action">实例化方法。</param>
+        /// <returns>返回发送结果。</returns>
+        public Task<bool> SendEmailAsync(UserBase user, string resourceKey, object replacement = null, Type resourceType = null, Action<Email> action = null)
+        {
+            var title = GetTemplate(resourceKey + "_Title", replacement, resourceType);
+            var content = GetTemplate(resourceKey + "_Content", replacement, resourceType);
+            return SendEmailAsync(user.UserId, user.Email, title, content, action);
         }
 
         /// <summary>

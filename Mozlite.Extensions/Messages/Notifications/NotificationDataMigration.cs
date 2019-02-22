@@ -32,5 +32,10 @@ namespace Mozlite.Extensions.Messages.Notifications
                     .Column(x => x.Status)
                     .Column(x => x.CreatedDate));
         }
+
+        public void Up1(MigrationBuilder builder)
+        {
+            builder.AddColumn<NotificationType>(x => x.Color);
+        }
     }
 }

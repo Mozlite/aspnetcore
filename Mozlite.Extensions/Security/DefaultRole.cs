@@ -19,12 +19,12 @@ namespace Mozlite.Extensions.Security
         public static readonly DefaultRole Owner = new DefaultRole(Resources.Owner, OwnerName, int.MaxValue);
 
         /// <summary>
-        /// 网站所有者，最低权限角色名称。
+        /// 最低权限角色名称。
         /// </summary>
         public const string MemberName = "SYS:MEMBER";
 
         /// <summary>
-        /// 网站所有者，最低权限角色。
+        /// 最低权限角色。
         /// </summary>
         public static readonly DefaultRole Member = new DefaultRole(Resources.Member, MemberName, 0);
 
