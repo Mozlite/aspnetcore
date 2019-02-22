@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using MimeKit;
 using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Settings;
+using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages.Mail
@@ -35,21 +36,29 @@ namespace Mozlite.Extensions.Storages.Mail
         /// </summary>
         /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
-        /// <returns>返回邮件实例对象。</returns>
-        protected override async Task InitAsync(MailMessage mail, Email message)
+        /// <returns>返回邮件实体对象。</returns>
+        protected override async Task<Multipart> InitAsync(MimeMessage mail, Email message)
         {
-            var attachments = message.GetAttachments();
-            if (!attachments.Any())
-                return;
-            foreach (var attachmentId in attachments)
+            var attachments = message.GetAttachments().ToList();
+            if (attachments?.Count > 0)
             {
-                var file = await MediaDirectory.FindAsync(attachmentId);
-                if (file == null)
-                    continue;
-                var attachment = new Attachment(file.PhysicalPath, file.ContentType);
-                attachment.Name = file.FileName;
-                mail.Attachments.Add(attachment);
+                var multipart = new Multipart("mixed");
+                foreach (var attachmentId in attachments)
+                {
+                    var file = await MediaDirectory.FindAsync(attachmentId);
+                    if (file == null)
+                        continue;
+                    var attachment = new MimePart(file.ContentType);
+                    attachment.Content = new MimeContent(File.OpenRead(file.PhysicalPath));
+                    attachment.ContentDisposition = new ContentDisposition(ContentDisposition.Attachment);
+                    attachment.ContentTransferEncoding = ContentEncoding.Default;
+                    attachment.FileName = file.FileName;
+                    multipart.Add(attachment);
+                }
+
+                return multipart;
             }
+            return null;
         }
     }
 }

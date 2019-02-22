@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using MimeKit;
 using Mozlite.Extensions.Properties;
 using Mozlite.Extensions.Settings;
 using Mozlite.Extensions.Tasks;
 using System;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Messages
@@ -81,21 +79,29 @@ namespace Mozlite.Extensions.Messages
         /// <returns>返回发送任务。</returns>
         protected virtual async Task SendAsync(EmailSettings settings, Email message)
         {
-            using (var client = new SmtpClient(settings.SmtpServer, settings.SmtpPort))
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
             {
-                client.EnableSsl = settings.UseSsl;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(settings.SmtpUserName, settings.SmtpPassword);
-                var mail = new MailMessage();
-                mail.From = new MailAddress(settings.SmtpUserName);
-                mail.To.Add(message.To);
-                mail.Body = message.Content;
+                await client.ConnectAsync(settings.SmtpServer, settings.SmtpPort, settings.UseSsl);
+                await client.AuthenticateAsync(settings.SmtpUserName, settings.SmtpPassword);
+
+                var mail = new MimeMessage();
+                mail.From.Add(new MailboxAddress(settings.SmtpUserName));
+                mail.To.Add(new MailboxAddress(message.To));
                 mail.Subject = message.Title;
-                mail.SubjectEncoding = Encoding.UTF8;
-                mail.BodyEncoding = Encoding.UTF8;
-                mail.IsBodyHtml = true;
-                await InitAsync(mail, message);
-                await client.SendMailAsync(mail);
+                var html = new TextPart("Html") { Text = message.Content };
+
+                var multipart = await InitAsync(mail, message);
+                if (multipart != null)
+                {
+                    multipart.Insert(0, html);
+                    mail.Body = multipart;
+                }
+                else
+                {
+                    mail.Body = html;
+                }
+
+                await client.SendAsync(mail);
             }
         }
 
@@ -104,7 +110,7 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="mail">邮件实例。</param>
         /// <param name="message">消息实例。</param>
-        /// <returns>返回邮件实例对象。</returns>
-        protected virtual Task InitAsync(MailMessage mail, Email message) => Task.CompletedTask;
+        /// <returns>返回邮件实体对象。</returns>
+        protected virtual Task<Multipart> InitAsync(MimeMessage mail, Email message) => Task.FromResult(default(Multipart));
     }
 }

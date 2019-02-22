@@ -640,7 +640,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回添加结果。</returns>
         public virtual async Task<bool> CreateOwnerAsync(string userName, string loginName, string password, Action<TUser> init = null)
         {
-            var user = Activator.CreateInstance(typeof(TUser)) as TUser;
+            var user = new TUser();
             user.UserName = userName;
             user.NormalizedUserName = loginName;
             user.PasswordHash = password;
@@ -648,9 +648,11 @@ namespace Mozlite.Extensions.Security
             user.PhoneNumberConfirmed = true;
             user.CreatedIP = "127.0.0.1";
             user.CreatedDate = DateTimeOffset.Now;
+            init?.Invoke(user);
             user.RoleId = 1;
             user.RoleName = DefaultRole.Owner.Name;
             user.NormalizedUserName = NormalizeKey(user.NormalizedUserName);
+            user.NormalizedEmail = user.NormalizedEmail ?? NormalizeKey(user.Email);
             user.PasswordHash = HashPassword(user);
             return await _store.UserContext.BeginTransactionAsync(async db =>
             {
