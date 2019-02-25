@@ -111,12 +111,15 @@ namespace Mozlite.Data
         {
             if (parameters is IDictionary<string, object> dic)
                 return dic;
-            return parameters
-                .GetType()
-                .GetProperties()
-                .Where(x => x.CanRead)
-                .Select(x => new KeyValuePair<string, object>(x.Name, x.GetValue(parameters)))
-                .ToDictionary(stringComparer ?? StringComparer.OrdinalIgnoreCase);
+            dic = new Dictionary<string, object>(stringComparer ?? StringComparer.OrdinalIgnoreCase);
+            var properties = parameters.GetType().GetProperties().Where(x => x.CanRead).ToList();
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(parameters);
+                dic.Add(property.Name, value);
+            }
+
+            return dic;
         }
     }
 }

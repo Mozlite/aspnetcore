@@ -82,9 +82,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回添加用户结果。</returns>
         public override Task<IdentityResult> CreateAsync(TUser user)
         {
-            if (user.CreatedIP == null)
-                user.CreatedIP = HttpContext.GetUserAddress();
-            return base.CreateAsync(user);
+            return CreateAsync(user, user.PasswordHash);
         }
 
         /// <summary>
@@ -97,7 +95,8 @@ namespace Mozlite.Extensions.Security
         {
             if (user.CreatedIP == null)
                 user.CreatedIP = HttpContext.GetUserAddress();
-            return base.CreateAsync(user, password);
+            user.PasswordHash = PasswordSalt(user.NormalizedUserName, password);
+            return base.CreateAsync(user, user.PasswordHash);
         }
 
         /// <summary>
