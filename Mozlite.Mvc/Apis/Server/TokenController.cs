@@ -7,7 +7,7 @@ namespace Mozlite.Mvc.Apis.Server
     /// <summary>
     /// API控制器。
     /// </summary>
-    [ApiController(Anonymousable = true)]
+    [ApplicationAuthorize(Tokenless = true)]
     public class TokenController : ApiControllerBase
     {
         /// <summary>

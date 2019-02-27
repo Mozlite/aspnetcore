@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -46,14 +47,7 @@ namespace Mozlite.Extensions.Security
                 .AddRoleManager<TRoleManager>()
                 .AddErrorDescriber<SecurityErrorDescriptor>()
                 .AddDefaultTokenProviders();
-            var config = configuration.GetSection("User");
-            services.ConfigureApplicationCookie(options =>
-                {
-                    options.LoginPath = new PathString(config["Login"] ?? "/login");
-                    options.LogoutPath = new PathString(config["Logout"] ?? "/logout");
-                    options.AccessDeniedPath = new PathString(config["Denied"] ?? "/denied");
-                    options.ReturnUrlParameter = config["ReturnUrl"] ?? "returnUrl";
-                })
+            services.ConfigureApplicationCookie(options => Init(options, configuration.GetSection("User")))
                 .Configure<CookiePolicyOptions>(options =>
                 {
                     // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -62,6 +56,19 @@ namespace Mozlite.Extensions.Security
                 });
             services.AddAuthentication();
             ConfigureSecurityServices(services, configuration);
+        }
+
+        /// <summary>
+        /// 配置Cookie验证实例。
+        /// </summary>
+        /// <param name="options">Cookie验证选项。</param>
+        /// <param name="section">用户配置节点。</param>
+        protected virtual void Init(CookieAuthenticationOptions options, IConfigurationSection section)
+        {
+            options.LoginPath = new PathString(section["Login"] ?? "/login");
+            options.LogoutPath = new PathString(section["Logout"] ?? "/logout");
+            options.AccessDeniedPath = new PathString(section["Denied"] ?? "/denied");
+            options.ReturnUrlParameter = section["ReturnUrl"] ?? "returnUrl";
         }
     }
 }

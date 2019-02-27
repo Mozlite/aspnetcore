@@ -11,7 +11,7 @@ namespace Mozlite.Mvc.Apis
     /// API特性。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class ApiControllerAttribute : Microsoft.AspNetCore.Mvc.ApiControllerAttribute, IAuthorizationFilter
+    public class ApplicationAuthorizeAttribute : ApiControllerAttribute, IAuthorizationFilter
     {
         private const string AppId = "appid";
         private bool TryGetValue(HttpRequest request, string key, out StringValues value)
@@ -44,7 +44,7 @@ namespace Mozlite.Mvc.Apis
                 return;
             }
             context.HttpContext.Items[typeof(CacheApplication)] = application;
-            if (Anonymousable)//无需验证
+            if (Tokenless)//无需验证
                 return;
             if (string.IsNullOrEmpty(application.Token) || application.ExpiredDate <= DateTimeOffset.Now)
                 context.Result = Error(ErrorCode.InvalidToken);
@@ -54,8 +54,8 @@ namespace Mozlite.Mvc.Apis
         }
 
         /// <summary>
-        /// 是否匿名就可访问。
+        /// 不需要Token验证。
         /// </summary>
-        public bool Anonymousable { get; set; }
+        public bool Tokenless { get; set; }
     }
 }
