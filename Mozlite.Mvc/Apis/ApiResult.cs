@@ -29,7 +29,7 @@ namespace Mozlite.Mvc.Apis
         public ApiResult(ErrorCode code)
         {
             Code = code;
-            Status = code == ErrorCode.Succeeded ? "ok" : "error";
+            Status = code == ErrorCode.Succeeded;
             Msg = Resources.ResourceManager.GetString($"ErrorCode_{code}");
         }
 
@@ -42,7 +42,7 @@ namespace Mozlite.Mvc.Apis
         {
             Code = code;
             Msg = msg;
-            Status = code == ErrorCode.Succeeded ? "ok" : "error";
+            Status = code == ErrorCode.Succeeded;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Mozlite.Mvc.Apis
         /// <summary>
         /// 状态描述。
         /// </summary>
-        public string Status { get; }
+        public bool Status { get; }
 
         /// <summary>
         /// 返回错误信息。
