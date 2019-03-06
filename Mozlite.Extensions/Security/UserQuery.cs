@@ -66,7 +66,7 @@ namespace Mozlite.Extensions.Security
             {
                 context.Select()
                     .LeftJoin<TRole>((u, r) => u.RoleId == r.RoleId)
-                    .Where<TRole>(x => x.RoleLevel < MaxRoleLevel);
+                    .Where<TRole>(x => x.RoleLevel <= MaxRoleLevel);
             }
         }
     }

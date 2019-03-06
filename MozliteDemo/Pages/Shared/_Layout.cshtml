@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "_Global";
+    var settings = SettingsManager.GetSettings<SiteSettings>();
+}
+@inject ISettingsManager SettingsManager
+
+<div class="mozskin-layout">
+    <main>
+        <div class="main">
+            <div class="header" .visible="@(ViewBag.HideHeader != true)">
+                <div class="header-container">
+                    <h1 class="title">
+                        @settings.SiteName
+                        <a .visible="@(!Context.Request.Path.StartsWithSegments("/login"))" href="#" onclick="history.go(-1)" class="pull-right"><i class="fa fa-reply"></i></a>
+                    </h1>
+                </div>
+            </div>
+            <div class="main-container">
+                @RenderBody()
+            </div>
+        </div>
+        <footer>
+            @Html.Raw(settings.Copyright)
+        </footer>
+    </main>
+</div>
+
+@section header{
+    <link rel="stylesheet" href="~/css/site.min.css" />
+    @RenderSection("header", false)
+}
+
+@section footer{
+    <script src="~/js/site.min.js"></script>
+    @RenderSection("footer", false)
+}

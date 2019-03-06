@@ -1,0 +1,27 @@
+﻿@{
+    var settings = SettingsManager.GetSettings<SiteSettings>();
+}
+@inject ISettingsManager SettingsManager
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @settings.SiteName</title>
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/mozlite/css/mozlite.min.css" />
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <moz:user-action-panel></moz:user-action-panel>
+    @RenderSection("header", false)
+</head>
+<body class="mozskin customScrollBar @ViewBag.ClassName">
+    @RenderBody()
+    <script src="~/lib/bootstrap/js/popper.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/mozlite/js/mozlite.min.js"></script>
+    @RenderSection("footer", false)
+    <moz:status-message-panel modal="true"></moz:status-message-panel>
+    <moz:form-antiforgery></moz:form-antiforgery>
+</body>
+</html>

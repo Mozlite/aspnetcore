@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
+    <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Messages.Notifications;
-using Mozlite.Extensions.Security.Activities;
+using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Security.Stores;
 using Mozlite.Extensions.Storages.Apis;
 using System;
@@ -110,17 +110,11 @@ namespace Mozlite.Mvc.Apis
             }
         }
 
+        private IEventLogger _eventLogger;
         /// <summary>
-        /// 添加操作日志。
+        /// 日志接口。
         /// </summary>
-        /// <param name="message">日志消息。</param>
-        /// <param name="args">格式化参数。</param>
-        protected void Log(string message, params object[] args) => Logger.Info(EventId, message, args);
-
-        /// <summary>
-        /// 日志分类Id。
-        /// </summary>
-        protected virtual int EventId => 1;
+        protected virtual IEventLogger EventLogger => _eventLogger ?? (_eventLogger = GetRequiredService<IEventLogger>());
 
         /// <summary>
         /// 获取注册的服务对象。

@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+    var message = new Mozlite.Mvc.Messages.StatusMessage(TempData);
+}
+
+@if (message.Message == null)
+{
+    <div class="modal-dialog @ViewBag.ClassName">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@ViewBag.Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="false">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @RenderBody()
+            </div>
+            <div .visible="ViewBag.HideFooter!=true" class="modal-footer">
+                @if (IsSectionDefined("footer"))
+                {
+                    @RenderSection("footer", false)
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> @(ViewBag.SubmitText ?? "提交")</button>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    IgnoreBody();
+    var type = message.Type.ToString().ToLower();
+    var icon = type == "success" ? "fa-check" : "fa-warning";
+    <div class="modal-dialog alert-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body row text-@type"><div class="col-sm-2 icon"><i class="fa @icon"></i></div> <span class="col-sm-10 txt"> @Html.Raw(message.Message) </span></div>
+            <div class="modal-footer"><button type="button" class="btn btn-@type" data-dismiss="modal"> 确认 </button></div>
+        </div>
+    </div>
+}

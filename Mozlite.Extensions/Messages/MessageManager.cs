@@ -1,5 +1,6 @@
 ﻿using Mozlite.Data;
 using Mozlite.Extensions.Security.Stores;
+using Mozlite.Extensions.Settings;
 using Mozlite.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Mozlite.Extensions.Messages
     public class MessageManager : IMessageManager
     {
         private readonly ILocalizer _localizer;
+        private readonly ISettingsManager _settingsManager;
 
         /// <summary>
         /// 数据库操作接口实例。
@@ -24,9 +26,11 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="context">数据库操作接口。</param>
         /// <param name="localizer">本地化接口。</param>
-        public MessageManager(IDbContext<Email> context, ILocalizer localizer)
+        /// <param name="settingsManager">配置管理接口。</param>
+        public MessageManager(IDbContext<Email> context, ILocalizer localizer, ISettingsManager settingsManager)
         {
             _localizer = localizer;
+            _settingsManager = settingsManager;
             Context = context;
         }
 
@@ -79,6 +83,8 @@ namespace Mozlite.Extensions.Messages
         /// <returns>返回添加结果。</returns>
         public virtual bool Save(Email message)
         {
+            if (!_settingsManager.GetSettings<EmailSettings>().Enabled)
+                return true;
             if (message.Id > 0)
                 return Context.Update(message);
             return Context.Create(message);
@@ -89,11 +95,13 @@ namespace Mozlite.Extensions.Messages
         /// </summary>
         /// <param name="message">消息实例对象。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual Task<bool> SaveAsync(Email message)
+        public virtual async Task<bool> SaveAsync(Email message)
         {
+            if (!(await _settingsManager.GetSettingsAsync<EmailSettings>()).Enabled)
+                return true;
             if (message.Id > 0)
-                return Context.UpdateAsync(message);
-            return Context.CreateAsync(message);
+                return await Context.UpdateAsync(message);
+            return await Context.CreateAsync(message);
         }
 
         /// <summary>
@@ -157,7 +165,7 @@ namespace Mozlite.Extensions.Messages
         /// <param name="content">内容。</param>
         /// <param name="action">实例化方法。</param>
         /// <returns>返回发送结果。</returns>
-        public virtual Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content, Action<Email> action = null)
+        public virtual async Task<bool> SendEmailAsync(int userId, string emailAddress, string title, string content, Action<Email> action = null)
         {
             var message = new Email();
             message.UserId = userId;
@@ -165,7 +173,7 @@ namespace Mozlite.Extensions.Messages
             message.Title = title;
             message.Content = content;
             action?.Invoke(message);
-            return SaveAsync(message);
+            return await SaveAsync(message);
         }
 
         /// <summary>

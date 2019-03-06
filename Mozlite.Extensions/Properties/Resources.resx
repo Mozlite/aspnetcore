@@ -275,4 +275,25 @@
   <data name="MessageStatus_Pending" xml:space="preserve">
     <value>等待发送</value>
   </data>
+  <data name="EventMessage_NullMessage" xml:space="preserve">
+    <value>事件消息未设置！</value>
+  </data>
+  <data name="EventMessage_NullUserId" xml:space="preserve">
+    <value>事件消息的用户Id未设置，并且当前用户还未登录！</value>
+  </data>
+  <data name="EventType_Core" xml:space="preserve">
+    <value>通用</value>
+  </data>
+  <data name="DataResult_Created" xml:space="preserve">
+    <value>添加了</value>
+  </data>
+  <data name="DataResult_Deleted" xml:space="preserve">
+    <value>删除了</value>
+  </data>
+  <data name="DataResult_Updated" xml:space="preserve">
+    <value>更新了</value>
+  </data>
+  <data name="Email_EventType" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
 </root>

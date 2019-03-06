@@ -1,0 +1,21 @@
+﻿@import 'core';
+
+.mini.sidebar .logo {
+    padding-top: 0;
+}
+
+.droplast .dropdown-menu.show {
+    font-size: .875rem;
+    position: absolute;
+    left: auto;
+    right: 0;
+}
+
+.dropicon .dropdown-item {
+    padding-left: 38px;
+}
+
+.dropicon .dropdown-item i {
+    margin-right: 8px;
+    margin-left: -23px;
+}

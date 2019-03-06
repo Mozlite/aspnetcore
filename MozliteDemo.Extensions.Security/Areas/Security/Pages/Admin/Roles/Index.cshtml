@@ -1,0 +1,41 @@
+﻿@page
+@model IndexModel
+@{
+    ViewBag.Title = "角色列表";
+    ViewBag.Current = "users.roles";
+    var i = 0;
+    var count = Model.Roles.Count;
+    ViewBag.Description = "<i class=\"fa fa-info-circle\"></i> 角色等级越高，权限也越高，高级角色能够修改低级角色得信息！";
+}
+
+<div class="filter">
+    <div class="right"><a js-modal="click" asp-page="/admin/roles/edit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus"></i> 添加角色</a></div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>角色名称</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model.Roles)
+            {
+                i++;
+                <tr>
+                    <td>
+                        @role.Name <i title="系统" .visible="role.IsSystem" class="fa fa-star text-warning"></i>
+                        <div class="data-action pull-right">
+                            <a .visible="!role.IsSystem" js-confirm="你确定要删除“@role.Name”吗？" title="删除" js-action="post" asp-page-handler="Delete" asp-route-id="@role.RoleId"><i class="fa fa-trash"></i></a>
+                            <a .visible="@(i!=1)" title="上移" js-action="post" asp-page-handler="MoveUp" asp-route-id="@role.RoleId"><i class="fa fa-arrow-up"></i></a>
+                            <a .visible="@(i!=count)" title="下移" js-action="post" asp-page-handler="MoveDown" asp-route-id="@role.RoleId"><i class="fa fa-arrow-down"></i></a>
+                            <a title="编辑" js-action="modal" asp-page="/admin/roles/edit" asp-route-id="@role.RoleId"><i class="fa fa-pencil"></i></a>
+                            <a title="权限" asp-page="/admin/roles/permission" asp-route-id="@role.RoleId"><i class="fa fa-share-alt"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

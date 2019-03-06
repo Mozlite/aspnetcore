@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Mozlite.Extensions;
 using Mozlite.Extensions.Security.Permissions;
-using Mozlite.Extensions.Storages;
-using Mozlite.Extensions.Storages.Excels;
-using System;
-using System.Collections.Generic;
 
 namespace Mozlite.Mvc.RazorUI
 {
@@ -14,10 +10,6 @@ namespace Mozlite.Mvc.RazorUI
     [Authorize]
     public abstract class ModelBase : Mvc.ModelBase
     {
-        /// <summary>
-        /// 事件ID。
-        /// </summary>
-        protected override int EventId => RazorUISettings.EventId;
     }
 
     /// <summary>

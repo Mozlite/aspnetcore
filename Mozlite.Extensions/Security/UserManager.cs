@@ -146,6 +146,8 @@ namespace Mozlite.Extensions.Security
         public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Func<TUser, Task> success)
         {
             var user = await FindByNameAsync(userName);
+            if (user == null)
+                return SignInResult.Failed;
             var result = await SignInManager.PasswordSignInAsync(user, password, isRemembered, true);
             if (result.Succeeded)
             {

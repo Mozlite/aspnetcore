@@ -70,6 +70,15 @@ namespace Mozlite.Mvc.Properties {
         }
         
         /// <summary>
+        ///   查找类似 开放平台 的本地化字符串。
+        /// </summary>
+        internal static string Api_EventType {
+            get {
+                return ResourceManager.GetString("Api_EventType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 MM月dd日 的本地化字符串。
         /// </summary>
         internal static string DateFormat {

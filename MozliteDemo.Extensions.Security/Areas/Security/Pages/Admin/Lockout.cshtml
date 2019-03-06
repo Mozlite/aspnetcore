@@ -1,0 +1,18 @@
+﻿@page
+@model LockoutModel
+@{
+    Layout = "_Modal";
+    ViewBag.Title = "锁定用户";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.UserId" />
+    <div class="form-group">
+        <label>截止时间</label>
+        <input js-date="datetime" js-date-min-date="@DateTimeOffset.Now" class="form-control" asp-for="Input.LockoutEnd" />
+    </div>
+    <div class="form-group">
+        <label>原因</label>
+        <textarea class="form-control" rows="3" asp-for="Input.Reason"></textarea>
+    </div>
+</form>

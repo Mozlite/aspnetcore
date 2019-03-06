@@ -1,0 +1,246 @@
+﻿@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "./lib/highlight/styles/vs2015.css";
+
+.txt {
+    blockquote {
+        padding: 10px 15px 1px 15px;
+        border-left: 3px solid #ccc;
+    }
+
+    img {
+        display: block;
+        text-align: center;
+    }
+
+    pre {
+        padding: 10px 20px;
+        border: 1px solid #efeeee;
+        border-radius: 4px;
+    }
+}
+
+.mini.sidebar .logo {
+    padding-top: 0;
+}
+
+.page-center {
+    justify-content: center;
+}
+
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid #ced4da !important;
+}
+
+.filter {
+    .multi {
+        margin-right: 0px;
+        display: block;
+
+        .form-row {
+            display: flex;
+            flex: 0 0 100%;
+
+            & > * {
+                margin-right: 10px;
+                margin-bottom: 0.75rem;
+            }
+        }
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border: 1px solid #6c757d !important;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        outline: 0;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #6c757d !important;
+    }
+}
+
+td.data-action, th.data-action {
+    text-align: center;
+}
+
+@include media-breakpoint-down(sm) {
+    .filter {
+        .right {
+            display: none !important;
+        }
+    }
+
+    td.data-action, th.data-action {
+        display: none !important;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .filter {
+        & > * {
+            margin-right: 0 !important;
+            width: 100%;
+            margin-bottom: 0.75rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .right {
+            justify-content: flex-start;
+
+            & > * {
+                margin-left: 0 !important;
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+@for $i from 1 through 10 {
+    .indent-#{$i} {
+        text-indent: #{$i}rem;
+    }
+}
+
+.main-container {
+    min-height: calc(100vh - 280px);
+}
+
+.mozksin-fullcontent main > .main .main-container {
+    padding: 0;
+    margin: 0;
+    margin: 0 -24px 0;
+    background: transparent;
+
+
+    div.data-content {
+        margin: 0;
+        padding: 0;
+        padding-right: 24px;
+    }
+}
+
+.icon-list .list-inline-item {
+    border: 1px solid #ccc;
+    width: 128px;
+    height: 128px;
+    text-align: center;
+    margin: 0;
+    background: #fff;
+    margin-right: -5px !important;
+}
+
+.icon-list .list-inline-item:hover {
+    background: #f7f5f5;
+}
+
+.icon-list .list-inline-item img, .icon-list .list-inline-item .icon {
+    width: 72px;
+    height: 72px;
+    margin: 10px auto;
+}
+
+.data-item {
+    margin: 0;
+    padding: 0;
+    padding-left: 24px;
+    padding-top: 24px;
+}
+
+.item-container {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    background: #fff;
+    height: 220px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-add, .icon-add {
+    border: 1px dashed #d9d9d9;
+    cursor: pointer;
+    color: #e8e8e8;
+}
+
+.item-add:hover, .icon-add:hover {
+    border: 1px dashed #40a9ff;
+    color: #0056b3;
+}
+
+.item-add > div {
+    height: 50px;
+    margin-top: 60px;
+    font-size: 24px;
+    color: #e8e8e8;
+    text-align: center;
+}
+
+.item-add:hover > div {
+    color: #40a9ff;
+}
+
+.item-content {
+    flex: 1 1 auto;
+    padding: 34px;
+    display: flex;
+    flex-direction: row;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.item-content .icon {
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    flex: 0 0 90px;
+    margin: auto;
+}
+
+.item-content .icon img {
+    width: 100%;
+    height: 100%;
+}
+
+.item-content .content {
+    flex: 1 1 auto;
+    margin-left: 28px;
+}
+
+.item-action {
+    flex: 0 0 45px;
+    height: 45px;
+    background: #f7f9fa;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: stretch;
+}
+
+.item-action a {
+    line-height: 25px;
+    flex: 1 1 auto;
+    text-align: center;
+    border-right: #e8e8e8 1px solid;
+}
+
+.item-action a:last-child {
+    border-right: none;
+}
+
+a {
+    color: #9d9f9f;
+}
+
+.title-right {
+    float: right;
+    margin-top: -47px;
+}
+
+.notification-confirmed {
+    opacity: 0.4;
+}

@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "_Admin";
+    ViewBag.HideHeader = true;
+}
+
+<div class="account-menu">
+    <moz:menu provider="account"></moz:menu>
+</div>
+<div class="account-main">
+    @RenderBody()
+</div>
+
+@section header{
+    <link rel="stylesheet" href="~/css/account.min.css" />
+    @RenderSection("header", false)
+}
+
+@section footer{
+    <script src="~/js/account.min.js"></script>
+    @RenderSection("footer", false)
+}

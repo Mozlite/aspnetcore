@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Messages
 {
@@ -8,6 +9,11 @@ namespace Mozlite.Extensions.Messages
     [Table("core_Emails_Settings")]
     public class EmailSettings : IIdObject
     {
+        /// <summary>
+        /// 事件类型。
+        /// </summary>
+        public static readonly string EventType = Resources.Email_EventType;
+
         /// <summary>
         /// 启用SMTP服务器。
         /// </summary>

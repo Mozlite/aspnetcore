@@ -2,6 +2,7 @@
 using Mozlite.Extensions.Messages.Notifications;
 using Mozlite.Extensions.Settings;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
 {
@@ -38,7 +39,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
             Settings.MaxSize = size;
             if (_settingsManager.SaveSettings(Settings))
             {
-                Log("修改了每个用户最大通知数量为：{0}。", size);
+                EventLogger.LogCore("修改了每个用户最大通知数量为：{0}。", size);
                 return Success("你已经成功更新了记录数！");
             }
 
@@ -52,8 +53,12 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
                 return Error("请先选择通知类型后在进行删除操作！");
             }
 
+            var types = string.Join(",", _typeManager.Fetch(x => ids.Contains(x.Id))
+                .Select(x => x.Name)
+                .ToArray());
             var result = _typeManager.Delete(ids);
-            return LogResult(result, "通知类型", ids);
+            EventLogger.LogCore("删除了通知类型：{0}", types);
+            return Json(result, types);
         }
     }
 }

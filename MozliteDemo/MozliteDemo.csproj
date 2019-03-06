@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mozlite.Core\Mozlite.Core.csproj" />
+    <ProjectReference Include="..\Mozlite.Data.SqlServer\Mozlite.Data.SqlServer.csproj" />
+    <ProjectReference Include="..\Mozlite.Data\Mozlite.Data.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.OpenServices\Mozlite.Extensions.OpenServices.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions.Storages\Mozlite.Extensions.Storages.csproj" />
+    <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
+    <ProjectReference Include="..\Mozlite.Mvc.RazorUI\Mozlite.Mvc.RazorUI.csproj" />
+    <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
+    <ProjectReference Include="..\MozliteDemo.Extensions.Security\MozliteDemo.Extensions.Security.csproj" />
+    <ProjectReference Include="..\MozliteDemo.Extensions\MozliteDemo.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,5 @@
-﻿using Mozlite.Mvc.AdminMenus;
+﻿using Mozlite.Extensions;
+using Mozlite.Mvc.AdminMenus;
 
 namespace Mozlite.Mvc.RazorUI
 {
@@ -18,12 +19,6 @@ namespace Mozlite.Mvc.RazorUI
                 .AddMenu("email", it => it.Texted("邮件管理").Page("/Admin/Email/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Email))
                 .AddMenu("emailsettings", it => it.Texted("邮件配置").Page("/Admin/Email/Settings", area: RazorUISettings.ExtensionName).Allow(Permissions.EmailSettings))
                 .AddMenu("notifier", it => it.Texted("通知管理").Page("/Admin/Notifications/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Notifications))
-            );
-
-            root.AddMenu("app", menu => menu.Texted("API管理", "fa fa-sitemap")
-                .AddMenu("index", it => it.Texted("应用管理").Page("/Admin/Applications/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Administrator))
-                .AddMenu("apis", it => it.Texted("API列表").Page("/Admin/Apis/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Administrator))
-                .AddMenu("code", it => it.Texted("状态编码").Page("/Admin/Apis/Code", area: RazorUISettings.ExtensionName).Allow(Permissions.Administrator))
             );
         }
     }

@@ -151,6 +151,42 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 添加了 的本地化字符串。
+        /// </summary>
+        internal static string DataResult_Created {
+            get {
+                return ResourceManager.GetString("DataResult_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除了 的本地化字符串。
+        /// </summary>
+        internal static string DataResult_Deleted {
+            get {
+                return ResourceManager.GetString("DataResult_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 更新了 的本地化字符串。
+        /// </summary>
+        internal static string DataResult_Updated {
+            get {
+                return ResourceManager.GetString("DataResult_Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 电子邮件 的本地化字符串。
+        /// </summary>
+        internal static string Email_EventType {
+            get {
+                return ResourceManager.GetString("Email_EventType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 电子邮件发送服务 的本地化字符串。
         /// </summary>
         internal static string EmailTaskService {
@@ -417,6 +453,33 @@ namespace Mozlite.Extensions.Properties {
         internal static string ErrorDescriptor_UserNotInRole {
             get {
                 return ResourceManager.GetString("ErrorDescriptor_UserNotInRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 事件消息未设置！ 的本地化字符串。
+        /// </summary>
+        internal static string EventMessage_NullMessage {
+            get {
+                return ResourceManager.GetString("EventMessage_NullMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 事件消息的用户Id未设置，并且当前用户还未登录！ 的本地化字符串。
+        /// </summary>
+        internal static string EventMessage_NullUserId {
+            get {
+                return ResourceManager.GetString("EventMessage_NullUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 通用 的本地化字符串。
+        /// </summary>
+        internal static string EventType_Core {
+            get {
+                return ResourceManager.GetString("EventType_Core", resourceCulture);
             }
         }
         

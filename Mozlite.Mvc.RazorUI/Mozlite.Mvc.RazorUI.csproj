@@ -19,9 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Areas\Core\Pages\Admin\Applications\Apis.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="Areas\Core\Pages\Admin\Notifications\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -34,5 +39,12 @@
     <Content Update="Areas\Core\Pages\_ViewImports.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

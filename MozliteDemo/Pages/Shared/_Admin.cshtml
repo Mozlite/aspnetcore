@@ -1,0 +1,205 @@
+﻿@{
+    Layout = "_Global";
+    var settings = SettingsManager.GetSettings<SiteSettings>();
+    var notifications = NotificationManager.Load();
+    var notificationSize = notifications.Count(x => x.Status == NotificationStatus.New);
+}
+@inject User Current
+@inject ISettingsManager SettingsManager
+@inject INotificationManager NotificationManager
+
+<div class="mozskin-layout">
+    <div class="sidebar d-print-none">
+        <div class="logo">
+            <a asp-page="/index" asp-area="">
+                <img src="@(settings.LogoUrl??"/images/logo-icon.png")" onerror="this.src='/images/logo-icon.png'" alt="@settings.SiteName">
+                <h1>@settings.SiteName</h1>
+            </a>
+        </div>
+        <moz:menu class="nav js-menu" provider="admin"></moz:menu>
+    </div>
+    <div class="mini-bg"></div>
+    <main>
+        <header class="d-print-none">
+            <i js-toggle="sidebar" class="sidebar-trigger fa fa-indent"></i>
+            <ul class="right navbar-nav">
+                <li class="nav-item text-nowarp">
+                    <a class="nav-link" title="控制台" asp-page="/index" asp-area="">
+                        <i class="fa fa-dashboard mr-1"></i>控制台
+                    </a>
+                </li>
+                <li class="nav-item text-nowarp dropdown dropdown-panel">
+                    <a class="nav-link dropdown-toggle dropleft" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bell-o mr-1"></i><span class="number badge badge-danger size-total">0</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-panel-body">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item"><a class="nav-link active" id="notify-tab" data-toggle="tab" href="#notify" role="tab" aria-controls="notify" aria-selected="false">通知<span data-size="@notificationSize" class="badge size-notify">(@notificationSize)</span></a></li>
+                            <li class="nav-item"><a class="nav-link" id="msg-tab" data-toggle="tab" href="#msg" role="tab" aria-controls="notify" aria-selected="false">消息<span data-size="5" class="badge size-msg">(5)</span></a></li>
+                            <li class="nav-item"><a class="nav-link" id="task-tab" data-toggle="tab" href="#task" role="tab" aria-controls="notify" aria-selected="false">代办<span data-size="10" class="badge size-task">(10)</span></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="notify" role="tabpanel">
+                                <div class="dropdown-panel-content customScrollBar overlay">
+                                    @foreach (var notification in notifications)
+                                    {
+                                        <a class="dropdown-panel-item notification-@(notification.Status.ToString().ToLower())" asp-controller="Notifier" asp-action="Confirmed" asp-area="" asp-route-id="@notification.Id">
+                                            <div class="dropdown-panel-item-icon"><moz:icon src="@notification.IconUrl" class="icon-circle"></moz:icon></div>
+                                            <div class="dropdown-panel-item-content">
+                                                <div class="title">@notification.Message</div>
+                                                <moz:datetimeoffset tag="div" date="@notification.CreatedDate" class="text"></moz:datetimeoffset>
+                                            </div>
+                                        </a>
+                                    }
+                                </div>
+                                <div class="dropdown-panel-action">
+                                    <a asp-controller="Notifier" asp-action="Clear" asp-area="">清空通知</a>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="msg" role="tabpanel">
+                                <div class="dropdown-panel-content customScrollBar overlay">
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="dropdown-panel-item-content">
+                                            <div class="title">发送了一个电子邮件</div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="dropdown-panel-item-content">
+                                            <div class="title">发送了一个电子邮件</div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="dropdown-panel-item-content">
+                                            <div class="title">发送了一个电子邮件</div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="dropdown-panel-item-content">
+                                            <div class="title">发送了一个电子邮件</div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="dropdown-panel-item-content">
+                                            <div class="title">发送了一个电子邮件</div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="dropdown-panel-item-content">
+                                            <div class="title">发送了一个电子邮件</div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-panel-action">
+                                    <a href="#">清空</a>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="task" role="tabpanel">
+                                <div class="dropdown-panel-content customScrollBar overlay">
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-content noicon">
+                                            <div class="title">发送了一个电子邮件 <span class="mark alert alert-success">已经完成</span></div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-content noicon">
+                                            <div class="title">发送了一个电子邮件 <span class="mark alert alert-danger">已经完成</span></div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-content noicon">
+                                            <div class="title">发送了一个电子邮件 <span class="mark alert alert-secondary">已经完成</span></div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-content noicon">
+                                            <div class="title">发送了一个电子邮件 <span class="mark alert alert-warning">已经完成</span></div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-panel-item">
+                                        <div class="dropdown-panel-item-content noicon">
+                                            <div class="title">发送了一个电子邮件 <span class="mark alert alert-success">已经完成</span></div>
+                                            <div class="text">发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件发送了一个电子邮件</div>
+                                            <div class="text">1个小时前</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-panel-action">
+                                    <a href="#">清空</a>
+                                    <a href="#">编辑</a>
+                                    <a href="#">添加</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item text-nowarp dropdown droplast">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="avatar" onerror="this.src = '/images/avatar.png';" src="@Current.Avatar" title="@Current.UserName"> @Current.UserName
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" asp-page="/account/index" asp-area="@SecuritySettings.ExtensionName"><i class="fa fa-user-o"></i>编辑资料</a>
+                        <a class="dropdown-item" asp-page="/account/changepassword" asp-area="@SecuritySettings.ExtensionName"><i class="fa fa-key"></i>修改密码</a>
+                        <a class="dropdown-item" asp-page="/account/log" asp-area="@SecuritySettings.ExtensionName"><i class="fa fa-envelope"></i>活动日志</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="fa fa-sign-out"></i>退出</a>
+                    </div>
+                </li>
+            </ul>
+        </header>
+        <div class="main">
+            <div class="header" .visible="@(ViewBag.HideHeader != true)">
+                <div class="header-container">
+                    <moz:menu-navigator class="d-print-none" home="控制台" href="/" provider="admin"></moz:menu-navigator>
+                    <h1 class="title">@ViewBag.Title</h1>
+                    @if (ViewBag.Description != null)
+                    {
+                        <div class="summary">@Html.Raw(ViewBag.Description)</div>
+                    }
+                    @RenderSection("summary", false)
+                </div>
+            </div>
+            <div class="main-container">
+                @RenderBody()
+            </div>
+        </div>
+        <footer>
+            Copyright &copy;2013-@(DateTime.Now.Year) 厦门奥普拓自控科技有限公司 ver @Cores.Version.ToString(3)
+        </footer>
+    </main>
+</div>
+
+@section header{
+    <link rel="stylesheet" href="~/css/admin.min.css" />
+    @RenderSection("header", false)
+}
+
+@section footer{
+    <script src="~/js/admin.min.js"></script>
+    @RenderSection("footer", false)
+}

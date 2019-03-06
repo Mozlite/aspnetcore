@@ -24,6 +24,11 @@ namespace Mozlite.Data.SqlServer
         protected override string DateTimeOffsetFormat => DateTimeOffsetFormatConst;
 
         /// <summary>
+        /// float格式。
+        /// </summary>
+        protected override string FloatingPointFormatString => "{0}";
+
+        /// <summary>
         /// 将对象转换为安全的SQL字符串。
         /// </summary>
         /// <param name="value">值。</param>

@@ -1,0 +1,35 @@
+﻿@page
+@using MozliteDemo.Extensions.Security.Areas.Security
+@model AvatarModel
+@{
+    ViewData["Title"] = "更新头像";
+    ViewData["Current"] = AccountMenu.Avatar;
+}
+
+<div class="account-title">
+    <h4>@ViewData["Title"]</h4>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Input.UserId"/>
+    <div class="form-group">
+        <div class="avatar">
+            <input asp-for="Input.AvatarFile" onchange="uploadAvatar(this);" type="file" style="display: none;"/>
+            <a href="#" onclick="$(this).parent().find('input').click();"><img src="@(Model.User.Avatar)" onerror="this.src='/images/avatar.png'" title="点击更新头像" class="preview"/></a>
+            <span asp-validation-for="Input.AvatarFile" class="text-danger"></span>
+        </div>
+        <div class="clearfix">
+            <ul class="avatar-summary">
+                <li>点击头像，选择头像文件</li>
+                <li>选择完将会自动上传并更新头像</li>
+                <li>完成更新</li>
+            </ul>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function uploadAvatar(file) {
+        $('.preview').attr('src', $(file).createObjectURL());
+        $(file).parents('form').submit();
+    }
+</script>

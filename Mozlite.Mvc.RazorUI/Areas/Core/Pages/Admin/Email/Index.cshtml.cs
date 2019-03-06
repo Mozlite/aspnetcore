@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Mozlite.Extensions;
 using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Security.Permissions;
 

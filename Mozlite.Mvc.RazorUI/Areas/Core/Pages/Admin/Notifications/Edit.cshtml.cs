@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Messages.Notifications;
+using Mozlite.Extensions.Security.Events;
 using System.Threading.Tasks;
 
 namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
@@ -29,11 +30,10 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
                 return Error();
             }
 
-            var action = Input.Id > 0 ? "更新" : "添加";
             var result = await _typeManager.SaveAsync(Input);
             if (result)
             {
-                Log("{1}了通知类型：{0}。", action, Input.Name);
+                EventLogger.LogResult(result, EventType.Core, "通知类型：{0}。", Input.Name);
             }
 
             return Json(result, Input.Name);

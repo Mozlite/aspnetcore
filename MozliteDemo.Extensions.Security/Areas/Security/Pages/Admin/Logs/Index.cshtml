@@ -1,0 +1,60 @@
+﻿@page
+@inject Mozlite.Extensions.Settings.ISettingsManager SettingsManager
+@model IndexModel
+@{
+    ViewBag.Title = "日志管理";
+    ViewBag.Current = "users.logs";
+    ViewBag.Description = "管理其他用户的活动日志，自己的活动日志可以在<a href=\"/Security/Account/Log\">活动日志</a>查看。";
+}
+@inject ILocalizer Localizer
+
+<div class="filter d-print-none">
+    <form class="left form-inline" method="get">
+        <div class="form-group">
+            <label>分类：</label>
+            <moz:event-type-dropdownlist default-text="全部" default-value="0" class="form-control form-control-sm border-secondary" for="Model.EventId"></moz:event-type-dropdownlist>
+        </div>
+        <div class="form-group">
+            <label>日期：</label>
+            <div class="input-group input-group-sm input-range">
+                <input autocomplete="off" class="form-control form-control-sm border-secondary" js-date="datetime" js-date-max="#Model_End" type="text" asp-for="Model.Start" />
+                <label class="border-secondary">~</label>
+                <input autocomplete="off" js-date="datetime" js-date-min="#Model_Start" class="form-control form-control-sm border-secondary" type="text" asp-for="Model.End" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group input-group-sm">
+                <input class="form-control form-control-sm border-secondary" placeholder="用户名称" type="text" asp-for="Model.Name" />
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">
+                        <span class="fa fa-search"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="right">
+        <a title="打印" href="#" onclick="print();" class="btn btn-sm btn-outline-secondary"><i class="fa fa-print"></i></a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>分类</th>
+                <th>日志信息</th>
+            </tr>
+        </thead>
+        <tbody class="data-content">
+            @foreach (var message in Model.Model)
+            {
+                <tr>
+                    <td class="text-center">@Model.GetEventType(message.EventId)</td>
+                    <td>[@message.CreatedDate.ToString("yyyy-MM-dd HH:mm")] <a asp-route-userid="@message.UserId">@message["UserName"]</a> @Html.Raw(message.Message)</td>
+                </tr>
+            }
+            <moz:warning-tabled colspan="2" class="text-secondary" attach="Model.Model">没有查询到相关日志！</moz:warning-tabled>
+        </tbody>
+    </table>
+    <moz:page class="pagination-sm d-print-none mb-0" data="Model.Model"></moz:page>
+</div>

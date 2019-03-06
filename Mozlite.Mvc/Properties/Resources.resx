@@ -231,4 +231,7 @@
   <data name="ErrorCode_NotFound" xml:space="preserve">
     <value>未找到{0}！</value>
   </data>
+  <data name="Api_EventType" xml:space="preserve">
+    <value>开放平台</value>
+  </data>
 </root>

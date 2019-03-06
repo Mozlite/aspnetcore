@@ -3,6 +3,7 @@ using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Security.Permissions;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Mozlite.Extensions;
 
 namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Email
 {

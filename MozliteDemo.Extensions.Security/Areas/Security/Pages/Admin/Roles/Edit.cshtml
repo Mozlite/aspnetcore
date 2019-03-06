@@ -1,0 +1,30 @@
+﻿@page
+@model EditModel
+@{
+    ViewBag.Title = "角色";
+    Layout = "_Modal";
+    ViewBag.SubmitText = "提交更改";
+}
+
+<form method="post">
+    <moz:modal-summary></moz:modal-summary>
+    <input type="hidden" asp-for="Input.RoleId"/>
+    <div class="form-group">
+        <label>名称</label>
+        <input class="form-control" asp-for="Input.Name"/>
+        <span class="text-danger" asp-validation-for="Input.Name"></span>
+    </div>
+    <div class="form-group">
+        @if (Model.Input?.RoleId > 0)
+        {
+            <label>唯一键</label>
+            <input class="form-control" readonly="readonly" asp-for="Input.NormalizedName"/>
+        }
+        else
+        {
+            <label>唯一键 <small class="text-secondary">(创建后不能修改)</small></label>
+            <input class="form-control text-uppercase" asp-for="Input.NormalizedName"/>
+            <span class="text-danger" asp-validation-for="Input.NormalizedName"></span>
+        }
+    </div>
+</form>
