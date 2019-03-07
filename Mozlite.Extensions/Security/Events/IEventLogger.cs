@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 
 namespace Mozlite.Extensions.Security.Events
 {

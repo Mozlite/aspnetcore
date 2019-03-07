@@ -32,7 +32,7 @@ namespace MozliteDemo.Extensions.Security
         /// <param name="result">数据操作结果。</param>
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
-        public static void LogResult(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResult(result, Resources.EventType, message);
+        public static void LogUserResult(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResult(result, Resources.EventType, message);
 
         /// <summary>
         /// 添加用户事件日志。
@@ -42,7 +42,7 @@ namespace MozliteDemo.Extensions.Security
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
         /// <param name="args">格式化参数。</param>
-        public static void LogResult(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResult(result, Resources.EventType, message, args);
+        public static void LogUserResult(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResult(result, Resources.EventType, message, args);
 
         /// <summary>
         /// 添加用户事件日志。
@@ -66,7 +66,7 @@ namespace MozliteDemo.Extensions.Security
         /// <param name="result">数据操作结果。</param>
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
-        public static Task LogResultAsync(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResultAsync(result, Resources.EventType, message);
+        public static Task LogUserResultAsync(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResultAsync(result, Resources.EventType, message);
 
         /// <summary>
         /// 添加用户事件日志。
@@ -76,6 +76,6 @@ namespace MozliteDemo.Extensions.Security
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
         /// <param name="args">格式化参数。</param>
-        public static Task LogResultAsync(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResultAsync(result, Resources.EventType, message, args);
+        public static Task LogUserResultAsync(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResultAsync(result, Resources.EventType, message, args);
     }
 }

@@ -822,8 +822,7 @@ namespace Mozlite.Data.Migrations
         /// </summary>
         /// <param name="sql">SQL语句。</param>
         /// <returns>返回迁移实例。</returns>
-        public virtual OperationBuilder<SqlOperation> Sql(
-             string sql)
+        public virtual OperationBuilder<SqlOperation> Sql(string sql)
         {
             Check.NotEmpty(sql, nameof(sql));
 

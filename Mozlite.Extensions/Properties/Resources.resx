@@ -296,4 +296,7 @@
   <data name="Email_EventType" xml:space="preserve">
     <value>电子邮件</value>
   </data>
+  <data name="EventType" xml:space="preserve">
+    <value>系统</value>
+  </data>
 </root>

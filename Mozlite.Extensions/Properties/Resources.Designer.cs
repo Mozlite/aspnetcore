@@ -475,6 +475,15 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
+        ///   查找类似 系统 的本地化字符串。
+        /// </summary>
+        internal static string EventType {
+            get {
+                return ResourceManager.GetString("EventType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 通用 的本地化字符串。
         /// </summary>
         internal static string EventType_Core {

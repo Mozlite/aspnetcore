@@ -3,6 +3,7 @@ using Mozlite.Extensions.Messages.Notifications;
 using Mozlite.Extensions.Settings;
 using System.Collections.Generic;
 using System.Linq;
+using Mozlite.Extensions.Security.Events;
 
 namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
 {

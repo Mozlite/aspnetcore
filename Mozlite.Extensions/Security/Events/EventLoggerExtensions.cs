@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using Mozlite.Extensions;
-using Mozlite.Extensions.Security.Events;
-using Mozlite.Mvc.RazorUI.Properties;
+﻿using Mozlite.Extensions.Properties;
+using System.Threading.Tasks;
 
-namespace Mozlite.Mvc.RazorUI
+namespace Mozlite.Extensions.Security.Events
 {
     /// <summary>
     /// 日志接口扩展。
@@ -32,7 +30,7 @@ namespace Mozlite.Mvc.RazorUI
         /// <param name="result">数据操作结果。</param>
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
-        public static void LogResult(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResult(result, Resources.EventType, message);
+        public static void LogCoreResult(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResult(result, Resources.EventType, message);
 
         /// <summary>
         /// 添加用户事件日志。
@@ -42,7 +40,7 @@ namespace Mozlite.Mvc.RazorUI
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
         /// <param name="args">格式化参数。</param>
-        public static void LogResult(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResult(result, Resources.EventType, message, args);
+        public static void LogCoreResult(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResult(result, Resources.EventType, message, args);
 
         /// <summary>
         /// 添加用户事件日志。
@@ -66,7 +64,7 @@ namespace Mozlite.Mvc.RazorUI
         /// <param name="result">数据操作结果。</param>
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
-        public static Task LogResultAsync(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResultAsync(result, Resources.EventType, message);
+        public static Task LogCoreResultAsync(this IEventLogger logger, DataResult result, string eventType, string message) => logger.LogResultAsync(result, Resources.EventType, message);
 
         /// <summary>
         /// 添加用户事件日志。
@@ -76,6 +74,6 @@ namespace Mozlite.Mvc.RazorUI
         /// <param name="eventType">事件类型名称。</param>
         /// <param name="message">事件消息。</param>
         /// <param name="args">格式化参数。</param>
-        public static Task LogResultAsync(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResultAsync(result, Resources.EventType, message, args);
+        public static Task LogCoreResultAsync(this IEventLogger logger, DataResult result, string eventType, string message, params object[] args) => logger.LogResultAsync(result, Resources.EventType, message, args);
     }
 }
