@@ -84,7 +84,7 @@ namespace Mozlite.Extensions.Security
         {
             if (user.CreatedIP == null)
                 user.CreatedIP = HttpContext.GetUserAddress();
-            user.PasswordHash = PasswordSalt(user.NormalizedUserName, user.PasswordHash);
+            user.PasswordHash = HashPassword(user);
             return base.CreateAsync(user);
         }
 
@@ -98,7 +98,8 @@ namespace Mozlite.Extensions.Security
         {
             if (user.CreatedIP == null)
                 user.CreatedIP = HttpContext.GetUserAddress();
-            user.PasswordHash = PasswordSalt(user.NormalizedUserName, password);
+            user.PasswordHash = password;
+            user.PasswordHash = HashPassword(user);
             return base.CreateAsync(user);
         }
 
