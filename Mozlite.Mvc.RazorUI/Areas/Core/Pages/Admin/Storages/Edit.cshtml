@@ -1,0 +1,20 @@
+﻿@page
+@model EditModel
+@{
+    ViewBag.Title = "修改名称";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <div class="form-group">
+        <label>文件名</label>
+        <div class="input-group input-append">
+            <input type="text" asp-for="Input.Name" class="form-control" />
+            <div class="input-group-text">
+                @Model.Input.Extension
+            </div>
+        </div>
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+</form>

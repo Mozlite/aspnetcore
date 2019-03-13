@@ -176,7 +176,7 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="id">媒体文件Id。</param>
         /// <returns>返回存储文件实例。</returns>
-        public virtual async Task<StoredPhysicalFile> FindAsync(Guid id)
+        public virtual async Task<StoredPhysicalFile> FindPhysicalFileAsync(Guid id)
         {
             var file = await _sfdb.AsQueryable().InnerJoin<MediaFile>((sf, mf) => sf.FileId == mf.FileId)
                 .Where<MediaFile>(x => x.Id == id)
@@ -185,6 +185,16 @@ namespace Mozlite.Extensions.Storages
                 .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
             file.PhysicalPath = Path.Combine(_media, file.PhysicalPath);
             return file;
+        }
+
+        /// <summary>
+        /// 通过GUID获取媒体文件实例。
+        /// </summary>
+        /// <param name="id">媒体文件Id。</param>
+        /// <returns>返回媒体文件实例。</returns>
+        public virtual Task<MediaFile> FindAsync(Guid id)
+        {
+            return _mfdb.FindAsync(id);
         }
 
         /// <summary>
@@ -271,6 +281,26 @@ namespace Mozlite.Extensions.Storages
 
             file.PhysicalPath = thumbFile.FullName;
             return file;
+        }
+
+        /// <summary>
+        /// 修改名称。
+        /// </summary>
+        /// <param name="id">媒体文件Id。</param>
+        /// <param name="name">文件名称，不包含扩展名。</param>
+        /// <returns>返回修改结果。</returns>
+        public Task<bool> RenameAsync(Guid id, string name)
+        {
+            return _mfdb.UpdateAsync(id, new { name });
+        }
+
+        /// <summary>
+        /// 获取扩展列表。
+        /// </summary>
+        /// <returns>返回扩展列表。</returns>
+        public Task<IEnumerable<string>> LoadExtensionNamesAsync()
+        {
+            return _mfdb.AsQueryable().Distinct(x => x.ExtensionName).AsEnumerableAsync(x => x.GetString(0));
         }
     }
 }

@@ -56,6 +56,14 @@ namespace Mozlite.Extensions.Storages
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
+        /// 获取缩略图地址。
+        /// </summary>
+        /// <param name="width">宽度。</param>
+        /// <param name="height">高度。</param>
+        /// <returns>返回缩略图地址。</returns>
+        public string GetThumbUrl(int width, int height) => $"/s-medias/{width}x{height}/{FileName}".ToLower();
+
+        /// <summary>
         /// 访问地址。
         /// </summary>
         public string Url => $"/s-medias/{FileName}".ToLower();

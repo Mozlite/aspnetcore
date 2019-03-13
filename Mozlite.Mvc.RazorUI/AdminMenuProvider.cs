@@ -19,6 +19,7 @@ namespace Mozlite.Mvc.RazorUI
                 .AddMenu("email", it => it.Texted("邮件管理").Page("/Admin/Email/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Email))
                 .AddMenu("emailsettings", it => it.Texted("邮件配置").Page("/Admin/Email/Settings", area: RazorUISettings.ExtensionName).Allow(Permissions.EmailSettings))
                 .AddMenu("notifier", it => it.Texted("通知管理").Page("/Admin/Notifications/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Notifications))
+                .AddMenu("storages", it => it.Texted("文件管理").Page("/Admin/Storages/Index", area: RazorUISettings.ExtensionName).Allow(Permissions.Notifications))
             );
         }
     }

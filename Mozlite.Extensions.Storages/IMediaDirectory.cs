@@ -64,7 +64,14 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <param name="id">媒体文件Id。</param>
         /// <returns>返回存储文件实例。</returns>
-        Task<StoredPhysicalFile> FindAsync(Guid id);
+        Task<StoredPhysicalFile> FindPhysicalFileAsync(Guid id);
+
+        /// <summary>
+        /// 通过GUID获取媒体文件实例。
+        /// </summary>
+        /// <param name="id">媒体文件Id。</param>
+        /// <returns>返回媒体文件实例。</returns>
+        Task<MediaFile> FindAsync(Guid id);
 
         /// <summary>
         /// 通过扩展名称和目标Id。
@@ -112,5 +119,19 @@ namespace Mozlite.Extensions.Storages
         /// <param name="height">高度。</param>
         /// <returns>返回存储缩略图实例。</returns>
         Task<StoredPhysicalFile> FindThumbAsync(Guid id, int width, int height);
+
+        /// <summary>
+        /// 修改名称。
+        /// </summary>
+        /// <param name="id">媒体文件Id。</param>
+        /// <param name="name">文件名称，不包含扩展名。</param>
+        /// <returns>返回修改结果。</returns>
+        Task<bool> RenameAsync(Guid id, string name);
+
+        /// <summary>
+        /// 获取扩展列表。
+        /// </summary>
+        /// <returns>返回扩展列表。</returns>
+        Task<IEnumerable<string>> LoadExtensionNamesAsync();
     }
 }

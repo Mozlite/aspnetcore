@@ -51,7 +51,7 @@ namespace Mozlite.Extensions.Storages.Apis
             name = Path.GetFileNameWithoutExtension(name);
             if (!Guid.TryParse(name, out var id))
                 return NotFound();
-            var file = await _mediaFileProvider.FindAsync(id);
+            var file = await _mediaFileProvider.FindPhysicalFileAsync(id);
             if (file == null || !System.IO.File.Exists(file.PhysicalPath))
                 return NotFound();
             return PhysicalFile(file.PhysicalPath, file.ContentType);
@@ -87,7 +87,7 @@ namespace Mozlite.Extensions.Storages.Apis
             name = Path.GetFileNameWithoutExtension(name);
             if (!Guid.TryParse(name, out var id))
                 return NotFound();
-            var file = await _mediaFileProvider.FindAsync(id);
+            var file = await _mediaFileProvider.FindPhysicalFileAsync(id);
             if (file == null || !System.IO.File.Exists(file.PhysicalPath))
                 return NotFound();
             Response.Headers.Add("Content-Disposition", $"attachment;filename={file.FileName}");

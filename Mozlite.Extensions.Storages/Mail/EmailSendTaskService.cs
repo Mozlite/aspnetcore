@@ -45,7 +45,7 @@ namespace Mozlite.Extensions.Storages.Mail
                 var multipart = new Multipart("mixed");
                 foreach (var attachmentId in attachments)
                 {
-                    var file = await MediaDirectory.FindAsync(attachmentId);
+                    var file = await MediaDirectory.FindPhysicalFileAsync(attachmentId);
                     if (file == null)
                         continue;
                     var attachment = new MimePart(file.ContentType);
