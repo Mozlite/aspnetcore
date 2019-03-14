@@ -302,5 +302,35 @@ namespace Mozlite.Extensions.Storages
         {
             return _mfdb.AsQueryable().Distinct(x => x.ExtensionName).AsEnumerableAsync(x => x.GetString(0));
         }
+
+        /// <summary>
+        /// 清除已经删除的物理文件。
+        /// </summary>
+        /// <returns>返回删除任务。</returns>
+        public async Task ClearDeletedPhysicalFilesAsync()
+        {
+            var files = await _sfdb.AsQueryable()
+                .WithNolock()
+                .LeftJoin<MediaFile>((s, m) => s.FileId == m.FileId)
+                .Where<MediaFile>(x => x.Id == null)
+                .Select()
+                .AsEnumerableAsync();
+            foreach (var file in files)
+            {
+                var info = new FileInfo(_directory.GetPhysicalPath(file.Path));
+                if (info.Extension.IsPicture())
+                {
+                    foreach (var current in info.Directory.GetFiles())
+                    {
+                        if (current.Name.StartsWith(file.FileId + ".", StringComparison.OrdinalIgnoreCase))
+                            current.Delete();
+                    }
+                }
+                else
+                {
+                    info.Delete();
+                }
+            }
+        }
     }
 }

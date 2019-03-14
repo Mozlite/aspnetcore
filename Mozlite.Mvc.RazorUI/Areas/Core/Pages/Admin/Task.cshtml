@@ -18,7 +18,13 @@
             {
                 <tr>
                     <td>
-                        <b>@task.Name</b>
+                        <div>
+                            <b>@task.Name</b>
+                            @if (task.TaskArgument.ErrorDate != null)
+                            {
+                                <i title="发生错误：@task.TaskArgument.ErrorDate" class="fa fa-warning text-danger"></i>
+                            }
+                        </div>
                         <div class="text-secondary">
                             @Html.Raw(task.Description)<span>(@(task.ToHtmlInterval())执行)</span>
                         </div>

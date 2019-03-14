@@ -133,5 +133,11 @@ namespace Mozlite.Extensions.Storages
         /// </summary>
         /// <returns>返回扩展列表。</returns>
         Task<IEnumerable<string>> LoadExtensionNamesAsync();
+
+        /// <summary>
+        /// 清除已经删除的物理文件。
+        /// </summary>
+        /// <returns>返回删除任务。</returns>
+        Task ClearDeletedPhysicalFilesAsync();
     }
 }

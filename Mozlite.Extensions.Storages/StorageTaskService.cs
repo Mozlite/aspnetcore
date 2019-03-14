@@ -11,13 +11,17 @@ namespace Mozlite.Extensions.Storages
     public class StorageTaskService : TaskService
     {
         private readonly IStorageDirectory _storageDirectory;
+        private readonly IMediaDirectory _mediaDirectory;
+
         /// <summary>
         /// 初始化类<see cref="StorageTaskService"/>。
         /// </summary>
         /// <param name="storageDirectory">存储文件夹接口。</param>
-        public StorageTaskService(IStorageDirectory storageDirectory)
+        /// <param name="mediaDirectory">媒体存储接口。</param>
+        public StorageTaskService(IStorageDirectory storageDirectory, IMediaDirectory mediaDirectory)
         {
             _storageDirectory = storageDirectory;
+            _mediaDirectory = mediaDirectory;
         }
 
         /// <summary>
@@ -41,6 +45,7 @@ namespace Mozlite.Extensions.Storages
         /// <param name="argument">参数。</param>
         public override async Task ExecuteAsync(Argument argument)
         {
+            await _mediaDirectory.ClearDeletedPhysicalFilesAsync();
             _storageDirectory.ClearEmptyDirectories();
             await Task.Delay(100);
         }

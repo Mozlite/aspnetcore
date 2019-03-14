@@ -61,7 +61,6 @@ namespace Mozlite.Extensions.Storages
             return $"{md5[1]}\\{md5[3]}\\{md5[12]}\\{md5[16]}\\{md5[20]}\\{md5}.moz";
         }
 
-        private static readonly string _images = ",.png,.jpg,.jpeg,.gif,.bmp,";
         /// <summary>
         /// 判断是否为图片文件。
         /// </summary>
@@ -71,8 +70,7 @@ namespace Mozlite.Extensions.Storages
         {
             if (extension == null)
                 return false;
-            extension = $",{extension.Trim().ToLower()},";
-            return _images.Contains(extension);
+            return extension.GetContentType().StartsWith("image/");
         }
 
         /// <summary>

@@ -99,6 +99,11 @@ namespace Mozlite.Extensions.Tasks
         public string Error { get => this[nameof(Error)]?.ToString(); set => this[nameof(Error)] = value; }
 
         /// <summary>
+        /// 错误发生时间。
+        /// </summary>
+        public DateTimeOffset? ErrorDate { get => (DateTimeOffset?)this[nameof(ErrorDate)]; set => this[nameof(ErrorDate)] = value; }
+
+        /// <summary>
         /// 是否保存堆栈信息。
         /// </summary>
         public bool IsStack { get => GetBoolean(nameof(IsStack)); set => this[nameof(IsStack)] = value; }

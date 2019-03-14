@@ -109,6 +109,7 @@ namespace Mozlite.Extensions.Tasks
                                 try
                                 {
                                     context.Argument.Error = null;
+                                    context.Argument.ErrorDate = null;
                                     //在服务运行后可以更改当前参数值
                                     await context.ExecuteAsync(context.Argument);
                                 }
@@ -123,6 +124,7 @@ namespace Mozlite.Extensions.Tasks
                                     {
                                         context.Argument.Error = ex.Message;
                                     }
+                                    context.Argument.ErrorDate = DateTimeOffset.Now;
                                 }
                                 context.LastExecuted = DateTime.Now;
                                 context.NextExecuting = context.Interval.Next();
