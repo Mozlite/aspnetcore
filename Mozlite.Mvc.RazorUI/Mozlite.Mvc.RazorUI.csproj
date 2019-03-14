@@ -21,12 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Areas\Core\Pages\Admin\Notifications\Edit.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Areas\Core\Pages\Admin\Notifications\Index.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Areas\Core\Pages\Admin\_ViewStart.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
