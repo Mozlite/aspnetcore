@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using Mozlite.Extensions.Storages;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security.Events;
+using Mozlite.Extensions.Storages;
 
-namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Storages
+namespace Mozlite.Mvc.RazorUI.Areas.Storages.Pages.Admin
 {
     public class EditModel : ModelBase
     {

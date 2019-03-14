@@ -21,6 +21,15 @@ namespace Mozlite.Mvc
     public static class ServiceExtensions
     {
         /// <summary>
+        /// 添加静态资源目录。
+        /// </summary>
+        /// <typeparam name="TAssemblyResourceType">程序集资源类型。</typeparam>
+        /// <param name="service">服务集合。</param>
+        /// <returns>服务集合。</returns>
+        public static IServiceCollection AddResources<TAssemblyResourceType>(this IServiceCollection service) =>
+            service.ConfigureOptions(typeof(RazorResourceOptions<TAssemblyResourceType>));
+
+        /// <summary>
         /// 添加MVC服务。
         /// </summary>
         /// <param name="builder">当前服务集合构建实例。</param>
@@ -32,7 +41,8 @@ namespace Mozlite.Mvc
             {
                 //防止添加用户活动日志的时候未注册HTTP上下文实例。
                 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                var mvc = services.AddMvc()
+                var mvc = services
+                    .AddMvc()
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                     .AddDataAnnotationsLocalization()
                     .AddRazorOptions(options =>

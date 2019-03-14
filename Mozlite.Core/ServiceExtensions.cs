@@ -114,7 +114,12 @@ namespace Mozlite
             return configuration.GetSection("Excludes").AsList() ?? Enumerable.Empty<string>();
         }
 
-        private static IEnumerable<Assembly> GetAssemblies(IConfiguration configuration)
+        /// <summary>
+        /// 获取应用程序中的程序集。
+        /// </summary>
+        /// <param name="configuration">配置实例。</param>
+        /// <returns>返回应用程序集列表。</returns>
+        public static IEnumerable<Assembly> GetAssemblies(this IConfiguration configuration)
         {
             var assemblies = new List<Assembly>();
             var excludes = GetExcludeAssemblies(configuration);

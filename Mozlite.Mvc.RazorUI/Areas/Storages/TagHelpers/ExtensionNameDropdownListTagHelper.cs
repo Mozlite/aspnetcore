@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Mozlite.Extensions.Storages;
 using Mozlite.Mvc.TagHelpers;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Mozlite.Mvc.RazorUI.Extensions.Storages.TagHelpers
+namespace Mozlite.Mvc.RazorUI.Areas.Storages.TagHelpers
 {
     /// <summary>
     /// 扩展名称。

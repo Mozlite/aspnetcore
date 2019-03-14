@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Storages;
-using System.Threading.Tasks;
 
-namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Storages
+namespace Mozlite.Mvc.RazorUI.Areas.Storages.Pages.Admin
 {
     public class IndexModel : ModelBase
     {
