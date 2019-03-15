@@ -112,7 +112,7 @@ namespace Mozlite.Mvc
             return string.Format(resource, args);
         }
 
-        private const string Resources = ".Resources";
+        private const string Resources = ".Resources.resources";
 
         /// <summary>
         /// 获取当前键的本地化字符串实例。
