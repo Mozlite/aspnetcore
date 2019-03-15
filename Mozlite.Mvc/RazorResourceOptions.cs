@@ -55,7 +55,7 @@ namespace Mozlite.Mvc
             /// 初始化类<see cref="EmbeddedFileProvider"/>。
             /// </summary>
             /// <param name="root">资源根目录。</param>
-            public EmbeddedFileProvider(string root = "Resources")
+            public EmbeddedFileProvider(string root = "wwwroot")
             {
                 _assembly = typeof(TAssemblyResourceType).Assembly;
                 _baseNamespace = _assembly.GetName().Name + "." + root + ".";
