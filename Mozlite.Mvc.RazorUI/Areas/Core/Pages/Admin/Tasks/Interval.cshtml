@@ -8,12 +8,12 @@
 <form method="post">
     <input type="hidden" asp-for="Input.Id" />
     <div class="form-group">
-        <label>时间间隔</label>
-        <div class="input-group input-append">
+        <label>时间间隔<small class="text-danger">(默认：@(Model.DefaultInterval))</small></label>
+        <div class="input-group">
             <input type="text" asp-for="Input.Interval" class="form-control" />
-            <a class="input-group-text" title="点击还原默认设置！" onclick="$(this).parent().find('input').val('@Model.Task.Interval')">
-                默认：@(Model.DefaultInterval)
-            </a>
+            <div class="input-group-append" title="点击还原默认设置！" onclick="$(this).parent().find('input').val('@Model.Task.Interval'); return false;">
+                <button type="button" class="btn btn-secondary">还原</button>
+            </div>
         </div>
         <span asp-validation-for="Input.Interval" class="text-danger"></span>
     </div>
