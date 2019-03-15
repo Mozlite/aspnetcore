@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Mozlite.Extensions;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Extensions.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mozlite.Extensions;
 
-namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin
+namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Tasks
 {
     [PermissionAuthorize(Permissions.Task)]
-    public class TaskModel : AdminModelBase
+    public class IndexModel : AdminModelBase
     {
         private readonly ITaskManager _taskManager;
 
-        public TaskModel(ITaskManager taskManager)
+        public IndexModel(ITaskManager taskManager)
         {
             _taskManager = taskManager;
         }

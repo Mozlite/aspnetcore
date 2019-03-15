@@ -1,0 +1,29 @@
+﻿@page
+@model IntervalModel
+@{
+    ViewBag.Title = "设定运行模式";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <div class="form-group">
+        <label>时间间隔</label>
+        <div class="input-group input-append">
+            <input type="text" asp-for="Input.Interval" class="form-control" />
+            <a class="input-group-text" title="点击还原默认设置！" onclick="$(this).parent().find('input').val('@Model.Task.Interval')">
+                默认：@(Model.DefaultInterval)
+            </a>
+        </div>
+        <span asp-validation-for="Input.Interval" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>定时模式：</label>
+        <ul class="text-secondary">
+            <li>每隔秒数：直接输入数字；</li>
+            <li>每天定时：HH:mm:ss格式；</li>
+            <li>每月定时：dd HH:mm:ss格式；</li>
+            <li>每年定时：MM:dd HH:mm:ss格式；</li>
+        </ul>
+    </div>
+</form>

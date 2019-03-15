@@ -47,11 +47,12 @@ namespace Mozlite.Extensions.Messages.Notifications
         private async Task<IEnumerable<Notifier>> LoadAsync()
         {
             var notifiers = new List<Notifier>();
-            using (var reader =
-                await _context.ExecuteReaderAsync(
-                    $"SELECT COUNT(1) as Size, UserId FROM {_context.EntityType.Table} GROUP BY UserId;"))
+            using (var reader = await _context.ExecuteReaderAsync($"SELECT COUNT(1) as Size, UserId FROM {_context.EntityType.Table} GROUP BY UserId;"))
             {
-                notifiers.Add(new Notifier { Size = reader.GetInt32(0), UserId = reader.GetInt32(1) });
+                while (await reader.ReadAsync())
+                {
+                    notifiers.Add(new Notifier { Size = reader.GetInt32(0), UserId = reader.GetInt32(1) });
+                }
             }
 
             return notifiers;

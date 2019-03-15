@@ -84,6 +84,16 @@ namespace Mozlite.Extensions.Tasks
         }
 
         /// <summary>
+        /// 通过ID获取后台服务。
+        /// </summary>
+        /// <param name="id">任务ID。</param>
+        /// <returns>返回当前ID的服务对象。</returns>
+        public TaskDescriptor GeTask(int id)
+        {
+            return _db.Find(id);
+        }
+
+        /// <summary>
         /// 设置时间间隔。
         /// </summary>
         /// <param name="id">服务Id。</param>
@@ -102,15 +112,15 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回设置结果。</returns>
         public async Task<bool> SaveArgumentIntervalAsync(int id, string interval)
         {
-            var value = await _db.FindAsync(id);
-            if (value == null)
+            var task = await _db.FindAsync(id);
+            if (task == null)
                 return false;
-            if (interval != value.TaskArgument.Interval)
+            if (interval != task.TaskArgument.Interval)
             {
-                value.TaskArgument.Interval = interval;
-                value.NextExecuting = ((TaskInterval)interval).Next();
+                task.TaskArgument.Interval = interval;
+                task.NextExecuting = ((TaskInterval)interval).Next();
             }
-            return await _db.UpdateAsync(id, new { value.NextExecuting, Argument = value.TaskArgument.ToString() });
+            return await _db.UpdateAsync(id, new { task.NextExecuting, Argument = task.TaskArgument.ToString() });
         }
 
         /// <summary>
@@ -121,12 +131,12 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回设置结果。</returns>
         public async Task<bool> SaveArgumentAsync(int id, Argument argument)
         {
-            var value = await _db.FindAsync(id);
-            if (value == null)
+            var task = await _db.FindAsync(id);
+            if (task == null)
                 return false;
-            if (argument.Interval != value.TaskArgument.Interval)
+            if (argument.Interval != task.TaskArgument.Interval)
             {
-                TaskInterval interval = argument.Interval ?? value.Interval;
+                TaskInterval interval = argument.Interval ?? task.Interval;
                 return await _db.UpdateAsync(id, new { Argument = argument.ToString(), NextExecuting = interval.Next() });
             }
             return await _db.UpdateAsync(id, new { Argument = argument.ToString() });
@@ -139,6 +149,10 @@ namespace Mozlite.Extensions.Tasks
         /// <returns>返回设置结果。</returns>
         public async Task<bool> SetCompletedAsync(TaskContext context)
         {
+            //将外部更改的属性附加到参数中
+            var argument = (await _db.FindAsync(context.Id)).TaskArgument;
+            context.Argument.Interval = argument.Interval;
+            context.Argument.IsStack = argument.IsStack;
             return await _db.UpdateAsync(context.Id, new { context.NextExecuting, context.LastExecuted, Argument = context.Argument.ToString() });
         }
 

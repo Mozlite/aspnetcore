@@ -1,0 +1,31 @@
+﻿@page
+@model DetailModel
+@{
+    ViewBag.Title = Model.Descriptor.Name;
+    Layout = "_Modal";
+    ViewBag.HideFooter = true;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="text-secondary mb-3">
+            @Html.Raw(Model.Descriptor.Description)<span>(@(Model.Descriptor.ToHtmlInterval())执行)</span>
+        </div>
+        <b>
+            上一次执行：
+        </b>
+        <div class="text-secondary mb-3">@Model.Descriptor.LastExecuted?.ToString("yyyy-MM-dd HH:mm:ss")</div>
+        <b>下一次执行：</b>
+        <div class="text-secondary mb-3">@Model.Descriptor.NextExecuting.ToString("yyyy-MM-dd HH:mm:ss")</div>
+        @if (Model.Descriptor.TaskArgument.ErrorDate != null)
+        {
+            <b>
+                <i class="fa fa-warning text-danger"></i> 
+                发生错误：@Model.Descriptor.TaskArgument.ErrorDate?.ToString("yyyy-MM-dd HH:mm:ss")
+            </b>
+            <div class="text-secondary">
+                @Html.Raw(Model.Descriptor.TaskArgument.Error)
+            </div>
+        }
+    </div>
+</div>

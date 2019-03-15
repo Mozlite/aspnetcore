@@ -53,6 +53,8 @@ namespace Mozlite.Extensions.Tasks
         {
             foreach (var service in _services)
             {
+                if(service.Disabled)
+                    continue;
                 var context = new TaskContext();
                 context.ExecuteAsync = service.ExecuteAsync;
                 context.Interval = service.Interval;
@@ -124,7 +126,7 @@ namespace Mozlite.Extensions.Tasks
                                     {
                                         context.Argument.Error = ex.Message;
                                     }
-                                    context.Argument.ErrorDate = DateTimeOffset.Now;
+                                    context.Argument.ErrorDate = DateTime.Now;
                                 }
                                 context.LastExecuted = DateTime.Now;
                                 context.NextExecuting = context.Interval.Next();

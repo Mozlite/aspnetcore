@@ -318,18 +318,23 @@ namespace Mozlite.Extensions.Storages
             foreach (var file in files)
             {
                 var info = new FileInfo(_directory.GetPhysicalPath(file.Path));
-                if (info.Extension.IsPicture())
-                {
-                    foreach (var current in info.Directory.GetFiles())
+                if (info.Exists)
+                {//删除物理文件
+                    if (info.Extension.IsPicture())
                     {
-                        if (current.Name.StartsWith(file.FileId + ".", StringComparison.OrdinalIgnoreCase))
-                            current.Delete();
+                        foreach (var current in info.Directory.GetFiles())
+                        {
+                            if (current.Name.StartsWith(file.FileId + ".", StringComparison.OrdinalIgnoreCase))
+                                current.Delete();
+                        }
+                    }
+                    else
+                    {
+                        info.Delete();
                     }
                 }
-                else
-                {
-                    info.Delete();
-                }
+                //删除数据库
+                await _sfdb.DeleteAsync(file.FileId);
             }
         }
     }

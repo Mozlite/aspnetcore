@@ -39,7 +39,12 @@ namespace Mozlite.Extensions.Tasks
                     return value;
                 return null;
             }
-            set => _arguments[name] = value;
+            set
+            {
+                if (name == nameof(IsStack) || name == nameof(Interval))
+                    throw new Exception($"不能在服务内部设置 {nameof(IsStack)} 和 {nameof(Interval)} 属性！");
+                _arguments[name] = value;
+            }
         }
 
         /// <summary>
@@ -91,7 +96,7 @@ namespace Mozlite.Extensions.Tasks
         /// <summary>
         /// 自定义后台服务运行模式。
         /// </summary>
-        public string Interval { get => this[nameof(Interval)]?.ToString(); set => this[nameof(Interval)] = value; }
+        public string Interval { get => this[nameof(Interval)]?.ToString(); internal set => _arguments[nameof(Interval)] = value; }
 
         /// <summary>
         /// 错误消息。
@@ -101,11 +106,11 @@ namespace Mozlite.Extensions.Tasks
         /// <summary>
         /// 错误发生时间。
         /// </summary>
-        public DateTimeOffset? ErrorDate { get => (DateTimeOffset?)this[nameof(ErrorDate)]; set => this[nameof(ErrorDate)] = value; }
+        public DateTime? ErrorDate { get => (DateTime?)this[nameof(ErrorDate)]; set => this[nameof(ErrorDate)] = value; }
 
         /// <summary>
         /// 是否保存堆栈信息。
         /// </summary>
-        public bool IsStack { get => GetBoolean(nameof(IsStack)); set => this[nameof(IsStack)] = value; }
+        public bool IsStack { get => GetBoolean(nameof(IsStack)); internal set => _arguments[nameof(IsStack)] = value; }
     }
 }

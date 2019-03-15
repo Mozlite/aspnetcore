@@ -59,7 +59,10 @@ namespace Mozlite.Mvc
             {
                 _assembly = typeof(TAssemblyResourceType).Assembly;
                 _baseNamespace = _assembly.GetName().Name + "." + root + ".";
-                _manifestResourceNames = new ConcurrentDictionary<string, string>(_assembly.GetManifestResourceNames().ToDictionary(x => x.Substring(_baseNamespace.Length)), StringComparer.OrdinalIgnoreCase);
+                var resourceNames = _assembly.GetManifestResourceNames()
+                    .Where(x => x.StartsWith(_baseNamespace, StringComparison.OrdinalIgnoreCase))
+                    .ToDictionary(x => x.Substring(_baseNamespace.Length));
+                _manifestResourceNames = new ConcurrentDictionary<string, string>(resourceNames, StringComparer.OrdinalIgnoreCase);
                 _lastModified = DateTimeOffset.UtcNow;
                 if (string.IsNullOrEmpty(_assembly.Location))
                     return;

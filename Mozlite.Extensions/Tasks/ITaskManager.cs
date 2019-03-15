@@ -29,6 +29,13 @@ namespace Mozlite.Extensions.Tasks
         TaskDescriptor GeTask(Type type);
 
         /// <summary>
+        /// 通过ID获取后台服务。
+        /// </summary>
+        /// <param name="id">任务ID。</param>
+        /// <returns>返回当前ID的服务对象。</returns>
+        TaskDescriptor GeTask(int id);
+
+        /// <summary>
         /// 设置时间间隔。
         /// </summary>
         /// <param name="id">服务Id。</param>

@@ -1,5 +1,5 @@
 ﻿@page
-@model TaskModel
+@model IndexModel
 @{
     ViewData["Title"] = "后台服务";
     ViewBag.Current = "sys.tasks";
@@ -18,15 +18,15 @@
             {
                 <tr>
                     <td>
-                        <div>
+                        <a class="text-dark" js-modal="click" asp-page="./Detail" asp-route-id="@task.Id">
                             <b>@task.Name</b>
                             @if (task.TaskArgument.ErrorDate != null)
                             {
                                 <i title="发生错误：@task.TaskArgument.ErrorDate" class="fa fa-warning text-danger"></i>
                             }
-                        </div>
+                        </a>
                         <div class="text-secondary">
-                            @Html.Raw(task.Description)<span>(@(task.ToHtmlInterval())执行)</span>
+                            @Html.Raw(task.Description)<span>(@(task.ToHtmlInterval())执行<a asp-page="./Interval" asp-route-id="@task.Id" js-modal="click" .permission="@Permissions.TaskInterval" title="配置执行模式"><i class="fa fa-pencil"></i></a>)</span>
                         </div>
                     </td>
                     <td>
@@ -48,7 +48,7 @@
 @section footer{
     <script type="text/javascript">
         $(function render() {
-            Mozlite.ajax('@Url.Page("./Task")', {},
+            Mozlite.ajax('@Url.Page("./Index")', {},
                 c => {
                     c.data.forEach(d => {
                         $('.last-' + d.id).html(d.lastExecuted);
