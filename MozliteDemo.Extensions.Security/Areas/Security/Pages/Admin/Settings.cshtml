@@ -7,20 +7,24 @@
 
 <form method="post">
     <div class="form-group">
-        <label asp-for="Input.Registrable"></label>
-        <moz:checkbox for="Input.Registrable"></moz:checkbox>
+        <moz:checkbox for="Input.Registrable">
+            <label asp-for="Input.Registrable"></label>
+        </moz:checkbox>
     </div>
     <div class="form-group">
-        <label asp-for="Input.RequiredEmailConfirmed"></label>
-        <moz:checkbox for="Input.RequiredEmailConfirmed"></moz:checkbox>
+        <moz:checkbox for="Input.RequiredEmailConfirmed">
+            <label asp-for="Input.RequiredEmailConfirmed"></label>
+        </moz:checkbox>
     </div>
     <div class="form-group">
-        <label asp-for="Input.RequiredPhoneNumberConfirmed"></label>
-        <moz:checkbox for="Input.RequiredPhoneNumberConfirmed"></moz:checkbox>
+        <moz:checkbox for="Input.RequiredPhoneNumberConfirmed">
+            <label asp-for="Input.RequiredPhoneNumberConfirmed"></label>
+        </moz:checkbox>
     </div>
     <div class="form-group">
-        <label asp-for="Input.RequiredTwoFactorEnabled"></label>
-        <moz:checkbox for="Input.RequiredTwoFactorEnabled"></moz:checkbox>
+        <moz:checkbox for="Input.RequiredTwoFactorEnabled">
+            <label asp-for="Input.RequiredTwoFactorEnabled"></label>
+        </moz:checkbox>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-outline-secondary">提交</button>
