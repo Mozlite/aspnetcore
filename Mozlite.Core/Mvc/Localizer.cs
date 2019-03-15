@@ -112,6 +112,8 @@ namespace Mozlite.Mvc
             return string.Format(resource, args);
         }
 
+        private const string Resources = ".Resources";
+
         /// <summary>
         /// 获取当前键的本地化字符串实例。
         /// </summary>
@@ -120,15 +122,15 @@ namespace Mozlite.Mvc
         /// <returns>返回当前本地化字符串。</returns>
         public virtual string GetString(Type type, string key)
         {
-            var resourceManager = _localizers.GetOrAdd(type, x =>
+            var resourceManager = _localizers.GetOrAdd(type, t =>
             {
                 Assembly assembly;
-                if (type == NullLocalizer.InstanceType)
+                if (t == NullLocalizer.InstanceType)
                     assembly = Assembly.GetEntryAssembly();
                 else
-                    assembly = x.GetTypeInfo().Assembly;
+                    assembly = t.Assembly;
                 var baseName = assembly.GetManifestResourceNames()
-                    .SingleOrDefault();
+                    .SingleOrDefault(x => x.EndsWith(Resources));
                 if (baseName == null)
                     return null;
                 baseName = baseName.Substring(0, baseName.Length - 10);
