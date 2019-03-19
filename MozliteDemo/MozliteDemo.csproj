@@ -22,4 +22,10 @@
     <ProjectReference Include="..\MozliteDemo.Extensions\MozliteDemo.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\Admin\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

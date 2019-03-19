@@ -18,13 +18,13 @@
                     @foreach (var permission in permissions)
                     {
                         <tr>
-                            <td>
+                            <td class="border-right-0">
                                 <b>@permission.Text</b>
-                                <div class="data-action">
-                                    <a .visible="index>0" js-action="post" js-data-id="@permission.Id" js-data-category="@permission.Category" title="向上移动" asp-page-handler="MoveUp"><i class="fa fa-arrow-up"></i></a>
-                                    <a .visible="index<count" js-action="post" js-data-id="@permission.Id" js-data-category="@permission.Category" title="向下移动" asp-page-handler="MoveDown"><i class="fa fa-arrow-down"></i></a>
-                                </div>
                                 <div class="text-secondary">@permission.Description</div>
+                            </td>
+                            <td class="align-middle text-right border-left-0">
+                                <a .visible="index>0" js-action="post" js-data-id="@permission.Id" js-data-category="@permission.Category" title="向上移动" asp-page-handler="MoveUp"><i class="fa fa-arrow-up"></i> 上移</a>
+                                <a .visible="index<count" js-action="post" js-data-id="@permission.Id" js-data-category="@permission.Category" title="向下移动" asp-page-handler="MoveDown"><i class="fa fa-arrow-down"></i> 下移</a>
                             </td>
                         </tr>
                         index++;

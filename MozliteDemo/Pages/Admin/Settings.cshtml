@@ -1,0 +1,40 @@
+﻿@page
+@model SettingsModel
+@{
+    ViewBag.Title = "系统配置";
+    ViewBag.Current = "sys.settings";
+}
+
+<form method="post">
+    <div class="form-group">
+        <label>网站名称</label>
+        <input type="text" asp-for="Input.SiteName" class="form-control" />
+        <span asp-validation-for="Input.SiteName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>LOGO图标</label>
+        <div class="input-group">
+            <input type="text" asp-for="Input.LogoUrl" class="form-control" />
+            <div class="input-group-prepend" data-toggle="uploader">
+                <button type="button" class="btn btn-secondary"><i class="fa fa-upload"></i></button>
+            </div>
+        </div>
+        <input js-uploader="@Url.Page("./Settings", "Upload")" type="file" class="hide" />
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+        <textarea asp-for="Input.Description" rows="3" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>
+            版权信息
+            <small class="text-secondary">
+                ($year：当前年份@(DateTime.Now.Year)；$version: 版本@(Cores.Version.ToString(3)))
+            </small>
+        </label>
+        <textarea asp-for="Input.Copyright" rows="5" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-outline-secondary">提交</button>
+    </div>
+</form>

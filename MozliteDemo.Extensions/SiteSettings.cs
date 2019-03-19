@@ -1,4 +1,5 @@
-﻿using Mozlite;
+﻿using Microsoft.AspNetCore.Html;
+using Mozlite;
 using System;
 
 namespace MozliteDemo.Extensions
@@ -29,8 +30,13 @@ namespace MozliteDemo.Extensions
         /// </summary>
         public string Copyright
         {
-            get => _copyright ?? (_copyright = $@"Copyright &copy;{DateTime.Now.Year} www.mozlite.com ver {Cores.Version.ToString(3)}");
+            get => _copyright ?? (_copyright = $@"Copyright &copy;$year www.mozlite.com ver $version");
             set => _copyright = value;
         }
+
+        /// <summary>
+        /// 版权信息。
+        /// </summary>
+        public IHtmlContent CopyrightHTML => new HtmlString(Copyright.Replace("$version", Cores.Version.ToString(3)).Replace("$year", DateTime.Now.Year.ToString()));
     }
 }

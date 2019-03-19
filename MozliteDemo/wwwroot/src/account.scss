@@ -40,5 +40,9 @@ body {
     .account-main {
         flex: 1 1 auto;
         padding: 24px;
+
+        .max-250 {
+            max-width: 250px;
+        }
     }
 }

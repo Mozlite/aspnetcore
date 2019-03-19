@@ -17,6 +17,7 @@
         <thead>
             <tr>
                 <th>角色名称</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -25,14 +26,22 @@
                 i++;
                 <tr>
                     <td>
-                        @role.Name <i title="系统" .visible="role.IsSystem" class="fa fa-star text-warning"></i>
-                        <div class="data-action pull-right">
-                            <a .visible="!role.IsSystem" js-confirm="你确定要删除“@role.Name”吗？" title="删除" js-action="post" asp-page-handler="Delete" asp-route-id="@role.RoleId"><i class="fa fa-trash"></i></a>
-                            <a .visible="@(i!=1)" title="上移" js-action="post" asp-page-handler="MoveUp" asp-route-id="@role.RoleId"><i class="fa fa-arrow-up"></i></a>
-                            <a .visible="@(i!=count)" title="下移" js-action="post" asp-page-handler="MoveDown" asp-route-id="@role.RoleId"><i class="fa fa-arrow-down"></i></a>
-                            <a title="编辑" js-action="modal" asp-page="/admin/roles/edit" asp-route-id="@role.RoleId"><i class="fa fa-pencil"></i></a>
-                            <a title="权限" asp-page="/admin/roles/permission" asp-route-id="@role.RoleId"><i class="fa fa-share-alt"></i></a>
-                        </div>
+                        @if (role.IsSystem)
+                        {
+                            <i title="系统" class="fa fa-star text-warning"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-star-o"></i>
+                        }
+                        @role.Name
+                    </td>
+                    <td>
+                        <a .visible="@(i != 1)" title="上移" js-action="post" asp-page-handler="MoveUp" asp-route-id="@role.RoleId"><i class="fa fa-arrow-up"></i> 上移</a>
+                        <a .visible="@(i != count)" title="下移" js-action="post" asp-page-handler="MoveDown" asp-route-id="@role.RoleId"><i class="fa fa-arrow-down"></i> 下移</a>
+                        <a title="编辑" js-action="modal" asp-page="/admin/roles/edit" asp-route-id="@role.RoleId"><i class="fa fa-pencil"></i> 编辑</a>
+                        <a title="权限" asp-page="/admin/roles/permission" asp-route-id="@role.RoleId"><i class="fa fa-share-alt"></i> 权限</a>
+                        <a .visible="!role.IsSystem" js-confirm="你确定要删除“@role.Name”吗？" title="删除" js-action="post" asp-page-handler="Delete" asp-route-id="@role.RoleId"><i class="fa fa-trash"></i> 删除</a>
                     </td>
                 </tr>
             }
