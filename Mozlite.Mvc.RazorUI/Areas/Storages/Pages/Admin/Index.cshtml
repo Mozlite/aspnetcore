@@ -55,7 +55,7 @@
                         }
                         else
                         {
-                            <img class="align-middle" src="~/storages/images/@(file.Extension.Trim('.')).png" onerror="this.src='/storages/images/default.png'" />
+                            <img height="24" class="align-middle" src="~/storages/images/@(file.Extension.Trim('.')).png" onerror="this.src='/storages/images/default.png'" />
                         }
                         @(file.Name)@(file.Extension)
                         <div class="data-action">
