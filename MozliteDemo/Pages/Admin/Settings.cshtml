@@ -15,7 +15,7 @@
         <label>LOGO图标</label>
         <div class="input-group">
             <input type="text" asp-for="Input.LogoUrl" class="form-control" />
-            <div class="input-group-prepend" data-toggle="uploader">
+            <div class="input-group-append" data-toggle="uploader">
                 <button type="button" class="btn btn-secondary"><i class="fa fa-upload"></i></button>
             </div>
         </div>
@@ -38,3 +38,16 @@
         <button type="submit" class="btn btn-outline-secondary">提交</button>
     </div>
 </form>
+
+@section footer{ 
+    <script type="text/javascript">
+        Mozlite.queue(context => {
+            $('[data-toggle=uploader]', context).exec(current => {
+                current.on('uploaded',
+                    function(e, url) {
+                        current.parent().find('#Input_LogoUrl').val(url);
+                    });
+            });
+        });
+    </script>
+}
