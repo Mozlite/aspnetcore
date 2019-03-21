@@ -24,6 +24,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core
                 .AddMenu("email", it => it.Texted("邮件管理").Page("/Admin/Email/Index", area: AreaName).Allow(Permissions.Email))
                 .AddMenu("emailsettings", it => it.Texted("邮件配置").Page("/Admin/Email/Settings", area: AreaName).Allow(Permissions.EmailSettings))
                 .AddMenu("notifier", it => it.Texted("通知管理").Page("/Admin/Notifications/Index", area: AreaName).Allow(Permissions.Notifications))
+                .AddMenu("dicsettings", it => it.Texted("字典管理").Page("/Admin/Settings/Index", area: AreaName).Allow(Permissions.Administrator))
             );
         }
     }

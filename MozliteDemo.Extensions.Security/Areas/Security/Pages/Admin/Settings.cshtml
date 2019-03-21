@@ -27,6 +27,10 @@
         </moz:checkbox>
     </div>
     <div class="form-group">
+        <label asp-for="Input.LoginDirection"></label>
+        <moz:enum-dropdownlist for="Input.LoginDirection" class="form-control max-250"></moz:enum-dropdownlist>
+    </div>
+    <div class="form-group">
         <button type="submit" class="btn btn-outline-secondary">提交</button>
     </div>
 </form>

@@ -29,8 +29,8 @@ namespace Mozlite.Extensions.Settings
             return Cache.GetOrCreate(_pathCacheKey, ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                var settings = Fetch().ToDictionary(x => x.Path, StringComparer.OrdinalIgnoreCase);
-                return new ConcurrentDictionary<string, SettingDictionary>(settings);
+                var settings = Fetch().ToDictionary(x => x.Path);
+                return new ConcurrentDictionary<string, SettingDictionary>(settings, StringComparer.OrdinalIgnoreCase);
             });
         }
 
@@ -39,8 +39,8 @@ namespace Mozlite.Extensions.Settings
             return Cache.GetOrCreateAsync(_pathCacheKey, async ctx =>
             {
                 ctx.SetDefaultAbsoluteExpiration();
-                var settings = (await FetchAsync()).ToDictionary(x => x.Path, StringComparer.OrdinalIgnoreCase);
-                return new ConcurrentDictionary<string, SettingDictionary>(settings);
+                var settings = (await FetchAsync()).ToDictionary(x => x.Path);
+                return new ConcurrentDictionary<string, SettingDictionary>(settings, StringComparer.OrdinalIgnoreCase);
             });
         }
 
@@ -93,7 +93,7 @@ namespace Mozlite.Extensions.Settings
                 var parentId = 0;
                 foreach (var name in names)
                 {
-                    setting = Find(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    setting = db.Find(x => x.Name == name);
                     if (setting == null)
                     {
                         setting = new SettingDictionary { ParentId = parentId, Name = name, Value = name };
@@ -130,7 +130,7 @@ namespace Mozlite.Extensions.Settings
                 var parentId = 0;
                 foreach (var name in names)
                 {
-                    setting = await FindAsync(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    setting = await db.FindAsync(x => x.Name == name);
                     if (setting == null)
                     {
                         setting = new SettingDictionary { ParentId = parentId, Name = name, Value = name };

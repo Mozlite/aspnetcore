@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Mozlite.Extensions.Settings;
 using MozliteDemo.Extensions.Security.Areas.Security.Models;
 using MozliteDemo.Extensions.Security.Properties;
 using System;
@@ -15,13 +16,17 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
     public class AccountController : Mozlite.Mvc.ControllerBase
     {
         private readonly IUserManager _userManager;
+        private readonly ISettingsManager _settingsManager;
+
         /// <summary>
         /// 初始化类<see cref="AccountController"/>。
         /// </summary>
         /// <param name="userManager">用户管理接口。</param>
-        public AccountController(IUserManager userManager)
+        /// <param name="settingsManager">配置管理接口。</param>
+        public AccountController(IUserManager userManager, ISettingsManager settingsManager)
         {
             _userManager = userManager;
+            _settingsManager = settingsManager;
         }
 
         /// <summary>
@@ -53,11 +58,17 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
                 if (!IsValidateCode("login", model.Code))
                     return Error("验证码错误！");
 #endif
+                var settings = await _settingsManager.GetSettingsAsync<SecuritySettings>();
+                returnUrl = returnUrl ?? Url.GetDirection(settings.LoginDirection);
                 model.UserName = model.UserName.Trim();
                 model.Password = model.Password.Trim();
+
                 var result = await _userManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, async user => await EventLogger.LogAsync(user.UserId, Resources.EventType, "成功登入系统。"));
                 if (result.Succeeded)
-                    return Success(new { url = returnUrl ?? "/" });
+                {
+                    Response.Cookies.Delete("login");
+                    return Success(new { url = returnUrl });
+                }
 
                 if (result.RequiresTwoFactor)
                     return Success(new { reurl = Url.Page("/LoginWith2fa", new { model.RememberMe, returnUrl, area = SecuritySettings.ExtensionName }) });

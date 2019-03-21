@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Settings;
-using Mozlite.Mvc.Logging;
 
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
 {
@@ -24,15 +23,16 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
         public IActionResult OnPost()
         {
             var settings = _settingsManager.GetSettings<SecuritySettings>();
-            var storage = LogContext.Create(settings);
+            Differ.Init(settings);
             settings.Registrable = Input.Registrable;
             settings.RequiredEmailConfirmed = Input.RequiredEmailConfirmed;
             settings.RequiredPhoneNumberConfirmed = Input.RequiredPhoneNumberConfirmed;
             settings.RequiredTwoFactorEnabled = Input.RequiredTwoFactorEnabled;
-            if (storage.Diff(settings))
+            settings.LoginDirection = Input.LoginDirection;
+            if (Differ.IsDifference(settings))
             {
                 _settingsManager.SaveSettings(settings);
-                EventLogger.LogUser($"更新了用户配置信息：{storage}");
+                EventLogger.LogUser($"更新了用户配置信息：{Differ}");
             }
 
             return RedirectToSuccessPage("你已经成功更新了配置！");

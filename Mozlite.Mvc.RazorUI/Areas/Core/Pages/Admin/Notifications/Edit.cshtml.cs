@@ -33,7 +33,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Notifications
             var result = await _typeManager.SaveAsync(Input);
             if (result)
             {
-                EventLogger.LogResult(result, EventType.Core, "通知类型：{0}。", Input.Name);
+                await EventLogger.LogCoreResultAsync(result, "通知类型：{0}。", Input.Name);
             }
 
             return Json(result, Input.Name);

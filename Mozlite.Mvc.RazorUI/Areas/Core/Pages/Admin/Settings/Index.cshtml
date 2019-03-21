@@ -1,0 +1,53 @@
+﻿@page
+@model IndexModel
+@{
+    ViewBag.Title = Model.Current.Value ?? "字典管理";
+    ViewBag.Current = "sys.dicsettings";
+}
+
+<div class="filter">
+    <div class="right">
+        <div class="btn-group">
+            <a js-checked="post" js-data-pid="@Model.Current.Id" js-confirm="你确定要删除所选择的字典实例吗？" asp-page-handler="Delete" class="btn btn-sm btn-outline-secondary"><i class="fa fa-trash-o"></i> 删除</a>
+            <a js-modal="click" asp-page="./Edit" asp-route-pid="@Model.Current.Id" class="btn btn-sm btn-secondary"><i class="fa fa-plus"></i> 添加</a>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered data-view">
+        <thead>
+            <tr>
+                <th class="checkbox-only"><moz:checkall></moz:checkall></th>
+                <th>标识</th>
+                <th>值</th>
+                <th class="data-action">操作</th>
+            </tr>
+        </thead>
+        <tbody class="data-content">
+            @if (Model.Current.Id > 0)
+            {
+                <tr>
+                    <td colspan="4">
+                        <a class="text-dark" title="@Model.Current.Value" asp-route-id="@Model.Current.ParentId">@Model.Current.Path <i class="fa fa-level-up"></i></a>
+                    </td>
+                </tr>
+            }
+            @foreach (var setting in Model.Current.Children)
+            {
+                <tr>
+                    <td class="checkbox-only"><moz:checkbox value="@setting.Id"></moz:checkbox></td>
+                    <td>
+                        <a title="点击访问子项目" class="text-dark" asp-route-id="@setting.Id">@(setting.Path) <i class="fa fa-level-down"></i></a>
+                    </td>
+                    <td>@setting.Value</td>
+                    <td class="data-action">
+                        <a js-modal="click" asp-page="./Edit" asp-route-id="@setting.Id"><i class="fa fa-pencil"></i> 编辑</a>
+                        <a asp-route-pid="@Model.Current.Id" js-confirm="你确定要删除“@setting.Name”吗？" js-action="post" asp-page-handler="Delete" asp-route-ids="@setting.Id"><i class="fa fa-trash-o"></i> 删除</a>
+                    </td>
+                </tr>
+            }
+            <moz:warning-tabled colspan="5" attach="@Model.Current.Children">还没有添加任何字典实例！</moz:warning-tabled>
+        </tbody>
+    </table>
+</div>

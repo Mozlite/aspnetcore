@@ -1,5 +1,4 @@
 ﻿@page
-@using Mozlite.Extensions.Storages
 @model IndexModel
 @{
     ViewBag.Title = "文件列表";
@@ -64,7 +63,7 @@
                             <a target="_blank" href="@file.Url"><i class="fa fa-link"></i> 访问</a>
                         </div>
                     </td>
-                    <td>@file.ExtensionName</td>
+                    <td>@Model.GetDictionaryValue($"extensionname.{file.ExtensionName}")</td>
                     <td>
                         @file.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")
                     </td>

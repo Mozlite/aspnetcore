@@ -35,5 +35,11 @@ namespace MozliteDemo.Extensions.Security
         /// </summary>
         [DisplayName("开放注册")]
         public bool Registrable { get; set; }
+
+        /// <summary>
+        /// 登录后的默认转向。
+        /// </summary>
+        [DisplayName("登入后转向")]
+        public LoginDirection LoginDirection { get; set; }
     }
 }

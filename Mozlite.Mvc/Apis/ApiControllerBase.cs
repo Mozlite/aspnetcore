@@ -8,6 +8,7 @@ using Mozlite.Extensions.Security.Stores;
 using Mozlite.Extensions.Storages.Apis;
 using System;
 using System.Threading.Tasks;
+using Mozlite.Extensions.Settings;
 
 namespace Mozlite.Mvc.Apis
 {
@@ -177,5 +178,21 @@ namespace Mozlite.Mvc.Apis
         /// <returns>返回发送结果。</returns>
         protected Task<bool> SendEmailAsync(UserBase user, string resourceKey, object replacement = null, Action<Email> action = null) =>
             GetRequiredService<IMessageManager>().SendEmailAsync(user, resourceKey, replacement, GetType(), action);
+
+        private IObjectDiffer _differ;
+        /// <summary>
+        /// 对象属性变更实例。
+        /// </summary>
+        protected IObjectDiffer Differ => _differ ?? (_differ = GetRequiredService<IObjectDiffer>());
+
+        private ISettingDictionaryManager _settingDictionaryManager;
+        /// <summary>
+        /// 获取字典值。
+        /// </summary>
+        /// <param name="path">标识。</param>
+        /// <returns>返回字典值。</returns>
+        public string GetDictionaryValue(string path) =>
+            (_settingDictionaryManager ?? (_settingDictionaryManager = GetRequiredService<ISettingDictionaryManager>()))
+            .GetOrAddSettings(path);
     }
 }

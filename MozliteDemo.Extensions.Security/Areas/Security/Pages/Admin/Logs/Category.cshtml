@@ -1,0 +1,20 @@
+﻿@page
+@model CategoryModel
+@{
+    ViewBag.Title = "类型管理";
+    ViewBag.Current = "users.logs";
+}
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody class="data-content">
+            @foreach (var type in Model.Types)
+            {
+                <tr>
+                    <td><moz:icon-event-type type="@type.Id"></moz:icon-event-type> @type.Name</td>
+                </tr>
+            }
+            <moz:warning-tabled class="text-secondary" attach="Model.Types">没有添加日志类型！</moz:warning-tabled>
+        </tbody>
+    </table>
+</div>

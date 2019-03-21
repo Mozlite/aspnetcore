@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Permissions;
-using Mozlite.Mvc.Logging;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
 {
@@ -58,7 +57,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
                 var user = await _userManager.FindByIdAsync(Input.UserId);
                 if (user == null)
                     return Error("未找到任何关联用户！");
-                var context = LogContext.Create(user, Localizer);
+                Differ.Init(user);
                 if (user.UserName != Input.UserName)
                 {
                     user.UserName = Input.UserName;
@@ -80,12 +79,12 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
                     user.PhoneNumberConfirmed = !string.IsNullOrEmpty(Input.PhoneNumber) && !Settings.RequiredPhoneNumberConfirmed;
                 }
 
-                if (context.Diff(user))
+                if (Differ.IsDifference(user))
                 {
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
-                        EventLogger.LogUser($"更新了用户“{user.UserName}”的信息：{context}");
+                        EventLogger.LogUser($"更新了用户“{user.UserName}”的信息：{Differ}");
                         return Success("你已经成功更新了用户信息！");
                     }
                     return Error(result.ToErrorString());

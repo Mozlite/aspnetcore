@@ -1,5 +1,4 @@
 ﻿using Mozlite.Extensions.Categories;
-using Mozlite.Extensions.Properties;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mozlite.Extensions.Security.Events
@@ -10,11 +9,6 @@ namespace Mozlite.Extensions.Security.Events
     [Table("core_Users_Events_Types")]
     public class EventType : CategoryBase
     {
-        /// <summary>
-        /// 通用。
-        /// </summary>
-        public static readonly string Core = Resources.EventType_Core;
-        
         /// <summary>
         /// 图标地址。
         /// </summary>

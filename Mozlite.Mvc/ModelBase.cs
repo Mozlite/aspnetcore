@@ -10,6 +10,7 @@ using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Security.Permissions;
 using Mozlite.Extensions.Security.Stores;
+using Mozlite.Extensions.Settings;
 using Mozlite.Extensions.Storages;
 using Mozlite.Extensions.Storages.Apis;
 using Mozlite.Extensions.Storages.Excels;
@@ -85,6 +86,22 @@ namespace Mozlite.Mvc
         /// 通知接口实例。
         /// </summary>
         protected INotifier Notifier => _notifier ?? (_notifier = GetRequiredService<INotifier>());
+
+        private IObjectDiffer _differ;
+        /// <summary>
+        /// 对象属性变更实例。
+        /// </summary>
+        protected IObjectDiffer Differ => _differ ?? (_differ = GetRequiredService<IObjectDiffer>());
+
+        private ISettingDictionaryManager _settingDictionaryManager;
+        /// <summary>
+        /// 获取字典值。
+        /// </summary>
+        /// <param name="path">标识。</param>
+        /// <returns>返回字典值。</returns>
+        public string GetDictionaryValue(string path) =>
+            (_settingDictionaryManager ?? (_settingDictionaryManager = GetRequiredService<ISettingDictionaryManager>()))
+            .GetOrAddSettings(path);
         #endregion
 
         #region users

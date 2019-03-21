@@ -28,13 +28,13 @@ namespace Mozlite.Extensions.Settings
                 {
                     var list = new List<string>();
                     var current = this;
-                    while (current.Id > 0)
+                    while (current?.Id > 0)
                     {
                         list.Add(current.Name);
                         current = current.Parent;
                     }
                     list.Reverse();
-                    _path = string.Join(".", list);
+                    _path = string.Join(".", list).ToLower();
                 }
 
                 return _path;

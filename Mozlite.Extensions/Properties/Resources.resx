@@ -281,9 +281,6 @@
   <data name="EventMessage_NullUserId" xml:space="preserve">
     <value>事件消息的用户Id未设置，并且当前用户还未登录！</value>
   </data>
-  <data name="EventType_Core" xml:space="preserve">
-    <value>通用</value>
-  </data>
   <data name="DataResult_Created" xml:space="preserve">
     <value>添加了</value>
   </data>
@@ -298,5 +295,32 @@
   </data>
   <data name="EventType" xml:space="preserve">
     <value>系统</value>
+  </data>
+  <data name="DifferAction_Add" xml:space="preserve">
+    <value>新增了</value>
+  </data>
+  <data name="DifferAction_AddFormat" xml:space="preserve">
+    <value>”{0}“(”{1}“)</value>
+  </data>
+  <data name="DifferAction_Modify" xml:space="preserve">
+    <value>修改了</value>
+  </data>
+  <data name="DifferAction_ModifyFormat" xml:space="preserve">
+    <value>“{0}”由”{1}“修改为“{2}”</value>
+  </data>
+  <data name="DifferAction_Remove" xml:space="preserve">
+    <value>移除了</value>
+  </data>
+  <data name="DifferAction_RemoveFormat" xml:space="preserve">
+    <value>”{0}“(”{1}“)</value>
+  </data>
+  <data name="Differ_Duplicated_Initialized" xml:space="preserve">
+    <value>原有对象已经初始化，不能重复调用初始化方法！</value>
+  </data>
+  <data name="Differ_Duplicated_Differed" xml:space="preserve">
+    <value>你已经对比过一次新对象，不能重复对比变更对象！</value>
+  </data>
+  <data name="Differ_Uninitialized" xml:space="preserve">
+    <value>对象变更原始对象未初始化，请在修改对象时候先调用Init方法。</value>
   </data>
 </root>
