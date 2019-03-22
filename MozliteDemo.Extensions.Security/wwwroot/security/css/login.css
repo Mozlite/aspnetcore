@@ -147,4 +147,5 @@ body {
 .mozskin-xs .signin .signin-panel {
     border: none;
     border-radius: 0;
+    background-color: #fff;
 }
