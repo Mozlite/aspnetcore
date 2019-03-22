@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Security
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public abstract class UserManager<TUser, TUserClaim, TUserLogin, TUserToken>
         : UserManager<TUser>, IUserManager<TUser>
@@ -42,7 +42,7 @@ namespace Mozlite.Extensions.Security
 
         private SignInManager<TUser> _signInManager;
         /// <summary>
-        /// 登陆管理实例。
+        /// 登录管理实例。
         /// </summary>
         public SignInManager<TUser> SignInManager
         {
@@ -116,7 +116,7 @@ namespace Mozlite.Extensions.Security
         public Task<TUser> GetUserAsync() => HttpContext.GetUserAsync<TUser>();
 
         /// <summary>
-        /// 判断当前用户是否已经登陆。
+        /// 判断当前用户是否已经登录。
         /// </summary>
         /// <returns>返回判断结果。</returns>
         public bool IsSignedIn()
@@ -125,25 +125,25 @@ namespace Mozlite.Extensions.Security
         }
 
         /// <summary>
-        /// 密码登陆。
+        /// 密码登录。
         /// </summary>
         /// <param name="userName">用户名。</param>
         /// <param name="password">密码。</param>
-        /// <param name="isRemembered">是否记住登陆状态。</param>
-        /// <returns>返回登陆结果。</returns>
+        /// <param name="isRemembered">是否记住登录状态。</param>
+        /// <returns>返回登录结果。</returns>
         public Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered)
         {
             return PasswordSignInAsync(userName, password, isRemembered, null);
         }
 
         /// <summary>
-        /// 密码登陆。
+        /// 密码登录。
         /// </summary>
         /// <param name="userName">用户名。</param>
         /// <param name="password">密码。</param>
-        /// <param name="isRemembered">是否记住登陆状态。</param>
+        /// <param name="isRemembered">是否记住登录状态。</param>
         /// <param name="success">成功后执行的方法。</param>
-        /// <returns>返回登陆结果。</returns>
+        /// <returns>返回登录结果。</returns>
         public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Func<TUser, Task> success)
         {
             var user = await FindByNameAsync(userName);
@@ -453,7 +453,7 @@ namespace Mozlite.Extensions.Security
         private const string TwoFactorTokenName = "TwoFactor";
 
         /// <summary>
-        /// 二次登陆验证判定。
+        /// 二次登录验证判定。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="verificationCode">验证码。</param>
@@ -490,7 +490,7 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserRole">用户角色类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>

@@ -51,11 +51,11 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"{user.UserName}移除社会化登陆失败！");
+                throw new InvalidOperationException($"{user.UserName}移除社会化登录失败！");
             }
 
             await _userManager.SignInManager.RefreshSignInAsync(user);
-            return RedirectToSuccessPage("你已经成功移除了登陆。");
+            return RedirectToSuccessPage("你已经成功移除了登录。");
         }
 
         public async Task<IActionResult> OnPostLinkLoginAsync(string provider)
@@ -80,19 +80,19 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             var info = await _userManager.SignInManager.GetExternalLoginInfoAsync(user.UserId.ToString());
             if (info == null)
             {
-                throw new InvalidOperationException("载入社会化登陆失败！");
+                throw new InvalidOperationException("载入社会化登录失败！");
             }
 
             var result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException("添加社会化登陆失败！");
+                throw new InvalidOperationException("添加社会化登录失败！");
             }
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            return RedirectToSuccessPage($"已经成功绑定了{info.ProviderDisplayName}登陆方式。");
+            return RedirectToSuccessPage($"已经成功绑定了{info.ProviderDisplayName}登录方式。");
         }
     }
 }

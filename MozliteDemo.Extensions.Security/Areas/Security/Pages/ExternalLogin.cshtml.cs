@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 {
     /// <summary>
-    /// 外部登陆模型。
+    /// 外部登录模型。
     /// </summary>
     [AllowAnonymous]
     public class ExternalLoginModel : ModelBase
@@ -34,7 +34,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             public string UserName { get; set; }
 
             /// <summary>
-            /// 登陆名称。
+            /// 登录名称。
             /// </summary>
             [Required(ErrorMessage = "{0}不能为空！")]
             public string LoginName { get; set; }
@@ -66,13 +66,13 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
-                ErrorMessage = $"社会化登陆提供者错误：{remoteError}。";
+                ErrorMessage = $"社会化登录提供者错误：{remoteError}。";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var info = await _userManager.SignInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "载入社会化登陆信息错误！";
+                ErrorMessage = "载入社会化登录信息错误！";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
@@ -80,7 +80,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             var result = await _userManager.SignInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                Logger.LogInformation("{Name} 通过 {LoginProvider} 进行登陆。", info.Principal.Identity.Name, info.LoginProvider);
+                Logger.LogInformation("{Name} 通过 {LoginProvider} 进行登录。", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
             if (result.IsLockedOut)
@@ -108,7 +108,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             var info = await _userManager.SignInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "确认社会化登陆失败！";
+                ErrorMessage = "确认社会化登录失败！";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 

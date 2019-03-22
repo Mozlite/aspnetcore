@@ -2,7 +2,7 @@
 @using MozliteDemo.Extensions.Security.Areas.Security
 @model Disable2faModel
 @{
-    ViewData["Title"] = "禁用二次登陆验证(2FA)";
+    ViewData["Title"] = "禁用二次登录验证(2FA)";
     ViewData["Current"] = AccountMenu.TwoFactorAuthentication;
 }
 
@@ -13,14 +13,14 @@
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>禁用二次登陆验证</strong>
+        <strong>禁用二次登录验证</strong>
     </p>
     <p>
-        禁用二次登陆验证，在登陆的时候不会改变密钥，如果需要改变密钥，<a asp-page="./ResetAuthenticator">请点击这里重置验证密钥。</a>
+        禁用二次登录验证，在登录的时候不会改变密钥，如果需要改变密钥，<a asp-page="./ResetAuthenticator">请点击这里重置验证密钥。</a>
     </p>
 </div>
 <div>
     <form method="post" class="form-group">
-        <button class="btn btn-danger" type="submit">禁用二次登陆验证</button>
+        <button class="btn btn-danger" type="submit">禁用二次登录验证</button>
     </form>
 </div>

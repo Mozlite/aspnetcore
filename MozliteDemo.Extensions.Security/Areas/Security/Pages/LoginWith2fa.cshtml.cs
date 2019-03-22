@@ -43,7 +43,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 
             if (user == null)
             {
-                throw new InvalidOperationException("未找到二次验证登陆的用户。");
+                throw new InvalidOperationException("未找到二次验证登录的用户。");
             }
 
             ReturnUrl = returnUrl;

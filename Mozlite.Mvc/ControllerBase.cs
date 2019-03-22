@@ -452,7 +452,7 @@ namespace Mozlite.Mvc
         }
 
         /// <summary>
-        /// 是否已经登入。
+        /// 是否已经登录。
         /// </summary>
         protected bool IsAuthenticated => User.Identity.IsAuthenticated;
 

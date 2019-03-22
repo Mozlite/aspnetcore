@@ -18,12 +18,12 @@ namespace MozliteDemo.Extensions.Security.Areas.Security
         public const string ChangePassword = "change.password";
 
         /// <summary>
-        /// 二次登陆验证。
+        /// 二次登录验证。
         /// </summary>
         public const string TwoFactorAuthentication = "two.factor";
 
         /// <summary>
-        /// 社会化登陆。
+        /// 社会化登录。
         /// </summary>
         public const string ExternalLogins = "external.logins";
 
@@ -56,8 +56,8 @@ namespace MozliteDemo.Extensions.Security.Areas.Security
             root.AddMenu(Index, item => item.Texted("个人配置").Page("/Account/Index", area: SecuritySettings.ExtensionName))
                 .AddMenu(ChangePassword, item => item.Texted("修改密码").Page("/Account/ChangePassword", area: SecuritySettings.ExtensionName))
                 .AddMenu(Avatar, item => item.Texted("更新头像").Page("/Account/Avatar", area: SecuritySettings.ExtensionName))
-                //.AddMenu(TwoFactorAuthentication, item => item.Texted("二次登陆验证", "fa fa-mobile").Page("/Account/TwoFactorAuthentication", area: SecuritySettings.ExtensionName))
-                //.AddMenu(ExternalLogins, item => item.Texted("社会化登陆", "fa fa-gg").Page("/Account/ExternalLogins", area: SecuritySettings.ExtensionName))
+                //.AddMenu(TwoFactorAuthentication, item => item.Texted("二次登录验证", "fa fa-mobile").Page("/Account/TwoFactorAuthentication", area: SecuritySettings.ExtensionName))
+                //.AddMenu(ExternalLogins, item => item.Texted("社会化登录", "fa fa-gg").Page("/Account/ExternalLogins", area: SecuritySettings.ExtensionName))
                 //.AddMenu(PersonalData, item => item.Texted("下载数据", "fa fa-download").Page("/Account/PersonalData", area: SecuritySettings.ExtensionName))
                 .AddMenu(Log, item => item.Texted("活动日志").Page("/Account/Log", area: SecuritySettings.ExtensionName));
         }

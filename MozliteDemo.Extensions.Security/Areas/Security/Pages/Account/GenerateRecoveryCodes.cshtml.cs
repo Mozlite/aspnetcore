@@ -27,7 +27,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             
             if (!user.TwoFactorEnabled)
             {
-                throw new InvalidOperationException($"{user.UserName}未激活二次登陆验证，不能生成验证码。");
+                throw new InvalidOperationException($"{user.UserName}未激活二次登录验证，不能生成验证码。");
             }
 
             return Page();
@@ -43,14 +43,14 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             
             if (!user.TwoFactorEnabled)
             {
-                throw new InvalidOperationException($"{user.UserName}未激活二次登陆验证，不能生成验证码。");
+                throw new InvalidOperationException($"{user.UserName}未激活二次登录验证，不能生成验证码。");
             }
 
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
             RecoveryCodes = recoveryCodes.ToArray();
 
-            EventLogger.LogUser("生成10个二次登陆验证码。");
-            return RedirectToSuccessPage("你已经成功生成了10个二次登陆验证码。", "./ShowRecoveryCodes");
+            EventLogger.LogUser("生成10个二次登录验证码。");
+            return RedirectToSuccessPage("你已经成功生成了10个二次登录验证码。", "./ShowRecoveryCodes");
         }
     }
 }

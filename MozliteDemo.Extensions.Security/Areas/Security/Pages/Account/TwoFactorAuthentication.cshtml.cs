@@ -46,7 +46,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             }
 
             await _userManager.SignInManager.ForgetTwoFactorClientAsync();
-            return RedirectToSuccessPage("已经忘记了登陆状态，下次你需要再进行登陆。");
+            return RedirectToSuccessPage("已经忘记了登录状态，下次你需要再进行登录。");
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登入类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public abstract class StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken> : DataMigration
         where TUser : UserBase, new()
@@ -115,7 +115,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登入类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserRole">用户所在组类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>

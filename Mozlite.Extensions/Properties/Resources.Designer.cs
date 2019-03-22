@@ -376,7 +376,7 @@ namespace Mozlite.Extensions.Properties {
         }
         
         /// <summary>
-        ///   查找类似 用户登陆已经存在。 的本地化字符串。
+        ///   查找类似 用户登录已经存在。 的本地化字符串。
         /// </summary>
         internal static string ErrorDescriptor_LoginAlreadyAssociated {
             get {

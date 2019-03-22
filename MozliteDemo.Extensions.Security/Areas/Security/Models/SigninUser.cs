@@ -3,7 +3,7 @@
 namespace MozliteDemo.Extensions.Security.Areas.Security.Models
 {
     /// <summary>
-    /// 登陆用户模型。
+    /// 登录用户模型。
     /// </summary>
     public class SigninUser
     {
@@ -26,7 +26,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Models
         public string Code { get; set; }
 
         /// <summary>
-        /// 登陆状态。
+        /// 登录状态。
         /// </summary>
         public bool RememberMe { get; set; }
     }

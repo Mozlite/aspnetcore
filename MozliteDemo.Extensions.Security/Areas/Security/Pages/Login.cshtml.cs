@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 {
     /// <summary>
-    /// 登陆模型。
+    /// 登录模型。
     /// </summary>
     [AllowAnonymous]
     public class LoginModel : ModelBase
@@ -73,7 +73,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _userManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, async user => await EventLogger.LogAsync(user.UserId, Resources.EventType, "成功登入系统。"));
+                var result = await _userManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, async user => await EventLogger.LogAsync(user.UserId, Resources.EventType, "成功登录系统。"));
                 if (result.Succeeded)
                 {
                     Response.Cookies.Delete("login");

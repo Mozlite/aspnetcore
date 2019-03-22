@@ -17,7 +17,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserRole">用户角色类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public abstract class UserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.Security.Stores
         public IDbContext<TUserClaim> UserClaimContext { get; }
 
         /// <summary>
-        /// 用户登陆数据库操作接口。
+        /// 用户登录数据库操作接口。
         /// </summary>
         public IDbContext<TUserLogin> UserLoginContext { get; }
 
@@ -122,7 +122,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="userContext">用户数据库接口。</param>
         /// <param name="userClaimContext">用户声明数据库接口。</param>
-        /// <param name="userLoginContext">用户登陆数据库接口。</param>
+        /// <param name="userLoginContext">用户登录数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
         /// <param name="roleContext">角色上下文。</param>
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
@@ -334,13 +334,13 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户登陆信息。
+        /// 获取用户登录信息。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
+        /// <returns>返回当前用户登录信息。</returns>
         protected override Task<TUserLogin> FindUserLoginAsync(int userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             return UserLoginContext.FindAsync(
@@ -349,12 +349,12 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户登陆信息。
+        /// 获取用户登录信息。
         /// </summary>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
+        /// <returns>返回当前用户登录信息。</returns>
         protected override Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             return UserLoginContext.FindAsync(
@@ -487,7 +487,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取用户标识。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="name">名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户标识实例。</returns>
@@ -517,10 +517,10 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 添加用户登陆信息。
+        /// 添加用户登录信息。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="login">用户登陆信息实例。</param>
+        /// <param name="login">用户登录信息实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
         {
@@ -537,11 +537,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 移除用户登陆信息。
+        /// 移除用户登录信息。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public override async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey,
             CancellationToken cancellationToken = default)
@@ -557,12 +557,12 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取当前用户的登陆信息列表。
+        /// 获取当前用户的登录信息列表。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
-        /// 返回当前用户所有登陆信息。
+        /// 返回当前用户所有登录信息。
         /// </returns>
         public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default)
         {

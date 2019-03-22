@@ -6,7 +6,7 @@ using MozliteDemo.Extensions.Security.Actions;
 namespace MozliteDemo.Extensions.Security.TagHelpers
 {
     /// <summary>
-    /// 用户登陆后操作标签。
+    /// 用户登录后操作标签。
     /// </summary>
     [HtmlTargetElement("moz:user-action-panel")]
     public class UserActionTagHelper : ViewContextableTagHelperBase

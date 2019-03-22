@@ -90,7 +90,7 @@
         /// </summary>
         PasswordMismatch,
         /// <summary>
-        /// 登陆已经关联。
+        /// 登录已经关联。
         /// </summary>
         LoginAlreadyAssociated,
         /// <summary>

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
 {
     /// <summary>
-    /// 禁用二次登陆验证。
+    /// 禁用二次登录验证。
     /// </summary>
     public class Disable2faModel : ModelBase
     {
@@ -26,7 +26,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
 
             if (!user.TwoFactorEnabled)
             {
-                throw new InvalidOperationException($"不能禁用'{user.UserName}'二次登陆验证，因为该账户没有开启二次登陆验证。");
+                throw new InvalidOperationException($"不能禁用'{user.UserName}'二次登录验证，因为该账户没有开启二次登录验证。");
             }
 
             return Page();
@@ -43,11 +43,11 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             user.TwoFactorEnabled = false;
             if (!await _userManager.UpdateAsync(user.UserId, new { user.TwoFactorEnabled }))
             {
-                throw new InvalidOperationException($"禁用'{user.UserName}'二次登陆验证发生了错误！");
+                throw new InvalidOperationException($"禁用'{user.UserName}'二次登录验证发生了错误！");
             }
 
-            EventLogger.LogUser("禁用了二次登陆验证！");
-            return RedirectToSuccessPage("二次登陆验证已经禁用。", "./TwoFactorAuthentication");
+            EventLogger.LogUser("禁用了二次登录验证！");
+            return RedirectToSuccessPage("二次登录验证已经禁用。", "./TwoFactorAuthentication");
         }
     }
 }

@@ -17,7 +17,7 @@ namespace MozliteDemo.Extensions
         /// <summary>
         /// Logo地址。
         /// </summary>
-        public string LogoUrl { get; set; }
+        public string LogoUrl { get; set; } = "/images/logo.png";
 
         /// <summary>
         /// 描述。

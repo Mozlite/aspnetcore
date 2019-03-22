@@ -15,7 +15,7 @@ namespace MozliteDemo.Extensions.Security.Services
         /// <param name="describer">错误描述<see cref="IdentityErrorDescriber"/>实例。</param>
         /// <param name="userContext">用户数据库接口。</param>
         /// <param name="userClaimContext">用户声明数据库接口。</param>
-        /// <param name="userLoginContext">用户登陆数据库接口。</param>
+        /// <param name="userLoginContext">用户登录数据库接口。</param>
         /// <param name="userTokenContext">用户标识数据库接口。</param>
         /// <param name="roleContext">角色上下文。</param>
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>

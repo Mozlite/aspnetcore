@@ -24,9 +24,9 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
         public class InputModel
         {
             /// <summary>
-            /// 登陆名称。
+            /// 登录名称。
             /// </summary>
-            [Display(Name = "登陆名称")]
+            [Display(Name = "登录名称")]
             [Required(ErrorMessage = "{0}不能为空！")]
             [RegularExpression("[@a-zA-Z][a-zA-Z_0-9]{4,15}", ErrorMessage = "{0}必须以字母或者@开头，由字母和数字以及下划线组合5到16个字符组成！")]
             public string UserName { get; set; }

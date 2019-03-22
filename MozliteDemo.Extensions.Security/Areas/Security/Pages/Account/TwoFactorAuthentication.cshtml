@@ -2,7 +2,7 @@
 @using MozliteDemo.Extensions.Security.Areas.Security
 @model TwoFactorAuthenticationModel
 @{
-    ViewData["Title"] = "二次登陆验证(2FA)";
+    ViewData["Title"] = "二次登录验证(2FA)";
     ViewData["Current"] = AccountMenu.TwoFactorAuthentication;
 }
 <div class="account-title">
@@ -15,31 +15,31 @@
     {
         <div class="alert alert-danger">
             <strong>你没有验证码剩余。</strong>
-            <p>在你通过验证码登陆之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
+            <p>在你通过验证码登录之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
         </div>
     }
     else if (Model.RecoveryCodesLeft == 1)
     {
         <div class="alert alert-danger">
             <strong>你只有1个验证码剩余。</strong>
-            <p>在你通过验证码登陆之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
+            <p>在你通过验证码登录之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
         </div>
     }
     else if (Model.RecoveryCodesLeft <= 3)
     {
         <div class="alert alert-warning">
             <strong>你只有 @(Model.RecoveryCodesLeft)个验证码剩余。</strong>
-            <p>在你通过验证码登陆之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
+            <p>在你通过验证码登录之前，你必须<a asp-page="./GenerateRecoveryCodes">生成新的验证码</a>。</p>
         </div>
     }
 
     if (Model.IsMachineRemembered)
     {
         <form method="post" style="display: inline-block">
-            <button type="submit" class="btn btn-outline-secondary">忘记登陆状态</button>
+            <button type="submit" class="btn btn-outline-secondary">忘记登录状态</button>
         </form>
     }
-    <a asp-page="./Disable2fa" class="btn btn-outline-secondary">禁用二次登陆</a>
+    <a asp-page="./Disable2fa" class="btn btn-outline-secondary">禁用二次登录</a>
     <a asp-page="./GenerateRecoveryCodes" class="btn btn-outline-secondary">重新生成验证码</a>
 }
 
@@ -49,10 +49,10 @@
 
 @if (!Model.HasAuthenticator)
 {
-    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-outline-secondary">激活二次登陆验证</a>
+    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-outline-secondary">激活二次登录验证</a>
 }
 else
 {
-    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-outline-secondary">激活二次登陆验证</a>
-    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-outline-secondary">重置二次登陆验证</a>
+    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-outline-secondary">激活二次登录验证</a>
+    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-outline-secondary">重置二次登录验证</a>
 }

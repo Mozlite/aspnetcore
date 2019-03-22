@@ -15,7 +15,7 @@
             <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label>登陆名称</label>
+                    <label>登录名称</label>
                     <input asp-for="Input.LoginName" class="form-control" />
                     <span asp-validation-for="Input.LoginName" class="text-danger"></span>
                 </div>

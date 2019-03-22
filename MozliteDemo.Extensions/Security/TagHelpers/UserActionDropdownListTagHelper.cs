@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MozliteDemo.Extensions.Security.TagHelpers
 {
     /// <summary>
-    /// 用户登陆后操作标签。
+    /// 用户登录后操作标签。
     /// </summary>
     [HtmlTargetElement("moz:user-action-dropdownlist")]
     public class UserActionDropdownListTagHelper : DropdownListTagHelper

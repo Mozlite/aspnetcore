@@ -184,7 +184,7 @@
     <value>用户名称'{0}'无效， 只能包含字母和数字。</value>
   </data>
   <data name="ErrorDescriptor_LoginAlreadyAssociated" xml:space="preserve">
-    <value>用户登陆已经存在。</value>
+    <value>用户登录已经存在。</value>
   </data>
   <data name="ErrorDescriptor_NullSecurityStamp" xml:space="preserve">
     <value>用户安全戳不能为空。</value>

@@ -45,7 +45,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             var logins = await _userManager.GetLoginsAsync(user);
             foreach (var login in logins)
             {
-                personalData.Add($"{login.LoginProvider} 登陆密钥", login.ProviderKey);
+                personalData.Add($"{login.LoginProvider} 登录密钥", login.ProviderKey);
             }
 
             personalData.Add("验证密钥", await _userManager.GetAuthenticatorKeyAsync(user));

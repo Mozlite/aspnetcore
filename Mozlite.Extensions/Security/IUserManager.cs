@@ -14,7 +14,7 @@ namespace Mozlite.Extensions.Security
         where TUser : UserBase, new()
     {
         /// <summary>
-        /// 登陆管理实例。
+        /// 登录管理实例。
         /// </summary>
         SignInManager<TUser> SignInManager { get; }
 
@@ -52,7 +52,7 @@ namespace Mozlite.Extensions.Security
         Task<TUser> GetUserAsync();
 
         /// <summary>
-        /// 判断当前用户是否已经登陆。
+        /// 判断当前用户是否已经登录。
         /// </summary>
         /// <returns>返回判断结果。</returns>
         bool IsSignedIn();
@@ -88,22 +88,22 @@ namespace Mozlite.Extensions.Security
         string PasswordSalt(string userName, string password);
 
         /// <summary>
-        /// 密码登陆。
+        /// 密码登录。
         /// </summary>
         /// <param name="userName">用户名。</param>
         /// <param name="password">密码。</param>
-        /// <param name="isRemembered">是否记住登陆状态。</param>
-        /// <returns>返回登陆结果。</returns>
+        /// <param name="isRemembered">是否记住登录状态。</param>
+        /// <returns>返回登录结果。</returns>
         Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered);
 
         /// <summary>
-        /// 密码登陆。
+        /// 密码登录。
         /// </summary>
         /// <param name="userName">用户名。</param>
         /// <param name="password">密码。</param>
-        /// <param name="isRemembered">是否记住登陆状态。</param>
+        /// <param name="isRemembered">是否记住登录状态。</param>
         /// <param name="success">成功后执行的方法。</param>
-        /// <returns>返回登陆结果。</returns>
+        /// <returns>返回登录结果。</returns>
         Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isRemembered, Func<TUser, Task> success);
 
         /// <summary>
@@ -288,10 +288,10 @@ namespace Mozlite.Extensions.Security
         Task<IdentityResult> DeleteAsync(int id);
 
         /// <summary>
-        /// 添加用户社会化登陆信息。
+        /// 添加用户社会化登录信息。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="login">用户登陆信息。</param>
+        /// <param name="login">用户登录信息。</param>
         /// <returns>返回添加结果。</returns>
         Task<IdentityResult> AddLoginAsync(TUser user, UserLoginInfo login);
 
@@ -311,10 +311,10 @@ namespace Mozlite.Extensions.Security
         Task<bool> CheckPasswordAsync(TUser user, string password);
 
         /// <summary>
-        /// 获取登陆信息。
+        /// 获取登录信息。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <returns>返回登陆信息列表。</returns>
+        /// <returns>返回登录信息列表。</returns>
         Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user);
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace Mozlite.Extensions.Security
         Task<string> GetAuthenticatorKeyAsync(TUser user);
 
         /// <summary>
-        /// 二次登陆验证判定。
+        /// 二次登录验证判定。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="verificationCode">验证码。</param>
@@ -341,14 +341,14 @@ namespace Mozlite.Extensions.Security
         Task<bool> VerifyTwoFactorTokenAsync(TUser user, string verificationCode);
 
         /// <summary>
-        /// 计算二次登陆验码数量。
+        /// 计算二次登录验码数量。
         /// </summary>
         /// <param name="user">用户实例。</param>
         /// <returns>返回计算结果。</returns>
         Task<int> CountRecoveryCodesAsync(TUser user);
 
         /// <summary>
-        /// 生成二次登陆验证码。
+        /// 生成二次登录验证码。
         /// </summary>
         /// <param name="user">用户实例。</param>
         /// <param name="count">生成数量。</param>
@@ -363,10 +363,10 @@ namespace Mozlite.Extensions.Security
         Task<IdentityResult> ResetAuthenticatorKeyAsync(TUser user);
 
         /// <summary>
-        /// 移除登陆信息。
+        /// 移除登录信息。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="providerKey">提供者密钥。</param>
         /// <returns>返回移除结果。</returns>
         Task<IdentityResult> RemoveLoginAsync(TUser user, string loginProvider, string providerKey);
@@ -426,7 +426,7 @@ namespace Mozlite.Extensions.Security
         /// 获取验证标识。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="tokenName">标识名称。</param>
         /// <returns>返回验证标识。</returns>
         Task<string> GetAuthenticationTokenAsync(TUser user, string loginProvider, string tokenName);
@@ -435,7 +435,7 @@ namespace Mozlite.Extensions.Security
         /// 设置验证标识。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="tokenName">标识名称。</param>
         /// <param name="tokenValue">标识值。</param>
         /// <returns>返回操作结果。</returns>
@@ -446,7 +446,7 @@ namespace Mozlite.Extensions.Security
         /// 移除验证标识。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="tokenName">标识名称。</param>
         /// <returns>返回操作结果。</returns>
         Task<IdentityResult> RemoveAuthenticationTokenAsync(TUser user, string loginProvider, string tokenName);

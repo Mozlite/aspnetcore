@@ -27,7 +27,7 @@ namespace MozliteDemo.Extensions.Security
         /// <summary>
         /// 是否需要二次验证。
         /// </summary>
-        [DisplayName("二次登陆验证")]
+        [DisplayName("二次登录验证")]
         public bool RequiredTwoFactorEnabled { get; set; }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace MozliteDemo.Extensions.Security
         /// <summary>
         /// 登录后的默认转向。
         /// </summary>
-        [DisplayName("登入后转向")]
+        [DisplayName("登录后转向")]
         public LoginDirection LoginDirection { get; set; }
     }
 }

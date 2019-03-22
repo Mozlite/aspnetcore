@@ -81,9 +81,9 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             }
 
             user.TwoFactorEnabled = true;
-            EventLogger.LogUser("激活二次登陆验证。", user.UserName);
+            EventLogger.LogUser("激活二次登录验证。", user.UserName);
 
-            StatusMessage("你已经成功绑定二次登陆验证。");
+            StatusMessage("你已经成功绑定二次登录验证。");
 
             if (await _userManager.CountRecoveryCodesAsync(user) == 0)
             {

@@ -2,7 +2,7 @@
 @model LoginModel
 @inject ISettingsManager SettingsManager
 @{
-    ViewData["Title"] = "用户登陆";
+    ViewData["Title"] = "用户登录";
     Layout = "_Global";
     var settings = SettingsManager.GetSettings<SiteSettings>();
     var securitySettings = SettingsManager.GetSettings<SecuritySettings>();
@@ -36,20 +36,20 @@
             </div>
             <div class="link-panel">
                 <div class="link-left">
-                    <moz:checkbox for="Input.RememberMe" class="mb-3">记住登陆状态</moz:checkbox>
+                    <moz:checkbox for="Input.RememberMe" class="mb-3">记住登录状态</moz:checkbox>
                 </div>
                 <div class="link-right">
                     <a asp-page="./ForgotPassword">忘记密码?</a>
                 </div>
             </div>
-            <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">登入</button>
+            <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">登录</button>
         </form>
         <div class="link-panel">
             <div class="link-left" .visible="@((Model.ExternalLogins?.Count ?? 0) > 0)">
                 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                     @foreach (var provider in Model.ExternalLogins)
                     {
-                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="使用你的@(provider.DisplayName)账号登陆">@provider.DisplayName</button>
+                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="使用你的@(provider.DisplayName)账号登录">@provider.DisplayName</button>
                     }
                 </form>
             </div>

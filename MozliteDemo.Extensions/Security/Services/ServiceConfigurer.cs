@@ -7,7 +7,7 @@ using Mozlite.Extensions.Security;
 namespace MozliteDemo.Extensions.Security.Services
 {
     /// <summary>
-    /// 注册当前登陆用户。
+    /// 注册当前登录用户。
     /// </summary>
     public class ServiceConfigurer : ServiceConfigurer<User, Role, UserStore, RoleStore, UserManager, RoleManager>
     {

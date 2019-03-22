@@ -13,7 +13,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// </summary>
     /// <typeparam name="TUser">用户类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public abstract class IdentityUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> :
        IUserLoginStore<TUser>,
@@ -60,11 +60,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 实例化当前用户的登陆信息实例。
+        /// 实例化当前用户的登录信息实例。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="login">登陆信息实例。</param>
-        /// <returns>返回用户登陆信息实例。</returns>
+        /// <param name="login">登录信息实例。</param>
+        /// <returns>返回用户登录信息实例。</returns>
         protected virtual TUserLogin CreateUserLogin(TUser user, UserLoginInfo login)
         {
             return new TUserLogin
@@ -80,7 +80,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 通过用户实例以及提供者实例化一个用户标识。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="name">用户标识名称。</param>
         /// <param name="value">用户标识值。</param>
         /// <returns>返回用户标识。</returns>
@@ -276,22 +276,22 @@ namespace Mozlite.Extensions.Security.Stores
         public abstract Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 获取用户登陆信息。
+        /// 获取用户登录信息。
         /// </summary>
         /// <param name="userId">用户Id。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
+        /// <returns>返回当前用户登录信息。</returns>
         protected abstract Task<TUserLogin> FindUserLoginAsync(int userId, string loginProvider, string providerKey, CancellationToken cancellationToken);
 
         /// <summary>
-        /// 获取用户登陆信息。
+        /// 获取用户登录信息。
         /// </summary>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回当前用户登陆信息。</returns>
+        /// <returns>返回当前用户登录信息。</returns>
         protected abstract Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken);
 
         /// <summary>
@@ -333,37 +333,37 @@ namespace Mozlite.Extensions.Security.Stores
         public abstract Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 添加用户登陆信息。
+        /// 添加用户登录信息。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="login">用户登陆信息实例。</param>
+        /// <param name="login">用户登录信息实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public abstract Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 移除用户登陆信息。
+        /// 移除用户登录信息。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public abstract Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 获取当前用户的登陆信息列表。
+        /// 获取当前用户的登录信息列表。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
-        /// 返回当前用户所有登陆信息。
+        /// 返回当前用户所有登录信息。
         /// </returns>
         public abstract Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 通过登陆提供者和唯一键获取用户实例。
+        /// 通过登录提供者和唯一键获取用户实例。
         /// </summary>
-        /// <param name="loginProvider">登陆提供者名称。</param>
-        /// <param name="providerKey">登陆唯一键。</param>
+        /// <param name="loginProvider">登录提供者名称。</param>
+        /// <param name="providerKey">登录唯一键。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>
         /// 返回用户实例对象。
@@ -521,11 +521,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 增加用户登陆失败次数。
+        /// 增加用户登录失败次数。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户登陆失败次数。</returns>
+        /// <returns>返回用户登录失败次数。</returns>
         public virtual Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -538,7 +538,7 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 重置用户登陆失败次数。
+        /// 重置用户登录失败次数。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
@@ -554,11 +554,11 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户登陆失败次数。
+        /// 获取用户登录失败次数。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
-        /// <returns>返回用户登陆失败次数。</returns>
+        /// <returns>返回用户登录失败次数。</returns>
         public virtual Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -570,7 +570,7 @@ namespace Mozlite.Extensions.Security.Stores
         }
 
         /// <summary>
-        /// 获取用户登陆失败达到限定次数后是否锁定。
+        /// 获取用户登录失败达到限定次数后是否锁定。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
         /// <param name="cancellationToken">取消标志。</param>
@@ -749,7 +749,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取用户标识。
         /// </summary>
         /// <param name="user">当前用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="name">名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回用户标识实例。</returns>
@@ -768,10 +768,10 @@ namespace Mozlite.Extensions.Security.Stores
         protected abstract Task RemoveUserTokenAsync(TUserToken token);
 
         /// <summary>
-        /// 设置当前用户的登陆标识。
+        /// 设置当前用户的登录标识。
         /// </summary>
         /// <param name="user">用户实例。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="name">名称。</param>
         /// <param name="value">标识的值。</param>
         /// <param name="cancellationToken">取消标志。</param>
@@ -799,7 +799,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 移除用户标识。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="name">名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         public virtual async Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
@@ -821,7 +821,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// 获取用户标识。
         /// </summary>
         /// <param name="user">用户实例对象。</param>
-        /// <param name="loginProvider">登陆提供者。</param>
+        /// <param name="loginProvider">登录提供者。</param>
         /// <param name="name">标识名称。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户标识值。</returns>
@@ -932,7 +932,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TRole">角色类型。</typeparam>
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserRole">用户角色类型。</typeparam>
-    /// <typeparam name="TUserLogin">用户登陆类型。</typeparam>
+    /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public abstract class IdentityUserStoreBase<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :

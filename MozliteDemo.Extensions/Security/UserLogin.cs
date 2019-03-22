@@ -3,7 +3,7 @@
 namespace MozliteDemo.Extensions.Security
 {
     /// <summary>
-    /// 用户登陆。
+    /// 用户登录。
     /// </summary>
     public class UserLogin : UserLoginBase
     {

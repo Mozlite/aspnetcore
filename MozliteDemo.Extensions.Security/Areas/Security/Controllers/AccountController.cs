@@ -30,13 +30,13 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
         }
 
         /// <summary>
-        /// 退出登陆。
+        /// 退出登录。
         /// </summary>
         [Route("logout")]
         public async Task<IActionResult> Logout(string returnUrl = null)
         {
             await _userManager.SignOutAsync();
-            EventLogger.LogUser("退出了登陆。");
+            EventLogger.LogUser("退出了登录。");
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);
@@ -45,7 +45,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
         }
 
         /// <summary>
-        /// 登陆。
+        /// 登录。
         /// </summary>
         [HttpPost]
         [Route("signin")]
@@ -63,7 +63,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
                 model.UserName = model.UserName.Trim();
                 model.Password = model.Password.Trim();
 
-                var result = await _userManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, async user => await EventLogger.LogAsync(user.UserId, Resources.EventType, "成功登入系统。"));
+                var result = await _userManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, async user => await EventLogger.LogAsync(user.UserId, Resources.EventType, "成功登录系统。"));
                 if (result.Succeeded)
                 {
                     Response.Cookies.Delete("login");
@@ -81,9 +81,9 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, $"账户[{model.UserName}]登陆失败:{ex.Message}");
+                Logger.LogError(ex, $"账户[{model.UserName}]登录失败:{ex.Message}");
             }
-            Logger.LogWarning($"账户[{model.UserName}]登陆失败。");
+            Logger.LogWarning($"账户[{model.UserName}]登录失败。");
             return Error("用户名或密码错误！");
         }
     }

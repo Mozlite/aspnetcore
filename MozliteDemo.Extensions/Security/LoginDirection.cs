@@ -1,7 +1,7 @@
 ﻿namespace MozliteDemo.Extensions.Security
 {
     /// <summary>
-    /// 登入后的转向。
+    /// 登录后的转向。
     /// </summary>
     public enum LoginDirection
     {

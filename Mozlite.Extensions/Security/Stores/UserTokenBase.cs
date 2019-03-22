@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Mozlite.Extensions.Security.Stores
 {
     /// <summary>
-    /// 用户登入提供者的一些信息存储。
+    /// 用户登录提供者的一些信息存储。
     /// </summary>
     [Table("core_Users_Tokens")]
     public abstract class UserTokenBase
@@ -16,7 +16,7 @@ namespace Mozlite.Extensions.Security.Stores
         public int UserId { get; set; }
 
         /// <summary>
-        /// 登入提供者。
+        /// 登录提供者。
         /// </summary>
         [Key]
         [Size(256)]
