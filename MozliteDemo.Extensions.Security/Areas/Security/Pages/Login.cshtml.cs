@@ -59,14 +59,14 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
         {
             if (ModelState.IsValid)
             {
+                var settings = await _settingsManager.GetSettingsAsync<SecuritySettings>();
 #if !DEBUG
-                if (!IsValidateCode("login", Input.Code))
+                if (settings.ValidCode && !IsValidateCode("login", Input.Code))
                 {
                     ModelState.AddModelError("Input.Code", "验证码不正确！");
                     return Page();
                 }
 #endif
-                var settings = await _settingsManager.GetSettingsAsync<SecuritySettings>();
                 returnUrl = returnUrl ?? Url.GetDirection(settings.LoginDirection);
                 Input.UserName = Input.UserName.Trim();
                 Input.Password = Input.Password.Trim();

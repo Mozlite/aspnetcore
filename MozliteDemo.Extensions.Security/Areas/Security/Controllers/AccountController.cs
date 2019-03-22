@@ -54,11 +54,11 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
         {
             try
             {
+                var settings = await _settingsManager.GetSettingsAsync<SecuritySettings>();
 #if !DEBUG
-                if (!IsValidateCode("login", model.Code))
+                if (settings.ValidCode && !IsValidateCode("login", model.Code))
                     return Error("验证码错误！");
 #endif
-                var settings = await _settingsManager.GetSettingsAsync<SecuritySettings>();
                 returnUrl = returnUrl ?? Url.GetDirection(settings.LoginDirection);
                 model.UserName = model.UserName.Trim();
                 model.Password = model.Password.Trim();
