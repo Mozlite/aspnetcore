@@ -41,5 +41,11 @@ namespace MozliteDemo.Extensions.Security
         /// </summary>
         [DisplayName("登录后转向")]
         public LoginDirection LoginDirection { get; set; }
+
+        /// <summary>
+        /// 是否开启验证码。
+        /// </summary>
+        [DisplayName("开启验证码")]
+        public bool ValidCode { get; set; }
     }
 }

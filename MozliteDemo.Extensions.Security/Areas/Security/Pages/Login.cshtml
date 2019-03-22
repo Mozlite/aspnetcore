@@ -26,7 +26,7 @@
                 <label>密码</label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            <div class="form-label-group">
+            <div class="form-label-group" .visible="@securitySettings.ValidCode">
                 <div class="input-group input-append">
                     <input asp-for="Input.Code" class="form-control" placeholder="验证码" />
                     <label>验证码</label>

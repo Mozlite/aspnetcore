@@ -24,14 +24,9 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
         {
             var settings = _settingsManager.GetSettings<SecuritySettings>();
             Differ.Init(settings);
-            settings.Registrable = Input.Registrable;
-            settings.RequiredEmailConfirmed = Input.RequiredEmailConfirmed;
-            settings.RequiredPhoneNumberConfirmed = Input.RequiredPhoneNumberConfirmed;
-            settings.RequiredTwoFactorEnabled = Input.RequiredTwoFactorEnabled;
-            settings.LoginDirection = Input.LoginDirection;
-            if (Differ.IsDifference(settings))
+            if (Differ.IsDifference(Input))
             {
-                _settingsManager.SaveSettings(settings);
+                _settingsManager.SaveSettings(Input);
                 EventLogger.LogUser($"更新了用户配置信息：{Differ}");
             }
 
