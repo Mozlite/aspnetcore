@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -50,5 +51,18 @@ namespace Mozlite.Extensions
         /// </summary>
         [JsonIgnore]
         public IEnumerable<string> ExtendKeys => _extendProperties.Keys;
+
+        /// <summary>
+        /// 从表单中读取扩展属性。
+        /// </summary>
+        /// <param name="form">表单集合。</param>
+        public void Merge(IFormCollection form)
+        {
+            foreach (var key in form.Keys)
+            {
+                if (key.StartsWith("ex:"))
+                    _extendProperties[key] = form[key];
+            }
+        }
     }
 }
