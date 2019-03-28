@@ -93,7 +93,7 @@ namespace Mozlite.Extensions.Settings
                 var parentId = 0;
                 foreach (var name in names)
                 {
-                    setting = db.Find(x => x.Name == name);
+                    setting = db.Find(x => x.Name == name && x.ParentId == parentId);
                     if (setting == null)
                     {
                         setting = new SettingDictionary { ParentId = parentId, Name = name, Value = name };
@@ -110,7 +110,10 @@ namespace Mozlite.Extensions.Settings
 
                 return true;
             }))
+            {
+                Refresh();
                 return setting;
+            }
             return null;
         }
 
@@ -130,7 +133,7 @@ namespace Mozlite.Extensions.Settings
                 var parentId = 0;
                 foreach (var name in names)
                 {
-                    setting = await db.FindAsync(x => x.Name == name);
+                    setting = await db.FindAsync(x => x.Name == name && x.ParentId == parentId);
                     if (setting == null)
                     {
                         setting = new SettingDictionary { ParentId = parentId, Name = name, Value = name };
@@ -147,7 +150,10 @@ namespace Mozlite.Extensions.Settings
 
                 return true;
             }))
+            {
+                Refresh();
                 return setting;
+            }
             return null;
         }
     }

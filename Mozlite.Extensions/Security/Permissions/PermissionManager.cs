@@ -69,34 +69,10 @@ namespace Mozlite.Extensions.Security.Permissions
             }
             return permissions.Values;
         }
-
-        private void EnsureCategories(IEnumerable<Permission> permissions)
-        {
-            var providerCategories = permissions.Select(x => x.Category).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-            var categoryManager =
-                _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<ICategoryManager>();
-            var categories = categoryManager.Fetch().ToList();
-            foreach (var category in categories)
-            {
-                if (providerCategories.Contains(category.Name))
-                    continue;
-                categoryManager.Delete(x => x.Name == category.Name);
-                DbContext.Delete(x => x.Category == category.Name);
-            }
-            categories = categoryManager.Fetch().ToList();
-            foreach (var providerCategory in providerCategories)
-            {
-                if (categories.Any(x => x.Name == providerCategory))
-                    continue;
-                var category = new Category { Name = providerCategory, Text = providerCategory };
-                categoryManager.Save(category);
-            }
-        }
-
+        
         private void Init()
         {
             var permissions = LoadProviderPermissions().ToList();
-            EnsureCategories(permissions);
             foreach (var permission in permissions)
             {
                 var dbPermission = DbContext.Find(x => x.Category == permission.Category && x.Name == permission.Name);
