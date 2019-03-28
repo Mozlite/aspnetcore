@@ -41,7 +41,7 @@
                         <a .visible="@(i != count)" title="下移" js-action="post" asp-page-handler="MoveDown" asp-route-id="@role.RoleId"><i class="fa fa-arrow-down"></i> 下移</a>
                         <a title="编辑" js-action="modal" asp-page="/admin/roles/edit" asp-route-id="@role.RoleId"><i class="fa fa-pencil"></i> 编辑</a>
                         <a title="权限" asp-page="/admin/roles/permission" asp-route-id="@role.RoleId"><i class="fa fa-share-alt"></i> 权限</a>
-                        <a .visible="!role.IsSystem" js-confirm="你确定要删除“@role.Name”吗？" title="删除" js-action="post" asp-page-handler="Delete" asp-route-id="@role.RoleId"><i class="fa fa-trash"></i> 删除</a>
+                        <a .visible="@(!role.IsSystem && role.RoleLevel < Model.Role.RoleLevel)" js-confirm="你确定要删除“@role.Name”吗？" title="删除" js-action="post" asp-page-handler="Delete" asp-route-id="@role.RoleId"><i class="fa fa-trash"></i> 删除</a>
                     </td>
                 </tr>
             }

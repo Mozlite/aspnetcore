@@ -24,7 +24,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin.Roles
 
         public void OnGet()
         {
-            Roles = _roleManager.Load().Where(x => x.RoleLevel < Role.RoleLevel).OrderByDescending(x => x.RoleLevel).ToList();
+            Roles = _roleManager.Load().Where(x => x.RoleLevel <= Role.RoleLevel).OrderByDescending(x => x.RoleLevel).ToList();
         }
 
         public async Task<IActionResult> OnPostMoveUpAsync(int id)

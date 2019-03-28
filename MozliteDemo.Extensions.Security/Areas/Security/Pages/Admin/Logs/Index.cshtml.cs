@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Security.Permissions;
 
@@ -31,6 +32,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin.Logs
 
         public void OnGet()
         {
+            Model.RoleLevel = Role.RoleLevel;
             Model = _eventManager.Load(Model);
         }
     }

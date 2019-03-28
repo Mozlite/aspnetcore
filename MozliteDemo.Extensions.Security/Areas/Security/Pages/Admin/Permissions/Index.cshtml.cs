@@ -13,23 +13,20 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin.Permissions
     public class IndexModel : ModelBase
     {
         private readonly IPermissionManager _permissionManager;
-        private readonly ICategoryManager _categoryManager;
-
-        public IndexModel(IPermissionManager permissionManager, ICategoryManager categoryManager)
+        public IndexModel(IPermissionManager permissionManager)
         {
             _permissionManager = permissionManager;
-            _categoryManager = categoryManager;
         }
 
         public IDictionary<string, List<Permission>> Permissions { get; private set; }
-
-        public IEnumerable<Category> Categories { get; private set; }
-
+        
         public async Task OnGetAsync()
         {
             var permissions = await _permissionManager.LoadPermissionsAsync();
-            Permissions = permissions.GroupBy(x => x.Category).ToDictionary(x => x.Key, x => x.ToList());
-            Categories = await _categoryManager.FetchAsync(x => !x.Disabled);
+            Permissions = permissions
+                .Where(x => _permissionManager.IsAuthorized(x.Key))
+                .GroupBy(x => x.Category)
+                .ToDictionary(x => x.Key, x => x.ToList());
         }
 
         public async Task<IActionResult> OnPostMoveUpAsync(int id, string category)

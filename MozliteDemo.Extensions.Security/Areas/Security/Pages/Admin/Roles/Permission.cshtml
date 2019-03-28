@@ -24,7 +24,7 @@
                                             <b>@permission.Text</b>
                                             <div class="text-secondary">@permission.Description</div>
                                         </td>
-                                        <td class="text-middle"><moz:permission-radioboxlist class="row" iclass="col-4" disabled="Model.Current.RoleLevel == int.MaxValue" roleid="Model.Current.RoleId" permissionid="permission.Id"></moz:permission-radioboxlist></td>
+                                        <td class="text-middle"><moz:permission-radioboxlist class="row" iclass="col-4" disabled="Model.Current.RoleLevel >= Model.Role.RoleLevel" roleid="Model.Current.RoleId" permissionid="permission.Id"></moz:permission-radioboxlist></td>
                                     </tr>
                                 }
                             </tbody>
@@ -33,7 +33,7 @@
                     current = false;
                 }
             </div>
-            <div .visible="Model.Current.RoleLevel < int.MaxValue" class="mb-3">
+            <div .visible="Model.Current.RoleLevel < Model.Role.RoleLevel" class="mb-3">
                 <button type="submit" js-submit="true" class="btn btn-primary">提交</button>
             </div>
         </div>
@@ -42,10 +42,10 @@
 
 @section summary{
     <ul class="nav nav-tabs" role="tablist">
-        @foreach (var category in Model.Categories)
+        @foreach (var category in Model.Permissions.Keys)
         {
             <li class="nav-item" .class-active="!current">
-                <a .class-active="!current" class="nav-link" id="@(category.Name)-tab" data-toggle="tab" href="#@(category.Name)" role="tab" aria-controls="home" aria-selected="true">@category.Text</a>
+                <a .class-active="!current" class="nav-link" id="@(category)-tab" data-toggle="tab" href="#@(category)" role="tab" aria-controls="home" aria-selected="true">@Model.GetDictionaryValue($"permissions.{category}")</a>
             </li>
             current = true;
         }

@@ -37,14 +37,11 @@
 </div>
 
 @section summary{
-    <div class="title-right">
-        <a title="权限配置" asp-page="./Category" class="btn btn-outline-secondary border-0"><i class="fa fa-cog"></i></a>
-    </div>
     <ul class="nav nav-tabs" role="tablist">
-        @foreach (var category in Model.Categories)
+        @foreach (var category in Model.Permissions.Keys)
         {
             <li class="nav-item" .class-active="!current">
-                <a .class-active="!current" class="nav-link" id="@(category.Name)-tab" data-toggle="tab" href="#@(category.Name)" role="tab">@category.Text</a>
+                <a .class-active="!current" class="nav-link" id="@(category)-tab" data-toggle="tab" href="#@(category)" role="tab">@Model.GetDictionaryValue($"permissions.{category}")</a>
             </li>
             current = true;
         }
