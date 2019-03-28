@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Settings;
+using Mozlite.Extensions.Storages;
+using System.Threading.Tasks;
 
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
 {
@@ -31,6 +34,13 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
             }
 
             return RedirectToSuccessPage("你已经成功更新了配置！");
+        }
+
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile file)
+        {
+            var mediaDirectory = GetRequiredService<IMediaDirectory>();
+            var result = await mediaDirectory.UploadAsync(file, SecuritySettings.ExtensionName);
+            return Json(result);
         }
     }
 }

@@ -19,7 +19,6 @@
                 <button type="button" class="btn btn-secondary"><i class="fa fa-upload"></i></button>
             </div>
         </div>
-        <input js-uploader="@Url.Page("./Settings", "Upload")" type="file" class="hide" />
     </div>
     <div class="form-group">
         <label>描述</label>
@@ -37,15 +36,16 @@
     <div class="form-group">
         <button type="submit" class="btn btn-outline-secondary">提交</button>
     </div>
+    <input js-uploader="@Url.Page("./Settings", "Upload")" type="file" class="hide" />
 </form>
 
-@section footer{ 
+@section footer{
     <script type="text/javascript">
         Mozlite.queue(context => {
             $('[data-toggle=uploader]', context).exec(current => {
                 current.on('uploaded',
-                    function(e, url) {
-                        current.parent().find('#Input_LogoUrl').val(url);
+                    function (e, url) {
+                        current.parent().find('input').val(url);
                     });
             });
         });

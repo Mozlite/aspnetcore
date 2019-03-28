@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Messages.Notifications;
-using Mozlite.Extensions.Security.Permissions;
 using System.Threading.Tasks;
-using Mozlite.Extensions;
 
 namespace Mozlite.Mvc.RazorUI.Areas.Core.Controllers
 {
     /// <summary>
     /// 通知控制器。
     /// </summary>
-    [PermissionAuthorize(Permissions.Notifications)]
+    [Authorize]
     public class NotifierController : ControllerBase
     {
         private readonly INotificationManager _notificationManager;

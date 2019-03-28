@@ -6,36 +6,98 @@
 }
 
 <form method="post">
-    <div class="form-group">
-        <moz:checkbox for="Input.Registrable">
-            <label asp-for="Input.Registrable"></label>
-        </moz:checkbox>
-    </div>
-    <div class="form-group">
-        <moz:checkbox for="Input.RequiredEmailConfirmed">
-            <label asp-for="Input.RequiredEmailConfirmed"></label>
-        </moz:checkbox>
-    </div>
-    <div class="form-group">
-        <moz:checkbox for="Input.RequiredPhoneNumberConfirmed">
-            <label asp-for="Input.RequiredPhoneNumberConfirmed"></label>
-        </moz:checkbox>
-    </div>
-    <div class="form-group">
-        <moz:checkbox for="Input.RequiredTwoFactorEnabled">
-            <label asp-for="Input.RequiredTwoFactorEnabled"></label>
-        </moz:checkbox>
-    </div>
-    <div class="form-group">
-        <moz:checkbox for="Input.ValidCode">
-            <label asp-for="Input.ValidCode"></label>
-        </moz:checkbox>
-    </div>
-    <div class="form-group">
-        <label asp-for="Input.LoginDirection"></label>
-        <moz:enum-dropdownlist for="Input.LoginDirection" class="form-control max-250"></moz:enum-dropdownlist>
-    </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <td class="border-right-0">
+                <b>用户注册</b>
+                <div class="text-secondary">是否开放用户注册功能</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <moz:checkbox for="Input.Registrable"> </moz:checkbox>
+            </td>
+        </tr>
+        <tr>
+            <td class="border-right-0">
+                <b>邮件激活</b>
+                <div class="text-secondary">注册成功后，是否需要通过邮件才能激活账号</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <moz:checkbox for="Input.RequiredEmailConfirmed"> </moz:checkbox>
+            </td>
+        </tr>
+        <tr>
+            <td class="border-right-0">
+                <b>短信激活</b>
+                <div class="text-secondary">注册成功后，是否需要通过短信才能激活账号</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <moz:checkbox for="Input.RequiredPhoneNumberConfirmed"> </moz:checkbox>
+            </td>
+        </tr>
+        <tr>
+            <td class="border-right-0">
+                <b>验证码登录</b>
+                <div class="text-secondary">在登录页面是否开启验证码</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <moz:checkbox for="Input.ValidCode"> </moz:checkbox>
+            </td>
+        </tr>
+        <tr>
+            <td class="border-right-0">
+                <b>二次登录验证</b>
+                <div class="text-secondary">用户密码登录成功后，是否需要进行短信验证</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <moz:checkbox for="Input.RequiredTwoFactorEnabled"> </moz:checkbox>
+            </td>
+        </tr>
+        <tr>
+            <td class="border-right-0">
+                <b>登录转向类型</b>
+                <div class="text-secondary">用户登录成功后，默认转向的页面</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <moz:enum-radioboxlist class="row" iclass="col-4" for="Input.LoginDirection"></moz:enum-radioboxlist>
+            </td>
+        </tr>
+        <tr>
+            <td class="border-right-0">
+                <b>登录页面背景图片</b>
+                <div class="text-secondary">用于替换登录页面的背景图片</div>
+            </td>
+            <td class="align-middle text-right border-left-0">
+                <input type="hidden" asp-for="Input.LoginBg" />
+                <img class="login-bg" title="点击上传" data-toggle="uploader" src="@Model.Input.LoginBg" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
     <div class="form-group">
         <button type="submit" class="btn btn-outline-secondary">提交</button>
     </div>
+    <input js-uploader="@Url.Page("./Settings", "Upload")" type="file" class="hide" />
 </form>
+
+@section header
+{
+    <style>
+        img.login-bg {
+            height: 38px; cursor: pointer;
+        }
+    </style>
+}
+
+@section footer{
+    <script type="text/javascript">
+        Mozlite.queue(context => {
+            $('[data-toggle=uploader]', context).exec(current => {
+                current.on('uploaded',
+                    function (e, url) {
+                        current.attr('src', url).parent().find('input').val(url);
+                    });
+            });
+        });
+    </script>
+}

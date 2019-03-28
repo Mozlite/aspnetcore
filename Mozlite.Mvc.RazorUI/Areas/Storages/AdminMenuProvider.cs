@@ -20,7 +20,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Storages
         public override void Init(MenuItem root)
         {
             root.AddMenu("sys", menu => menu
-                .AddMenu("storages", it => it.Texted("文件管理").Page("/Admin/Index", area: AreaName).Allow(Permissions.Notifications))
+                .AddMenu("storages", it => it.Texted("文件管理").Page("/Admin/Index", area: AreaName).Allow(Permissions.Storages))
             );
         }
     }

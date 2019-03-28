@@ -63,4 +63,10 @@
 
 @section header{
     <link href="~/security/css/login.css" rel="stylesheet" />
+    @if (!string.IsNullOrEmpty(securitySettings.LoginBg))
+    {
+        <style>
+            body{ background-image: url('@securitySettings.LoginBg');}
+        </style>
+    }
 }

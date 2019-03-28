@@ -47,5 +47,11 @@ namespace MozliteDemo.Extensions.Security
         /// </summary>
         [DisplayName("开启验证码")]
         public bool ValidCode { get; set; }
+
+        /// <summary>
+        /// 登录页面背景图片。
+        /// </summary>
+        [DisplayName("登录页面背景图片")]
+        public string LoginBg { get; set; } = "/security/images/login.jpg";
     }
 }

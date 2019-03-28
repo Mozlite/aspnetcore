@@ -69,7 +69,7 @@ namespace Mozlite.Extensions.Security.Permissions
             }
             return permissions.Values;
         }
-        
+
         private void Init()
         {
             var permissions = LoadProviderPermissions().ToList();
@@ -82,8 +82,16 @@ namespace Mozlite.Extensions.Security.Permissions
                     DbContext.Create(permission);
                 }
                 else
+                {
                     DbContext.Update(x => x.Id == dbPermission.Id, new { permission.Text, permission.Description });
+                    permission.Id = dbPermission.Id;
+                }
             }
+
+            var permissionIds = permissions.Select(x => x.Id).ToList();
+            var dbs = DbContext.Fetch().Where(x => permissionIds.All(i => i != x.Id)).Select(x=>x.Id).ToList();
+            if (dbs.Count > 0)
+                DbContext.Delete(x => x.Id.Included(dbs));
             RefreshOwners();
         }
 

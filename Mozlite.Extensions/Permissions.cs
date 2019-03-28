@@ -17,7 +17,6 @@ namespace Mozlite.Extensions
             Add("taskinterval", "配置定时模式", "允许配置后台服务定时模式相关操作!");
             Add("email", "邮件管理", "允许管理邮件相关操作!");
             Add("emailsettings", "邮件配置", "允许管理邮件配置相关操作!");
-            Add("notification", "通知管理", "允许管理通知相关操作!");
             Add("storages", "文件管理", "允许管理文件存储相关操作!");
         }
 
@@ -45,11 +44,6 @@ namespace Mozlite.Extensions
         /// 邮件配置管理。
         /// </summary>
         public const string EmailSettings = "core.emailsettings";
-
-        /// <summary>
-        /// 通知管理。
-        /// </summary>
-        public const string Notifications = "core.notification";
 
         /// <summary>
         /// 文件管理。
