@@ -74,6 +74,13 @@ namespace Mozlite.Extensions.Storages
         Task<MediaFile> FindAsync(Guid id);
 
         /// <summary>
+        /// 通过媒体文件名称获取媒体文件实例。
+        /// </summary>
+        /// <param name="fileName">媒体文件名称，包含GUID的文件名。</param>
+        /// <returns>返回媒体文件实例。</returns>
+        Task<MediaFile> FindAsync(string fileName);
+
+        /// <summary>
         /// 通过扩展名称和目标Id。
         /// </summary>
         /// <param name="extensionName">扩展名称。</param>

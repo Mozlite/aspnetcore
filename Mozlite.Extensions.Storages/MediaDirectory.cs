@@ -337,5 +337,18 @@ namespace Mozlite.Extensions.Storages
                 await _sfdb.DeleteAsync(file.FileId);
             }
         }
+
+        /// <summary>
+        /// 通过媒体文件名称获取媒体文件实例。
+        /// </summary>
+        /// <param name="fileName">媒体文件名称，包含GUID的文件名。</param>
+        /// <returns>返回媒体文件实例。</returns>
+        public async Task<MediaFile> FindAsync(string fileName)
+        {
+            fileName = Path.GetFileNameWithoutExtension(fileName);
+            if (Guid.TryParse(fileName, out var id))
+                return await FindAsync(id);
+            throw new Exception(Resources.FileNameIsNotGuidFormat);
+        }
     }
 }
