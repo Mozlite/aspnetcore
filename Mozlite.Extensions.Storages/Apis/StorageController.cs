@@ -8,6 +8,7 @@ namespace Mozlite.Extensions.Storages.Apis
     /// <summary>
     /// 存储控制器。
     /// </summary>
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class StorageController : Controller
     {
         private readonly IMediaDirectory _mediaFileProvider;

@@ -86,13 +86,13 @@ namespace Mozlite.Mvc.Apis
         /// <summary>
         /// 当前程序的版本。
         /// </summary>
-        public Version Version => _version ?? (_version = Cores.Version);
+        protected Version Version => _version ?? (_version = Cores.Version);
 
         private ILocalizer _localizer;
         /// <summary>
         /// 本地化接口。
         /// </summary>
-        public ILocalizer Localizer => _localizer ?? (_localizer = GetRequiredService<ILocalizer>());
+        protected ILocalizer Localizer => _localizer ?? (_localizer = GetRequiredService<ILocalizer>());
 
         private ILogger _logger;
         /// <summary>
@@ -191,7 +191,7 @@ namespace Mozlite.Mvc.Apis
         /// </summary>
         /// <param name="path">标识。</param>
         /// <returns>返回字典值。</returns>
-        public string GetDictionaryValue(string path) =>
+        protected string GetDictionaryValue(string path) =>
             (_settingDictionaryManager ?? (_settingDictionaryManager = GetRequiredService<ISettingDictionaryManager>()))
             .GetOrAddSettings(path);
     }
