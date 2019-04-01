@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Mozlite.Extensions\Mozlite.Extensions.csproj" />
     <ProjectReference Include="..\Mozlite.Mvc.RazorUI\Mozlite.Mvc.RazorUI.csproj" />
     <ProjectReference Include="..\Mozlite.Mvc\Mozlite.Mvc.csproj" />
+    <ProjectReference Include="..\MozliteDemo.Extensions.ProjectManager\MozliteDemo.Extensions.ProjectManager.csproj" />
     <ProjectReference Include="..\MozliteDemo.Extensions.Security\MozliteDemo.Extensions.Security.csproj" />
     <ProjectReference Include="..\MozliteDemo.Extensions\MozliteDemo.Extensions.csproj" />
   </ItemGroup>

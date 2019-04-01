@@ -1,5 +1,5 @@
 {
-  "name": "apollo",
+  "name": "mozlite",
   "version": "1.0.0",
   "description": "UI for Mozlite Server.",
   "scripts": {
@@ -30,7 +30,7 @@
     "bootstrap": "^4.2.1",
     "d3": "^5.7.0",
     "jquery": "^3.3.1",
-    "mozlite": "0.0.33",
+    "mozlite": "0.0.35",
     "popper.js": "^1.14.4",
     "select2": "^4.0.6-rc.1"
   }

@@ -991,7 +991,7 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
 
-bootstrap@^4.0.0, bootstrap@^4.2.1:
+bootstrap@^4.2.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
   integrity sha512-rXqOmH1VilAt2DyPzluTi2blhk17bO7ef+zLLPlWvG494pDxcM234pJ8wTc/6R40UWizAIIMgxjvxZg5kmsbag==
@@ -3646,12 +3646,12 @@ move-concurrently@^1.0.1:
     rimraf "^2.5.4"
     run-queue "^1.0.3"
 
-mozlite@0.0.33:
-  version "0.0.33"
-  resolved "https://registry.yarnpkg.com/mozlite/-/mozlite-0.0.33.tgz#9a0bd1b3fb1d87d6b3ba851633f81a06be4e4f60"
-  integrity sha512-d8OwMwM4GH40/dazQLFK8aXZiRowJkF7z+A31a/Fhhln1YSNxXnA/mzpQuHM5mGR2R/cBvl+vysFNXIuhgHSXw==
+mozlite@0.0.35:
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/mozlite/-/mozlite-0.0.35.tgz#f34168b694f896902064040e3db0ede9b3f6c4ec"
+  integrity sha512-+0X1ZGhAB7ybFVrK5DP6TrzQi7Zqn1d0S7MJkcDQz3e4D5XEz/Cg3NYcuP7sE4GFqNmwZ0QyuiLCOf5R8e+Q4w==
   dependencies:
-    bootstrap "^4.0.0"
+    bootstrap "^4.2.1"
     font-awesome "^4.7.0"
     jquery "^3.3.1"
     popper.js "^1.14.4"
