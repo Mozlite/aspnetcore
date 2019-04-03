@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Storages.Pages.Admin
         {
             public Guid Id { get; set; }
 
-            [Required(ErrorMessage = "ÎÄ¼şÃû³Æ²»ÄÜÎª¿Õ£¡")]
+            [Required(ErrorMessage = "æ–‡ä»¶åç§°ä¸èƒ½ä¸ºç©ºï¼")]
             public string Name { get; set; }
 
             public string Extension { get; set; }
@@ -48,8 +48,8 @@ namespace Mozlite.Mvc.RazorUI.Areas.Storages.Pages.Admin
                 var result = await _mediaDirectory.RenameAsync(Input.Id, Input.Name);
                 if (result)
                 {
-                    await EventLogger.LogCoreAsync("½«ÎÄ¼ş ¡°{0}{2}¡± ĞŞ¸ÄÎª ¡°{1}{2}¡±¡£", file.Name, Input.Name, Input.Extension);
-                    return Success("ÄãÒÑ¾­³É¹¦ĞŞ¸ÄÁËÎÄ¼ş£¡");
+                    await EventLogger.LogCoreAsync("å°†æ–‡ä»¶ â€œ{0}{2}â€ ä¿®æ”¹ä¸º â€œ{1}{2}â€ã€‚", file.Name, Input.Name, Input.Extension);
+                    return Success("ä½ å·²ç»æˆåŠŸä¿®æ”¹äº†æ–‡ä»¶ï¼");
                 }
             }
 

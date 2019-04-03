@@ -1,4 +1,4 @@
-export var name = "d3";
+﻿export var name = "d3";
 export var version = "5.9.1";
 export var description = "Data-Driven Documents";
 export var keywords = ["dom","visualization","svg","animation","canvas"];

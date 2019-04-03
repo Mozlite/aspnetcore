@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+ï»¿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security.Events;
@@ -31,17 +31,17 @@ namespace MozliteDemo.Pages.Admin
             if (string.IsNullOrEmpty(Input.SiteName))
             {
                 valid = false;
-                ModelState.AddModelError("Input.SiteName", "ÍøÕ¾Ãû³Æ²»ÄÜÎª¿Õ£¡");
+                ModelState.AddModelError("Input.SiteName", "ç½‘ç«™åç§°ä¸èƒ½ä¸ºç©ºï¼");
             }
 
             if (valid)
             {
                 if (_settingsManager.SaveSettings(Input))
                 {
-                    EventLogger.LogCore("¸üĞÂÁËÍøÕ¾ÅäÖÃĞÅÏ¢£¡");
-                    return RedirectToSuccessPage("ÄãÒÑ¾­³É¹¦¸üĞÂÁËÍøÕ¾ÅäÖÃĞÅÏ¢£¡");
+                    EventLogger.LogCore("æ›´æ–°äº†ç½‘ç«™é…ç½®ä¿¡æ¯ï¼");
+                    return RedirectToSuccessPage("ä½ å·²ç»æˆåŠŸæ›´æ–°äº†ç½‘ç«™é…ç½®ä¿¡æ¯ï¼");
                 }
-                return ErrorPage("¸üĞÂÍøÕ¾ĞÅÏ¢ÅäÖÃ´íÎó£¡");
+                return ErrorPage("æ›´æ–°ç½‘ç«™ä¿¡æ¯é…ç½®é”™è¯¯ï¼");
             }
 
             return Page();

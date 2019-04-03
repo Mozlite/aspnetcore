@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Security.Permissions;
@@ -6,7 +6,7 @@ using Mozlite.Extensions.Security.Permissions;
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin.Logs
 {
     /// <summary>
-    /// ÈÕÖ¾·ÖÀà¡£
+    /// æ—¥å¿—åˆ†ç±»ã€‚
     /// </summary>
     [PermissionAuthorize(Mozlite.Extensions.Permissions.Administrator)]
     public class CategoryModel : ModelBase

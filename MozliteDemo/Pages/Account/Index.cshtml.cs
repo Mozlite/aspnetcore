@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using MozliteDemo.Extensions;
 
 namespace MozliteDemo.Pages.Account
