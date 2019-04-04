@@ -1,4 +1,5 @@
 ﻿using Mozlite.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MozliteDemo.Extensions.ProjectManager.Projects
@@ -31,5 +32,15 @@ namespace MozliteDemo.Extensions.ProjectManager.Projects
         /// 项目负责人。
         /// </summary>
         public int UserId { get; set; }
+
+        /// <summary>
+        /// 激活。
+        /// </summary>
+        public bool Enabled { get; set; } = true;
+
+        /// <summary>
+        /// 添加时间。
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
     }
 }

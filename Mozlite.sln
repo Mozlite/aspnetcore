@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mozlite.Core", "Mozlite.Core\Mozlite.Core.csproj", "{6A9793E7-1789-42C9-AE75-EA2D6F6D06C4}"
 EndProject
@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozliteDemo.Extensions", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozliteDemo.Extensions.Security", "MozliteDemo.Extensions.Security\MozliteDemo.Extensions.Security.csproj", "{D73B1D0D-2E33-496D-B985-2FDB22ADD17D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MozliteDemo.Extensions.ProjectManager", "MozliteDemo.Extensions.ProjectManager\MozliteDemo.Extensions.ProjectManager.csproj", "{25E90B0C-40DD-46CF-A677-52630EBC36D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MozliteDemo.Extensions.ProjectManager", "MozliteDemo.Extensions.ProjectManager\MozliteDemo.Extensions.ProjectManager.csproj", "{25E90B0C-40DD-46CF-A677-52630EBC36D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

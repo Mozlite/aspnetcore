@@ -32,7 +32,7 @@ namespace MozliteDemo.Extensions.ProjectManager.Areas.ProjectManager.TagHelpers
         /// <returns>返回选项列表。</returns>
         protected override IEnumerable<SelectListItem> Init()
         {
-            var projects = _projectManager.Fetch();
+            var projects = _projectManager.Fetch(x => x.Enabled);
             if (UserId > 0)
                 projects = projects.Where(x => x.UserId == UserId);
             foreach (var project in projects)

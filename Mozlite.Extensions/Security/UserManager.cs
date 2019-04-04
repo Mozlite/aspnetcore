@@ -7,7 +7,9 @@ using Mozlite.Extensions.Security.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozlite.Extensions.Security
 {
@@ -44,15 +46,7 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 登录管理实例。
         /// </summary>
-        public SignInManager<TUser> SignInManager
-        {
-            get
-            {
-                if (_signInManager == null)
-                    _signInManager = _serviceProvider.GetRequiredService<SignInManager<TUser>>();
-                return _signInManager;
-            }
-        }
+        public SignInManager<TUser> SignInManager => _signInManager ?? (_signInManager = _serviceProvider.GetRequiredService<SignInManager<TUser>>());
 
         private readonly IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> _store;
         /// <summary>
@@ -61,19 +55,12 @@ namespace Mozlite.Extensions.Security
         protected IUserDbContext<TUser, TUserClaim, TUserLogin, TUserToken> DbContext { get; }
 
         private HttpContext _httpContext;
-
         /// <summary>
         /// 当前HTTP上下文。
         /// </summary>
-        protected HttpContext HttpContext
-        {
-            get
-            {
-                if (_httpContext == null)
-                    _httpContext = _serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
-                return _httpContext;
-            }
-        }
+        protected HttpContext HttpContext =>
+            _httpContext ??
+            (_httpContext = _serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext);
 
         /// <summary>
         /// 新建用户实例（不会对密码进行加密）。
@@ -461,6 +448,66 @@ namespace Mozlite.Extensions.Security
         public virtual Task<bool> VerifyTwoFactorTokenAsync(TUser user, string verificationCode)
         {
             return VerifyTwoFactorTokenAsync(user, Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+        }
+
+        /// <summary>
+        /// 加载所有用户。
+        /// </summary>
+        /// <param name="expression">用户条件表达式。</param>
+        /// <returns>返回用户列表。</returns>
+        public virtual IEnumerable<TUser> LoadUsers(Expression<Predicate<TUser>> expression = null)
+        {
+            return _store.UserContext.Fetch(expression);
+        }
+
+        /// <summary>
+        /// 加载所有用户。
+        /// </summary>
+        /// <param name="expression">用户条件表达式。</param>
+        /// <returns>返回用户列表。</returns>
+        public virtual Task<IEnumerable<TUser>> LoadUsersAsync(Expression<Predicate<TUser>> expression = null)
+        {
+            return _store.UserContext.FetchAsync(expression);
+        }
+
+        protected readonly Type CacheKey = typeof(CachedUser);
+
+        /// <summary>
+        /// 获取缓存用户实例。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回缓存用户实例对象。</returns>
+        public virtual CachedUser GetUser(int id)
+        {
+            var cachedUsers = GetRequiredService<IMemoryCache>().GetOrCreate(CacheKey, ctx =>
+            {
+                ctx.SetDefaultAbsoluteExpiration();
+                return _store.UserContext.AsQueryable()
+                    .WithNolock()
+                    .AsEnumerable(reader => CacheKey.GetEntityType().Read<CachedUser>(reader))
+                    .ToDictionary(x => x.UserId);
+            });
+            cachedUsers.TryGetValue(id, out var cachedUser);
+            return cachedUser;
+        }
+
+        /// <summary>
+        /// 获取缓存用户实例。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回缓存用户实例对象。</returns>
+        public virtual async Task<CachedUser> GetUserAsync(int id)
+        {
+            var cachedUsers = await GetRequiredService<IMemoryCache>().GetOrCreateAsync(CacheKey, async ctx =>
+           {
+               ctx.SetDefaultAbsoluteExpiration();
+               var users = await _store.UserContext.AsQueryable()
+                   .WithNolock()
+                   .AsEnumerableAsync(reader => CacheKey.GetEntityType().Read<CachedUser>(reader));
+               return users.ToDictionary(x => x.UserId);
+           });
+            cachedUsers.TryGetValue(id, out var cachedUser);
+            return cachedUser;
         }
 
         /// <summary>
