@@ -1,0 +1,14 @@
+﻿@page
+@model EditModel
+@{
+    ViewBag.Title = "项目信息";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id"/>
+    <div class="form-group">
+        <label>用户列表</label>
+        <moz:user-checkboxlist class="row" iclass="col-6" for="Input.UserIds"></moz:user-checkboxlist>
+    </div>
+</form>

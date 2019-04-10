@@ -19,6 +19,7 @@ namespace MozliteDemo.Extensions.ProjectManager.Milestones
         /// <summary>
         /// 创建人。
         /// </summary>
+        [NotUpdated]
         public int UserId { get; set; }
 
         /// <summary>
@@ -51,11 +52,13 @@ namespace MozliteDemo.Extensions.ProjectManager.Milestones
         /// <summary>
         /// 任务数。
         /// </summary>
+        [NotUpdated]
         public int Issues { get; set; }
 
         /// <summary>
         /// 完成数。
         /// </summary>
+        [NotUpdated]
         public int Completed { get; set; }
 
         /// <summary>

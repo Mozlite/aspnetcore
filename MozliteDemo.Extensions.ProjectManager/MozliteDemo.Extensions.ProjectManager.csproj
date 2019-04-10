@@ -26,6 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Areas\ProjectManager\Pages\Admin\Milestones\Edit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\ProjectManager\Pages\Admin\Milestones\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Areas\ProjectManager\Pages\Admin\_ViewStart.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
