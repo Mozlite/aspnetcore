@@ -41,6 +41,7 @@
                     <td class="data-action">
                         <a js-action="modal" title="编辑" asp-page="./edit" asp-route-id="@project.Id"><i class="fa fa-pencil"></i> 编辑</a>
                         <a js-action="post" js-confirm="你确定要删除项目“@project.Name”?" asp-route-id="@project.Id" title="删除" asp-page-handler="Delete"><i class="fa fa-trash"></i> 删除</a>
+                        <a title="里程碑" asp-page="../Milestones/Index" asp-route-id="@project.Id"><i class="fa fa-hashtag"></i> 里程碑</a>
                     </td>
                 </tr>
             }

@@ -1,27 +1,33 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite;
 using MozliteDemo.Extensions.ProjectManager.Milestones;
+using MozliteDemo.Extensions.ProjectManager.Projects;
 
 namespace MozliteDemo.Extensions.ProjectManager.Areas.ProjectManager.Pages.Admin.Milestones
 {
     public class IndexModel : ModelBase
     {
         private readonly IMilestoneManager _milestoneManager;
+        private readonly IProjectManager _projectManager;
 
-        public IndexModel(IMilestoneManager milestoneManager)
+        public IndexModel(IMilestoneManager milestoneManager, IProjectManager projectManager)
         {
             _milestoneManager = milestoneManager;
+            _projectManager = projectManager;
         }
 
         public IEnumerable<Milestone> Milestones { get; private set; }
 
-        public void OnGet(int projectid)
+        public Project Project { get; private set; }
+
+        public IActionResult OnGet(int id)
         {
-            Milestones = _milestoneManager.Fetch();
-            if (projectid > 0)
-                Milestones = Milestones.Where(x => x.ProjectId == projectid).ToList();
+            Project = _projectManager.Find(id);
+            if (Project == null)
+                return NotFound();
+            Milestones = _milestoneManager.Fetch(x => x.ProjectId == id);
+            return Page();
         }
 
         public IActionResult OnPost(int[] ids)

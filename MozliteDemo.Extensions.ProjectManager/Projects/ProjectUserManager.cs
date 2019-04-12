@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Mozlite;
 using Mozlite.Data;
 using Mozlite.Extensions;
+using Mozlite.Extensions.Security;
 using MozliteDemo.Extensions.Security;
 
 namespace MozliteDemo.Extensions.ProjectManager.Projects
@@ -45,6 +46,45 @@ namespace MozliteDemo.Extensions.ProjectManager.Projects
              });
             if (result) Refresh();
             return result;
+        }
+
+        /// <summary>
+        /// 根据条件获取列表。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <returns>返回模型实例列表。</returns>
+        public override IEnumerable<ProjectUser> Fetch(Expression<Predicate<ProjectUser>> expression = null)
+        {
+            var models = Cache.GetOrCreate(CacheKey, ctx =>
+            {
+                ctx.SetDefaultAbsoluteExpiration();
+                return Context.AsQueryable()
+                    .WithNolock()
+                    .Select()
+                    .JoinSelect<ProjectUser, User>((p, u) => p.Id == u.UserId)
+                    .AsEnumerable();
+            });
+            return models.Filter(expression);
+        }
+
+        /// <summary>
+        /// 根据条件获取列表。
+        /// </summary>
+        /// <param name="expression">条件表达式。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回模型实例列表。</returns>
+        public override async Task<IEnumerable<ProjectUser>> FetchAsync(Expression<Predicate<ProjectUser>> expression = null, CancellationToken cancellationToken = default)
+        {
+            var models = await Cache.GetOrCreateAsync(CacheKey, ctx =>
+            {
+                ctx.SetDefaultAbsoluteExpiration();
+                return Context.AsQueryable()
+                    .WithNolock()
+                    .Select()
+                    .JoinSelect<ProjectUser, User>((p, u) => p.Id == u.UserId)
+                    .AsEnumerableAsync(cancellationToken);
+            });
+            return models.Filter(expression);
         }
     }
 }

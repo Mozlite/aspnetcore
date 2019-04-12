@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace MozliteDemo.Pages
+﻿namespace MozliteDemo.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : Mozlite.Mvc.ModelBase
     {
         public void OnGet()
         {

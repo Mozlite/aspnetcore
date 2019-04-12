@@ -1,7 +1,7 @@
 ﻿using Mozlite.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MozliteDemo.Extensions.Security;
+using Mozlite.Extensions.Security;
 
 namespace MozliteDemo.Extensions.ProjectManager.Projects
 {

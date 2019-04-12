@@ -1,14 +1,32 @@
 ﻿@page
 @model EditModel
 @{
-    ViewBag.Title = "项目信息";
+    ViewBag.Title = "里程碑";
     Layout = "_Modal";
 }
 
 <form method="post">
-    <input type="hidden" asp-for="Input.Id"/>
+    <input type="hidden" asp-for="Input.Id" />
+    <input type="hidden" asp-for="Input.ProjectId" />
     <div class="form-group">
-        <label>用户列表</label>
-        <moz:user-checkboxlist class="row" iclass="col-6" for="Input.UserIds"></moz:user-checkboxlist>
+        <label>名称</label>
+        <input asp-for="Input.Name" class="form-control" autocomplete="off"/>
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>负责人</label>
+        <moz:project-user-dropdownlist for="Input.Operator" class="form-control"></moz:project-user-dropdownlist>
+    </div>
+    <div class="form-group">
+        <label>时间区间</label>
+        <div class="input-group input-range">
+            <input class="form-control" js-date="datetime" js-date-max="#Input_CompletedDate" type="text" asp-for="Input.StartDate" autocomplete="off" />
+            <label>~</label>
+            <input js-date="datetime" js-date-min="#Input_StartDate" class="form-control" type="text" asp-for="Input.CompletedDate" autocomplete="off" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+        <textarea rows="3" asp-for="Input.Summary" class="form-control"></textarea>
     </div>
 </form>

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using MozliteDemo.Extensions.Security;
 using System.Collections.Generic;
-using System.Linq;
-using Mozlite;
 using Mozlite.Mvc.TagHelpers.Bootstrap;
+using MozliteDemo.Extensions.ProjectManager.Projects;
 
 namespace MozliteDemo.Extensions.ProjectManager.Areas.ProjectManager.TagHelpers
 {
@@ -13,13 +11,11 @@ namespace MozliteDemo.Extensions.ProjectManager.Areas.ProjectManager.TagHelpers
     [HtmlTargetElement("moz:user-radioboxlist")]
     public class UserRadioboxListTagHelper : RadioboxListTagHelper
     {
-        private readonly IUserManager _userManager;
-        private readonly IRoleManager _roleManager;
+        private readonly IProjectUserManager _userManager;
 
-        public UserRadioboxListTagHelper(IUserManager userManager, IRoleManager roleManager)
+        public UserRadioboxListTagHelper(IProjectUserManager userManager)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -28,11 +24,10 @@ namespace MozliteDemo.Extensions.ProjectManager.Areas.ProjectManager.TagHelpers
         /// <param name="items">复选框项目列表实例。</param>
         protected override void Init(IDictionary<string, string> items)
         {
-            var roles = _roleManager.Load().Where(x => !x.IsSystem).Select(x => x.RoleId).ToList();
-            var users = _userManager.LoadUsers(x => x.RoleId.Included(roles));
+            var users = _userManager.Fetch();
             foreach (var user in users)
             {
-                items[user.UserName] = user.UserId.ToString();
+                items[user.UserName] = user.Id.ToString();
             }
         }
     }
