@@ -30,18 +30,34 @@
         void AddFile(string fileName, string path, string title);
 
         /// <summary>
-        /// 添加封面图片。
+        /// 编译成Epub文件，并返回物理路径。
         /// </summary>
-        /// <param name="path">物理路径。</param>
-        /// <param name="extension">图片扩展名。</param>
-        /// <returns>返回封面路径。</returns>
-        string AddCover(string path, string extension = ".png");
+        /// <param name="fileName">生成得文件路径。</param>
+        void Save(string fileName);
 
         /// <summary>
         /// 编译成Epub文件，并返回物理路径。
         /// </summary>
-        /// <param name="overwrite">是否覆盖已有文件。</param>
-        /// <returns>返回当前文件得物理路径。</returns>
-        string Compile(bool overwrite);
+        /// <param name="fileName">生成得文件路径。</param>
+        void Compile(string fileName);
+
+        /// <summary>
+        /// 移除文件。
+        /// </summary>
+        /// <param name="fileName">文件名。</param>
+        void RemoveFile(string fileName);
+
+        /// <summary>
+        /// 添加默认样式文件。
+        /// </summary>
+        void AddDefaultStyle();
+
+        /// <summary>
+        /// 添加默认模板内容。
+        /// </summary>
+        /// <param name="fileName">文件名。</param>
+        /// <param name="content">内容。</param>
+        /// <param name="title">标题。</param>
+        void AddHtml(string fileName, string content, string title);
     }
 }

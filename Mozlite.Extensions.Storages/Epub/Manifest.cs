@@ -11,7 +11,7 @@ namespace Mozlite.Extensions.Storages.Epub
         /// <summary>
         /// 文件Id。
         /// </summary>
-        public string Id { get => _id ?? (_id = Href.Replace("/", ".").Replace("\\", ".").ToLower()); }
+        public string Id => _id ?? (_id = Href.Replace("/", ".").Replace("\\", ".").ToLower());
 
         /// <summary>
         /// 文件相对路径。
@@ -22,7 +22,7 @@ namespace Mozlite.Extensions.Storages.Epub
         /// <summary>
         /// 文件媒体类型。
         /// </summary>
-        public string MediaType { get => _mediaType ?? (_mediaType = GetMediaType(Href)); }
+        public string MediaType => _mediaType ?? (_mediaType = GetMediaType(Href));
 
         /// <summary>
         /// 是否为文件档案。
@@ -34,11 +34,23 @@ namespace Mozlite.Extensions.Storages.Epub
         /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// 是否为封面。
+        /// </summary>
+        public bool IsCover { get; set; }
+
+        /// <summary>
+        /// 是否为目录。
+        /// </summary>
+        public bool IsToc { get; set; }
+
         private string GetMediaType(string fileName)
         {
             var extension = Path.GetExtension(fileName)?.ToLower();
-            if (extension == ".html")
+            if (extension == ".xhtml" || extension == ".html" || extension == ".xml")
                 return "application/xhtml+xml";
+            if (extension == ".ncx")
+                return "application/x-dtbncx+xml";
             return extension.GetContentType();
         }
     }

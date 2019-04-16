@@ -13,16 +13,6 @@ namespace Mozlite.Extensions.Storages.Epub
         public string BookId { get; set; }
 
         /// <summary>
-        /// 封面图片。
-        /// </summary>
-        public string CoverImage { get; set; }
-
-        /// <summary>
-        /// 封面文件。
-        /// </summary>
-        public string CoverFile { get; set; }
-
-        /// <summary>
         /// 都柏林核心元素集。
         /// </summary>
         public DublinCore DC { get; set; } 

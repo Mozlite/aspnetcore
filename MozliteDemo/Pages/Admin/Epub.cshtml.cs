@@ -26,29 +26,35 @@ namespace MozliteDemo.Pages.Admin
         public void OnGet(string id)
         {
             id = id ?? "1f18bd7a-63ca-460e-972f-d81a061f1c99";
-            Input = (EpubFile)_epubManager.Create(id);
+            var epub =_epubManager.Create(id);
+            epub.Compile("test");
+            Input = (EpubFile) epub;
         }
 
         public async Task<IActionResult> OnPostUpload(IFormFile file, string bookid)
         {
             var epub = _epubManager.Create(bookid);
             var info = await _storageDirectory.SaveToTempAsync(file);
-            if (file.FileName.IsPictureFile())
-            {
-                var url = epub.AddCover(info.FullName, Path.GetExtension(file.FileName));
-                info.Delete();
-                return Success(new { url });
-            }
-
-            epub.AddFile(file.FileName, info.FullName);
+            epub.AddFile(info.FullName, Path.GetExtension(file.FileName));
             return Success();
         }
 
         public IActionResult OnPost()
         {
             var epub = _epubManager.Create(Input.BookId);
-            epub.Compile(false);
+            var epubFile = (EpubFile) epub;
+            epubFile.DC = Input.DC;
+            epubFile.Manifest = Input.Manifest;
+            epubFile.Metadata = Input.Metadata;
+            epub.Save("test.epub");
             return SuccessPage("成功生成！");
+        }
+
+        public IActionResult OnPostDelete(string bookid, string file)
+        {
+            var epub = _epubManager.Create(bookid);
+            epub.RemoveFile(file);
+            return Success("移除成功！");
         }
     }
 }

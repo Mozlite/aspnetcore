@@ -1,4 +1,6 @@
-﻿namespace Mozlite.Extensions.Storages.Epub
+﻿using System;
+
+namespace Mozlite.Extensions.Storages.Epub
 {
     /// <summary>
     /// 都柏林核心元素集。
@@ -38,7 +40,7 @@
         /// <summary>
         /// 日期，资源生存周期中的一些事件的相关时间。
         /// </summary>
-        public string Date { get; set; }
+        public string Date { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
         /// <summary>
         /// 类型,资源所属的类别，包括种类、体裁、作品级别等描述性术语。
@@ -58,7 +60,7 @@
         /// <summary>
         /// 语种,描述资源知识内容的语种。
         /// </summary>
-        public string Language { get; set; }
+        public string Language { get; set; } = "zh-cn";
 
         /// <summary>
         /// 来源，对当前资源来源的参照。
