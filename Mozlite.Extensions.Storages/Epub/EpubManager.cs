@@ -3,8 +3,9 @@ using System.IO;
 using System.Xml;
 using System.Linq;
 using System.Text;
-using System.IO.Compression;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Storages.Epub
 {
@@ -47,11 +48,81 @@ namespace Mozlite.Extensions.Storages.Epub
             return new EpubFileEntry(instance, path);
         }
 
+        /// <summary>
+        /// 加载远程路径上得TXT文章。
+        /// </summary>
+        /// <param name="bookId">电子书Id。</param>
+        /// <param name="uri">地址。</param>
+        /// <param name="encoding">字符编码。</param>
+        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n"。</param>
+        /// <returns>返回电子书实例。</returns>
+        public async Task<IEpubFile> LoadUriAsync(string bookId, Uri uri, Encoding encoding = null, Regex title = null)
+        {
+            var file = await _storageDirectory.SaveToTempAsync(uri);
+            return await LoadFileAsync(bookId, file.FullName, encoding, title);
+        }
+
+        private static readonly Regex _regex = new Regex("^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n", RegexOptions.Multiline);
+        /// <summary>
+        /// 加载文章。
+        /// </summary>
+        /// <param name="bookId">电子书Id。</param>
+        /// <param name="content">内容。</param>
+        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n"。</param>
+        /// <returns>返回电子书实例。</returns>
+        public IEpubFile Load(string bookId, string content, Regex title = null)
+        {
+            var epub = Create(bookId);
+            if (string.IsNullOrEmpty(content))
+                return epub;
+            title = title ?? _regex;
+            var chapters = new Dictionary<string, string>();
+            string chapter = null;
+            foreach (Match match in title.Matches(content))
+            {
+                var current = match.Groups[0].Value;
+                var index = content.IndexOf(current);
+                var body = content.Substring(0, index);
+                content = content.Substring(index + current.Length);
+                if (chapter != null)
+                    chapters[chapter] = body;
+                chapter = $"{match.Groups[1].Value.Trim()} {match.Groups[2].Value.Trim()}";
+            }
+            if (chapter != null)
+                chapters[chapter] = content.Trim();
+            var i = 1;
+            foreach (var current in chapters)
+            {
+                content = current.Value.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).Where(x => x.Length > 0).Join("</p><p>");
+                content = $"<p>{content}</p>";
+                epub.AddHtml(i.ToString("D6") + ".xhtml", content, current.Key);
+                i++;
+            }
+
+            return epub;
+        }
+
+        /// <summary>
+        /// 加载文章。
+        /// </summary>
+        /// <param name="bookId">电子书Id。</param>
+        /// <param name="path">文本文件物理路径。</param>
+        /// <param name="encoding">字符编码。</param>
+        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n"。</param>
+        /// <returns>返回电子书实例。</returns>
+        public async Task<IEpubFile> LoadFileAsync(string bookId, string path, Encoding encoding = null, Regex title = null)
+        {
+            if (path.IndexOf(":\\") != 1)
+                path = _storageDirectory.GetTempPath(path);
+            var content = await StorageHelper.ReadTextAsync(path, encoding);
+            return Load(bookId, content, title);
+        }
+
         private class EpubFileEntry : EpubFile, IEpubFile
         {
             public EpubFileEntry(EpubFile file, string directoryName)
             {
-                _directoryName = directoryName;
+                _directoryName = new DirectoryInfo(directoryName).FullName;
                 BookId = file.BookId;
                 DC = file.DC;
                 Metadata = file.Metadata;
@@ -70,7 +141,10 @@ namespace Mozlite.Extensions.Storages.Epub
                 StorageHelper.SaveText(path, text);
             }
 
-            private void Refresh() => StorageHelper.SaveText(Path.Combine(_directoryName, "epub.json"), this.ToJsonString());
+            /// <summary>
+            /// 将实例保存到JSON文件中。
+            /// </summary>
+            public void Save() => StorageHelper.SaveText(Path.Combine(_directoryName, "epub.json"), this.ToJsonString());
 
             private Manifest GetOrCreate(string fileName)
             {
@@ -100,8 +174,8 @@ namespace Mozlite.Extensions.Storages.Epub
                 var manifest = GetOrCreate(fileName);
                 manifest.IsSpine = isSpine;
                 manifest.Title = title;
-                SaveFile($"OEBPS/{fileName}", content);
-                Refresh();
+                SaveFile($"{fileName}", content);
+                Save();
             }
 
             /// <summary>
@@ -140,11 +214,11 @@ namespace Mozlite.Extensions.Storages.Epub
 
             private void Copy(string path, string fileName)
             {
-                var filePath = Path.Combine(_directoryName, "OEBPS", fileName);
+                var filePath = Path.Combine(_directoryName, fileName);
                 var dir = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                 File.Copy(path, filePath, true);
-                Refresh();
+                Save();
             }
 
             /// <summary>
@@ -155,13 +229,15 @@ namespace Mozlite.Extensions.Storages.Epub
             {
                 var doc = parentElement.OwnerDocument;
                 var metadata = doc.CreateElement("metadata");
+                metadata.SetAttribute("xmlns:opf", "http://www.idpf.org/2007/opf");
+                metadata.SetAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
                 parentElement.AppendChild(metadata);
                 foreach (var property in typeof(DublinCore).GetEntityType().GetProperties())
                 {
                     var value = property.Get(DC);
                     if (value != null)
                     {
-                        var item = doc.CreateElement("dc:" + property.Name.ToLower());
+                        var item = doc.CreateElement("dc", property.Name.ToLower(), "http://purl.org/dc/elements/1.1/");
                         item.InnerText = value.ToString();
                         metadata.AppendChild(item);
                     }
@@ -169,9 +245,8 @@ namespace Mozlite.Extensions.Storages.Epub
 
                 //默认首页和图片
                 var coverImage = Manifest.FirstOrDefault(x => x.IsCover && !x.IsSpine);
-                var coverHtml = Manifest.FirstOrDefault(x => x.IsCover && x.IsSpine);
                 if (coverImage != null)
-                    Metadata[coverHtml?.Href ?? "conver.xhtml"] = coverImage.Href;
+                    Metadata["conver"] = coverImage.Href;
                 foreach (var data in Metadata)
                 {
                     var meta = doc.CreateElement("meta");
@@ -187,12 +262,13 @@ namespace Mozlite.Extensions.Storages.Epub
             private void SaveOPF()
             {
                 //指向OPF文件
-                SaveFile("META-INF/container.xml", EpubConstants.Container);
+                SaveFile("META-INF/container.xml", Epubs.Container);
                 //生成OPF文件
-                var filePath = Path.Combine(_directoryName, "OEBPS/content.opf");
+                var filePath = Path.Combine(_directoryName, "content.opf");
                 if (File.Exists(filePath)) File.Delete(filePath);
                 var doc = new XmlDocument();
-                doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                var declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                doc.AppendChild(declaration);
                 var documentElement = doc.CreateElement("package", "http://www.idpf.org/2007/opf");
                 documentElement.SetAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
                 documentElement.SetAttribute("unique-identifier", "urn:uuid:" + BookId);
@@ -224,21 +300,27 @@ namespace Mozlite.Extensions.Storages.Epub
                     spineElement.AppendChild(element);
                 }
                 //导航
-                var coverFile = Manifest.FirstOrDefault(x => x.IsCover && x.IsSpine);
-                if (coverFile != null)
-                {
-                    var guideElement = doc.CreateElement("guide");
-                    documentElement.AppendChild(guideElement);
-                    var cover = doc.CreateElement("reference");
-                    cover.SetAttribute("href", coverFile.Href);
-                    cover.SetAttribute("type", "cover");
-                    cover.SetAttribute("title", "封面");
-                    guideElement.AppendChild(cover);
-                }
+                var guideElement = doc.CreateElement("guide");
+                documentElement.AppendChild(guideElement);
+                //var coverFile = Manifest.FirstOrDefault(x => x.IsCover && x.IsSpine);
+                //CreateReferenceElement(guideElement, coverFile, "cover");
+                var tocFile = Manifest.FirstOrDefault(x => x.IsToc && x.IsSpine);
+                CreateReferenceElement(guideElement, tocFile, "toc");
 
                 var dir = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                 doc.Save(filePath);
+            }
+
+            private void CreateReferenceElement(XmlElement guideElement, Manifest manifest, string type)
+            {
+                if (manifest == null)
+                    return;
+                var reference = guideElement.OwnerDocument.CreateElement("reference");
+                reference.SetAttribute("href", manifest.Href);
+                reference.SetAttribute("type", type);
+                reference.SetAttribute("title", manifest.Title);
+                guideElement.AppendChild(reference);
             }
 
             private List<Manifest> LoadSortManifest()
@@ -268,13 +350,12 @@ namespace Mozlite.Extensions.Storages.Epub
                 //生成toc.ncx文件
                 var ma = Manifest.FirstOrDefault(x => x.Href == "toc.ncx");
                 if (ma == null)
-                {
                     Manifest.Add(new Manifest { Href = "toc.ncx" });
-                }
-                var filePath = Path.Combine(_directoryName, "OEBPS/toc.ncx");
+                var filePath = Path.Combine(_directoryName, "toc.ncx");
                 if (File.Exists(filePath)) File.Delete(filePath);
                 var doc = new XmlDocument();
-                doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                var declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                doc.AppendChild(declaration);
                 var docType = doc.CreateDocumentType("ncx", "-//NISO//DTD ncx 2005-1//EN",
                     "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd", null);
                 doc.AppendChild(docType);
@@ -314,7 +395,7 @@ namespace Mozlite.Extensions.Storages.Epub
                 documentElement.AppendChild(navMap);
 
                 var i = 1;
-                var manifests = LoadSortManifest();
+                var manifests = Manifest.Where(x => x.IsSpine && !x.IsCover && !x.IsToc).OrderBy(x => x.Id).ToList();
                 foreach (var manifest in manifests)
                 {
                     var navPoint = doc.CreateElement("navPoint");
@@ -342,7 +423,7 @@ namespace Mozlite.Extensions.Storages.Epub
             /// 编译成Epub文件，并返回物理路径。
             /// </summary>
             /// <param name="fileName">生成得文件路径。</param>
-            public void Save(string fileName)
+            public void Compile(string fileName)
             {
                 if (DC == null)
                     DC = new DublinCore();
@@ -353,36 +434,11 @@ namespace Mozlite.Extensions.Storages.Epub
                 SaveCover();
                 SaveNCX();
                 SaveOPF();
+                var path = Epubs.Compile(_directoryName, "../" + BookId);
+                fileName = fileName.MapPath(_directoryName + "/../");
                 if (File.Exists(fileName))
                     File.Delete(fileName);
-                var path = "../" + BookId;
-                Compile(path);
                 File.Move(path, fileName);
-            }
-
-            /// <summary>
-            /// 编译成Epub文件，并返回物理路径。
-            /// </summary>
-            /// <param name="fileName">生成得文件路径。</param>
-            public void Compile(string fileName)
-            {
-                SaveFile("mimetype", "application/epub+zip");
-                if (fileName.IndexOf(":\\") == -1)
-                    fileName = Path.Combine(_directoryName, "../", fileName);
-                if (!fileName.EndsWith(".epub", StringComparison.OrdinalIgnoreCase))
-                    fileName += ".epub";
-                if (File.Exists(fileName)) File.Delete(fileName);
-                using (var zip = ZipFile.Open(fileName, ZipArchiveMode.Create, Encoding.UTF8))
-                {
-                    zip.CreateEntryFromFile(Path.Combine(_directoryName, "mimetype"), "mimetype", CompressionLevel.NoCompression);
-                    foreach (var file in new DirectoryInfo(_directoryName).EnumerateFiles("*.*", SearchOption.AllDirectories))
-                    {
-                        var current = GetFileName(file.FullName);
-                        if (current == "mimetype" || current == "epub.json")
-                            continue;
-                        zip.CreateEntryFromFile(file.FullName, current);
-                    }
-                }
             }
 
             /// <summary>
@@ -395,7 +451,7 @@ namespace Mozlite.Extensions.Storages.Epub
                 if (manifest == null)
                     return;
                 Manifest.Remove(manifest);
-                Refresh();
+                Save();
             }
 
             /// <summary>
@@ -408,8 +464,32 @@ namespace Mozlite.Extensions.Storages.Epub
                     return;
                 mani = new Manifest { Href = "stylesheet.css" };
                 Manifest.Add(mani);
-                SaveFile("OEBPS/stylesheet.css", EpubConstants.DefaultStyle);
-                Refresh();
+                SaveFile("stylesheet.css", Epubs.DefaultStyle);
+                Save();
+            }
+
+            /// <summary>
+            /// 添加目录页面。
+            /// </summary>
+            public void AddToc()
+            {
+                var builder = new StringBuilder();
+                builder.AppendFormat("<h1>目录</h1>");
+                builder.Append("<ul>");
+                var manifests = Manifest.Where(x => x.IsSpine).OrderBy(x => x.Id).ToList();
+                foreach (var manifest in manifests)
+                {
+                    builder.AppendFormat("<li class=\"chapter\"><a href=\"{0}\">{1}</a></li>", manifest.Href,
+                        manifest.Title);
+                }
+                builder.Append("</ul>");
+                AddHtml("toc.xhtml", builder.ToString(), "目录");
+                var current = GetOrCreate("toc.xhtml");
+                current.IsSpine = true;
+                current.Title = "目录";
+                current.IsToc = true;
+                SaveFile($"{current.Href}", Epubs.Html(current.Title, builder.ToString()));
+                Save();
             }
 
             /// <summary>
@@ -420,16 +500,8 @@ namespace Mozlite.Extensions.Storages.Epub
             /// <param name="title">标题。</param>
             public void AddHtml(string fileName, string content, string title)
             {
-                content = EpubConstants.Html(title, content);
+                content = Epubs.Html(title, content);
                 AddContent(fileName, content, title);
-            }
-
-            private string GetFileName(string fullName)
-            {
-                var index = fullName.IndexOf(BookId, StringComparison.OrdinalIgnoreCase);
-                if (index == -1)
-                    return null;
-                return fullName.Substring(index + BookId.Length + 1);
             }
 
             private void SaveCover()
@@ -439,14 +511,19 @@ namespace Mozlite.Extensions.Storages.Epub
                 var coverHtml = Manifest.FirstOrDefault(x => x.IsCover && x.IsSpine);
                 if (coverImage == null)
                     return;
-                AddContent(coverHtml?.Href ?? "cover.xhtml", $@"<html xmlns=""http://www.w3.org/1999/xhtml"">
+                var manifest = GetOrCreate(coverHtml?.Href ?? "cover.xhtml");
+                manifest.IsSpine = true;
+                manifest.Title = "封面";
+                manifest.IsCover = true;
+                SaveFile($"{manifest.Href}", $@"<html xmlns=""http://www.w3.org/1999/xhtml"">
   <head>
     <title>""{DC.Title}""</title>
   </head>
   <body>
     <img src=""{coverImage.Href}"" alt=""{DC.Title}"" style=""width:100%;height:100%;""/>
   </body>
-</html>", "封面");
+</html>");
+                Save();
             }
         }
     }

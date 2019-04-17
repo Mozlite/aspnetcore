@@ -11,7 +11,7 @@ namespace Mozlite.Extensions.Storages
         {
             FileName = reader["Name"]?.ToString();
             ContentType = reader["ContentType"]?.ToString();
-            PhysicalPath = reader["FileId"].ToString().MakedPath();
+            PhysicalPath = reader["FileId"].ToString().ToStoragePath();
         }
 
         /// <summary>

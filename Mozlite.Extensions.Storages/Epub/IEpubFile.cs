@@ -33,12 +33,6 @@
         /// 编译成Epub文件，并返回物理路径。
         /// </summary>
         /// <param name="fileName">生成得文件路径。</param>
-        void Save(string fileName);
-
-        /// <summary>
-        /// 编译成Epub文件，并返回物理路径。
-        /// </summary>
-        /// <param name="fileName">生成得文件路径。</param>
         void Compile(string fileName);
 
         /// <summary>
@@ -53,11 +47,21 @@
         void AddDefaultStyle();
 
         /// <summary>
+        /// 添加目录页面。
+        /// </summary>
+        void AddToc();
+
+        /// <summary>
         /// 添加默认模板内容。
         /// </summary>
         /// <param name="fileName">文件名。</param>
         /// <param name="content">内容。</param>
         /// <param name="title">标题。</param>
         void AddHtml(string fileName, string content, string title);
+
+        /// <summary>
+        /// 将实例保存到JSON文件中。
+        /// </summary>
+        void Save();
     }
 }

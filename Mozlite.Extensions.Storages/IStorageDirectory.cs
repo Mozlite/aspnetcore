@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -38,11 +39,18 @@ namespace Mozlite.Extensions.Storages
         Task<FileInfo> SaveToTempAsync(IFormFile file);
 
         /// <summary>
-        /// 将表单文件实例保存到临时文件夹中。
+        /// 将文件实例保存到临时文件夹中。
         /// </summary>
         /// <param name="file">表单文件实例。</param>
         /// <returns>返回文件实例。</returns>
         Task<FileInfo> SaveToTempAsync(Stream file);
+
+        /// <summary>
+        /// 将Uri文件实例保存到临时文件夹中。
+        /// </summary>
+        /// <param name="uri">文件Uri实例。</param>
+        /// <returns>返回文件实例。</returns>
+        Task<FileInfo> SaveToTempAsync(Uri uri);
 
         /// <summary>
         /// 将字符串保存到临时文件夹中。
