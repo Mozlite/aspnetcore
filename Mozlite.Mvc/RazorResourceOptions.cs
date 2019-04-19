@@ -58,11 +58,23 @@ namespace Mozlite.Mvc
             public EmbeddedFileProvider(string root = "wwwroot")
             {
                 _assembly = typeof(TAssemblyResourceType).Assembly;
-                _baseNamespace = _assembly.GetName().Name + "." + root + ".";
-                var resourceNames = _assembly.GetManifestResourceNames()
-                    .Where(x => x.StartsWith(_baseNamespace, StringComparison.OrdinalIgnoreCase))
-                    .ToDictionary(x => x.Substring(_baseNamespace.Length));
-                _manifestResourceNames = new ConcurrentDictionary<string, string>(resourceNames, StringComparer.OrdinalIgnoreCase);
+                root = $".{root}.";
+                var resources = _assembly.GetManifestResourceNames()
+                    .Where(x => x.IndexOf(root, StringComparison.OrdinalIgnoreCase) != -1)
+                    .ToList();
+                if (resources.Count > 0)
+                {
+                    var baseNamespace = resources.First();
+                    var index = baseNamespace.IndexOf(root);
+                    _baseNamespace = baseNamespace.Substring(0, index + root.Length);
+                    var resourceNames = resources.ToDictionary(x => x.Substring(_baseNamespace.Length));
+                    _manifestResourceNames = new ConcurrentDictionary<string, string>(resourceNames, StringComparer.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    _baseNamespace = _assembly.GetName().Name + root;
+                    _manifestResourceNames = new ConcurrentDictionary<string, string>();
+                }
                 _lastModified = DateTimeOffset.UtcNow;
                 if (string.IsNullOrEmpty(_assembly.Location))
                     return;
@@ -109,10 +121,9 @@ namespace Mozlite.Mvc
                 if (subpath.Length != 0 && !string.Equals(subpath, "/", StringComparison.Ordinal))
                     return NotFoundDirectoryContents.Singleton;
                 List<IFileInfo> fileInfoList = new List<IFileInfo>();
-                foreach (string manifestResourceName in _manifestResourceNames.Values)
+                foreach (var manifestResourceName in _manifestResourceNames)
                 {
-                    if (manifestResourceName.StartsWith(_baseNamespace, StringComparison.Ordinal))
-                        fileInfoList.Add(new EmbeddedResourceFileInfo(_assembly, manifestResourceName, manifestResourceName.Substring(_baseNamespace.Length), _lastModified));
+                    fileInfoList.Add(new EmbeddedResourceFileInfo(_assembly, manifestResourceName.Value, manifestResourceName.Key, _lastModified));
                 }
                 return new EnumerableDirectoryContents(fileInfoList);
             }
