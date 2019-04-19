@@ -1,6 +1,5 @@
 using System;
-using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,11 +38,10 @@ namespace MozliteDemo.Pages.Admin
             return Success("成功上传了文件！");
         }
 
-        public async Task<IActionResult> OnPostLoadAsync(string bookid, string file, string encoding)
+        public async Task<IActionResult> OnPostLoadAsync(string bookid, string file)
         {
-            var epub = await _epubManager.LoadFileAsync(bookid, file ?? "8b7ff96e-90a5-4c00-9635-52dc0d6043a1", Encoding.GetEncoding(encoding ?? "gb2312"));
+            var epub = await _epubManager.LoadFileAsync(bookid, file ?? "all.txt");
             epub.AddDefaultStyle();
-            epub.AddToc();
             return Success("成功加载文件！");
         }
 
@@ -52,9 +50,24 @@ namespace MozliteDemo.Pages.Admin
             var epub = _epubManager.Create(Input.BookId);
             var epubFile = (EpubFile)epub;
             epubFile.DC = Input.DC;
-            epubFile.Manifest = Input.Manifest;
+            var storeds = epubFile.Manifest.ToDictionary(x => x.Href, StringComparer.OrdinalIgnoreCase);
+            foreach (var manifest in Input.Manifest)
+            {
+                if (storeds.TryGetValue(manifest.Href, out var stored))
+                {//修改
+                    stored.IsCover = manifest.IsCover;
+                    stored.Title = manifest.Title;
+                    stored.IsSpine = manifest.IsSpine;
+                    stored.IsToc = manifest.IsToc;
+                }
+                else
+                {
+                    epubFile.Manifest.Add(manifest);
+                }
+            }
             epubFile.Metadata = Input.Metadata;
             epub.Save();
+            Input.Manifest = epubFile.Manifest;
             return SuccessPage("成功保存！");
         }
 
@@ -68,8 +81,8 @@ namespace MozliteDemo.Pages.Admin
         public IActionResult OnPostSave(string bookid, string file)
         {
             var epub = _epubManager.Create(bookid);
-            epub.Compile("xx.epub");
-            Epubs.Compile(_storageDirectory.GetTempPath("1"), "1.epub");
+            epub.AddToc();
+            epub.Compile(file ?? $"{((EpubFile)epub).DC?.Title ?? "test"}.epub");
             return Success("生成成功！");
         }
     }

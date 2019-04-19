@@ -11,7 +11,11 @@ namespace Mozlite.Extensions.Storages.Epub
         /// <summary>
         /// 文件Id。
         /// </summary>
-        public string Id => _id ?? (_id = Href.Replace("/", ".").Replace("\\", ".").ToLower());
+        public string Id
+        {
+            get => _id ?? (_id = Href.Replace("/", ".").Replace("\\", ".").ToLower());
+            set => _id = value;
+        }
 
         /// <summary>
         /// 文件相对路径。

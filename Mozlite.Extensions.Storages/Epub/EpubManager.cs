@@ -54,7 +54,7 @@ namespace Mozlite.Extensions.Storages.Epub
         /// <param name="bookId">电子书Id。</param>
         /// <param name="uri">地址。</param>
         /// <param name="encoding">字符编码。</param>
-        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n"。</param>
+        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千0-9]+章)(.*?)\r?\n"。</param>
         /// <returns>返回电子书实例。</returns>
         public async Task<IEpubFile> LoadUriAsync(string bookId, Uri uri, Encoding encoding = null, Regex title = null)
         {
@@ -62,13 +62,13 @@ namespace Mozlite.Extensions.Storages.Epub
             return await LoadFileAsync(bookId, file.FullName, encoding, title);
         }
 
-        private static readonly Regex _regex = new Regex("^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n", RegexOptions.Multiline);
+        private static readonly Regex _regex = new Regex("^(第[一二三四五六七八九十百千0-9]+章)(.*?)\r?\n", RegexOptions.Multiline);
         /// <summary>
         /// 加载文章。
         /// </summary>
         /// <param name="bookId">电子书Id。</param>
         /// <param name="content">内容。</param>
-        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n"。</param>
+        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千0-9]+章)(.*?)\r?\n"。</param>
         /// <returns>返回电子书实例。</returns>
         public IEpubFile Load(string bookId, string content, Regex title = null)
         {
@@ -108,12 +108,13 @@ namespace Mozlite.Extensions.Storages.Epub
         /// <param name="bookId">电子书Id。</param>
         /// <param name="path">文本文件物理路径。</param>
         /// <param name="encoding">字符编码。</param>
-        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千]+章)(.*?)\r?\n"。</param>
+        /// <param name="title">标题格式："^(第[一二三四五六七八九十百千0-9]+章)(.*?)\r?\n"。</param>
         /// <returns>返回电子书实例。</returns>
         public async Task<IEpubFile> LoadFileAsync(string bookId, string path, Encoding encoding = null, Regex title = null)
         {
             if (path.IndexOf(":\\") != 1)
                 path = _storageDirectory.GetTempPath(path);
+            encoding = encoding ?? StorageHelper.GetEncoding(path, Encoding.GetEncoding("GB2312"));
             var content = await StorageHelper.ReadTextAsync(path, encoding);
             return Load(bookId, content, title);
         }
@@ -124,9 +125,9 @@ namespace Mozlite.Extensions.Storages.Epub
             {
                 _directoryName = new DirectoryInfo(directoryName).FullName;
                 BookId = file.BookId;
-                DC = file.DC;
-                Metadata = file.Metadata;
-                Manifest = file.Manifest;
+                DC = file.DC ?? new DublinCore();
+                Metadata = file.Metadata ?? new Dictionary<string, string>();
+                Manifest = file.Manifest ?? new List<Manifest>();
             }
 
             /// <summary>
@@ -232,6 +233,7 @@ namespace Mozlite.Extensions.Storages.Epub
                 metadata.SetAttribute("xmlns:opf", "http://www.idpf.org/2007/opf");
                 metadata.SetAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
                 parentElement.AppendChild(metadata);
+                DC.Identifier = $"urn:uuid:{BookId}";
                 foreach (var property in typeof(DublinCore).GetEntityType().GetProperties())
                 {
                     var value = property.Get(DC);
@@ -266,61 +268,66 @@ namespace Mozlite.Extensions.Storages.Epub
                 //生成OPF文件
                 var filePath = Path.Combine(_directoryName, "content.opf");
                 if (File.Exists(filePath)) File.Delete(filePath);
-                var doc = new XmlDocument();
-                var declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);
-                doc.AppendChild(declaration);
-                var documentElement = doc.CreateElement("package", "http://www.idpf.org/2007/opf");
-                documentElement.SetAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
-                documentElement.SetAttribute("unique-identifier", "urn:uuid:" + BookId);
-                documentElement.SetAttribute("version", "2.0");
-                doc.AppendChild(documentElement);
-                AppendMetadata(documentElement);
-                //文件
-                var manifestElement = doc.CreateElement("manifest");
-                documentElement.AppendChild(manifestElement);
-                foreach (var manifest in Manifest)
+                using (var writer = new XmlTextWriter(filePath, Encoding.UTF8))
                 {
-                    var element = doc.CreateElement("item");
-                    element.SetAttribute("id", manifest.Id);
-                    element.SetAttribute("href", manifest.Href);
-                    element.SetAttribute("media-type", manifest.MediaType);
-                    manifestElement.AppendChild(element);
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("package", "http://www.idpf.org/2007/opf");
+                    writer.WriteAttributeString("xmlns:dc", "http://purl.org/dc/elements/1.1/");
+                    writer.WriteAttributeString("unique-identifier", $"urn:uuid:{BookId}");
+                    writer.WriteAttributeString("version", "2.0");
+                    //metadata
+                    writer.WriteStartElement("metadata");
+                    writer.WriteAttributeString("xmlns:opf", "http://www.idpf.org/2007/opf");
+                    writer.WriteAttributeString("xmlns:dc", "http://purl.org/dc/elements/1.1/");
+                    DC.Identifier = $"urn:uuid:{BookId}";
+                    foreach (var property in typeof(DublinCore).GetEntityType().GetProperties())
+                    {
+                        var value = property.Get(DC)?.ToString();
+                        if (!string.IsNullOrEmpty(value))
+                            writer.WriteElementText($"dc:{property.Name.ToLower()}", value);
+                    }
+                    //默认首页和图片
+                    var coverImage = Manifest.FirstOrDefault(x => x.IsCover && !x.IsSpine);
+                    if (coverImage != null)
+                        Metadata["cover"] = coverImage.Href;
+                    foreach (var data in Metadata)
+                        writer.WriteMetaElement(data.Key, data.Value);
+                    writer.WriteEndElement();
+                    //manifest
+                    writer.WriteStartElement("manifest");
+                    foreach (var manifest in Manifest)
+                    {
+                        writer.WriteStartElement("item");
+                        writer.WriteAttributeString("id", manifest.Id);
+                        writer.WriteAttributeString("href", manifest.Href);
+                        writer.WriteAttributeString("media-type", manifest.MediaType);
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    //spine
+                    writer.WriteStartElement("spine");
+                    writer.WriteAttributeString("toc", "ncx");//NCX文件Id
+                    var manifests = LoadSortManifest();
+                    foreach (var manifest in manifests)
+                    {
+                        writer.WriteStartElement("itemref");
+                        writer.WriteAttributeString("idref", manifest.Id);
+                        if (manifest.IsCover)
+                            writer.WriteAttributeString("linear", "no");
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    //guide
+                    writer.WriteStartElement("guide");
+                    var guide = manifests.FirstOrDefault(x => x.IsCover);
+                    writer.WriteReferenceElement(guide, "cover");
+                    guide = manifests.FirstOrDefault(x => x.IsToc);
+                    writer.WriteReferenceElement(guide, "toc");
+                    writer.WriteEndElement();
+                    //end
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
                 }
-                //档案文件
-                var spineElement = doc.CreateElement("spine");
-                spineElement.SetAttribute("toc", "toc.ncx");//NCX文件Id
-                documentElement.AppendChild(spineElement);
-                var manifests = LoadSortManifest();
-                foreach (var manifest in manifests)
-                {
-                    var element = doc.CreateElement("itemref");
-                    element.SetAttribute("idref", manifest.Id);
-                    if (manifest.IsCover)
-                        element.SetAttribute("linear", "no");
-                    spineElement.AppendChild(element);
-                }
-                //导航
-                var guideElement = doc.CreateElement("guide");
-                documentElement.AppendChild(guideElement);
-                //var coverFile = Manifest.FirstOrDefault(x => x.IsCover && x.IsSpine);
-                //CreateReferenceElement(guideElement, coverFile, "cover");
-                var tocFile = Manifest.FirstOrDefault(x => x.IsToc && x.IsSpine);
-                CreateReferenceElement(guideElement, tocFile, "toc");
-
-                var dir = Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                doc.Save(filePath);
-            }
-
-            private void CreateReferenceElement(XmlElement guideElement, Manifest manifest, string type)
-            {
-                if (manifest == null)
-                    return;
-                var reference = guideElement.OwnerDocument.CreateElement("reference");
-                reference.SetAttribute("href", manifest.Href);
-                reference.SetAttribute("type", type);
-                reference.SetAttribute("title", manifest.Title);
-                guideElement.AppendChild(reference);
             }
 
             private List<Manifest> LoadSortManifest()
@@ -350,73 +357,48 @@ namespace Mozlite.Extensions.Storages.Epub
                 //生成toc.ncx文件
                 var ma = Manifest.FirstOrDefault(x => x.Href == "toc.ncx");
                 if (ma == null)
-                    Manifest.Add(new Manifest { Href = "toc.ncx" });
+                    Manifest.Add(new Manifest { Href = "toc.ncx", Id = "ncx" });
                 var filePath = Path.Combine(_directoryName, "toc.ncx");
                 if (File.Exists(filePath)) File.Delete(filePath);
-                var doc = new XmlDocument();
-                var declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);
-                doc.AppendChild(declaration);
-                var docType = doc.CreateDocumentType("ncx", "-//NISO//DTD ncx 2005-1//EN",
-                    "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd", null);
-                doc.AppendChild(docType);
-                var documentElement = doc.CreateElement("ncx", "http://www.daisy.org/z3986/2005/ncx/");
-                documentElement.SetAttribute("version", "2005-1");
-                doc.AppendChild(documentElement);
-                //head
-                var head = doc.CreateElement("head");
-                documentElement.AppendChild(head);
-                //uid： 数字图书的惟一 ID。该元素应该和 OPF 文件中的 dc:identifier 对应。
-                //depth：反映目录表中层次的深度。该例只有一层，因此是 1。
-                //totalPageCount 和 maxPageNumber：仅用于纸质图书，保留 0 即可。
-                head.InnerXml = $@"<meta name=""dtb:uid"" content=""urn:uuid:{BookId}""/>
-    <meta name=""dtb:depth"" content=""2""/>
-    <meta name=""dtb:totalPageCount"" content=""0""/>
-    <meta name=""dtb:maxPageNumber"" content=""0""/>";
-
-                //title
-                var title = doc.CreateElement("docTitle");
-                documentElement.AppendChild(title);
-                var text = doc.CreateElement("text");
-                text.InnerXml = DC.Title;
-                title.AppendChild(text);
-
-                //creator
-                if (!string.IsNullOrEmpty(DC.Creator))
+                using (var writer = new XmlTextWriter(filePath, Encoding.UTF8))
                 {
-                    var author = doc.CreateElement("docAuthor");
-                    documentElement.AppendChild(author);
-                    text = doc.CreateElement("text");
-                    text.InnerXml = DC.Creator;
-                    author.AppendChild(text);
+                    writer.WriteStartDocument();
+                    writer.WriteDocType("ncx", "-//NISO//DTD ncx 2005-1//EN", "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd", null);
+                    writer.WriteStartElement("ncx", "http://www.daisy.org/z3986/2005/ncx/");
+                    writer.WriteAttributeString("version", "2005-1");
+                    //head
+                    //uid： 数字图书的惟一 ID。该元素应该和 OPF 文件中的 dc:identifier 对应。
+                    //depth：反映目录表中层次的深度。该例只有一层，因此是 1。
+                    //totalPageCount 和 maxPageNumber：仅用于纸质图书，保留 0 即可。
+                    writer.WriteStartElement("head");
+                    writer.WriteMetaElement("dtb:uid", $"urn:uuid:{BookId}");
+                    writer.WriteMetaElement("dtb:depth", "2");
+                    writer.WriteMetaElement("dtb:totalPageCount", "0");
+                    writer.WriteMetaElement("dtb:maxPageNumber", "0");
+                    writer.WriteEndElement();
+                    //doc
+                    writer.WriteSubTextElement("docTitle", DC.Title);
+                    writer.WriteSubTextElement("docAuthor", DC.Creator);
+                    //navMap
+                    writer.WriteStartElement("navMap");
+                    var i = 1;
+                    var manifests = Manifest.Where(x => x.IsSpine && !x.IsCover && !x.IsToc).OrderBy(x => x.Id).ToList();
+                    foreach (var manifest in manifests)
+                    {
+                        writer.WriteStartElement("navPoint");
+                        writer.WriteAttributeString("id", $"nav-{i}");
+                        writer.WriteAttributeString("playOrder", i.ToString());
+                        writer.WriteSubTextElement("navLabel", manifest.Title);
+                        writer.WriteStartElement("content");
+                        writer.WriteAttributeString("src", manifest.Href);
+                        writer.WriteEndElement();
+                        writer.WriteEndElement();
+                        i++;
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
                 }
-
-                //导航
-                var navMap = doc.CreateElement("navMap");
-                documentElement.AppendChild(navMap);
-
-                var i = 1;
-                var manifests = Manifest.Where(x => x.IsSpine && !x.IsCover && !x.IsToc).OrderBy(x => x.Id).ToList();
-                foreach (var manifest in manifests)
-                {
-                    var navPoint = doc.CreateElement("navPoint");
-                    var navLabel = doc.CreateElement("navLabel");
-                    navPoint.AppendChild(navLabel);
-                    var textNode = doc.CreateElement("text");
-                    textNode.InnerXml = manifest.Title;
-                    navLabel.AppendChild(textNode);
-                    //内容文件
-                    var content = doc.CreateElement("content");
-                    navPoint.AppendChild(content);
-                    content.SetAttribute("src", manifest.Href);
-                    navMap.AppendChild(navPoint);
-                    navPoint.SetAttribute("id", $"navpoint-{i}");
-                    navPoint.SetAttribute("playOrder", i.ToString());
-                    i++;
-                }
-
-                var dir = Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                doc.Save(filePath);
             }
 
             /// <summary>
@@ -476,15 +458,15 @@ namespace Mozlite.Extensions.Storages.Epub
                 var builder = new StringBuilder();
                 builder.AppendFormat("<h1>目录</h1>");
                 builder.Append("<ul>");
-                var manifests = Manifest.Where(x => x.IsSpine).OrderBy(x => x.Id).ToList();
+                var manifests = Manifest.Where(x => x.IsSpine && !x.IsCover && !x.IsToc).OrderBy(x => x.Id).ToList();
                 foreach (var manifest in manifests)
                 {
                     builder.AppendFormat("<li class=\"chapter\"><a href=\"{0}\">{1}</a></li>", manifest.Href,
                         manifest.Title);
                 }
                 builder.Append("</ul>");
-                AddHtml("toc.xhtml", builder.ToString(), "目录");
-                var current = GetOrCreate("toc.xhtml");
+                AddHtml(Epubs.TocFile, builder.ToString(), "目录");
+                var current = GetOrCreate(Epubs.TocFile);
                 current.IsSpine = true;
                 current.Title = "目录";
                 current.IsToc = true;
@@ -500,6 +482,7 @@ namespace Mozlite.Extensions.Storages.Epub
             /// <param name="title">标题。</param>
             public void AddHtml(string fileName, string content, string title)
             {
+                content = $"<h2><span style=\"border-bottom:1px solid\">正文 {title}</span></h2>" + content;
                 content = Epubs.Html(title, content);
                 AddContent(fileName, content, title);
             }

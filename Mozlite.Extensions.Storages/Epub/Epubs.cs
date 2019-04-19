@@ -2,13 +2,14 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Xml;
 
 namespace Mozlite.Extensions.Storages.Epub
 {
     /// <summary>
     /// 定义。
     /// </summary>
-    public class Epubs
+    public static class Epubs
     {
         /// <summary>
         /// 默认样式。
@@ -38,6 +39,11 @@ namespace Mozlite.Extensions.Storages.Epub
 @page {{ margin-bottom: 5.000000pt; margin-top: 5.000000pt; }}</style>
 </head>
 <body>{body}<div class=""break""></div></body></html>";
+
+        /// <summary>
+        /// 目录文件。
+        /// </summary>
+        internal const string TocFile = "catalog.xhtml";
 
         private const string Mimetype = "mimetype";
 
@@ -70,6 +76,43 @@ namespace Mozlite.Extensions.Storages.Epub
             }
 
             return outputFileName;
+        }
+
+        internal static void WriteMetaElement(this XmlTextWriter writer, string name, string content)
+        {
+            writer.WriteStartElement("meta");
+            writer.WriteAttributeString("name", name);
+            writer.WriteAttributeString("content", content);
+            writer.WriteEndElement();
+        }
+
+        internal static void WriteElementText(this XmlTextWriter writer, string nodeName, string content)
+        {
+            writer.WriteStartElement(nodeName);
+            writer.WriteString(content);
+            writer.WriteEndElement();
+        }
+
+        internal static void WriteSubTextElement(this XmlTextWriter writer, string nodeName, string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return;
+            writer.WriteStartElement(nodeName);
+            writer.WriteStartElement("text");
+            writer.WriteString(content);
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+        }
+
+        internal static void WriteReferenceElement(this XmlTextWriter writer, Manifest manifest, string type)
+        {
+            if (manifest == null)
+                return;
+            writer.WriteStartElement("reference");
+            writer.WriteAttributeString("href", manifest.Href);
+            writer.WriteAttributeString("type", type);
+            writer.WriteAttributeString("title", manifest.Title);
+            writer.WriteEndElement();
         }
     }
 
