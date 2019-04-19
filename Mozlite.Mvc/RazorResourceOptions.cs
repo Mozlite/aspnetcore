@@ -22,26 +22,22 @@ namespace Mozlite.Mvc
     /// <typeparam name="TAssemblyResourceType">程序集资源类型。</typeparam>
     internal class RazorResourceOptions<TAssemblyResourceType> : IPostConfigureOptions<StaticFileOptions>
     {
-        private readonly IHostingEnvironment Environment;
+        private readonly IHostingEnvironment _environment;
         public RazorResourceOptions(IHostingEnvironment environment)
         {
-            Environment = environment;
+            _environment = environment;
         }
 
-        /// <summary>Invoked to configure a TOptions instance.</summary>
-        /// <param name="name">The name of the options instance being configured.</param>
-        /// <param name="options">The options instance to configured.</param>
         public void PostConfigure(string name, StaticFileOptions options)
         {
-            name = name ?? throw new ArgumentNullException(nameof(name));
             options = options ?? throw new ArgumentNullException(nameof(options));
 
             options.ContentTypeProvider = options.ContentTypeProvider ?? new FileExtensionContentTypeProvider();
-            if (options.FileProvider == null && Environment.WebRootFileProvider == null)
+            if (options.FileProvider == null && _environment.WebRootFileProvider == null)
                 throw new InvalidOperationException("Missing FileProvider.");
 
-            options.FileProvider = options.FileProvider ?? Environment.WebRootFileProvider;
-            options.FileProvider = new CompositeFileProvider(options.FileProvider, new EmbeddedFileProvider());
+            options.FileProvider = options.FileProvider ?? _environment.WebRootFileProvider;
+            options.FileProvider = new CompositeFileProvider(options.FileProvider, new EmbeddedFileProvider(typeof(TAssemblyResourceType).Assembly));
         }
 
         internal class EmbeddedFileProvider : IFileProvider
@@ -54,18 +50,17 @@ namespace Mozlite.Mvc
             /// <summary>
             /// 初始化类<see cref="EmbeddedFileProvider"/>。
             /// </summary>
-            /// <param name="root">资源根目录。</param>
-            public EmbeddedFileProvider(string root = "wwwroot")
+            public EmbeddedFileProvider(Assembly assembly)
             {
-                _assembly = typeof(TAssemblyResourceType).Assembly;
-                root = $".{root}.";
+                _assembly = assembly;
+                var root = ".wwwroot.";
                 var resources = _assembly.GetManifestResourceNames()
                     .Where(x => x.IndexOf(root, StringComparison.OrdinalIgnoreCase) != -1)
                     .ToList();
                 if (resources.Count > 0)
                 {
                     var baseNamespace = resources.First();
-                    var index = baseNamespace.IndexOf(root);
+                    var index = baseNamespace.IndexOf(root, StringComparison.OrdinalIgnoreCase);
                     _baseNamespace = baseNamespace.Substring(0, index + root.Length);
                     var resourceNames = resources.ToDictionary(x => x.Substring(_baseNamespace.Length));
                     _manifestResourceNames = new ConcurrentDictionary<string, string>(resourceNames, StringComparer.OrdinalIgnoreCase);
@@ -120,12 +115,12 @@ namespace Mozlite.Mvc
                     return NotFoundDirectoryContents.Singleton;
                 if (subpath.Length != 0 && !string.Equals(subpath, "/", StringComparison.Ordinal))
                     return NotFoundDirectoryContents.Singleton;
-                List<IFileInfo> fileInfoList = new List<IFileInfo>();
+                var files = new List<IFileInfo>();
                 foreach (var manifestResourceName in _manifestResourceNames)
                 {
-                    fileInfoList.Add(new EmbeddedResourceFileInfo(_assembly, manifestResourceName.Value, manifestResourceName.Key, _lastModified));
+                    files.Add(new EmbeddedResourceFileInfo(_assembly, manifestResourceName.Value, manifestResourceName.Key, _lastModified));
                 }
-                return new EnumerableDirectoryContents(fileInfoList);
+                return new EnumerableDirectoryContents(files);
             }
 
             public IChangeToken Watch(string pattern)
