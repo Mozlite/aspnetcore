@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Mozlite.Extensions.Settings;
 using Mozlite.Extensions.Storages;
 using Mozlite.Mvc.TagHelpers;
 
@@ -14,10 +15,12 @@ namespace Mozlite.Mvc.RazorUI.Areas.Storages.TagHelpers
     public class ExtensionNameDropdownListTagHelper : DropdownListTagHelper
     {
         private readonly IMediaDirectory _mediaDirectory;
+        private readonly ISettingDictionaryManager _settingDictionaryManager;
 
-        public ExtensionNameDropdownListTagHelper(IMediaDirectory mediaDirectory)
+        public ExtensionNameDropdownListTagHelper(IMediaDirectory mediaDirectory, ISettingDictionaryManager settingDictionaryManager)
         {
             _mediaDirectory = mediaDirectory;
+            _settingDictionaryManager = settingDictionaryManager;
         }
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Storages.TagHelpers
             var items = new List<SelectListItem>();
             foreach (var extensionName in extensionNames)
             {
-                items.Add(new SelectListItem(extensionName, extensionName));
+                items.Add(new SelectListItem(_settingDictionaryManager.GetOrAddSettings($"extensionname.{extensionName}"), extensionName));
             }
 
             return items;
