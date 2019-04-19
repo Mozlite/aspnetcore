@@ -4,6 +4,7 @@ using Mozlite.Extensions.Storages.Properties;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Mozlite.Utils;
 
 namespace Mozlite.Extensions.Storages
 {
@@ -21,12 +22,7 @@ namespace Mozlite.Extensions.Storages
         public StorageDirectory(IConfiguration configuration)
         {
             var path = configuration["StorageDir"]?.Trim() ?? "../storages";
-            if (path.StartsWith("~/"))//虚拟目录
-                _root = Path.Combine(Directory.GetCurrentDirectory(), path.Substring(2));
-            else if (path.Length > 2 && path[1] == ':')//物理目录
-                _root = path;
-            else
-                _root = Path.Combine(Directory.GetCurrentDirectory(), path);
+            _root = path.MapPath();
             if (!Directory.Exists(_root)) Directory.CreateDirectory(_root);
             _temp = Path.Combine(_root, "temp");
             if (!Directory.Exists(_temp)) Directory.CreateDirectory(_temp);
@@ -93,6 +89,23 @@ namespace Mozlite.Extensions.Storages
             var tempFile = GetTempPath(Guid.NewGuid().ToString());
             await file.SaveToAsync(tempFile);
             return new FileInfo(tempFile);
+        }
+
+        /// <summary>
+        /// 将Uri文件实例保存到临时文件夹中。
+        /// </summary>
+        /// <param name="uri">文件Uri实例。</param>
+        /// <returns>返回文件实例。</returns>
+        public virtual Task<FileInfo> SaveToTempAsync(Uri uri)
+        {
+            return HttpHelper.ExecuteAsync(async client =>
+            {
+                client.Timeout = TimeSpan.FromHours(1);
+                client.DefaultRequestHeaders.Referrer =
+                    new Uri($"{uri.Scheme}://{uri.DnsSafeHost}{(uri.IsDefaultPort ? null : ":" + uri.Port)}/");
+                using (var stream = await client.GetStreamAsync(uri))
+                    return await SaveToTempAsync(stream);
+            });
         }
 
         /// <summary>

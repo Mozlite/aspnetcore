@@ -15,6 +15,11 @@ namespace MozliteDemo.Extensions
         public string SiteName { get; set; } = "Mozlite Demo";
 
         /// <summary>
+        /// 简称。
+        /// </summary>
+        public string ShortName { get; set; }
+
+        /// <summary>
         /// Logo地址。
         /// </summary>
         public string LogoUrl { get; set; } = "/images/logo.png";
@@ -24,15 +29,10 @@ namespace MozliteDemo.Extensions
         /// </summary>
         public string Description { get; set; }
 
-        private string _copyright;
         /// <summary>
         /// 版权信息。
         /// </summary>
-        public string Copyright
-        {
-            get => _copyright ?? (_copyright = $@"Copyright &copy;$year www.mozlite.com ver $version");
-            set => _copyright = value;
-        }
+        public string Copyright { get; set; } = "Copyright &copy;$year www.mozlite.com ver $version";
 
         /// <summary>
         /// 版权信息。

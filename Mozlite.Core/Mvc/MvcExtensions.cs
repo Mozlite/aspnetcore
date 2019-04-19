@@ -54,7 +54,7 @@ namespace Mozlite.Mvc
                 || domain.StartsWith("localhost:")
                 || domain.StartsWith("127.0.0.1:");
         }
-        
+
         /// <summary>
         /// 获取或添加当前请求上下文实例。
         /// </summary>

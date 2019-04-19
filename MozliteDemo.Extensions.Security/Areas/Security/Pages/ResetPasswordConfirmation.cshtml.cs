@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 {

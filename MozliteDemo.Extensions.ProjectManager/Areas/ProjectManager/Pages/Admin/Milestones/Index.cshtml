@@ -1,0 +1,67 @@
+﻿@page
+@model IndexModel
+@{
+    ViewBag.Title = "里程碑";
+    ViewBag.Current = "pm.projects";
+}
+
+<div class="filter">
+    <form class="form-inline">
+        <div class="form-group">
+            <moz:project-dropdownlist class="form-control form-control-sm border-secondary" name="id" value="@Model.Project.Id" onchange="location.href='?id='+this.value"></moz:project-dropdownlist>
+        </div>
+    </form>
+    <div class="right">
+        <div class="btn-group">
+            <a js-checked="post" js-confirm="你确定要删除所选择的里程碑吗?" class="btn btn-sm btn-outline-secondary" title="删除" asp-page-handler="Delete"><i class="fa fa-trash"></i> 删除</a>
+            <a js-modal="click" class="btn btn-sm btn-outline-secondary" asp-page="./Edit" asp-route-pid="@Model.Project.Id"><i class="fa fa-plus"></i> 添加</a>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered data-view">
+        <thead>
+            <tr>
+                <th class="checkbox-only"><moz:checkall></moz:checkall></th>
+                <th>名称</th>
+                <th>负责人</th>
+                <th>创建人</th>
+                <th>进度</th>
+                <th class="data-action">操作</th>
+            </tr>
+        </thead>
+        <tbody class="data-content">
+            @foreach (var milestone in Model.Milestones)
+            {
+                var user = Model.GetUser(milestone.Operator);
+                var creator = Model.GetUser(milestone.UserId);
+            <tr>
+                <td><moz:checkbox value="@milestone.Id"></moz:checkbox></td>
+                <td>@milestone.Name</td>
+                <td>
+                    @if (user != null)
+                        {
+                    <moz:icon class="icon" src="@user.Avatar"></moz:icon>
+                    @(user.UserName)
+                        }
+                </td>
+                <td>
+                    <moz:icon class="icon" src="@creator.Avatar"></moz:icon>
+                    @(creator.UserName)
+                </td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: @(milestone.Progress)%;">@(milestone.Progress)%</div>
+                    </div>
+                </td>
+                <td class="data-action">
+                    <a js-action="modal" title="编辑" asp-page="./edit" asp-route-id="@milestone.Id"><i class="fa fa-pencil"></i> 编辑</a>
+                    <a js-action="post" js-confirm="你确定要删除里程碑“@milestone.Name”?" asp-route-ids="@milestone.Id" title="删除" asp-page-handler="Delete"><i class="fa fa-trash"></i> 删除</a>
+                </td>
+            </tr>
+            }
+            <moz:warning-tabled colspan="6" attach="Model.Milestones">当前网站还没添加里程碑！</moz:warning-tabled>
+        </tbody>
+    </table>
+</div>

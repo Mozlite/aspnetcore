@@ -36,7 +36,7 @@ namespace Mozlite.Extensions.Storages
             get
             {
                 if (_path == null && FileId != null)
-                    _path = FileId.MakedPath();
+                    _path = FileId.ToStoragePath();
                 return _path;
             }
         }

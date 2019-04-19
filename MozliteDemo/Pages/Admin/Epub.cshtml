@@ -1,0 +1,72 @@
+﻿@page
+@model EpubModel
+@{
+    ViewBag.Title = "电子书生成器";
+    var i = 0;
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.BookId" />
+    <div class="form-group">
+        <label>标题</label>
+        <input asp-for="Input.DC.Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>作者</label>
+        <input asp-for="Input.DC.Creator" class="form-control" />
+    </div>
+    <div class="form-group">
+        <button type="button" data-toggle="uploader" class="btn btn-secondary"><i class="fa fa-picture-o"></i> 添加文件</button>
+        <button type="button" js-action="@Url.Page("./Epub", "Load")" js-data-bookid="@Model.Input.BookId" class="btn btn-secondary">载入</button>
+        <button type="submit" class="btn btn-secondary">提交</button>
+        <button type="button" js-action="@Url.Page("./Epub", "Save")" js-data-bookid="@Model.Input.BookId" class="btn btn-secondary">生成</button>
+    </div>
+    @if (Model.Input.Manifest != null)
+    {
+        var list = Model.Input.Manifest.Where(x => !x.IsSpine || x.IsCover || x.IsToc).ToList();
+        if (list.Count > 0)
+        {
+            foreach (var file in list)
+            {
+                <div class="form-group">
+                    <input name="Input.Manifest[@i].Id" type="hidden" value="@file.Id" />
+                    <div class="input-group">
+                        <input name="Input.Manifest[@i].Href" readonly="readonly" class="form-control max-200" value="@file.Href" />
+                        <moz:checkbox class="border p-1 pr-3 pl-3 border-left-0 border-right-0" name="Input.Manifest[@i].IsSpine" value="true" checked="@file.IsSpine"> 文档</moz:checkbox>
+                        <moz:checkbox class="border p-1 pr-3 border-left-0 border-right-0" name="Input.Manifest[@i].IsCover" value="true" checked="@file.IsCover"> 封面</moz:checkbox>
+                        <moz:checkbox class="border p-1 pr-3 border-left-0 border-right-0" name="Input.Manifest[@i].IsToc" value="true" checked="@file.IsToc"> 目录</moz:checkbox>
+                        <input name="Input.Manifest[@i].Title" class="form-control" value="@file.Title" />
+                        <div class="input-group-append">
+                            <button type="button" js-action="@Url.Page("./Epub", "Delete")" js-data-file="@file.Href" js-data-bookid="@Model.Input.BookId" class="btn btn-secondary"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                </div>
+                i++;
+            }
+        }
+        list = Model.Input.Manifest.Where(x => x.IsSpine && !x.IsCover && !x.IsToc).ToList();
+        if (list.Count > 0)
+        {
+            var cols = 4;
+            var rows = Math.Ceiling(list.Count * 1.0 / cols);
+            <table class="table table-bordered">
+                <tr>
+                    <th colspan="@cols">章节</th>
+                </tr>
+                @for (var row = 0; row < rows; row++)
+                {
+                    <tr>
+                        @for (var col = 0; col < cols; col++)
+                        {
+                            i = row * cols + col;
+                            <td>
+                                @(i < list.Count ? list[i].Title : null)
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        }
+    }
+    <input type="file" js-data-bookid="@Model.Input.BookId" class="hide" js-uploader="@Url.Page("./Epub", "Upload")" />
+</form>

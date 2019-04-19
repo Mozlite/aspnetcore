@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Settings;
 using System.Linq;
@@ -23,21 +23,21 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Settings
         public IActionResult OnPostDelete(int[] ids, int pid)
         {
             if (ids == null || ids.Length == 0)
-                return Error("ÇëÑ¡ÔñÊµÀýºóÔÙ½øÐÐÉ¾³ý²Ù×÷£¡");
+                return Error("è¯·é€‰æ‹©å®žä¾‹åŽå†è¿›è¡Œåˆ é™¤æ“ä½œï¼");
             var settings = _settingManager.Find(pid).Children.Where(x => ids.Contains(x.Id)).ToList();
             foreach (var setting in settings)
             {
                 if (setting.Count > 0)
-                    return Error($"{setting.Value} ÏÂÃæµÄ×ÖµäÊµÀý²»Îª¿Õ£¬ÐèÒªÏÈÇå¿Õ×ÓÏî£¬²ÅÄÜ½øÐÐÉ¾³ý²Ù×÷£¡");
+                    return Error($"{setting.Value} ä¸‹é¢çš„å­—å…¸å®žä¾‹ä¸ä¸ºç©ºï¼Œéœ€è¦å…ˆæ¸…ç©ºå­é¡¹ï¼Œæ‰èƒ½è¿›è¡Œåˆ é™¤æ“ä½œï¼");
             }
 
             var result = _settingManager.Delete(ids);
             if (result)
             {
-                EventLogger.LogCore("É¾³ýÁË×ÖµäÊµÀý£º{0}", string.Join(",", settings.Select(x => x.Value)));
+                EventLogger.LogCore("åˆ é™¤äº†å­—å…¸å®žä¾‹ï¼š{0}", string.Join(",", settings.Select(x => x.Value)));
             }
 
-            return Json(result, "×ÖµäÊµÀý");
+            return Json(result, "å­—å…¸å®žä¾‹");
         }
     }
 }

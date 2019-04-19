@@ -1,4 +1,4 @@
-namespace Mozlite.Data.Migrations.Builders
+﻿namespace Mozlite.Data.Migrations.Builders
 {
     internal enum NameType
     {

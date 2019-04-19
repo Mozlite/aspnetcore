@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+ï»¿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Storages;
 using System;
@@ -27,18 +27,18 @@ namespace Mozlite.Mvc.RazorUI.Areas.Storages.Pages.Admin
         public async Task<IActionResult> OnPostDeleteAsync(Guid[] ids)
         {
             if (ids == null || ids.Length == 0)
-                return Error("ÇëÑ¡ÔñÎÄ¼şºóÔÙ½øĞĞÉ¾³ı²Ù×÷£¡");
+                return Error("è¯·é€‰æ‹©æ–‡ä»¶åå†è¿›è¡Œåˆ é™¤æ“ä½œï¼");
             foreach (var id in ids)
             {
                 await _mediaDirectory.DeleteAsync(id);
             }
-            return Success("ÄãÒÑ¾­³É¹¦É¾³ıÎÄ¼ş£¡");
+            return Success("ä½ å·²ç»æˆåŠŸåˆ é™¤æ–‡ä»¶ï¼");
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile file)
         {
             if (file?.Length <= 0)
-                return Error("ÇëÑ¡Ôñ·Ç¿ÕÎÄ¼şºó£¬ÔÙÉÏ´«£¡");
+                return Error("è¯·é€‰æ‹©éç©ºæ–‡ä»¶åï¼Œå†ä¸Šä¼ ï¼");
             var result = await _mediaDirectory.UploadAsync(file, "core");
             return Json(result);
         }

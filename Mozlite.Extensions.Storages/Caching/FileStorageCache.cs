@@ -46,7 +46,7 @@ namespace Mozlite.Extensions.Storages.Caching
         /// <returns>返回当前缓存文件的物理路径。</returns>
         protected string GetFilePath(string hashedKey, bool ensureDir = false)
         {
-            var path = Path.Combine(_cacheRoot, hashedKey.MakedPath());
+            var path = Path.Combine(_cacheRoot, hashedKey.ToStoragePath());
             if (ensureDir)
             {
                 var dir = Path.GetDirectoryName(path);
@@ -146,7 +146,7 @@ namespace Mozlite.Extensions.Storages.Caching
                 Remove(cache.CacheKey);
                 return GetOrCreate(key, dependency, action);
             }
-            return StorageHelper.ReadText(path, FileShare.Read);
+            return StorageHelper.ReadText(path, share: FileShare.Read);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Mozlite.Extensions.Storages.Caching
                 await RemoveAsync(cache.CacheKey);
                 return await GetOrCreateAsync(key, dependency, action);
             }
-            return await StorageHelper.ReadTextAsync(path, FileShare.Read);
+            return await StorageHelper.ReadTextAsync(path, share: FileShare.Read);
         }
 
         /// <summary>

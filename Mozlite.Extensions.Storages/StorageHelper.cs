@@ -12,6 +12,29 @@ namespace Mozlite.Extensions.Storages
     public static class StorageHelper
     {
         /// <summary>
+        /// 获取当前路径是否为绝对路径。
+        /// </summary>
+        /// <param name="path">当前路径实例。</param>
+        /// <param name="directoryName">父级文件夹名称。</param>
+        /// <returns>返回当前路径是否为绝对路径。</returns>
+        public static string MapPath(this string path, string directoryName = null)
+        {
+            directoryName = directoryName ?? Directory.GetCurrentDirectory();
+            if (path.StartsWith("~/"))//虚拟目录
+                path = Path.Combine(directoryName, path.Substring(2));
+            else if (!path.IsPhysicalPath())//物理目录
+                path = Path.Combine(directoryName, path);
+            return new DirectoryInfo(path).FullName;
+        }
+
+        /// <summary>
+        /// 判断当前路径是否为物理路径。
+        /// </summary>
+        /// <param name="path">当前路径。</param>
+        /// <returns>返回判断结果。</returns>
+        public static bool IsPhysicalPath(this string path) => path.Length > 3 && path[1] == ':' && path[2] == '\\';
+
+        /// <summary>
         /// 下载文件并保存到目录中，如果文件已经存在则不下载。
         /// </summary>
         /// <param name="url">URL地址。</param>
@@ -71,13 +94,14 @@ namespace Mozlite.Extensions.Storages
         /// 读取所有文件内容。
         /// </summary>
         /// <param name="path">文件的物理路径。</param>
+        /// <param name="encoding">编码。</param>
         /// <param name="share">文件共享选项。</param>
         /// <returns>返回文件内容字符串。</returns>
-        public static string ReadText(string path, FileShare share = FileShare.None)
+        public static string ReadText(string path, Encoding encoding = null, FileShare share = FileShare.None)
         {
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, share))
             {
-                using (var reader = new StreamReader(fs, Encoding.UTF8))
+                using (var reader = new StreamReader(fs, encoding ?? Encoding.UTF8))
                 {
                     return reader.ReadToEnd();
                 }
@@ -88,13 +112,14 @@ namespace Mozlite.Extensions.Storages
         /// 读取所有文件内容。
         /// </summary>
         /// <param name="path">文件的物理路径。</param>
+        /// <param name="encoding">编码。</param>
         /// <param name="share">文件共享选项。</param>
         /// <returns>返回文件内容字符串。</returns>
-        public static async Task<string> ReadTextAsync(string path, FileShare share = FileShare.None)
+        public static async Task<string> ReadTextAsync(string path, Encoding encoding = null, FileShare share = FileShare.None)
         {
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, share))
             {
-                using (var reader = new StreamReader(fs, Encoding.UTF8))
+                using (var reader = new StreamReader(fs, encoding ?? Encoding.UTF8))
                 {
                     return await reader.ReadToEndAsync();
                 }

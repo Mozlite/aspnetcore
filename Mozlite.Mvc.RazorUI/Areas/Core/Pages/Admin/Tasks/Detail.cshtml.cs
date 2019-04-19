@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions.Tasks;
 
 namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Tasks

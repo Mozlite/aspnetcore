@@ -2,6 +2,7 @@
 using Mozlite.Extensions.Security.Stores;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Mozlite.Extensions.Security
@@ -450,6 +451,34 @@ namespace Mozlite.Extensions.Security
         /// <param name="tokenName">标识名称。</param>
         /// <returns>返回操作结果。</returns>
         Task<IdentityResult> RemoveAuthenticationTokenAsync(TUser user, string loginProvider, string tokenName);
+
+        /// <summary>
+        /// 加载所有用户。
+        /// </summary>
+        /// <param name="expression">用户条件表达式。</param>
+        /// <returns>返回用户列表。</returns>
+        IEnumerable<TUser> LoadUsers(Expression<Predicate<TUser>> expression = null);
+
+        /// <summary>
+        /// 加载所有用户。
+        /// </summary>
+        /// <param name="expression">用户条件表达式。</param>
+        /// <returns>返回用户列表。</returns>
+        Task<IEnumerable<TUser>> LoadUsersAsync(Expression<Predicate<TUser>> expression = null);
+
+        /// <summary>
+        /// 获取缓存用户实例。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回缓存用户实例对象。</returns>
+        CachedUser GetUser(int id);
+
+        /// <summary>
+        /// 获取缓存用户实例。
+        /// </summary>
+        /// <param name="id">用户Id。</param>
+        /// <returns>返回缓存用户实例对象。</returns>
+        Task<CachedUser> GetUserAsync(int id);
     }
 
     /// <summary>

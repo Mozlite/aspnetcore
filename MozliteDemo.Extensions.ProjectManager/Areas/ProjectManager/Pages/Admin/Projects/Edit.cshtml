@@ -1,0 +1,24 @@
+﻿@page
+@model EditModel
+@{
+    ViewBag.Title = "项目信息";
+    Layout = "_Modal";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <moz:checkbox for="Input.Enabled" class="mb-2">启用</moz:checkbox>
+    <div class="form-group">
+        <label>项目名称</label>
+        <input asp-for="Input.Name" class="form-control" />
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>负责人</label>
+        <moz:user-dropdownlist for="Input.UserId" class="form-control"></moz:user-dropdownlist>
+    </div>
+    <div class="form-group">
+        <label>备注</label>
+        <textarea asp-for="Input.Summary" class="form-control" rows="3"></textarea>
+    </div>
+</form>

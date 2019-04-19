@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mozlite.Utils;
 
 namespace Mozlite.Extensions.Storages
 {
@@ -17,9 +18,6 @@ namespace Mozlite.Extensions.Storages
         private readonly IStorageDirectory _directory;
         private readonly IDbContext<MediaFile> _mfdb;
         private readonly IDbContext<StoredFile> _sfdb;
-
-        private const string UserAgent =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
         private readonly string _media;
         private readonly string _thumbs;
 
@@ -81,15 +79,8 @@ namespace Mozlite.Extensions.Storages
         public virtual async Task<MediaResult> DownloadAsync(string url, Action<MediaFile> init, bool unique = true)
         {
             var uri = new Uri(url);
-            using (var client = new HttpClient())
-            {
-                FileInfo tempFile;
-                client.DefaultRequestHeaders.Referrer = new Uri($"{uri.Scheme}://{uri.DnsSafeHost}{(uri.IsDefaultPort ? null : ":" + uri.Port)}/");
-                client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
-                using (var stream = await client.GetStreamAsync(uri))
-                    tempFile = await _directory.SaveToTempAsync(stream);
-                return await SaveAsync(tempFile, uri.AbsolutePath, init, unique);
-            }
+            var tempFile = await _directory.SaveToTempAsync(uri);
+            return await SaveAsync(tempFile, uri.AbsolutePath, init, unique);
         }
 
         /// <summary>

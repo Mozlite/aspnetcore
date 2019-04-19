@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Mozlite.Extensions;
 using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Security.Permissions;
@@ -47,7 +47,7 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Tasks
                 }
                 catch (Exception)
                 {
-                    ModelState.AddModelError("Input.Interval", "Ê±¼ä¼ä¸ô¸ñÊ½´íÎó£¬ÇëÊäÈëÕıÈ·µÄ¸ñÊ½£¡");
+                    ModelState.AddModelError("Input.Interval", "æ—¶é—´é—´éš”æ ¼å¼é”™è¯¯ï¼Œè¯·è¾“å…¥æ­£ç¡®çš„æ ¼å¼ï¼");
                     return Error();
                 }
             }
@@ -56,9 +56,9 @@ namespace Mozlite.Mvc.RazorUI.Areas.Core.Pages.Admin.Tasks
             if (await _taskManager.SaveArgumentIntervalAsync(Input.Id, interval?.ToString()))
             {
                 interval = Task.Interval;
-                await EventLogger.LogCoreAsync("½«ºóÌ¨·şÎñ {2} µÄÊ±¼ä¼ä¸ôÓÉ {0} ĞŞ¸ÄÎª {1}¡£", Task.ToHtmlInterval().ToString(), interval.ToHtmlString().ToString(),
+                await EventLogger.LogCoreAsync("å°†åå°æœåŠ¡ {2} çš„æ—¶é—´é—´éš”ç”± {0} ä¿®æ”¹ä¸º {1}ã€‚", Task.ToHtmlInterval().ToString(), interval.ToHtmlString().ToString(),
                     Task.Name);
-                return Success("ÄãÒÑ¾­³É¹¦¸ü¸ÄÁËÊ±¼ä¼ä¸ô£¡");
+                return Success("ä½ å·²ç»æˆåŠŸæ›´æ”¹äº†æ—¶é—´é—´éš”ï¼");
             }
             return Error();
         }

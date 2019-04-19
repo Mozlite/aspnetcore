@@ -39,7 +39,17 @@
                                 <ul style="list-style: none; padding: 0;">
                                     @foreach (var parameter in api.ParameterDescriptions)
                                     {
-                                        <li><em>@(parameter.Name)：</em>@(parameter.GetDescription())</li>
+                                    <li>
+                                        <em>@(parameter.Name)：</em>
+                                        @if (api.HttpMethod == "POST")
+                                        {
+                                            <code>@(parameter.GetDescription())</code>
+                                        }
+                                        else
+                                        {
+                                            @(parameter.GetDescription())
+                                        }
+                                    </li>
                                     }
                                 </ul>
                             }
