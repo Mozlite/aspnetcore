@@ -183,7 +183,8 @@ namespace Mozlite.Extensions.Storages
                 .Select<MediaFile>(x => x.Name)
                 .Select(x => new { x.FileId, x.ContentType })
                 .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
-            file.PhysicalPath = Path.Combine(_media, file.PhysicalPath);
+            if (file != null)
+                file.PhysicalPath = Path.Combine(_media, file.PhysicalPath);
             return file;
         }
 
@@ -266,6 +267,8 @@ namespace Mozlite.Extensions.Storages
                 .Select<MediaFile>(x => x.Name)
                 .Select(x => new { x.FileId, x.ContentType })
                 .FirstOrDefaultAsync(reader => new StoredPhysicalFile(reader));
+            if (file == null)
+                return null;
             var thumbFile = new FileInfo(Path.Combine(_thumbs, file.PhysicalPath).Replace(".moz", $".{width}x{height}.moz"));
             if (!thumbFile.Exists)
             {
