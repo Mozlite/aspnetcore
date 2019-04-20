@@ -5,10 +5,10 @@
 }
 <div class="container mozskin-main mt-4">
     <h4>@ViewData["Title"]</h4>
+    <hr />
     <div class="row">
         <div class="col-md-4">
             <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.UserName"></label>

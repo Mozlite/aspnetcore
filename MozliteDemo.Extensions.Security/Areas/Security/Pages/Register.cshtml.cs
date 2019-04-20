@@ -4,6 +4,7 @@ using Mozlite.Extensions.Messages;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using MozliteDemo.Extensions.Security.Properties;
 
 namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 {
@@ -76,7 +77,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
 
                 if (result.Succeeded)
                 {
-                    EventLogger.LogUser("注册了新用户。");
+                    EventLogger.Log(user.UserId, Resources.EventType, "注册了新用户。");
 
                     if (Settings.RequiredEmailConfirmed)
                     {
