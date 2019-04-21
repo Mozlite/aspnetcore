@@ -9,12 +9,19 @@ namespace Mozlite.Extensions.Storages.Epub
     /// <summary>
     /// 定义。
     /// </summary>
-    public static class Epubs
+    public static class EpubSettings
     {
+        /// <summary>
+        /// 扩展名称。
+        /// </summary>
+        public const string ExtensionName = "Epub";
+
         /// <summary>
         /// 默认样式。
         /// </summary>
         internal static readonly string DefaultStyle = @"body {margin: 10px;font-size: 1.0em;word-wrap: break-word;}ul,li {list-style-type: none;margin: 0;padding: 0;}p {text-indent: 2em;line-height: 1.5em;margin-top: 0;margin-bottom: 1.5em;}.chapter {line-height: 3.5em;height: 3.5em;font-size: 0.8em;}li {border-bottom: 1px solid #D5D5D5;}h1 {font-size: 1.6em;font-weight: bold;}h2 {display: block;font-size: 1.2em;font-weight: bold;margin-bottom: 0.83em;margin-left: 0;margin-right: 0;margin-top: 1em;}.break {display: block;margin-bottom: 0;margin-left: 0;margin-right: 0;margin-top: 0}a {color: inherit;text-decoration: none;cursor: default}a[href] {color: blue;text-decoration: none;cursor: pointer}.italic {font-style: italic}";
+
+        internal static readonly string ContainerFile = "META-INF/container.xml";
 
         /// <summary>
         /// META-INF/container.xml。

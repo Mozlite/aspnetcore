@@ -15,6 +15,7 @@ namespace Mozlite.Extensions.Storages
         {
             var contentTypes = new List<Tuple<string, string>>
             {
+                new Tuple<string, string>(".epub", "application/epub+zip"),
                 new Tuple<string, string>(".001", "application/x-001"),
                 new Tuple<string, string>(".301", "application/x-301"),
                 new Tuple<string, string>(".323", "text/h323"),

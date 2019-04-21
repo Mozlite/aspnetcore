@@ -28,6 +28,31 @@ namespace Mozlite.Extensions.Storages
         }
 
         /// <summary>
+        /// 确认文件夹，如果文件夹不存在则创建文件夹。
+        /// </summary>
+        /// <param name="path">当前物理路径实例。</param>
+        /// <returns>返回当前物理路径。</returns>
+        public static string MakeDirectory(this string path)
+        {
+            var dir = Path.GetDirectoryName(path);
+            if (dir == null || Directory.Exists(dir))
+                return path;
+            Directory.CreateDirectory(dir);
+            return path;
+        }
+
+        /// <summary>
+        /// 如果文件存在，则删除文件并返回当前物理路径。
+        /// </summary>
+        /// <param name="path">当前物理路径实例。</param>
+        /// <returns>返回当前物理路径。</returns>
+        public static string DeleteFile(this string path)
+        {
+            if (File.Exists(path)) File.Delete(path);
+            return path;
+        }
+
+        /// <summary>
         /// 判断当前路径是否为物理路径。
         /// </summary>
         /// <param name="path">当前路径。</param>
@@ -57,9 +82,7 @@ namespace Mozlite.Extensions.Storages
             return await HttpHelper.ExecuteAsync(async client =>
             {
                 using (var stream = await client.GetStreamAsync(uri))
-                {
                     await stream.SaveToAsync(path);
-                }
                 return name;
             });
         }
@@ -78,9 +101,7 @@ namespace Mozlite.Extensions.Storages
                 return await HttpHelper.ExecuteAsync(async client =>
                 {
                     using (var stream = await client.GetStreamAsync(uri))
-                    {
                         await stream.SaveToAsync(path);
-                    }
                     return Path.GetExtension(uri.AbsolutePath);
                 });
             }
@@ -100,12 +121,8 @@ namespace Mozlite.Extensions.Storages
         public static string ReadText(string path, Encoding encoding = null, FileShare share = FileShare.None)
         {
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, share))
-            {
-                using (var reader = new StreamReader(fs, encoding ?? Encoding.UTF8))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            using (var reader = new StreamReader(fs, encoding ?? Encoding.UTF8))
+                return reader.ReadToEnd();
         }
 
         /// <summary>
@@ -118,12 +135,8 @@ namespace Mozlite.Extensions.Storages
         public static async Task<string> ReadTextAsync(string path, Encoding encoding = null, FileShare share = FileShare.None)
         {
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, share))
-            {
-                using (var reader = new StreamReader(fs, encoding ?? Encoding.UTF8))
-                {
-                    return await reader.ReadToEndAsync();
-                }
-            }
+            using (var reader = new StreamReader(fs, encoding ?? Encoding.UTF8))
+                return await reader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -192,7 +205,7 @@ namespace Mozlite.Extensions.Storages
         /// <returns>返回当前文件的编码。</returns>
         public static Encoding GetEncoding(string path, Encoding defaultEncoding = null)
         {
-            defaultEncoding = defaultEncoding ?? Encoding.Default;
+            defaultEncoding = defaultEncoding ?? Encoding.GetEncoding("GB2312");
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 if (fs.Length < 3)

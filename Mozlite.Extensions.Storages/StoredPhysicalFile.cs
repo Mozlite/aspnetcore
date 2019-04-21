@@ -7,6 +7,11 @@ namespace Mozlite.Extensions.Storages
     /// </summary>
     public class StoredPhysicalFile
     {
+        /// <summary>
+        /// 初始化类<see cref="StoredPhysicalFile"/>。
+        /// </summary>
+        public StoredPhysicalFile() { }
+
         internal StoredPhysicalFile(DbDataReader reader)
         {
             FileName = reader["Name"]?.ToString();

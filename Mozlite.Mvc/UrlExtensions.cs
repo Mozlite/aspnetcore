@@ -79,5 +79,19 @@ namespace Mozlite.Mvc
             routes.Add("area", areaName);
             return urlHelper.Action(action, controller, routes);
         }
+
+        /// <summary>
+        /// 获取路由数据项。
+        /// </summary>
+        /// <param name="routeData">路由表格。</param>
+        /// <param name="key">配置键。</param>
+        /// <param name="defaultValue">默认值。</param>
+        /// <returns>返回路由数据项。</returns>
+        public static string GetValue(this RouteData routeData, string key, string defaultValue = null)
+        {
+            if (routeData.Values.TryGetValue(key, out var value))
+                return value?.ToString() ?? defaultValue;
+            return defaultValue;
+        }
     }
 }

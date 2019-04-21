@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mozlite.Extensions
@@ -37,13 +38,6 @@ namespace Mozlite.Extensions
         /// 包含子项数量。
         /// </summary>
         int Count { get; }
-
-        /// <summary>
-        /// 索引获取当前模型实例对象。
-        /// </summary>
-        /// <param name="index">索引值。</param>
-        /// <returns>返回当前模型实例。</returns>
-        object this[int index] { get; }
     }
 
     /// <summary>
@@ -67,13 +61,6 @@ namespace Mozlite.Extensions
         /// </summary>
         /// <param name="model">子集实例。</param>
         void Add(TModel model);
-
-        /// <summary>
-        /// 索引获取当前模型实例对象。
-        /// </summary>
-        /// <param name="index">索引值。</param>
-        /// <returns>返回当前模型实例。</returns>
-        new TModel this[int index] { get; }
     }
 
     /// <summary>
@@ -85,19 +72,18 @@ namespace Mozlite.Extensions
         /// 具有上下级关系的模型进行封装，将对象添加到父级或子集对象中，从而可以访问父级或子集对象实例。
         /// </summary>
         /// <param name="models">当前从数据库中获取的模型列表。</param>
-        /// <param name="id">当前模型ID，用于返回当前实例。</param>
         /// <returns>返回当前ID实例。</returns>
-        public static TModel Make<TModel>(IEnumerable<TModel> models, int id)
-            where TModel : IParentable<TModel>, new()
+        public static IDictionary<int, TModel> MakeDictionary<TModel>(this IEnumerable<TModel> models)
+            where TModel : IParentable<TModel>
         {
             var dic = models.ToDictionary(c => c.Id);
-            dic[0] = new TModel();
-            foreach (var category in models)
+            dic[0] = Activator.CreateInstance<TModel>();
+            foreach (var model in models)
             {
-                if (dic.TryGetValue(category.ParentId, out var temp))
-                    temp.Add(category);
+                if (dic.TryGetValue(model.ParentId, out var temp))
+                    temp.Add(model);
             }
-            return dic[id];
+            return dic;
         }
     }
 }

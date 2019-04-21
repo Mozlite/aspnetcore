@@ -234,4 +234,16 @@
   <data name="Api_EventType" xml:space="preserve">
     <value>开放平台</value>
   </data>
+  <data name="LinkTarget_Self" xml:space="preserve">
+    <value>_self</value>
+  </data>
+  <data name="LinkTarget_Blank" xml:space="preserve">
+    <value>_blank</value>
+  </data>
+  <data name="LinkTarget_Parent" xml:space="preserve">
+    <value>_parent</value>
+  </data>
+  <data name="LinkTarget_Top" xml:space="preserve">
+    <value>_top</value>
+  </data>
 </root>

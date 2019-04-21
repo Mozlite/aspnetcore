@@ -59,14 +59,7 @@ namespace Mozlite.Extensions.Groups
             {
                 ctx.SetDefaultAbsoluteExpiration();
                 var categories = Context.Fetch();
-                var dic = categories.ToDictionary(c => c.Id);
-                dic[0] = Activator.CreateInstance<TGroup>();
-                foreach (var category in categories)
-                {
-                    if (dic.TryGetValue(category.ParentId, out var temp))
-                        temp.Add(category);
-                }
-                return dic.Values;
+                return categories.MakeDictionary().Values;
             });
             return models.Filter(expression);
         }
@@ -83,14 +76,7 @@ namespace Mozlite.Extensions.Groups
             {
                 ctx.SetDefaultAbsoluteExpiration();
                 var categories = await Context.FetchAsync(cancellationToken: cancellationToken);
-                var dic = categories.ToDictionary(c => c.Id);
-                dic[0] = Activator.CreateInstance<TGroup>();
-                foreach (var category in categories)
-                {
-                    if (dic.TryGetValue(category.ParentId, out var temp))
-                        temp.Add(category);
-                }
-                return dic.Values;
+                return categories.MakeDictionary().Values;
             });
             return models.Filter(expression);
         }

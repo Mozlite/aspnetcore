@@ -11,7 +11,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
     /// js脚本标签，可以和HTML混合并用，开放参数：
     /// $this:表示当前标签jQuery对象；
     /// $model:表示当前JSON对象；
-    /// 注意：script标签里的代码将在呈现后进行调用。
+    /// 注意：代码里的"&lt;"和"&gt;"号需要空格分割，script标签里的代码将在呈现后进行调用。
     /// </summary>
     [HtmlTargetElement("*", Attributes = "mozjs")]
     [HtmlTargetElement("moz:js", Attributes = "href")]
@@ -124,7 +124,7 @@ namespace Mozlite.Mvc.TagHelpers.Common
 
             while (reader.MoveNext())
             {
-                if (reader.Current == '<' && !reader.IsNext(' '))
+                if (reader.Current == '<' && reader.IsTag())
                 {//读取html标签
                     ReadHtml(output, builder, reader);
                     continue;
@@ -140,6 +140,13 @@ namespace Mozlite.Mvc.TagHelpers.Common
                 if (reader.Current == '`')
                 {//字符串
                     ReadQuote(output, builder, reader);
+                    continue;
+                }
+
+                if(reader.Current == '<')
+                {//代码里的小于号if(i < 0){}
+                    output.AppendHtml("<");
+                    reader.Skip();
                     continue;
                 }
 

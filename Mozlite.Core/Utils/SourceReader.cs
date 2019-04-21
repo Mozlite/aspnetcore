@@ -59,6 +59,19 @@ namespace Mozlite.Utils
         }
 
         /// <summary>
+        /// 判断是否下一个字符串是否为HTML标签。
+        /// </summary>
+        /// <returns>返回判断结果。</returns>
+        public bool IsTag()
+        {
+            var index = _index + 1;
+            if (_length <= index)
+                return false;
+            var current = char.ToUpper(_source[index]);
+            return current == '/' || (current >= 'A' && current <= 'Z');
+        }
+
+        /// <summary>
         /// 判断是否下一个非空字符是否为当前字符。
         /// </summary>
         /// <param name="current">当前非空字符。</param>
@@ -221,39 +234,6 @@ namespace Mozlite.Utils
         }
 
         /// <summary>
-        /// 读取代码块。
-        /// </summary>
-        /// <param name="start">块开始符号。</param>
-        /// <param name="end">块结束符号。</param>
-        /// <param name="builder">字符串构建实例。</param>
-        /// <returns>返回当前字符串。</returns>
-        public string ReadBlock(char start, char end, StringBuilder builder = null)
-        {
-            builder = builder ?? new StringBuilder();
-            var blocks = 0;
-            while (_source.Length > _index)
-            {
-                var current = Current;
-                if (current.IsQuote())
-                {
-                    ReadQuote(current, builder);
-                    continue;
-                }
-
-                builder.Append(current);
-                _index++;
-
-                if (current == start)
-                    blocks++;
-                else if (current == end)
-                    blocks--;
-                if (blocks <= 0)
-                    break;
-            }
-            return builder.ToString();
-        }
-
-        /// <summary>
         /// 读取字符串。
         /// </summary>
         /// <param name="end">结束字符。</param>
@@ -318,6 +298,71 @@ namespace Mozlite.Utils
                 if (current.IsQuote())
                 {
                     ReadQuote(current, builder);
+                    continue;
+                }
+                if (ends.Any(x => x == current))
+                    return builder.ToString();
+                builder.Append(current);
+                Skip();
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// 读取代码块。
+        /// </summary>
+        /// <param name="start">块开始符号。</param>
+        /// <param name="end">块结束符号。</param>
+        /// <param name="builder">字符串构建实例。</param>
+        /// <returns>返回当前字符串。</returns>
+        public string ReadBlock(char start, char end, StringBuilder builder = null)
+        {
+            builder = builder ?? new StringBuilder();
+            var blocks = 0;
+            while (_source.Length > _index)
+            {
+                var current = Current;
+                if (current.IsQuote())
+                {
+                    ReadQuote(current, builder);
+                    continue;
+                }
+
+                builder.Append(current);
+                _index++;
+
+                if (current == start)
+                    blocks++;
+                else if (current == end)
+                    blocks--;
+                if (blocks <= 0)
+                    break;
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// 读取字符串。
+        /// </summary>
+        /// <param name="ends">结束字符集。</param>
+        /// <param name="start">块开始符号。</param>
+        /// <param name="end">块结束符号。</param>
+        /// <param name="builder">字符串构建实例。</param>
+        /// <returns>返回当前字符串。</returns>
+        public string ReadUntil(char[] ends, char start, char end, StringBuilder builder = null)
+        {
+            builder = builder ?? new StringBuilder();
+            while (_source.Length > _index)
+            {
+                var current = Current;
+                if (current.IsQuote())
+                {
+                    ReadQuote(current, builder);
+                    continue;
+                }
+                else if (current == start)
+                {
+                    ReadBlock(start, end, builder);
                     continue;
                 }
                 if (ends.Any(x => x == current))

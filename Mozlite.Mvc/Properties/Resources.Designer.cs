@@ -19,7 +19,7 @@ namespace Mozlite.Mvc.Properties {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -210,6 +210,42 @@ namespace Mozlite.Mvc.Properties {
         internal static string LastPage {
             get {
                 return ResourceManager.GetString("LastPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 _blank 的本地化字符串。
+        /// </summary>
+        internal static string LinkTarget_Blank {
+            get {
+                return ResourceManager.GetString("LinkTarget_Blank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 _parent 的本地化字符串。
+        /// </summary>
+        internal static string LinkTarget_Parent {
+            get {
+                return ResourceManager.GetString("LinkTarget_Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 _self 的本地化字符串。
+        /// </summary>
+        internal static string LinkTarget_Self {
+            get {
+                return ResourceManager.GetString("LinkTarget_Self", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 _top 的本地化字符串。
+        /// </summary>
+        internal static string LinkTarget_Top {
+            get {
+                return ResourceManager.GetString("LinkTarget_Top", resourceCulture);
             }
         }
         

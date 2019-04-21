@@ -58,22 +58,13 @@ namespace Mozlite.Extensions.Groups
         }
 
         /// <summary>
-        /// 索引获取当前模型实例对象。
-        /// </summary>
-        /// <param name="index">索引值。</param>
-        /// <returns>返回当前模型实例。</returns>
-        public TGroup this[int index] => _children[index];
-
-        /// <summary>
         /// 包含分组集合。
         /// </summary>
-        public List<TGroup> Children => _children;
+        public virtual List<TGroup> Children => _children;
 
         /// <summary>
         /// 子级数量。 
         /// </summary>
         public int Count => _children.Count;
-
-        object IParentable.this[int index] => this[index];
     }
 }
