@@ -265,4 +265,4 @@ __pycache__/
 /**/.DS_Store
 /**/package-lock.json
 /**/appsettings.Development.json
-.lock
+*.lock
