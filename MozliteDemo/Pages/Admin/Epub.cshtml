@@ -16,10 +16,9 @@
         <input asp-for="Input.DC.Creator" class="form-control" />
     </div>
     <div class="form-group">
-        <button type="button" data-toggle="uploader" class="btn btn-secondary"><i class="fa fa-picture-o"></i> 添加文件</button>
-        <button type="button" js-action="@Url.Page("./Epub", "Load")" js-data-bookid="@Model.Input.BookId" class="btn btn-secondary">载入</button>
-        <button type="submit" class="btn btn-secondary">提交</button>
-        <button type="button" js-action="@Url.Page("./Epub", "Save")" js-data-bookid="@Model.Input.BookId" class="btn btn-secondary">生成</button>
+        <button type="button" js-data-bookid="@Model.Input.BookId" js-upload="@Url.Page("./Epub", "Upload")" class="btn btn-secondary"><i class="fa fa-picture-o"></i> 添加文件</button>
+        <button type="submit" class="btn btn-secondary"><i class="fa fa-save"></i> 保存配置</button>
+        <button type="submit" asp-page-handler="Save" class="btn btn-secondary"><i class="fa fa-user-secret"></i>生成</button>
     </div>
     @if (Model.Input.Manifest != null)
     {
@@ -68,5 +67,4 @@
             </table>
         }
     }
-    <input type="file" js-data-bookid="@Model.Input.BookId" class="hide" js-uploader="@Url.Page("./Epub", "Upload")" />
 </form>

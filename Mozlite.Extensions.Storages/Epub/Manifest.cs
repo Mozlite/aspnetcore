@@ -13,7 +13,7 @@ namespace Mozlite.Extensions.Storages.Epub
         /// </summary>
         public string Id
         {
-            get => _id ?? (_id = Href.Replace("/", ".").Replace("\\", ".").ToLower());
+            get => _id ?? (_id = "id_" + Href.Replace(".xhtml", string.Empty).Replace("/", "_").Replace("\\", "_").Replace(".", "_").ToLower());
             set => _id = value;
         }
 

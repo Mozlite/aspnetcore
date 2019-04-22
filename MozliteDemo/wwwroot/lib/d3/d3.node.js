@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -34,7 +34,7 @@ var d3Transition = require('d3-transition');
 var d3Voronoi = require('d3-voronoi');
 var d3Zoom = require('d3-zoom');
 
-var version = "5.9.1";
+var version = "5.9.2";
 
 Object.keys(d3Array).forEach(function (key) { exports[key] = d3Array[key]; });
 Object.keys(d3Axis).forEach(function (key) { exports[key] = d3Axis[key]; });

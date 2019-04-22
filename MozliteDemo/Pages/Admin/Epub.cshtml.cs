@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -30,19 +31,22 @@ namespace MozliteDemo.Pages.Admin
             Input = (EpubFile)_epubManager.Create(id);
         }
 
-        public async Task<IActionResult> OnPostUpload(IFormFile file, string bookid)
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile file, string bookid)
         {
             var epub = _epubManager.Create(bookid);
-            var info = await _storageDirectory.SaveToTempAsync(file);
-            epub.AddFile(file.FileName, info.FullName);
-            return Success("成功上传了文件！");
-        }
+            if (Path.GetExtension(file.FileName).ToLower() == ".txt")
+            {
+                var chapters = await _epubManager.LoadFileAsync(file);
+                await epub.AddChaptersAsync(chapters);
+                return Success("成功上传了文件！");
+            }
 
-        public async Task<IActionResult> OnPostLoadAsync(string bookid, string file)
-        {
-            var epub = await _epubManager.LoadFileAsync(bookid, file ?? "all.txt");
-            epub.AddDefaultStyle();
-            return Success("成功加载文件！");
+            var info = await _storageDirectory.SaveToTempAsync(file);
+            if (file.FileName.IsPictureFile())
+                await epub.AddCoverAsync(file.FileName, info.FullName);
+            else
+                epub.AddFile(file.FileName, info.FullName);
+            return Success("成功上传了文件！");
         }
 
         public IActionResult OnPost()
@@ -51,18 +55,22 @@ namespace MozliteDemo.Pages.Admin
             var epubFile = (EpubFile)epub;
             epubFile.DC = Input.DC;
             var storeds = epubFile.Manifest.ToDictionary(x => x.Href, StringComparer.OrdinalIgnoreCase);
-            foreach (var manifest in Input.Manifest)
+            if (Input.Manifest != null)
             {
-                if (storeds.TryGetValue(manifest.Href, out var stored))
-                {//修改
-                    stored.IsCover = manifest.IsCover;
-                    stored.Title = manifest.Title;
-                    stored.IsSpine = manifest.IsSpine;
-                    stored.IsToc = manifest.IsToc;
-                }
-                else
+                foreach (var manifest in Input.Manifest)
                 {
-                    epubFile.Manifest.Add(manifest);
+                    if (storeds.TryGetValue(manifest.Href, out var stored))
+                    {
+                        //修改
+                        stored.IsCover = manifest.IsCover;
+                        stored.Title = manifest.Title;
+                        stored.IsSpine = manifest.IsSpine;
+                        stored.IsToc = manifest.IsToc;
+                    }
+                    else
+                    {
+                        epubFile.Manifest.Add(manifest);
+                    }
                 }
             }
             epubFile.Metadata = Input.Metadata;
@@ -74,16 +82,18 @@ namespace MozliteDemo.Pages.Admin
         public IActionResult OnPostDelete(string bookid, string file)
         {
             var epub = _epubManager.Create(bookid);
-            epub.RemoveFile(file);
+            epub.Remove(file);
             return Success("移除成功！");
         }
 
-        public IActionResult OnPostSave(string bookid, string file)
+        public IActionResult OnPostSave()
         {
-            var epub = _epubManager.Create(bookid);
+            var epub = _epubManager.Create(Input.BookId);
             epub.AddToc();
-            epub.Compile(file ?? $"{((EpubFile)epub).DC?.Title ?? "test"}.epub");
-            return Success("生成成功！");
+            epub.AddDefaultStyle();
+            var path = _storageDirectory.GetTempPath($"{Input.BookId}.epub");
+            epub.Compile(path);
+            return PhysicalFile(path, ".epub".GetContentType(), $"{Input.DC.Title}.epub");
         }
     }
 }
