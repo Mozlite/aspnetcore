@@ -23,7 +23,7 @@ namespace MozliteDemo
         /// <returns>返回执行结果。</returns>
         public override async Task<InstallerStatus> ExecuteAsync()
         {
-            if (!await _userManager.CreateOwnerAsync("开发员", "admin", "admin", user =>
+            if (!await _userManager.CreateOwnerAsync("admin", "admin", user =>
             {
                 user.Email = "support@test.com";
             }))

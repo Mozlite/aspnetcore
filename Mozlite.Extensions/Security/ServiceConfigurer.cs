@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
 {
@@ -29,33 +28,43 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 配置服务。
         /// </summary>
-        /// <param name="services">服务集合。</param>
-        /// <param name="configuration">配置接口。</param>
-        protected abstract void ConfigureSecurityServices(IServiceCollection services, IConfiguration configuration);
+        /// <param name="builder">容器构建实例。</param>
+        protected abstract void ConfigureSecurityServices(IMozliteBuilder builder);
 
         /// <summary>
-        /// 配置服务方法。
+        /// 配置<see cref="IdentityBuilder"/>实例。
         /// </summary>
-        /// <param name="services">服务集合实例。</param>
-        /// <param name="configuration">配置接口。</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        /// <param name="builder"><see cref="IdentityBuilder"/>实例。</param>
+        protected virtual void ConfigureIdentityServices(IdentityBuilder builder)
         {
-            services.AddIdentity<TUser, TRole>()
-                .AddUserStore<TUserStore>()
+            builder.AddUserStore<TUserStore>()
                 .AddRoleStore<TRoleStore>()
                 .AddUserManager<TUserManager>()
                 .AddRoleManager<TRoleManager>()
                 .AddErrorDescriber<SecurityErrorDescriptor>()
                 .AddDefaultTokenProviders();
-            services.ConfigureApplicationCookie(options => Init(options, configuration.GetSection("User")))
-                .Configure<CookiePolicyOptions>(options =>
-                {
-                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                    options.CheckConsentNeeded = context => false;//是否开启GDPR
-                    options.MinimumSameSitePolicy = SameSiteMode.None;
-                });
-            services.AddAuthentication();
-            ConfigureSecurityServices(services, configuration);
+        }
+
+        /// <summary>
+        /// 配置服务方法。
+        /// </summary>
+        /// <param name="builder">容器构建实例。</param>
+        public void ConfigureServices(IMozliteBuilder builder)
+        {
+            builder.AddServices(services =>
+            {
+                var identityBuilder = services.AddIdentity<TUser, TRole>();
+                ConfigureIdentityServices(identityBuilder);
+                services.ConfigureApplicationCookie(options => Init(options, builder.Configuration.GetSection("User")))
+                    .Configure<CookiePolicyOptions>(options =>
+                    {
+                        // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                        options.CheckConsentNeeded = context => false;//是否开启GDPR
+                        options.MinimumSameSitePolicy = SameSiteMode.None;
+                    });
+                services.AddAuthentication();
+            });
+            ConfigureSecurityServices(builder);
         }
 
         /// <summary>

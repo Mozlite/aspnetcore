@@ -1,5 +1,5 @@
 ﻿using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
+using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Settings;
 using Mozlite.Mvc;
 using System;
@@ -189,7 +189,7 @@ namespace Mozlite.Extensions.Messages
         {
             var title = GetTemplate(resourceKey + "_Title", replacement, resourceType);
             var content = GetTemplate(resourceKey + "_Content", replacement, resourceType);
-            return SendEmail(user.UserId, user.Email, title, content, action);
+            return SendEmail(user.Id, user.Email, title, content, action);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Mozlite.Extensions.Messages
         {
             var title = GetTemplate(resourceKey + "_Title", replacement, resourceType);
             var content = GetTemplate(resourceKey + "_Content", replacement, resourceType);
-            return SendEmailAsync(user.UserId, user.Email, title, content, action);
+            return SendEmailAsync(user.Id, user.Email, title, content, action);
         }
 
         /// <summary>

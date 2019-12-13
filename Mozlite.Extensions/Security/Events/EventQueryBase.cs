@@ -1,5 +1,4 @@
 ﻿using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
 using System;
 
 namespace Mozlite.Extensions.Security.Events
@@ -48,7 +47,7 @@ namespace Mozlite.Extensions.Security.Events
         protected override void Init(IQueryContext<EventMessage> context)
         {
             context.WithNolock().Select();
-            context.InnerJoin<TUser>((a, u) => a.UserId == u.UserId)
+            context.InnerJoin<TUser>((a, u) => a.UserId == u.Id)
                 .Select<TUser>(x => new { x.UserName, x.NormalizedUserName, x.Avatar });
             if (EventId > 0)
                 context.Where(x => x.EventId == EventId);
@@ -90,7 +89,7 @@ namespace Mozlite.Extensions.Security.Events
             if (RoleLevel > 0)
             {
                 context.Select()
-                    .LeftJoin<TUser, TRole>((u, r) => u.RoleId == r.RoleId)
+                    .LeftJoin<TUser, TRole>((u, r) => u.RoleId == r.Id)
                     .Where<TRole>(x => x.RoleLevel <= RoleLevel);
             }
         }

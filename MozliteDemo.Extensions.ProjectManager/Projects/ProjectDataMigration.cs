@@ -23,7 +23,7 @@ namespace MozliteDemo.Extensions.ProjectManager.Projects
         {
             builder.CreateTable<ProjectUser>(table => table
                 .Column(x => x.Id)
-                .ForeignKey<User>(x => x.Id, x => x.UserId, onDelete: ReferentialAction.Cascade)
+                .ForeignKey<User>(x => x.Id, x => x.Id, onDelete: ReferentialAction.Cascade)
             );
         }
     }

@@ -51,7 +51,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
                     protocol: Request.Scheme);
 
                 await _emailSender.SendEmailAsync(
-                    user.UserId,
+                    user.Id,
                     Input.Email,
                     "重置密码",
                     $"重置密码链接： <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>点击这里</a>...");

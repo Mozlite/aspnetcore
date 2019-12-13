@@ -77,7 +77,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
                 return NotFound("用户不存在！");
             }
 
-            var info = await _userManager.SignInManager.GetExternalLoginInfoAsync(user.UserId.ToString());
+            var info = await _userManager.SignInManager.GetExternalLoginInfoAsync(user.Id.ToString());
             if (info == null)
             {
                 throw new InvalidOperationException("载入社会化登录失败！");

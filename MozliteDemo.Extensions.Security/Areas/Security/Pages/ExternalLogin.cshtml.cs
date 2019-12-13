@@ -116,7 +116,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             {
                 var user = new User();
                 user.UserName = Input.UserName;
-                user.NormalizedUserName = _userManager.NormalizeKey(Input.LoginName);
+                user.NormalizedUserName = _userManager.NormalizeName(Input.LoginName);
                 user.Email = Input.Email;
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)

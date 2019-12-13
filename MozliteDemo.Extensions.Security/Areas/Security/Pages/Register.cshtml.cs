@@ -71,13 +71,13 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             {
                 var user = new User();
                 user.UserName = Input.UserName;
-                user.NormalizedUserName = _userManager.NormalizeKey(Input.UserName);
+                user.NormalizedUserName = _userManager.NormalizeName(Input.UserName);
                 user.Email = Input.Email;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    EventLogger.Log(user.UserId, Resources.EventType, "注册了新用户。");
+                    EventLogger.Log(user.Id, Resources.EventType, "注册了新用户。");
 
                     if (Settings.RequiredEmailConfirmed)
                     {
@@ -85,10 +85,10 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
                         var callbackUrl = Url.Page(
                             "/Account/ConfirmEmail",
                             pageHandler: null,
-                            values: new { userId = user.UserId, code = code },
+                            values: new { userId = user.Id, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(user.UserId, Input.Email, "激活账号",
+                        await _emailSender.SendEmailAsync(user.Id, Input.Email, "激活账号",
                             $"激活账号：<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>点击这里</a>...");
                     }
                     else

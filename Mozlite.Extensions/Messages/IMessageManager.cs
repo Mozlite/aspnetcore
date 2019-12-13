@@ -1,7 +1,7 @@
-﻿using Mozlite.Extensions.Security.Stores;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mozlite.Extensions.Security;
 
 namespace Mozlite.Extensions.Messages
 {

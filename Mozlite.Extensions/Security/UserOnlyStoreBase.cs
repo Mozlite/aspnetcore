@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Mozlite.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Mozlite.Data;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 用户存储类型。
@@ -17,8 +17,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     public abstract class UserOnlyStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
-        : IdentityUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>,
-            IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
+        : UserStoreBase<TUser, int, TUserClaim, TUserLogin, TUserToken>, IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -71,7 +70,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回更新结果。</returns>
         public virtual bool Update(int userId, object fields)
         {
-            return UserContext.Update(x => x.UserId == userId, fields);
+            return UserContext.Update(x => x.Id == userId, fields);
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回更新结果。</returns>
         public virtual Task<bool> UpdateAsync(int userId, object fields, CancellationToken cancellationToken = default)
         {
-            return UserContext.UpdateAsync(x => x.UserId == userId, fields, cancellationToken);
+            return UserContext.UpdateAsync(x => x.Id == userId, fields, cancellationToken);
         }
 
         /// <summary>
@@ -116,9 +115,25 @@ namespace Mozlite.Extensions.Security.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-            await UserContext.CreateAsync(user, cancellationToken);
-            return IdentityResult.Success;
+            }
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await db.CreateAsync(user, cancellationToken))
+                        return false;
+                    if (!await handler.OnCreatedAsync(db, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.CreateAsync(user, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -131,9 +146,25 @@ namespace Mozlite.Extensions.Security.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-            await UserContext.UpdateAsync(user, cancellationToken);
-            return IdentityResult.Success;
+            }
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await handler.OnUpdateAsync(db, cancellationToken))
+                        return false;
+                    if (!await db.UpdateAsync(user, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.UpdateAsync(user, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -149,8 +180,22 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            await UserContext.DeleteAsync(user.UserId, cancellationToken);
-            return IdentityResult.Success;
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (user is IUserEventHandler<TUser> handler)
+            {
+                if (await UserContext.BeginTransactionAsync(async db =>
+                {
+                    if (!await handler.OnDeleteAsync(db, cancellationToken))
+                        return false;
+                    if (!await db.DeleteAsync(user.Id, cancellationToken))
+                        return false;
+                    return true;
+                }, cancellationToken: cancellationToken))
+                    return IdentityResult.Success;
+            }
+            else if (await UserContext.DeleteAsync(user.Id, cancellationToken))
+                return IdentityResult.Success;
+            return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
 
         /// <summary>
@@ -188,7 +233,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="userId">用户Id。</param>
         /// <param name="cancellationToken">取消标志。</param>
         /// <returns>返回当前用户实例。</returns>
-        public override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default)
+        protected override Task<TUser> FindUserAsync(int userId, CancellationToken cancellationToken = default)
         {
             return UserContext.FindAsync(userId, cancellationToken);
         }
@@ -223,9 +268,9 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回判断结果。</returns>
         public virtual IdentityResult IsDuplicated(TUser user)
         {
-            if (user.UserName != null && UserContext.Any(x => x.UserId != user.UserId && x.UserName == user.UserName))
+            if (user.UserName != null && UserContext.Any(x => x.Id != user.Id && x.UserName == user.UserName))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
-            if (user.NormalizedUserName != null && UserContext.Any(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName))
+            if (user.NormalizedUserName != null && UserContext.Any(x => x.Id != user.Id && x.NormalizedUserName == user.NormalizedUserName))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
             return IdentityResult.Success;
         }
@@ -238,9 +283,9 @@ namespace Mozlite.Extensions.Security.Stores
         /// <returns>返回判断结果。</returns>
         public virtual async Task<IdentityResult> IsDuplicatedAsync(TUser user, CancellationToken cancellationToken = default)
         {
-            if (user.UserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.UserName == user.UserName, cancellationToken))
+            if (user.UserName != null && await UserContext.AnyAsync(x => x.Id != user.Id && x.UserName == user.UserName, cancellationToken))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.UserName));
-            if (user.NormalizedUserName != null && await UserContext.AnyAsync(x => x.UserId != user.UserId && x.NormalizedUserName == user.NormalizedUserName, cancellationToken))
+            if (user.NormalizedUserName != null && await UserContext.AnyAsync(x => x.Id != user.Id && x.NormalizedUserName == user.NormalizedUserName, cancellationToken))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
             return IdentityResult.Success;
         }
@@ -286,7 +331,7 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            var claims = await UserClaimContext.FetchAsync(x => x.UserId == user.UserId, cancellationToken);
+            var claims = await UserClaimContext.FetchAsync(x => x.UserId == user.Id, cancellationToken);
             return claims.Select(x => x.ToClaim()).ToList();
         }
 
@@ -340,7 +385,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(newClaim));
             }
             await UserClaimContext.UpdateAsync(
-                uc => uc.UserId == user.UserId && uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type,
+                uc => uc.UserId == user.Id && uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type,
                 new { ClaimType = newClaim.Type, ClaimValue = newClaim.Value }, cancellationToken);
         }
 
@@ -366,7 +411,7 @@ namespace Mozlite.Extensions.Security.Stores
                 foreach (var claim in claims)
                 {
                     await db.DeleteAsync(
-                        uc => uc.UserId == user.UserId && uc.ClaimType == claim.Type && uc.ClaimValue == claim.Value, cancellationToken);
+                        uc => uc.UserId == user.Id && uc.ClaimType == claim.Type && uc.ClaimValue == claim.Value, cancellationToken);
                 }
                 return true;
             }, cancellationToken: cancellationToken);
@@ -388,7 +433,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(claim));
             }
 
-            var users = await UserContext.AsQueryable().InnerJoin<TUserClaim>((u, c) => u.UserId == c.UserId)
+            var users = await UserContext.AsQueryable().InnerJoin<TUserClaim>((u, c) => u.Id == c.UserId)
                 .Where<TUserClaim>(x => x.ClaimType == claim.Type && x.ClaimValue == claim.Value)
                 .AsEnumerableAsync(cancellationToken);
 
@@ -406,7 +451,7 @@ namespace Mozlite.Extensions.Security.Stores
         protected override Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             return UserTokenContext.FindAsync(
-                x => x.UserId == user.UserId && x.LoginProvider == loginProvider && x.Name == name, cancellationToken);
+                x => x.UserId == user.Id && x.LoginProvider == loginProvider && x.Name == name, cancellationToken);
         }
 
         /// <summary>
@@ -464,7 +509,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(user));
             }
             await UserLoginContext.DeleteAsync(
-                x => x.UserId == user.UserId && x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
+                x => x.UserId == user.Id && x.LoginProvider == loginProvider && x.ProviderKey == providerKey,
                 cancellationToken);
         }
 
@@ -478,7 +523,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// </returns>
         public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default)
         {
-            var loginInfos = await UserLoginContext.FetchAsync(x => x.UserId == user.UserId, cancellationToken);
+            var loginInfos = await UserLoginContext.FetchAsync(x => x.UserId == user.Id, cancellationToken);
             return loginInfos.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName)).ToList();
         }
 
@@ -492,5 +537,8 @@ namespace Mozlite.Extensions.Security.Stores
         {
             return UserContext.FindAsync(x => x.NormalizedEmail == normalizedEmail, cancellationToken);
         }
+
+        Task<TUser> IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken>.FindUserAsync(int userId,
+            CancellationToken cancellationToken) => FindUserAsync(userId, cancellationToken);
     }
 }

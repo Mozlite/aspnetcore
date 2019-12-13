@@ -7,7 +7,7 @@
     var current = true;
 }
 <form method="post">
-    <input type="hidden" name="RoleId" value="@Model.Current.RoleId" />
+    <input type="hidden" name="RoleId" value="@Model.Current.Id" />
     <div class="panel panel-primary nav-panel" data-collapsed="0">
         <div class="panel-body">
             <div class="tab-content mb-3">
@@ -24,7 +24,7 @@
                                             <b>@permission.Text</b>
                                             <div class="text-secondary">@permission.Description</div>
                                         </td>
-                                        <td class="text-middle"><moz:permission-radioboxlist class="row" iclass="col-4" disabled="Model.Current.RoleLevel >= Model.Role.RoleLevel" roleid="Model.Current.RoleId" permissionid="permission.Id"></moz:permission-radioboxlist></td>
+                                        <td class="text-middle"><moz:permission-radioboxlist class="row" iclass="col-4" disabled="Model.Current.RoleLevel >= Model.Role.RoleLevel" roleid="Model.Current.Id" permissionid="permission.Id"></moz:permission-radioboxlist></td>
                                     </tr>
                                 }
                             </tbody>

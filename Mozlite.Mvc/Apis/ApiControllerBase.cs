@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 using Mozlite.Extensions.Messages;
 using Mozlite.Extensions.Messages.Notifications;
 using Mozlite.Extensions.Security.Events;
-using Mozlite.Extensions.Security.Stores;
 using Mozlite.Extensions.Storages.Apis;
 using System;
 using System.Threading.Tasks;
 using Mozlite.Extensions.Settings;
+using Mozlite.Extensions.Security;
 
 namespace Mozlite.Mvc.Apis
 {

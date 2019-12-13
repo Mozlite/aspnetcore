@@ -63,7 +63,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Controllers
                 model.UserName = model.UserName.Trim();
                 model.Password = model.Password.Trim();
 
-                var result = await _userManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, async user => await EventLogger.LogAsync(user.UserId, Resources.EventType, "成功登录系统。"));
+                var result = await _userManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, async user => await EventLogger.LogAsync(user.Id, Resources.EventType, "成功登录系统。"));
                 if (result.Succeeded)
                 {
                     Response.Cookies.Delete("login");

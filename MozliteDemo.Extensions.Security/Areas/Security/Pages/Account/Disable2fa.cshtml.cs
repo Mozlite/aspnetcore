@@ -41,7 +41,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             }
 
             user.TwoFactorEnabled = false;
-            if (!await _userManager.UpdateAsync(user.UserId, new { user.TwoFactorEnabled }))
+            if (!await _userManager.UpdateAsync(user.Id, new { user.TwoFactorEnabled }))
             {
                 throw new InvalidOperationException($"禁用'{user.UserName}'二次登录验证发生了错误！");
             }

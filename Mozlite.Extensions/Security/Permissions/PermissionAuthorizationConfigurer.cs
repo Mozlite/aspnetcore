@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozlite.Extensions.Security.Permissions
@@ -12,11 +11,10 @@ namespace Mozlite.Extensions.Security.Permissions
         /// <summary>
         /// 配置服务方法。
         /// </summary>
-        /// <param name="services">服务集合实例。</param>
-        /// <param name="configuration">配置接口。</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        /// <param name="builder">容器构建实例。</param>
+        public void ConfigureServices(IMozliteBuilder builder)
         {
-            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            builder.AddServices(services => services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>());
         }
     }
 }

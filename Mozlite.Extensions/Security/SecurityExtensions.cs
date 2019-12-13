@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
 using Mozlite.Mvc;
 using System.Linq;
 using System.Security.Claims;

@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Security.Stores
+﻿namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 用户和角色数据库操作上下文接口。
@@ -20,9 +20,6 @@
         where TUserToken : UserTokenBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
-        /// <summary>
-        /// 角色管理接口。
-        /// </summary>
-        IRoleManager<TRole, TUserRole, TRoleClaim> RoleManager { get; }
+
     }
 }

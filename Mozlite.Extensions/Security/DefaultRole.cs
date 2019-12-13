@@ -1,5 +1,5 @@
-﻿using Mozlite.Extensions.Properties;
-using Mozlite.Extensions.Security.Stores;
+﻿using System;
+using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Security
 {
@@ -62,7 +62,7 @@ namespace Mozlite.Extensions.Security
         /// <typeparam name="TRole">角色类型。</typeparam>
         public TRole As<TRole>() where TRole : RoleBase, new()
         {
-            return new TRole { Name = Name, NormalizedName = NormalizedName, RoleLevel = RoleLevel };
+            return new TRole { Name = Name, NormalizedName = NormalizedName, RoleLevel = RoleLevel, ConcurrencyStamp = Guid.NewGuid().ToString() };
         }
     }
 }

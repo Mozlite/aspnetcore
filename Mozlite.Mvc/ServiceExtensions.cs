@@ -24,7 +24,7 @@ namespace Mozlite.Mvc
         /// 添加静态资源目录。
         /// </summary>
         /// <typeparam name="TAssemblyResourceType">程序集资源类型。</typeparam>
-        /// <param name="service">服务集合。</param>
+        /// <param name="builder">服务集合。</param>
         /// <returns>服务集合。</returns>
         /// <remarks>
         /// 1.编辑“.csproj”项目文件，添加以下代码段（将文件夹设置为嵌入资源）：
@@ -39,8 +39,8 @@ namespace Mozlite.Mvc
         /// 
         /// 注意：资源目录为wwwroot，项目只能有一个wwwroot目录，为了不和其他程序集冲突，在wwwroot目录下文件夹最好和Areas目录下的文件夹一样。
         /// </remarks>
-        public static IServiceCollection AddResources<TAssemblyResourceType>(this IServiceCollection service) =>
-            service.ConfigureOptions(typeof(RazorResourceOptions<TAssemblyResourceType>));
+        public static IMozliteBuilder AddResources<TAssemblyResourceType>(this IMozliteBuilder builder) =>
+            builder.AddServices(service => service.ConfigureOptions(typeof(RazorResourceOptions<TAssemblyResourceType>)));
 
         /// <summary>
         /// 添加MVC服务。
@@ -60,11 +60,11 @@ namespace Mozlite.Mvc
                     .AddDataAnnotationsLocalization()
                     .AddRazorOptions(options =>
                     {//网站的程序集名称，约定扩展程序集名称必须为“网站程序集名称.Extensions.当前扩展区域名称”
-                        var assemblyName = Assembly.GetEntryAssembly().GetName().Name;
+                        var assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
                         ViewLocation(options, assemblyName);
                         PageLocation(options);
                     })
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                    .SetCompatibilityVersion(CompatibilityVersion.Latest);
                 action?.Invoke(mvc);
             });
         }

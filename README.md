@@ -1,4 +1,4 @@
-# Mozlite(aspnetcore 2.x)
+# Mozlite(aspnetcore 3.x)
 
 Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库等等功能模块，本框架的目的是为了更高效，更友好，更简单的进行项目开发，实现价值最大化，完全开放源代码，技术交流可以加QQ群：`88794325`,`8781765`。
 
@@ -50,4 +50,4 @@ Mozlite框架基于AspNetCore框架进行快速的开发，包括UI，数据库�
 
 # 相关链接
 
-* https://www.mozlite.com
+* https://github.com/Mozlite/aspnetcore

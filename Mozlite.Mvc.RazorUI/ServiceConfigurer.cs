@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Mozlite.Mvc.RazorUI
+﻿namespace Mozlite.Mvc.RazorUI
 {
     /// <summary>
     /// 服务配置。
@@ -11,11 +8,10 @@ namespace Mozlite.Mvc.RazorUI
         /// <summary>
         /// 配置服务方法。
         /// </summary>
-        /// <param name="services">服务集合实例。</param>
-        /// <param name="configuration">配置接口。</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        /// <param name="builder">容器构建实例。</param>
+        public void ConfigureServices(IMozliteBuilder builder)
         {
-            services.AddResources<ServiceConfigurer>();
+            builder.AddResources<ServiceConfigurer>();
         }
     }
 }

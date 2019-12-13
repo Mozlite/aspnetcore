@@ -64,16 +64,16 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             
             if (result.Succeeded)
             {
-                Logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.UserId);
+                Logger.LogInformation("User with ID '{0}' logged in with a recovery code.", user.Id);
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             if (result.IsLockedOut)
             {
-                Logger.LogWarning("User with ID '{UserId}' account locked out.", user.UserId);
+                Logger.LogWarning("User with ID '{0}' account locked out.", user.Id);
                 return RedirectToPage("./Lockout");
             }
 
-            Logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", user.UserId);
+            Logger.LogWarning("Invalid recovery code entered for user with ID '{0}' ", user.Id);
             ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
             return Page();
         }

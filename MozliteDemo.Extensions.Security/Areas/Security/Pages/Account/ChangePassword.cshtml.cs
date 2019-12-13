@@ -69,7 +69,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             }
 
             //将必须修改密码操作归零
-            user.AttachActionProvider(ChangePasswordActionProvider.Provider);
+            //user.AttachActionProvider(ChangePasswordActionProvider.Provider);
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
             if (!changePasswordResult.Succeeded)
             {

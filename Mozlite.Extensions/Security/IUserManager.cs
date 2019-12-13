@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Mozlite.Extensions.Security.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -36,9 +35,16 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 正常实例化键。
         /// </summary>
-        /// <param name="key">原有键值。</param>
+        /// <param name="userName">用户名称。</param>
         /// <returns>返回正常化后的字符串。</returns>
-        string NormalizeKey(string key);
+        string NormalizeName(string userName);
+
+        /// <summary>
+        /// 正常实例化键。
+        /// </summary>
+        /// <param name="email">电子邮件。</param>
+        /// <returns>返回正常化后的字符串。</returns>
+        string NormalizeEmail(string email);
 
         /// <summary>
         /// 获取当前用户。
@@ -575,10 +581,9 @@ namespace Mozlite.Extensions.Security
         /// 添加所有者账号。
         /// </summary>
         /// <param name="userName">用户名。</param>
-        /// <param name="loginName">登录名称。</param>
         /// <param name="password">密码。</param>
         /// <param name="init">实例化用户方法。</param>
         /// <returns>返回添加结果。</returns>
-        Task<bool> CreateOwnerAsync(string userName, string loginName, string password, Action<TUser> init = null);
+        Task<bool> CreateOwnerAsync(string userName, string password, Action<TUser> init = null);
     }
 }

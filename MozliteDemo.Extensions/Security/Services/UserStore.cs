@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
+using Mozlite.Extensions.Security;
 
 namespace MozliteDemo.Extensions.Security.Services
 {
@@ -20,9 +20,8 @@ namespace MozliteDemo.Extensions.Security.Services
         /// <param name="roleContext">角色上下文。</param>
         /// <param name="userRoleContext">用户角色数据库操作接口。</param>
         /// <param name="roleClaimContext">角色声明数据库操作接口。</param>
-        /// <param name="roleManager">角色管理接口。</param>
-        public UserStore(IdentityErrorDescriber describer, IDbContext<User> userContext, IDbContext<UserClaim> userClaimContext, IDbContext<UserLogin> userLoginContext, IDbContext<UserToken> userTokenContext, IDbContext<Role> roleContext, IDbContext<UserRole> userRoleContext, IDbContext<RoleClaim> roleClaimContext, IRoleManager roleManager) 
-            : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext, roleContext, userRoleContext, roleClaimContext, roleManager)
+        public UserStore(IdentityErrorDescriber describer, IDbContext<User> userContext, IDbContext<UserClaim> userClaimContext, IDbContext<UserLogin> userLoginContext, IDbContext<UserToken> userTokenContext, IDbContext<Role> roleContext, IDbContext<UserRole> userRoleContext, IDbContext<RoleClaim> roleClaimContext) 
+            : base(describer, userContext, userClaimContext, userLoginContext, userTokenContext, roleContext, userRoleContext, roleClaimContext)
         {
         }
     }

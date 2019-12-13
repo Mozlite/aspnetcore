@@ -1,6 +1,6 @@
 ﻿using Mozlite.Data;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 角色数据库操作上下文接口。

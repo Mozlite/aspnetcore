@@ -1,4 +1,4 @@
-﻿namespace Mozlite.Extensions.Security.Stores
+﻿namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 用户角色接口。

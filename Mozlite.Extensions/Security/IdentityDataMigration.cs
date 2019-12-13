@@ -3,7 +3,7 @@ using Mozlite.Data.Migrations.Builders;
 using Mozlite.Extensions.Security.DisallowNames;
 using Mozlite.Extensions.Security.Permissions;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 数据库迁移。
@@ -12,7 +12,7 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserClaim">用户声明类型。</typeparam>
     /// <typeparam name="TUserLogin">用户登录类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken> : DataMigration
+    public abstract class IdentityDataMigration<TUser, TUserClaim, TUserLogin, TUserToken> : DataMigration
         where TUser : UserBase, new()
         where TUserClaim : UserClaimBase, new()
         where TUserLogin : UserLoginBase, new()
@@ -32,7 +32,7 @@ namespace Mozlite.Extensions.Security.Stores
             //用户
             builder.CreateTable<TUser>(table =>
             {
-                table.Column(x => x.UserId)
+                table.Column(x => x.Id)
                     .Column(x => x.UserName, nullable: false)
                     .Column(x => x.NormalizedUserName, nullable: false)
                     .Column(x => x.PasswordHash, nullable: false)
@@ -54,8 +54,7 @@ namespace Mozlite.Extensions.Security.Stores
                     .Column(x => x.RoleId, defaultValue: 0)
                     .Column(x => x.RoleName)
                     .Column(x => x.LoginIP)
-                    .Column(x => x.LastLoginDate)
-                    .Column(x => x.Action);
+                    .Column(x => x.LastLoginDate);
                 Create(table);
             });
 
@@ -64,21 +63,21 @@ namespace Mozlite.Extensions.Security.Stores
                 .Column(x => x.ClaimType, nullable: false)
                 .Column(x => x.ClaimValue)
                 .Column(x => x.UserId)
-                .ForeignKey<TUser>(x => x.UserId, onDelete: ReferentialAction.Cascade));
+                .ForeignKey<TUser>(x => x.UserId, x => x.Id, onDelete: ReferentialAction.Cascade));
 
             builder.CreateTable<TUserLogin>(table => table
                 .Column(x => x.LoginProvider, nullable: false)
                 .Column(x => x.ProviderKey, nullable: false)
                 .Column(x => x.ProviderDisplayName)
                 .Column(x => x.UserId)
-                .ForeignKey<TUser>(x => x.UserId, onDelete: ReferentialAction.Cascade));
+                .ForeignKey<TUser>(x => x.UserId, x => x.Id, onDelete: ReferentialAction.Cascade));
 
             builder.CreateTable<TUserToken>(table => table
                 .Column(x => x.LoginProvider, nullable: false)
                 .Column(x => x.Name, nullable: false)
                 .Column(x => x.Value)
                 .Column(x => x.UserId)
-                .ForeignKey<TUser>(x => x.UserId, onDelete: ReferentialAction.Cascade));
+                .ForeignKey<TUser>(x => x.UserId, x => x.Id, onDelete: ReferentialAction.Cascade));
         }
 
         /// <summary>
@@ -119,8 +118,8 @@ namespace Mozlite.Extensions.Security.Stores
     /// <typeparam name="TUserRole">用户所在组类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
-    public abstract class StoreDataMigration<TUser, TRole, TUserClaim, TRoleClaim, TUserLogin, TUserRole, TUserToken> :
-        StoreDataMigration<TUser, TUserClaim, TUserLogin, TUserToken>
+    public abstract class IdentityDataMigration<TUser, TRole, TUserClaim, TRoleClaim, TUserLogin, TUserRole, TUserToken> :
+        IdentityDataMigration<TUser, TUserClaim, TUserLogin, TUserToken>
         where TUser : UserBase, new()
         where TRole : RoleBase, new()
         where TUserClaim : UserClaimBase, new()
@@ -138,25 +137,28 @@ namespace Mozlite.Extensions.Security.Stores
             base.Create(builder);
             //角色
             builder.CreateTable<TRole>(table => table
-                .Column(x => x.RoleId)
+                .Column(x => x.Id)
                 .Column(x => x.Name, nullable: false)
                 .Column(x => x.NormalizedName, nullable: false)
-                .Column(x => x.RoleLevel));
+                .Column(x => x.ConcurrencyStamp)
+                .Column(x => x.RoleLevel)
+                .Column(x => x.Color)
+                .Column(x => x.IconUrl));
 
             //判断TUserRole是否单独一个表格，也可以把这个表格合并到TUser中，每一个用户只是应对一个角色
             if (typeof(UserRoleBase).IsAssignableFrom(typeof(TUserRole)))
                 builder.CreateTable<TUserRole>(table => table
                     .Column(x => x.UserId)
                     .Column(x => x.RoleId)
-                    .ForeignKey<TUser>(x => x.UserId, onDelete: ReferentialAction.Cascade)
-                    .ForeignKey<TRole>(x => x.RoleId, onDelete: ReferentialAction.Cascade));
+                    .ForeignKey<TUser>(x => x.UserId, x => x.Id, onDelete: ReferentialAction.Cascade)
+                    .ForeignKey<TRole>(x => x.RoleId, x => x.Id, onDelete: ReferentialAction.Cascade));
 
             builder.CreateTable<TRoleClaim>(table => table
                 .Column(x => x.Id)
                 .Column(x => x.ClaimType, nullable: false)
                 .Column(x => x.ClaimValue)
                 .Column(x => x.RoleId)
-                .ForeignKey<TRole>(x => x.RoleId, onDelete: ReferentialAction.Cascade));
+                .ForeignKey<TRole>(x => x.RoleId, x => x.Id, onDelete: ReferentialAction.Cascade));
 
             //权限
             builder.CreateTable<Permission>(table => table

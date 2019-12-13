@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
+using Mozlite.Extensions.Security;
 
 namespace MozliteDemo.Extensions.Security.Services
 {

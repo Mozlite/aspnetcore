@@ -52,7 +52,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
                 return NotFound("未找到用户！");
             Input = new InputModel
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 RoleId = await _userManager.GetRoleIdsAsync(id)
             };
             Name = user.UserName;
@@ -62,7 +62,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
         public async Task<IActionResult> OnPostAsync()
         {
             var defaultRole = await _roleManager.FindByNameAsync(DefaultRole.Member.NormalizedName);
-            var roles = new[] { defaultRole.RoleId };
+            var roles = new[] { defaultRole.Id };
             if (Input.RoleId == null)
                 Input.RoleId = roles;
             else
@@ -71,7 +71,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
             var role = await _roleManager.FindByIdAsync(user.RoleId);
             if (role > Role) //没有权限
                 return Error("不能设置比自己等级高的用户角色！");
-            if (await _userManager.SetUserToRolesAsync(user.UserId, Input.RoleId))
+            if (await _userManager.SetUserToRolesAsync(user.Id, Input.RoleId))
             {
                 var roleNames = await _userManager.GetRolesAsync(user);
                 EventLogger.LogUser($"设置了用户“{user.UserName}”的角色为：{string.Join(",", roleNames)}。");

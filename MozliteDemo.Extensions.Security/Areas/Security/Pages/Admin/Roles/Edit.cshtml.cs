@@ -34,7 +34,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin.Roles
         {
             var role = _roleManager.FindById(id);
             if (role != null)
-                Input = new InputModel { Name = role.Name, NormalizedName = role.NormalizedName, RoleId = role.RoleId };
+                Input = new InputModel { Name = role.Name, NormalizedName = role.NormalizedName, RoleId = role.Id };
         }
 
         public async Task<IActionResult> OnPostAsync()

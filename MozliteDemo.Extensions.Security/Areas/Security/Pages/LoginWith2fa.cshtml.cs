@@ -73,17 +73,17 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages
             
             if (result.Succeeded)
             {
-                Logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.UserId);
+                Logger.LogInformation("User with ID '{0}' logged in with 2fa.", user.Id);
                 return LocalRedirect(returnUrl);
             }
 
             if (result.IsLockedOut)
             {
-                Logger.LogWarning("User with ID '{UserId}' account locked out.", user.UserId);
+                Logger.LogWarning("User with ID '{0}' account locked out.", user.Id);
                 return RedirectToPage("./Lockout");
             }
 
-            Logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", user.UserId);
+            Logger.LogWarning("Invalid authenticator code entered for user with ID '{0}'.", user.Id);
             ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
             return Page();
         }

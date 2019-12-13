@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Security.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,9 +92,9 @@ namespace Mozlite.Extensions.Security
         public virtual IdentityResult IsDuplicated(TRole role)
         {
             var roles = Load().ToList();
-            if (role.Name != null && roles.Any(x => x.RoleId != role.RoleId && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
+            if (role.Name != null && roles.Any(x => x.Id != role.Id && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
-            if (role.NormalizedName != null && roles.Any(x => x.RoleId != role.RoleId && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
+            if (role.NormalizedName != null && roles.Any(x => x.Id != role.Id && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
             return IdentityResult.Success;
         }
@@ -108,7 +107,7 @@ namespace Mozlite.Extensions.Security
         public virtual IdentityResult Delete(int[] ids)
         {
             var result = IdentityResult.Success;
-            if (!DbContext.RoleContext.Delete(x => x.RoleId.Included(ids)))
+            if (!DbContext.RoleContext.Delete(x => x.Id.Included(ids)))
                 result = IdentityResult.Failed(ErrorDescriber.DefaultError());
             return FromResult(result, null);
         }
@@ -121,7 +120,7 @@ namespace Mozlite.Extensions.Security
         public virtual async Task<IdentityResult> DeleteAsync(int[] ids)
         {
             var result = IdentityResult.Success;
-            if (!await DbContext.RoleContext.DeleteAsync(x => x.RoleId.Included(ids)))
+            if (!await DbContext.RoleContext.DeleteAsync(x => x.Id.Included(ids)))
                 result = IdentityResult.Failed(ErrorDescriber.DefaultError());
             return FromResult(result, null);
         }
@@ -134,9 +133,9 @@ namespace Mozlite.Extensions.Security
         public virtual async Task<IdentityResult> IsDuplicatedAsync(TRole role)
         {
             var roles = (await LoadAsync()).ToList();
-            if (role.Name != null && roles.Any(x => x.RoleId != role.RoleId && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
+            if (role.Name != null && roles.Any(x => x.Id != role.Id && x.Name.Equals(role.Name, StringComparison.OrdinalIgnoreCase)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
-            if (role.NormalizedName != null && roles.Any(x => x.RoleId != role.RoleId && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
+            if (role.NormalizedName != null && roles.Any(x => x.Id != role.Id && x.NormalizedName.Equals(role.NormalizedName, StringComparison.OrdinalIgnoreCase)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateNormalizedRoleName(role.Name));
             return IdentityResult.Success;
         }
@@ -169,7 +168,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回角色保存结果。</returns>
         public virtual IdentityResult Save(TRole role)
         {
-            if (role.RoleId > 0)
+            if (role.Id > 0)
                 return Update(role);
             return Create(role);
         }
@@ -241,7 +240,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回角色保存结果。</returns>
         public virtual Task<IdentityResult> SaveAsync(TRole role)
         {
-            if (role.RoleId > 0)
+            if (role.Id > 0)
                 return UpdateAsync(role);
             return CreateAsync(role);
         }

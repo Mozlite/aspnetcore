@@ -49,9 +49,9 @@
         CreatedFailured = 4,
 
         /// <summary>
-        /// 包含子项不为空，不能删除！
+        /// 子项不为空，不能删除！
         /// </summary>
-        DeletedFailuredItemsNotEmpty = 5,
+        ChildrenNotEmpty = 5,
 
         /// <summary>
         /// 未知错误。

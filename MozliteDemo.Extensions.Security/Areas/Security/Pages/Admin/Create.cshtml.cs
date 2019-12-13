@@ -65,13 +65,13 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
                 var role = await _roleManager.FindByNameAsync(DefaultRole.Member.NormalizedName);
                 var user = new User
                 {
-                    RoleId = role.RoleId,
+                    RoleId = role.Id,
                     RoleName = role.Name,
                     UserName = Input.RealName,
-                    NormalizedUserName = _userManager.NormalizeKey(Input.UserName),
+                    NormalizedUserName = _userManager.NormalizeName(Input.UserName),
                     PasswordHash = Input.Password,
                     Email = Input.Email,
-                    NormalizedEmail = _userManager.NormalizeKey(Input.Email),
+                    NormalizedEmail = _userManager.NormalizeEmail(Input.Email),
                     PhoneNumber = Input.PhoneNumber,
                     EmailConfirmed = !string.IsNullOrEmpty(Input.Email) && !Settings.RequiredEmailConfirmed,
                     PhoneNumberConfirmed = !string.IsNullOrEmpty(Input.PhoneNumber) && !Settings.RequiredPhoneNumberConfirmed,

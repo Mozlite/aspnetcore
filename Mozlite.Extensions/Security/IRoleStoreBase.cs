@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Security
 {
     /// <summary>
     /// 用户角色存储基类。

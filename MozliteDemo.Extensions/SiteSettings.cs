@@ -12,7 +12,7 @@ namespace MozliteDemo.Extensions
         /// <summary>
         /// 网站名称。
         /// </summary>
-        public string SiteName { get; set; } = "Mozlite Demo";
+        public string SiteName { get; set; } = "Ydcl Demo";
 
         /// <summary>
         /// 简称。
@@ -32,7 +32,7 @@ namespace MozliteDemo.Extensions
         /// <summary>
         /// 版权信息。
         /// </summary>
-        public string Copyright { get; set; } = "Copyright &copy;$year www.mozlite.com ver $version";
+        public string Copyright { get; set; } = "Copyright &copy;$year www.xmydcl.com ver $version";
 
         /// <summary>
         /// 版权信息。

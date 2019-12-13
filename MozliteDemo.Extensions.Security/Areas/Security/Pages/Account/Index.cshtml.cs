@@ -77,7 +77,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             if (Input.Email != user.Email)
             {
                 user.Email = Input.Email;
-                user.NormalizedEmail = _userManager.NormalizeKey(Input.Email);
+                user.NormalizedEmail = _userManager.NormalizeEmail(Input.Email);
                 user.EmailConfirmed = false;
             }
 
@@ -86,7 +86,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
                 user.PhoneNumberConfirmed = false;
             }
-            await _userManager.UpdateAsync(user.UserId,
+            await _userManager.UpdateAsync(user.Id,
                 new
                 {
                     user.UserName,
@@ -118,10 +118,10 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Account
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { userId = user.UserId, code = code },
+                values: new { userId = user.Id, code = code },
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
-                user.UserId,
+                user.Id,
                 user.Email,
                 "确认电子邮件",
                 $"请确认激活电子邮件，<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>点击这里进行激活</a>.");

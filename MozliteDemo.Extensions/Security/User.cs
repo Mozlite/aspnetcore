@@ -1,6 +1,5 @@
 ﻿using Mozlite.Data.Internal;
 using Mozlite.Extensions.Security;
-using Mozlite.Extensions.Security.Stores;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +21,7 @@ namespace MozliteDemo.Extensions.Security
             //添加用户角色
             var role = context.As<Role>()
                 .Find(x => x.NormalizedName == DefaultRole.Member.NormalizedName);
-            var userRole = new UserRole { RoleId = role.RoleId, UserId = UserId };
+            var userRole = new UserRole { RoleId = role.Id, UserId = Id };
             return context.As<UserRole>().Create(userRole);
         }
 
@@ -37,7 +36,7 @@ namespace MozliteDemo.Extensions.Security
             //添加用户角色
             var role = await context.As<Role>()
                 .FindAsync(x => x.NormalizedName == DefaultRole.Member.NormalizedName, cancellationToken);
-            var userRole = new UserRole { RoleId = role.RoleId, UserId = UserId };
+            var userRole = new UserRole { RoleId = role.Id, UserId = Id };
             return await context.As<UserRole>().CreateAsync(userRole, cancellationToken);
         }
 
@@ -83,10 +82,5 @@ namespace MozliteDemo.Extensions.Security
             return Task.FromResult(true);
         }
         #endregion
-
-        /// <summary>
-        /// 当前访问的区域Id。
-        /// </summary>
-        public int AreaId { get; set; }
     }
 }

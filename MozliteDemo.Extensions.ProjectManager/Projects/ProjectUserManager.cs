@@ -61,7 +61,7 @@ namespace MozliteDemo.Extensions.ProjectManager.Projects
                 return Context.AsQueryable()
                     .WithNolock()
                     .Select()
-                    .JoinSelect<ProjectUser, User>((p, u) => p.Id == u.UserId)
+                    .JoinSelect<ProjectUser, User>((p, u) => p.Id == u.Id)
                     .AsEnumerable();
             });
             return models.Filter(expression);
@@ -81,7 +81,7 @@ namespace MozliteDemo.Extensions.ProjectManager.Projects
                 return Context.AsQueryable()
                     .WithNolock()
                     .Select()
-                    .JoinSelect<ProjectUser, User>((p, u) => p.Id == u.UserId)
+                    .JoinSelect<ProjectUser, User>((p, u) => p.Id == u.Id)
                     .AsEnumerableAsync(cancellationToken);
             });
             return models.Filter(expression);

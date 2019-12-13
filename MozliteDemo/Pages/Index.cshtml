@@ -5,6 +5,9 @@
     ViewBag.Current = "home";
 }
 
+@HttpContext.User.Identity.Name
+@inject IUserManager UserManager
+@UserManager.IsSignedIn()
 <script src="~/lib/videojs/video.min.js"></script>
 <link href="~/lib/videojs/video-js.min.css" rel="stylesheet" />
 

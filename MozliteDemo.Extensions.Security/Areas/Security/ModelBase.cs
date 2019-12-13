@@ -11,8 +11,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security
         /// <summary>
         /// 安全配置。
         /// </summary>
-        public SecuritySettings Settings => _settings ??
-                                            (_settings = GetRequiredService<ISettingsManager>()
-                                                .GetSettings<SecuritySettings>());
+        public SecuritySettings Settings => _settings ??= GetRequiredService<ISettingsManager>()
+            .GetSettings<SecuritySettings>();
     }
 }

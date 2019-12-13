@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Mozlite.Data.Internal;
 using Mozlite.Extensions.Security;
-using Mozlite.Extensions.Security.Stores;
 
 namespace MozliteDemo.Extensions.Security
 {
@@ -40,9 +39,9 @@ namespace MozliteDemo.Extensions.Security
         public bool OnUpdate(IDbTransactionContext<Role> context)
         {
             //更改用户显示的角色名称
-            var dbRole = context.Find(RoleId);
+            var dbRole = context.Find(Id);
             if (dbRole.Name != Name)
-                context.As<User>().Update(x => x.RoleId == RoleId, new { RoleName = Name });
+                context.As<User>().Update(x => x.RoleId == Id, new { RoleName = Name });
             return true;
         }
 
@@ -55,9 +54,9 @@ namespace MozliteDemo.Extensions.Security
         public async Task<bool> OnUpdateAsync(IDbTransactionContext<Role> context, CancellationToken cancellationToken = default(CancellationToken))
         {
             //更改用户显示的角色名称
-            var dbRole = await context.FindAsync(RoleId, cancellationToken);
+            var dbRole = await context.FindAsync(Id, cancellationToken);
             if (dbRole.Name != Name)
-                await context.As<User>().UpdateAsync(x => x.RoleId == RoleId, new { RoleName = Name }, cancellationToken);
+                await context.As<User>().UpdateAsync(x => x.RoleId == Id, new { RoleName = Name }, cancellationToken);
             return true;
         }
 
@@ -70,9 +69,9 @@ namespace MozliteDemo.Extensions.Security
         {
             //更改用户显示的角色名称
             var basic = context.Find(x => x.NormalizedName == DefaultRole.Member.NormalizedName);
-            var dbRole = context.Find(RoleId);
+            var dbRole = context.Find(Id);
             if (dbRole.Name != Name)
-                context.As<User>().Update(x => x.RoleId == basic.RoleId, new { basic.RoleId, RoleName = basic.Name });
+                context.As<User>().Update(x => x.RoleId == basic.Id, new { basic.Id, RoleName = basic.Name });
             return true;
         }
 
@@ -86,9 +85,9 @@ namespace MozliteDemo.Extensions.Security
         {
             //更改用户显示的角色名称
             var basic = await context.FindAsync(x => x.NormalizedName == DefaultRole.Member.NormalizedName, cancellationToken);
-            var dbRole = await context.FindAsync(RoleId, cancellationToken);
+            var dbRole = await context.FindAsync(Id, cancellationToken);
             if (dbRole.Name != Name)
-                await context.As<User>().UpdateAsync(x => x.RoleId == basic.RoleId, new { basic.RoleId, RoleName = basic.Name }, cancellationToken);
+                await context.As<User>().UpdateAsync(x => x.RoleId == basic.Id, new { basic.Id, RoleName = basic.Name }, cancellationToken);
             return true;
         }
     }

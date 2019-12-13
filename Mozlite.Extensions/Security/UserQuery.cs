@@ -1,6 +1,5 @@
 ﻿using System;
 using Mozlite.Data;
-using Mozlite.Extensions.Security.Stores;
 
 namespace Mozlite.Extensions.Security
 {
@@ -65,7 +64,7 @@ namespace Mozlite.Extensions.Security
             if (MaxRoleLevel > 0)
             {
                 context.Select()
-                    .LeftJoin<TRole>((u, r) => u.RoleId == r.RoleId)
+                    .LeftJoin<TRole>((u, r) => u.RoleId == r.Id)
                     .Where<TRole>(x => x.RoleLevel <= MaxRoleLevel);
             }
         }

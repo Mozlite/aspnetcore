@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Mozlite.Extensions.Security.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +45,7 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 登录管理实例。
         /// </summary>
-        public SignInManager<TUser> SignInManager => _signInManager ?? (_signInManager = _serviceProvider.GetRequiredService<SignInManager<TUser>>());
+        public SignInManager<TUser> SignInManager => _signInManager ??= _serviceProvider.GetRequiredService<SignInManager<TUser>>();
 
         private readonly IUserStoreBase<TUser, TUserClaim, TUserLogin, TUserToken> _store;
         /// <summary>
@@ -59,8 +58,7 @@ namespace Mozlite.Extensions.Security
         /// 当前HTTP上下文。
         /// </summary>
         protected HttpContext HttpContext =>
-            _httpContext ??
-            (_httpContext = _serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext);
+            _httpContext ??= _serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 
         /// <summary>
         /// 新建用户实例（不会对密码进行加密）。
@@ -139,7 +137,7 @@ namespace Mozlite.Extensions.Security
             var result = await SignInManager.PasswordSignInAsync(user, password, isRemembered, true);
             if (result.Succeeded)
             {
-                await UpdateAsync(user.UserId, new
+                await UpdateAsync(user.Id, new
                 {
                     LoginIP = HttpContext.GetUserAddress(),
                     LastLoginDate = DateTimeOffset.Now
@@ -193,7 +191,7 @@ namespace Mozlite.Extensions.Security
         public override async Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword)
         {
             if (user.PasswordHash == null || user.NormalizedUserName == null)
-                user = await FindByIdAsync(user.UserId);
+                user = await FindByIdAsync(user.Id);
             if (token == null)
                 token = await GeneratePasswordResetTokenAsync(user);
             newPassword = PasswordSalt(user.NormalizedUserName, newPassword);
@@ -272,7 +270,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回判断结果。</returns>
         public virtual IdentityResult IsDuplicated(int userId, string userName)
         {
-            if (DbContext.UserContext.Any(x => x.UserId != userId && (x.UserName == userName || x.NormalizedUserName == userName)))
+            if (DbContext.UserContext.Any(x => x.Id != userId && (x.UserName == userName || x.NormalizedUserName == userName)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(userName));
             return IdentityResult.Success;
         }
@@ -285,7 +283,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回判断结果。</returns>
         public virtual async Task<IdentityResult> IsDuplicatedAsync(int userId, string userName)
         {
-            if (await DbContext.UserContext.AnyAsync(x => x.UserId != userId && (x.UserName == userName || x.NormalizedUserName == userName)))
+            if (await DbContext.UserContext.AnyAsync(x => x.Id != userId && (x.UserName == userName || x.NormalizedUserName == userName)))
                 return IdentityResult.Failed(ErrorDescriber.DuplicateUserName(userName));
             return IdentityResult.Success;
         }
@@ -319,7 +317,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回删除结果。</returns>
         public virtual IdentityResult Delete(int[] ids)
         {
-            if (DbContext.UserContext.Delete(x => x.UserId.Included(ids)))
+            if (DbContext.UserContext.Delete(x => x.Id.Included(ids)))
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
@@ -343,7 +341,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回删除结果。</returns>
         public virtual async Task<IdentityResult> DeleteAsync(int[] ids)
         {
-            if (await DbContext.UserContext.DeleteAsync(x => x.UserId.Included(ids)))
+            if (await DbContext.UserContext.DeleteAsync(x => x.Id.Included(ids)))
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
@@ -387,7 +385,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回加密后得字符串。</returns>
         public virtual string HashPassword(TUser user)
         {
-            var userName = user.NormalizedUserName ?? NormalizeKey(user.UserName);
+            var userName = user.NormalizedUserName ?? NormalizeName(user.UserName);
             var password = PasswordSalt(userName, user.PasswordHash);
             return PasswordHasher.HashPassword(user, password);
         }
@@ -422,7 +420,7 @@ namespace Mozlite.Extensions.Security
         /// <returns>返回拼接后得字符串。</returns>
         public virtual string PasswordSalt(string userName, string password)
         {
-            return $"{NormalizeKey(userName)}2O.l8{password}";
+            return $"{NormalizeName(userName)}2O.l8{password}";
         }
 
         /// <summary>
@@ -541,8 +539,7 @@ namespace Mozlite.Extensions.Security
     /// <typeparam name="TUserToken">用户标识类型。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
     public abstract class UserManager<TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>
-        : UserManager<TUser, TUserClaim, TUserLogin, TUserToken>,
-            IUserManager<TUser, TRole>
+        : UserManager<TUser, TUserClaim, TUserLogin, TUserToken>, IUserManager<TUser, TRole>
         where TUser : UserBase, new()
         where TRole : RoleBase, new()
         where TUserClaim : UserClaimBase, new()
@@ -583,7 +580,7 @@ namespace Mozlite.Extensions.Security
         public virtual int[] GetRoleIds(int userId)
         {
             var roles = GetRoles(userId);
-            return roles.Select(x => x.RoleId).ToArray();
+            return roles.Select(x => x.Id).ToArray();
         }
 
         /// <summary>
@@ -594,7 +591,7 @@ namespace Mozlite.Extensions.Security
         public virtual async Task<int[]> GetRoleIdsAsync(int userId)
         {
             var roles = await GetRolesAsync(userId);
-            return roles.Select(x => x.RoleId).ToArray();
+            return roles.Select(x => x.Id).ToArray();
         }
 
         /// <summary>
@@ -686,25 +683,25 @@ namespace Mozlite.Extensions.Security
         /// 添加所有者账号。
         /// </summary>
         /// <param name="userName">用户名。</param>
-        /// <param name="loginName">登录名称。</param>
         /// <param name="password">密码。</param>
         /// <param name="init">实例化用户方法。</param>
         /// <returns>返回添加结果。</returns>
-        public virtual async Task<bool> CreateOwnerAsync(string userName, string loginName, string password, Action<TUser> init = null)
+        public virtual async Task<bool> CreateOwnerAsync(string userName, string password, Action<TUser> init = null)
         {
-            var user = new TUser();
-            user.UserName = userName;
-            user.NormalizedUserName = loginName;
-            user.PasswordHash = password;
-            user.EmailConfirmed = true;
-            user.PhoneNumberConfirmed = true;
-            user.CreatedIP = "127.0.0.1";
-            user.CreatedDate = DateTimeOffset.Now;
+            var user = new TUser
+            {
+                UserName = userName,
+                PasswordHash = password,
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                CreatedIP = "127.0.0.1",
+                CreatedDate = DateTimeOffset.Now
+            };
             init?.Invoke(user);
             user.RoleId = 1;
             user.RoleName = DefaultRole.Owner.Name;
-            user.NormalizedUserName = NormalizeKey(user.NormalizedUserName);
-            user.NormalizedEmail = user.NormalizedEmail ?? NormalizeKey(user.Email);
+            user.NormalizedUserName = NormalizeName(userName);
+            user.NormalizedEmail ??= NormalizeEmail(user.Email);
             user.PasswordHash = HashPassword(user);
             return await _store.UserContext.BeginTransactionAsync(async db =>
             {
@@ -715,8 +712,8 @@ namespace Mozlite.Extensions.Security
                 await rdb.CreateAsync(member);
                 await db.CreateAsync(user);
                 var urdb = db.As<TUserRole>();
-                await urdb.CreateAsync(new TUserRole { UserId = user.UserId, RoleId = owner.RoleId });
-                await urdb.CreateAsync(new TUserRole { UserId = user.UserId, RoleId = member.RoleId });
+                await urdb.CreateAsync(new TUserRole { UserId = user.Id, RoleId = owner.Id });
+                await urdb.CreateAsync(new TUserRole { UserId = user.Id, RoleId = member.Id });
                 return true;
             });
         }

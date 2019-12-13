@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Mozlite.Data;
 
-namespace Mozlite.Extensions.Security.Stores
+namespace Mozlite.Extensions.Security
 {
     /// <summary>
-    /// 数据库存储类。
+    /// 用户角色存储基类。
     /// </summary>
-    /// <typeparam name="TRole">角色类型。</typeparam>
-    /// <typeparam name="TUserRole">用户角色类型。</typeparam>
+    /// <typeparam name="TRole">用户角色类型。</typeparam>
+    /// <typeparam name="TUserRole">用户角色关联类。</typeparam>
     /// <typeparam name="TRoleClaim">角色声明类型。</typeparam>
-    public abstract class RoleStoreBase<TRole, TUserRole, TRoleClaim>
-        : IdentityRoleStoreBase<TRole, TUserRole, TRoleClaim>,
-        IRoleStoreBase<TRole, TUserRole, TRoleClaim>
+    public abstract class RoleStoreBase<TRole, TUserRole, TRoleClaim> : RoleStoreBase<TRole, int, TUserRole, TRoleClaim>, IRoleStoreBase<TRole, TUserRole, TRoleClaim>
         where TRole : RoleBase
-        where TUserRole : IUserRole
+        where TUserRole : UserRoleBase, new()
         where TRoleClaim : RoleClaimBase, new()
     {
         /// <summary>
@@ -158,13 +156,13 @@ namespace Mozlite.Extensions.Security.Stores
                 {
                     if (!await handler.OnDeleteAsync(db, cancellationToken))
                         return false;
-                    if (!await db.DeleteAsync(role.RoleId, cancellationToken))
+                    if (!await db.DeleteAsync(role.Id, cancellationToken))
                         return false;
                     return true;
                 }, cancellationToken: cancellationToken))
                     return IdentityResult.Success;
             }
-            else if (await RoleContext.DeleteAsync(role.RoleId, cancellationToken))
+            else if (await RoleContext.DeleteAsync(role.Id, cancellationToken))
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
@@ -185,14 +183,14 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 return RoleContext.BeginTransaction(db =>
                 {
-                    if (!db.MoveUp(role.RoleId, x => x.RoleLevel, MoveExpression(role)))
+                    if (!db.MoveUp(role.Id, x => x.RoleLevel, MoveExpression(role)))
                         return false;
                     if (!handler.OnUpdate(db))
                         return false;
                     return true;
                 });
             }
-            return RoleContext.MoveUp(role.RoleId, x => x.RoleLevel, MoveExpression(role));
+            return RoleContext.MoveUp(role.Id, x => x.RoleLevel, MoveExpression(role));
         }
 
         /// <summary>
@@ -211,14 +209,14 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 return RoleContext.BeginTransaction(db =>
                 {
-                    if (!db.MoveDown(role.RoleId, x => x.RoleLevel, MoveExpression(role)))
+                    if (!db.MoveDown(role.Id, x => x.RoleLevel, MoveExpression(role)))
                         return false;
                     if (!handler.OnUpdate(db))
                         return false;
                     return true;
                 });
             }
-            return RoleContext.MoveDown(role.RoleId, x => x.RoleLevel, MoveExpression(role));
+            return RoleContext.MoveDown(role.Id, x => x.RoleLevel, MoveExpression(role));
         }
 
         /// <summary>
@@ -248,14 +246,14 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 return await RoleContext.BeginTransactionAsync(async db =>
                 {
-                    if (!await db.MoveUpAsync(role.RoleId, x => x.RoleLevel, MoveExpression(role), cancellationToken))
+                    if (!await db.MoveUpAsync(role.Id, x => x.RoleLevel, MoveExpression(role), cancellationToken))
                         return false;
                     if (!await handler.OnUpdateAsync(db, cancellationToken))
                         return false;
                     return true;
                 }, cancellationToken: cancellationToken);
             }
-            return await RoleContext.MoveUpAsync(role.RoleId, x => x.RoleLevel, MoveExpression(role), cancellationToken);
+            return await RoleContext.MoveUpAsync(role.Id, x => x.RoleLevel, MoveExpression(role), cancellationToken);
         }
 
         /// <summary>
@@ -275,14 +273,14 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 return await RoleContext.BeginTransactionAsync(async db =>
                 {
-                    if (!await db.MoveDownAsync(role.RoleId, x => x.RoleLevel, MoveExpression(role), cancellationToken))
+                    if (!await db.MoveDownAsync(role.Id, x => x.RoleLevel, MoveExpression(role), cancellationToken))
                         return false;
                     if (!await handler.OnUpdateAsync(db, cancellationToken))
                         return false;
                     return true;
                 }, cancellationToken: cancellationToken);
             }
-            return await RoleContext.MoveDownAsync(role.RoleId, x => x.RoleLevel, MoveExpression(role), cancellationToken);
+            return await RoleContext.MoveDownAsync(role.Id, x => x.RoleLevel, MoveExpression(role), cancellationToken);
         }
 
         /// <summary>
@@ -303,13 +301,13 @@ namespace Mozlite.Extensions.Security.Stores
                 {
                     if (!handler.OnDelete(db))
                         return false;
-                    if (!db.Delete(role.RoleId))
+                    if (!db.Delete(role.Id))
                         return false;
                     return true;
                 }))
                     return IdentityResult.Success;
             }
-            else if (RoleContext.Delete(role.RoleId))
+            else if (RoleContext.Delete(role.Id))
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
@@ -320,7 +318,7 @@ namespace Mozlite.Extensions.Security.Stores
         /// <param name="id">角色Id。</param>
         /// <param name="cancellationToken">取消标识。</param>
         /// <returns>返回当前角色实例对象。</returns>
-        public override Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default)
+        public virtual Task<TRole> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return RoleContext.FindAsync(id, cancellationToken);
         }
@@ -348,7 +346,7 @@ namespace Mozlite.Extensions.Security.Stores
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            var claims = await RoleClaimContext.FetchAsync(x => x.RoleId == role.RoleId, cancellationToken);
+            var claims = await RoleClaimContext.FetchAsync(x => x.RoleId == role.Id, cancellationToken);
             return claims.Select(x => x.ToClaim()).ToList();
         }
 
@@ -388,7 +386,7 @@ namespace Mozlite.Extensions.Security.Stores
                 throw new ArgumentNullException(nameof(claim));
             }
             await RoleClaimContext.DeleteAsync(x =>
-                x.RoleId == role.RoleId && x.ClaimType == claim.Type && x.ClaimValue == claim.Value, cancellationToken);
+                x.RoleId == role.Id && x.ClaimType == claim.Type && x.ClaimValue == claim.Value, cancellationToken);
         }
 
         /// <summary>
@@ -488,5 +486,23 @@ namespace Mozlite.Extensions.Security.Stores
                 return IdentityResult.Success;
             return IdentityResult.Failed(ErrorDescriber.DefaultError());
         }
+
+        /// <summary>
+        /// 通过ID获取角色实例。
+        /// </summary>
+        /// <param name="id">角色Id。</param>
+        /// <param name="cancellationToken">取消标识。</param>
+        /// <returns>返回当前角色实例对象。</returns>
+        public override async Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (int.TryParse(id, out var roleId))
+                return await FindByIdAsync(roleId, cancellationToken);
+            return null;
+        }
+
+        /// <summary>
+        /// 角色查询实例对象。
+        /// </summary>
+        public override System.Linq.IQueryable<TRole> Roles { get; } = null;
     }
 }

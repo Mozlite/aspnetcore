@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mozlite.Extensions.Properties;
 using System;
 using System.Threading.Tasks;
+using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Security.Events
 {
@@ -107,9 +107,7 @@ namespace Mozlite.Extensions.Security.Events
         /// <param name="message">事件消息。</param>
         public Task LogAsync(int userId, string eventType, string message)
         {
-            var eventMessage = new EventMessage();
-            eventMessage.Message = message;
-            eventMessage.UserId = userId;
+            var eventMessage = new EventMessage {Message = message, UserId = userId};
             return LogAsync(eventType, eventMessage);
         }
 
@@ -150,9 +148,7 @@ namespace Mozlite.Extensions.Security.Events
         /// <param name="message">事件消息。</param>
         public void Log(int userId, string eventType, string message)
         {
-            var eventMessage = new EventMessage();
-            eventMessage.Message = message;
-            eventMessage.UserId = userId;
+            var eventMessage = new EventMessage {Message = message, UserId = userId};
             Log(eventType, eventMessage);
         }
 

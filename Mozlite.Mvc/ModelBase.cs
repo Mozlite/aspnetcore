@@ -9,7 +9,6 @@ using Mozlite.Extensions.Messages.Notifications;
 using Mozlite.Extensions.Security;
 using Mozlite.Extensions.Security.Events;
 using Mozlite.Extensions.Security.Permissions;
-using Mozlite.Extensions.Security.Stores;
 using Mozlite.Extensions.Settings;
 using Mozlite.Extensions.Storages;
 using Mozlite.Extensions.Storages.Apis;

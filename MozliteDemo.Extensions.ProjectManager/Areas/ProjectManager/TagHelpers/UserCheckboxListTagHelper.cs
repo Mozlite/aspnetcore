@@ -28,11 +28,11 @@ namespace MozliteDemo.Extensions.ProjectManager.Areas.ProjectManager.TagHelpers
         /// <param name="items">复选框项目列表实例。</param>
         protected override void Init(IDictionary<string, string> items)
         {
-            var roles = _roleManager.Load().Where(x => !x.IsSystem).Select(x => x.RoleId).ToList();
+            var roles = _roleManager.Load().Where(x => !x.IsSystem).Select(x => x.Id).ToList();
             var users = _userManager.LoadUsers(x => x.RoleId.Included(roles));
             foreach (var user in users)
             {
-                items[user.UserName] = user.UserId.ToString();
+                items[user.UserName] = user.Id.ToString();
             }
         }
     }

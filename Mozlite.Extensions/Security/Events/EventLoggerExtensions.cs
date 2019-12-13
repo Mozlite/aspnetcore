@@ -1,5 +1,5 @@
-﻿using Mozlite.Extensions.Properties;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Mozlite.Extensions.Properties;
 
 namespace Mozlite.Extensions.Security.Events
 {

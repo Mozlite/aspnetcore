@@ -3,7 +3,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Mozlite.Data;
 using Mozlite.Extensions.Properties;
-using Mozlite.Extensions.Security.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -308,9 +307,9 @@ namespace Mozlite.Extensions.Security.Permissions
             var permissions = await LoadCachePermissionsAsync();
             foreach (var permission in permissions.Values)
             {
-                if (await _prdb.AnyAsync(x => x.PermissionId == permission.Id && x.RoleId == role.RoleId))
+                if (await _prdb.AnyAsync(x => x.PermissionId == permission.Id && x.RoleId == role.Id))
                     continue;
-                await _prdb.CreateAsync(new PermissionInRole { PermissionId = permission.Id, RoleId = role.RoleId, Value = PermissionValue.Allow });
+                await _prdb.CreateAsync(new PermissionInRole { PermissionId = permission.Id, RoleId = role.Id, Value = PermissionValue.Allow });
             }
             RemoveCache();
         }
@@ -325,9 +324,9 @@ namespace Mozlite.Extensions.Security.Permissions
             var permissions = LoadCachePermissions().Values;
             foreach (var permission in permissions)
             {
-                if (_prdb.Any(x => x.PermissionId == permission.Id && x.RoleId == role.RoleId))
+                if (_prdb.Any(x => x.PermissionId == permission.Id && x.RoleId == role.Id))
                     continue;
-                _prdb.Create(new PermissionInRole { PermissionId = permission.Id, RoleId = role.RoleId, Value = PermissionValue.Allow });
+                _prdb.Create(new PermissionInRole { PermissionId = permission.Id, RoleId = role.Id, Value = PermissionValue.Allow });
             }
             RemoveCache();
         }

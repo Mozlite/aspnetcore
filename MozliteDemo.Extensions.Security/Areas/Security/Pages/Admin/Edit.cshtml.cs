@@ -22,7 +22,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
 
             public InputModel(User currentUser)
             {
-                UserId = currentUser.UserId;
+                UserId = currentUser.Id;
                 UserName = currentUser.UserName;
                 PhoneNumber = currentUser.PhoneNumber;
                 Email = currentUser.Email;
@@ -69,7 +69,7 @@ namespace MozliteDemo.Extensions.Security.Areas.Security.Pages.Admin
                 if (user.Email != Input.Email)
                 {
                     user.Email = Input.Email;
-                    user.NormalizedEmail = _userManager.NormalizeKey(Input.Email);
+                    user.NormalizedEmail = _userManager.NormalizeEmail(Input.Email);
                     user.EmailConfirmed = !string.IsNullOrEmpty(Input.Email) && !Settings.RequiredEmailConfirmed;
                 }
 

@@ -36,7 +36,7 @@ namespace MozliteDemo.Extensions.Security.TagHelpers
             {
                 if (MaxRoleLevel > 0 && role.RoleLevel >= MaxRoleLevel || role.RoleLevel == 0)
                     continue;
-                items.Add(role.Name, role.RoleId.ToString());
+                items.Add(role.Name, role.Id.ToString());
             }
         }
     }

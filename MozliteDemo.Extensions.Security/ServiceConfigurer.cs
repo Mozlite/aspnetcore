@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Mozlite;
+﻿using Mozlite;
 using Mozlite.Mvc;
 
 namespace MozliteDemo.Extensions.Security
@@ -13,11 +11,10 @@ namespace MozliteDemo.Extensions.Security
         /// <summary>
         /// 配置服务方法。
         /// </summary>
-        /// <param name="services">服务集合实例。</param>
-        /// <param name="configuration">配置接口。</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        /// <param name="builder">容器构建实例。</param>
+        public void ConfigureServices(IMozliteBuilder builder)
         {
-            services.AddResources<ServiceConfigurer>();
+            builder.AddResources<ServiceConfigurer>();
         }
     }
 }

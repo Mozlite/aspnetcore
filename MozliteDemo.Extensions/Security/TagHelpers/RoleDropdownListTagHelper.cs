@@ -37,7 +37,7 @@ namespace MozliteDemo.Extensions.Security.TagHelpers
             {
                 if (MaxRoleLevel > 0 && role.RoleLevel >= MaxRoleLevel || role.IsSystem)
                     continue;
-                yield return new SelectListItem(role.Name, role.RoleId.ToString());
+                yield return new SelectListItem(role.Name, role.Id.ToString());
             }
         }
     }

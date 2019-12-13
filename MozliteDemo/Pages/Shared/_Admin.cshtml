@@ -5,7 +5,7 @@
     ();
     var notifications = NotificationManager.Load();
     var notificationSize = notifications.Count(x => x.Status == NotificationStatus.New);
-    var events = EventManager.LoadMessages(Current.UserId);
+    var events = EventManager.LoadMessages(Current.Id);
 }
 @inject User Current
 @inject ISettingsManager SettingsManager

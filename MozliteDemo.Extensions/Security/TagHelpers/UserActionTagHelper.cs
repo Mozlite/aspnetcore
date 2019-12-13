@@ -28,14 +28,14 @@ namespace MozliteDemo.Extensions.Security.TagHelpers
         /// <param name="output">当前标签输出实例，用于呈现标签相关信息。</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (HttpContext.Request.Method == "GET" && HttpContext.User.Identity.IsAuthenticated)
-            {
-                var user = HttpContext.GetUser<User>();
-                if (user != null && _factory.TryGetProvider(user.Action, out var provider))
-                {
-                    provider.Invoke(ViewContext);
-                }
-            }
+            //if (HttpContext.Request.Method == "GET" && HttpContext.User.Identity.IsAuthenticated)
+            //{
+            //    var user = HttpContext.GetUser<User>();
+            //    if (user != null && _factory.TryGetProvider(user.Action, out var provider))
+            //    {
+            //        provider.Invoke(ViewContext);
+            //    }
+            //}
             output.SuppressOutput();
         }
     }

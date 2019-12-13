@@ -52,14 +52,14 @@
                         <i .visible="lockout" class="text-danger fa fa-lock"></i>
                         @(user.UserName)(@user.NormalizedUserName.ToLower())
                         <div class="data-action pull-right">
-                            <a js-action="modal" title="编辑" asp-page="./edit" asp-route-id="@user.UserId"><i class="fa fa-pencil"></i> 编辑</a>
-                            <a js-action="modal" title="设置密码" asp-page="./password" asp-route-id="@user.UserId"><i class="fa fa-key"></i> 密码</a>
-                            <a js-action="modal" title="设置角色" asp-page="./role" asp-route-id="@user.UserId"><i class="fa fa-users"></i> 角色</a>
-                            <a .visible="lockout&&user.UserId != Model.UserId" js-action="post" title="解锁" asp-page="./lockout" asp-page-handler="Unlock" asp-route-id="@user.UserId"><i class="fa fa-unlock"></i> 解锁</a>
-                            <a .visible="!lockout&&user.LockoutEnabled&&user.UserId != Model.UserId" js-action="modal" title="锁定" asp-page="./lockout" asp-route-id="@user.UserId"><i class="fa fa-lock"></i> 锁定</a>
-                            @if (user.UserId != Model.UserId)
+                            <a js-action="modal" title="编辑" asp-page="./edit" asp-route-id="@user.Id"><i class="fa fa-pencil"></i> 编辑</a>
+                            <a js-action="modal" title="设置密码" asp-page="./password" asp-route-id="@user.Id"><i class="fa fa-key"></i> 密码</a>
+                            <a js-action="modal" title="设置角色" asp-page="./role" asp-route-id="@user.Id"><i class="fa fa-users"></i> 角色</a>
+                            <a .visible="lockout&&user.Id != Model.UserId" js-action="post" title="解锁" asp-page="./lockout" asp-page-handler="Unlock" asp-route-id="@user.Id"><i class="fa fa-unlock"></i> 解锁</a>
+                            <a .visible="!lockout&&user.LockoutEnabled&&user.Id != Model.UserId" js-action="modal" title="锁定" asp-page="./lockout" asp-route-id="@user.Id"><i class="fa fa-lock"></i> 锁定</a>
+                            @if (user.Id != Model.UserId)
                             {
-                                <a js-action="post" js-confirm="你确定要删除用户“@user.UserName”?" asp-route-id="@user.UserId" title="删除" asp-page-handler="Delete"><i class="fa fa-trash"></i> 删除</a>
+                                <a js-action="post" js-confirm="你确定要删除用户“@user.UserName”?" asp-route-id="@user.Id" title="删除" asp-page-handler="Delete"><i class="fa fa-trash"></i> 删除</a>
                             }
                         </div>
                     </td>
