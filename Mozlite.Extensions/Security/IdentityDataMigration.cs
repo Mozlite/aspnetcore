@@ -35,6 +35,7 @@ namespace Mozlite.Extensions.Security
                 table.Column(x => x.Id)
                     .Column(x => x.UserName, nullable: false)
                     .Column(x => x.NormalizedUserName, nullable: false)
+                    .Column(x => x.RealName)
                     .Column(x => x.PasswordHash, nullable: false)
                     .Column(x => x.Email)
                     .Column(x => x.NormalizedEmail)
@@ -54,7 +55,8 @@ namespace Mozlite.Extensions.Security
                     .Column(x => x.RoleId, defaultValue: 0)
                     .Column(x => x.RoleName)
                     .Column(x => x.LoginIP)
-                    .Column(x => x.LastLoginDate);
+                    .Column(x => x.LastLoginDate)
+                    .Column(x => x.ParentId);
                 Create(table);
             });
 

@@ -18,8 +18,16 @@ namespace Mozlite.Extensions.Security
         public override int Id { get; set; }
 
         /// <summary>
+        /// 获取或设置用户姓名。
+        /// </summary>
+        [Size(64)]
+        [ProtectedPersonalData]
+        public virtual string RealName { get; set; }
+
+        /// <summary>
         /// 获取或设置用户名称。
         /// </summary>
+        [NotUpdated]
         [Size(64)]
         [ProtectedPersonalData]
         public override string UserName { get; set; }
@@ -27,6 +35,7 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 用于验证的用户名称。
         /// </summary>
+        [NotUpdated]
         [Size(64)]
         public override string NormalizedUserName { get; set; }
 
@@ -52,6 +61,7 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 加密后的密码。
         /// </summary>
+        [NotUpdated]
         [Size(128)]
         public override string PasswordHash { get; set; }
 
@@ -83,22 +93,26 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 是否激活电话号码或邮件验证。
         /// </summary>
+        [NotUpdated]
         [PersonalData]
         public override bool TwoFactorEnabled { get; set; }
 
         /// <summary>
         /// 锁定截止UTC时间。
         /// </summary>
+        [NotUpdated]
         public override DateTimeOffset? LockoutEnd { get; set; }
 
         /// <summary>
         /// 登录错误达到失败次数，是否锁定账户。
         /// </summary>
+        [NotUpdated]
         public override bool LockoutEnabled { get; set; }
 
         /// <summary>
         /// 登录失败次数。
         /// </summary>
+        [NotUpdated]
         public override int AccessFailedCount { get; set; }
 
         /// <summary>
@@ -135,19 +149,28 @@ namespace Mozlite.Extensions.Security
         /// <summary>
         /// 头像。
         /// </summary>
+        [NotUpdated]
         [Size(256)]
         public virtual string Avatar { get; set; } = "/images/avatar.png";
 
         /// <summary>
         /// 显示角色Id。
         /// </summary>
+        [NotUpdated]
         public virtual int RoleId { get; set; }
 
         /// <summary>
         /// 显示角色名称。
         /// </summary>
+        [NotUpdated]
         [Size(64)]
         public virtual string RoleName { get; set; }
+
+        /// <summary>
+        /// 父级Id。
+        /// </summary>
+        [NotUpdated]
+        public virtual int ParentId { get; set; }
 
         /// <summary>
         /// 返回当前用户的用户名。
